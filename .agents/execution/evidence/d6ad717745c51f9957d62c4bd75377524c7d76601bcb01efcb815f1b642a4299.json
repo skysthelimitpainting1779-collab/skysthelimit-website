@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "1.0.0",
+  "issuer": "trusted-local-runner",
+  "kind": "p0-focused-node-test",
+  "command": "npx tsx --test tests/active-state-reconciliation.test.mjs tests/worktree-quarantine.test.mjs tests/trusted-evidence-receipts.test.mjs tests/git-integration-safety.test.mjs",
+  "exitCode": 0,
+  "providerId": null,
+  "providerEvidenceId": null,
+  "status": null,
+  "conclusion": null,
+  "headSha": "ed47077356c7e7343a0aa14595860b698aeda585",
+  "treeSha": "e5f8357cc789b0355b71941f923cdae2f6cdf7e5",
+  "outputSha256": "d38a8ecbc4770aeb8649a265c3ded4eb487075401dfea9d6ed8f4915cf28be98",
+  "observedAt": "2026-07-29T21:50:33.529Z",
+  "receiptSha256": "d6ad717745c51f9957d62c4bd75377524c7d76601bcb01efcb815f1b642a4299"
+}
