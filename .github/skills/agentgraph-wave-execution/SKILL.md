@@ -73,10 +73,13 @@ Reject the input if `source.kind` is not `authoritative-lifecycle-ledger`. Never
 3. Acquire every assignment `resourceLocks` and file lock before launch. Defer conflicting nodes.
 4. Launch each assignment with `createCodexAppTaskBridge` when host task controls are injected. Use `createCodexCliTaskBridge` only from the exact target worktree when the host bridge is unavailable.
 5. Pass the ledger boundary to `runAgentGraphWithCodex`. Use `workspace-write` only for local files named by `allowedFiles`; use read-only mode for inspection/verifier work.
-6. Accept only a strict JSON completion callback bound to the node, assignment, and worker IDs. Require a non-empty artifact ID and explicit `productionSideEffects: false` plus `providerMutations: false`.
-7. Launch a separate verifier worker for the emitted verifier assignment. Require its callback to bind the completion artifact ID.
-8. Mark the node complete and unlock successors only after verification passes.
-9. On missing callback, invalid identity, failed verification, or platform failure, halt once, persist the exact report, and steer remaining workers to stop.
+6. Use host app-registry lifecycle MCP tools when exposed. If app-registry lifecycle MCP exposure is unavailable, use the authorized official in-process `mcp_server.py` function transport: keep one long-lived Python control process, import the official `mcp_server.py` module exactly once, and call its lifecycle functions directly.
+7. Do not start an MCP subprocess. Do not edit the lifecycle database manually or directly. Keep the lease capability only in memory; never print it, persist it, include it in evidence, or return it in a callback.
+8. Call `lifecycle_checkpoint_renew` before the active lease expires and before any long-running test or build could cross its expiry.
+9. Accept only a strict JSON completion callback bound to the node, assignment, and worker IDs. Require a non-empty artifact ID and explicit `productionSideEffects: false` plus `providerMutations: false`.
+10. Launch a separate verifier worker for the emitted verifier assignment. Require its callback to bind the completion artifact ID.
+11. Mark the node complete and unlock successors only after verification passes.
+12. On missing callback, invalid identity, failed verification, or platform failure, halt once, persist the exact report, and steer remaining workers to stop.
 
 ## Boundary
 

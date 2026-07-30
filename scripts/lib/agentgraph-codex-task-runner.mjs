@@ -241,7 +241,23 @@ export function createCodexAssignmentPrompt({
     assignment: spec,
     artifact:
       assignment.role === 'verifier' ? state.nodes[assignment.nodeId].completionArtifact : null,
-    constraints: { ...spec.constraints, output: 'Return exactly one JSON object and no markdown.' },
+    constraints: {
+      ...spec.constraints,
+      lifecycleTransport: {
+        preferred: 'Use the host app-registry lifecycle MCP tools when exposed.',
+        fallback:
+          'If app-registry lifecycle MCP exposure is unavailable, use the authorized official in-process mcp_server.py function transport.',
+        process:
+          'Use one long-lived Python control process; import the official mcp_server.py module exactly once and call its lifecycle functions directly.',
+        forbidden:
+          'Do not start an MCP subprocess and do not edit the lifecycle database manually or directly.',
+        capability:
+          'Keep the lease capability only in memory; never print it, persist it, include it in evidence, or return it in the callback.',
+        heartbeat:
+          'Call lifecycle_checkpoint_renew before the active lease expires and before any long-running test or build could cross its expiry.',
+      },
+      output: 'Return exactly one JSON object and no markdown.',
+    },
     callback: callbackContract(assignment),
   };
   return [

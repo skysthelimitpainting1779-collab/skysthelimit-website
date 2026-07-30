@@ -126,6 +126,42 @@ test('prompt and callback preserve immutable assignment identity', () => {
   assert.equal(callback.artifact.id, 'artifact:READ-PACKAGE:1');
 });
 
+test('prompt requires the official in-process lifecycle fallback and lease heartbeat', () => {
+  const graph = proofGraph();
+  const state = createAgentGraphExecutionState(graph);
+  const assignment = {
+    id: 'assignment:READ-PACKAGE:1:executor',
+    nodeId: 'READ-PACKAGE',
+    workerId: 'codex-executor-1',
+    role: 'executor',
+  };
+
+  const prompt = createCodexAssignmentPrompt({ graph, state, assignment });
+
+  assert.match(prompt, /app-registry lifecycle MCP exposure is unavailable/i);
+  assert.match(prompt, /official in-process .*mcp_server\.py.*function transport/i);
+  assert.match(prompt, /import .*mcp_server\.py.*exactly once/i);
+  assert.match(prompt, /do not start an MCP subprocess/i);
+  assert.match(prompt, /do not edit the lifecycle database/i);
+  assert.match(prompt, /lease capability.*memory.*never print.*persist/i);
+  assert.match(prompt, /lifecycle_checkpoint_renew.*before.*lease.*expires/i);
+});
+
+test('wave skill carries the in-process lifecycle fallback and heartbeat contract', () => {
+  const skill = readFileSync(
+    '.agents/skills/agentgraph-wave-execution/SKILL.md',
+    'utf8',
+  );
+
+  assert.match(skill, /app-registry lifecycle MCP exposure is unavailable/i);
+  assert.match(skill, /official in-process .*mcp_server\.py.*function transport/i);
+  assert.match(skill, /import .*mcp_server\.py.*exactly once/i);
+  assert.match(skill, /do not start an MCP subprocess/i);
+  assert.match(skill, /do not edit the lifecycle database/i);
+  assert.match(skill, /lease capability.*memory.*never print.*persist/i);
+  assert.match(skill, /lifecycle_checkpoint_renew.*before.*lease.*expires/i);
+});
+
 test('Codex app bridge maps create_thread and wait_threads results to assignment callbacks', async () => {
   const calls = [];
   const bridge = createCodexAppTaskBridge({
