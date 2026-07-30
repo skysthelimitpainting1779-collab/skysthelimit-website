@@ -15,6 +15,7 @@ import type * as estimates from "../estimates.js";
 import type * as http from "../http.js";
 import type * as invitations from "../invitations.js";
 import type * as invitationsInternal from "../invitationsInternal.js";
+import type * as leadAssignments from "../leadAssignments.js";
 import type * as lib_audit from "../lib/audit.js";
 import type * as lib_authz from "../lib/authz.js";
 import type * as lib_cal from "../lib/cal.js";
@@ -38,6 +39,7 @@ declare const fullApi: ApiFromModules<{
   http: typeof http;
   invitations: typeof invitations;
   invitationsInternal: typeof invitationsInternal;
+  leadAssignments: typeof leadAssignments;
   "lib/audit": typeof lib_audit;
   "lib/authz": typeof lib_authz;
   "lib/cal": typeof lib_cal;

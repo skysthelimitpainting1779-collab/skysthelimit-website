@@ -1,7 +1,7 @@
 'use client';
 
 import { UserButton } from '@clerk/nextjs';
-import { Component, Fragment, type ReactNode } from 'react';
+import { Component, Fragment, type ReactNode, useState } from 'react';
 import { useQuery } from 'convex/react';
 
 import { api } from '../../../../convex/_generated/api';
@@ -93,6 +93,21 @@ class ManageQueryBoundary extends Component<
 
 function ManagePageContent() {
   const companies = useQuery(api.crm.staffOverview);
+  const [asOf] = useState(() => Date.now());
+  const [selectedCompanyId, setSelectedCompanyId] = useState('');
+  const activeCompany =
+    companies?.find(
+      (company) => company.companyId === selectedCompanyId
+    ) ?? companies?.[0];
+  const assignments = useQuery(
+    api.leadAssignments.slaQueue,
+    activeCompany
+      ? {
+          companyId: activeCompany.companyId,
+          asOf,
+        }
+      : 'skip'
+  );
 
   return (
     <main className="dark min-h-screen bg-[var(--background)] px-4 py-8 text-[var(--foreground)] sm:px-6 lg:px-8">
@@ -113,7 +128,102 @@ function ManagePageContent() {
           <UserButton />
         </header>
 
-        <CrmOperator companies={companies} />
+        <section
+          aria-labelledby="lead-sla-heading"
+          role="status"
+          className="mt-8 border border-[var(--border)] bg-[var(--card)] p-5"
+        >
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <p className="text-xs font-bold uppercase text-[var(--primary)]">
+                First-response SLA
+              </p>
+              <h2 id="lead-sla-heading" className="mt-1 text-xl font-black">
+                Lead follow-up queue
+              </h2>
+            </div>
+            <p className="text-sm text-[var(--muted-foreground)]">
+              {assignments === undefined
+                ? 'Loading assignments…'
+                : `${assignments.length} active assignment${assignments.length === 1 ? '' : 's'}`}
+            </p>
+          </div>
+
+          {companies && companies.length > 1 ? (
+            <label className="mt-4 grid max-w-xs gap-1.5 text-xs font-semibold text-[var(--muted-foreground)]">
+              Company
+              <select
+                value={activeCompany?.companyId ?? ''}
+                onChange={(event) =>
+                  setSelectedCompanyId(event.target.value)
+                }
+                className="h-11 border border-[var(--border)] bg-[var(--background)] px-3 text-sm text-[var(--foreground)]"
+              >
+                {companies.map((company) => (
+                  <option key={company.companyId} value={company.companyId}>
+                    {company.companyName}
+                  </option>
+                ))}
+              </select>
+            </label>
+          ) : null}
+
+          {assignments?.length === 0 ? (
+            <p className="mt-4 text-sm text-[var(--muted-foreground)]">
+              No lead assignments are waiting for a first response.
+            </p>
+          ) : null}
+          {assignments && assignments.length > 0 ? (
+            <ul className="mt-4 grid gap-3">
+              {assignments.map((assignment) => {
+                const urgent =
+                  assignment.slaStatus === 'breached' ||
+                  assignment.slaStatus === 'escalated';
+                return (
+                  <li
+                    key={assignment.assignmentId}
+                    className={`border p-4 ${
+                      urgent
+                        ? 'border-[var(--destructive)] bg-[color-mix(in_oklab,var(--destructive)_8%,var(--card))]'
+                        : 'border-[var(--border)]'
+                    }`}
+                  >
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <div>
+                        <p className="font-bold">
+                          Lead {assignment.leadId}
+                        </p>
+                        <p className="mt-1 text-sm text-[var(--muted-foreground)]">
+                          Assigned to {assignment.assigneeUserId}
+                        </p>
+                      </div>
+                      <p
+                        className={`text-sm font-bold ${
+                          urgent
+                            ? 'text-[var(--destructive)]'
+                            : 'text-[var(--foreground)]'
+                        }`}
+                      >
+                        {assignment.operatorLabel}
+                      </p>
+                    </div>
+                    <p className="mt-3 text-xs text-[var(--muted-foreground)]">
+                      Response due{' '}
+                      {new Date(
+                        assignment.firstResponseDueAt
+                      ).toLocaleString()}
+                    </p>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : null}
+        </section>
+
+        <CrmOperator
+          key={activeCompany?.companyId ?? 'loading'}
+          companies={activeCompany ? [activeCompany] : companies}
+        />
       </div>
     </main>
   );

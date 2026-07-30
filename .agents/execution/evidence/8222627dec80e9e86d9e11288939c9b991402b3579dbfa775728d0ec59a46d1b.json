@@ -1,0 +1,84 @@
+{
+  "baseHeadSha": "13908b69847a60847dbb53c6b0706491d5e36079",
+  "checkpointId": "cp-20260730-stl203-001",
+  "completedStage": "stage:STL-203:complete",
+  "context7": {
+    "contract": "Durable workflow effects must be idempotent across retries and isolated in durable steps.",
+    "decision": "Use the repository's existing Convex scheduler and idempotency/domain-event patterns because Vercel Workflow is not installed and provider mutation is forbidden for STL-203.",
+    "libraryId": "/vercel/workflow"
+  },
+  "graphSha256": "4f6a7d81e9c46ecbf886703fcf03988dd317115f9577152aa7ac09bd5ec532c9",
+  "nativeBrowser": {
+    "result": "The local homepage rendered successfully in the Codex in-app browser with its accessible lead form structure intact.",
+    "status": "passed"
+  },
+  "nodeId": "STL-203",
+  "productionBoundary": {
+    "productionMutationAuthorized": false,
+    "productionMutationPerformed": false,
+    "providerMutationPerformed": false
+  },
+  "programId": "stl-post-g20-sequential-tdd-v1",
+  "reviewAudit": [
+    {
+      "reviewer": "Kant",
+      "status": "Final independent review approved the tenant-remount repair and found no Critical or Important findings."
+    }
+  ],
+  "schemaVersion": 1,
+  "scope": [
+    "convex/_generated/api.d.ts",
+    "convex/schema.ts",
+    "convex/leadAssignments.ts",
+    "src/app/(protected)/manage/page.tsx",
+    "src/workflows/lead-assignment.ts",
+    "tests/api-units.test.mjs",
+    "tests/leads-api-handler.test.mjs"
+  ],
+  "tdd": {
+    "green": "Deterministic eligible routing, fail-closed empty rosters, durable idempotent escalation and acknowledgement, exact-deadline race stability, indexed active SLA queues, and tenant-safe operator visibility pass.",
+    "red": "Focused tests first failed for the absent workflow and Convex module, then reproduced exact-deadline inconsistency, historical queue crowd-out, and stale tenant state before each repair."
+  },
+  "verification": [
+    {
+      "command": "npm run lint:ci",
+      "result": "Repository lint and architecture policy checks passed.",
+      "status": "passed"
+    },
+    {
+      "command": "npm test",
+      "result": "573/573 tests passed across 25 suites.",
+      "status": "passed"
+    },
+    {
+      "command": ".\\node_modules\\.bin\\next.cmd build",
+      "result": "Next.js 16.2.12 production-mode local build compiled, typechecked, and generated 46 pages.",
+      "status": "passed"
+    },
+    {
+      "command": "node scripts/smoke-site.mjs --base-url http://127.0.0.1:3104",
+      "result": "All 10 local preview smoke checks passed, including expected 404, robots, and sitemap.",
+      "status": "passed"
+    },
+    {
+      "command": "npm run goal:verify",
+      "result": "Goal contract, Context7 evidence, lint, and 573/573 tests passed.",
+      "status": "passed"
+    },
+    {
+      "command": "npm run ship:eval",
+      "result": "Deterministic ship-loop graders passed with a 1.0 pass rate.",
+      "status": "passed"
+    },
+    {
+      "command": "npm run context7:verify",
+      "result": "Context7 contract evidence passed.",
+      "status": "passed"
+    },
+    {
+      "command": "git diff --check",
+      "result": "No whitespace errors.",
+      "status": "passed"
+    }
+  ]
+}

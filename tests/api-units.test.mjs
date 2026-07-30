@@ -21,6 +21,10 @@ import {
   buildLeadHtml,
   createRateLimiter
 } from '../src/lib/api/utils.ts';
+import {
+  evaluateLeadSla,
+  selectDeterministicAssignee,
+} from '../src/workflows/lead-assignment.ts';
 
 // ---------------------------------------------------------------------------
 // asText tests
@@ -413,6 +417,160 @@ describe('api/leads - Rate limiter', () => {
     const start = Date.now();
     while (Date.now() - start < 5) { /* wait 5ms */ }
     assert.equal(rl('10.0.0.6'), true);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Governed lead assignment and first-response SLA workflow
+// ---------------------------------------------------------------------------
+describe('lead assignment workflow', () => {
+  const eligibleCandidates = [
+    {
+      userId: 'users:staff-b',
+      role: 'staff',
+      membershipStatus: 'active',
+      userStatus: 'active',
+    },
+    {
+      userId: 'users:admin-a',
+      role: 'admin',
+      membershipStatus: 'active',
+      userStatus: 'active',
+    },
+    {
+      userId: 'users:disabled',
+      role: 'staff',
+      membershipStatus: 'active',
+      userStatus: 'disabled',
+    },
+    {
+      userId: 'users:customer',
+      role: 'customer',
+      membershipStatus: 'active',
+      userStatus: 'active',
+    },
+    {
+      userId: 'users:revoked',
+      role: 'staff',
+      membershipStatus: 'revoked',
+      userStatus: 'active',
+    },
+  ];
+
+  test('routes a lead deterministically regardless of candidate order', () => {
+    const first = selectDeterministicAssignee(
+      'lead:stable-203',
+      eligibleCandidates
+    );
+    const replay = selectDeterministicAssignee(
+      'lead:stable-203',
+      [...eligibleCandidates].reverse()
+    );
+
+    assert.deepEqual(replay, first);
+    assert.match(first.assigneeUserId, /^users:(staff-b|admin-a)$/);
+    assert.equal(first.algorithmVersion, 'stable-hash-v1');
+    assert.match(first.reason, /deterministic/i);
+  });
+
+  test('fails closed when no active staff or admin candidate exists', () => {
+    assert.throws(
+      () =>
+        selectDeterministicAssignee('lead:unroutable', [
+          {
+            userId: 'users:customer',
+            role: 'customer',
+            membershipStatus: 'active',
+            userStatus: 'active',
+          },
+        ]),
+      /eligible staff or admin/i
+    );
+  });
+
+  test('breaches visibly at the exact deadline but never after acknowledgement', () => {
+    const assignment = {
+      status: 'assigned',
+      firstResponseDueAt: 10_000,
+      escalationStatus: 'none',
+    };
+
+    assert.deepEqual(evaluateLeadSla(assignment, 9_999), {
+      status: 'pending',
+      breached: false,
+      shouldEscalate: false,
+      operatorLabel: 'First response due soon',
+    });
+    assert.deepEqual(evaluateLeadSla(assignment, 10_000), {
+      status: 'breached',
+      breached: true,
+      shouldEscalate: true,
+      operatorLabel: 'SLA breached — immediate follow-up required',
+    });
+    assert.deepEqual(
+      evaluateLeadSla(
+        {
+          ...assignment,
+          status: 'acknowledged',
+          firstResponseAt: 9_500,
+        },
+        12_000
+      ),
+      {
+        status: 'met',
+        breached: false,
+        shouldEscalate: false,
+        operatorLabel: 'First response completed within SLA',
+      }
+    );
+    assert.deepEqual(
+      evaluateLeadSla(
+        {
+          ...assignment,
+          status: 'acknowledged',
+          firstResponseAt: 10_000,
+          escalationStatus: 'resolved',
+        },
+        12_000
+      ),
+      {
+        status: 'breached',
+        breached: true,
+        shouldEscalate: false,
+        operatorLabel: 'First response completed after SLA breach',
+      }
+    );
+    assert.deepEqual(
+      evaluateLeadSla(
+        {
+          ...assignment,
+          status: 'acknowledged',
+          firstResponseAt: 10_001,
+          escalationStatus: 'resolved',
+        },
+        12_000
+      ),
+      {
+        status: 'breached',
+        breached: true,
+        shouldEscalate: false,
+        operatorLabel: 'First response completed after SLA breach',
+      }
+    );
+  });
+
+  test('staff manage route renders the authorized SLA queue and breach label', () => {
+    const managePage = read('src/app/(protected)/manage/page.tsx');
+
+    assert.match(managePage, /api\.leadAssignments\.slaQueue/);
+    assert.match(managePage, /First-response SLA/);
+    assert.match(managePage, /operatorLabel/);
+    assert.match(managePage, /role="status"/);
+    assert.match(managePage, /setSelectedCompanyId/);
+    assert.match(
+      managePage,
+      /<CrmOperator[\s\S]*key=\{activeCompany\?\.companyId \?\? 'loading'\}[\s\S]*companies=\{activeCompany \? \[activeCompany\] : companies\}/
+    );
   });
 });
 

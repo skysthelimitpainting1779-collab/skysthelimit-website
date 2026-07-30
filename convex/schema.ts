@@ -119,6 +119,37 @@ export default defineSchema({
     .index('by_company_status', ['companyId', 'status'])
     .index('by_idempotencyKey', ['idempotencyKey']),
 
+  leadAssignments: defineTable({
+    companyId: v.id('companies'),
+    leadId: v.id('leads'),
+    assigneeUserId: v.id('users'),
+    status: v.union(
+      v.literal('assigned'),
+      v.literal('acknowledged'),
+      v.literal('closed'),
+    ),
+    escalationStatus: v.union(
+      v.literal('none'),
+      v.literal('escalated'),
+      v.literal('resolved'),
+    ),
+    routingVersion: v.literal('stable-hash-v1'),
+    routingReason: v.string(),
+    assignedAt: v.number(),
+    firstResponseDueAt: v.number(),
+    firstResponseAt: v.optional(v.number()),
+    escalatedAt: v.optional(v.number()),
+    requestId: v.string(),
+    updatedAt: v.number(),
+  })
+    .index('by_lead', ['leadId'])
+    .index('by_company_status_dueAt', [
+      'companyId',
+      'status',
+      'firstResponseDueAt',
+    ])
+    .index('by_assignee_status', ['assigneeUserId', 'status']),
+
   contacts: defineTable({
     migrationCanonicalId: v.optional(v.string()),
     migrationChecksum: v.optional(v.string()),
