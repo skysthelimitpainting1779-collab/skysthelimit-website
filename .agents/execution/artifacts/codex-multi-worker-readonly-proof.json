@@ -1,0 +1,92 @@
+{
+  "schemaVersion": "1.0.0",
+  "proof": "real-codex-multi-worker-fanout",
+  "environment": "local non-production",
+  "productionSideEffects": false,
+  "providerMutations": false,
+  "executorTasks": [
+    {
+      "nodeId": "READ-GRAPH",
+      "assignmentId": "assignment:READ-GRAPH:1:executor",
+      "workerId": "codex-executor-1",
+      "threadId": "019fb20c-d7df-7361-b621-8c08c1c67cb7",
+      "artifactId": "artifact:READ-GRAPH:live-1",
+      "summary": "Graph contains 66 nodes; INSPECT-REPOSITORY exists."
+    },
+    {
+      "nodeId": "READ-PACKAGE",
+      "assignmentId": "assignment:READ-PACKAGE:1:executor",
+      "workerId": "codex-executor-2",
+      "threadId": "019fb20c-6f92-7a00-b38c-0e8a819b6ec7",
+      "artifactId": "artifact:READ-PACKAGE:live-1",
+      "summary": "Package skys-the-limit-painting-website has 55 scripts."
+    }
+  ],
+  "verifierTasks": [
+    {
+      "nodeId": "READ-GRAPH",
+      "assignmentId": "assignment:READ-GRAPH:1:verifier",
+      "workerId": "codex-verifier-1",
+      "threadId": "019fb20f-f741-7e12-bbac-03d5c378087e",
+      "artifactId": "artifact:READ-GRAPH:live-1",
+      "passed": true
+    },
+    {
+      "nodeId": "READ-PACKAGE",
+      "assignmentId": "assignment:READ-PACKAGE:1:verifier",
+      "workerId": "codex-verifier-2",
+      "threadId": "019fb210-a110-72c3-8867-a344fe57035d",
+      "artifactId": "artifact:READ-PACKAGE:live-1",
+      "passed": true
+    }
+  ],
+  "identityGate": {
+    "initialMismatchedCallbacksRejected": true,
+    "workersSteeredToDispatcherIssuedIdentities": true
+  },
+  "autonomousCliProof": {
+    "startedAt": "2026-07-30T08:19:28.702Z",
+    "finishedAt": "2026-07-30T08:22:47.567Z",
+    "launcher": "codex exec --sandbox read-only",
+    "approvalPolicy": "never",
+    "executorFanout": 2,
+    "verifierFanout": 2,
+    "nodes": {
+      "READ-PACKAGE-NAME": {
+        "status": "completed",
+        "artifactId": "package-name",
+        "summary": "skys-the-limit-painting-website",
+        "verificationWorker": "codex-verifier-1",
+        "verificationPassed": true
+      },
+      "COUNT-PACKAGE-SCRIPTS": {
+        "status": "completed",
+        "artifactId": "package-script-count-55",
+        "summary": "The top-level scripts object in package.json contains exactly 55 keys.",
+        "verificationWorker": "codex-verifier-2",
+        "verificationPassed": true
+      }
+    },
+    "result": {
+      "status": "complete",
+      "haltReport": null,
+      "newAssignments": []
+    }
+  },
+  "genuineBlockerProof": {
+    "status": "halted",
+    "reason": "verification_failed",
+    "nodeId": "READ-GRAPH",
+    "error": "Executor reported incorrect graph facts; independent verifier found 66 nodes and INSPECT-REPOSITORY.",
+    "repeatedAudit": false
+  },
+  "result": {
+    "status": "complete",
+    "nodeStatuses": {
+      "READ-GRAPH": "completed",
+      "READ-PACKAGE": "completed"
+    },
+    "newAssignments": [],
+    "haltReport": null
+  }
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "AgentGraph Wave Execution"
+  short_description: "Launch ledger-approved Codex worker waves"
+  default_prompt: "Use $agentgraph-wave-execution to validate authoritative ready-node input and launch a safe non-production worker wave."
