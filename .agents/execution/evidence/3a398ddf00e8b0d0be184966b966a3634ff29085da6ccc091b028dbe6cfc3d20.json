@@ -1,0 +1,73 @@
+{
+  "baseHeadSha": "d996b33d1df75b81f7370eae45243b553d733f88",
+  "checkpointId": "cp-20260730-stl205-001",
+  "completedStage": "stage:STL-205:complete",
+  "context7": {
+    "contract": "Convex mutations are atomic and isolated, thrown errors roll back writes, public arguments are validated, and tenant access uses declared indexes.",
+    "libraryId": "/websites/convex_dev"
+  },
+  "graphSha256": "4f6a7d81e9c46ecbf886703fcf03988dd317115f9577152aa7ac09bd5ec532c9",
+  "nodeId": "STL-205",
+  "productionBoundary": {
+    "productionMutationAuthorized": false,
+    "providerMutationPerformed": false
+  },
+  "programId": "stl-post-g20-sequential-tdd-v1",
+  "reviewAudit": [
+    {
+      "reviewer": "Gibbs",
+      "status": "Final independent review found no Critical or Important findings and marked the change ready to merge."
+    }
+  ],
+  "schemaVersion": 1,
+  "scope": [
+    "convex/estimates.ts",
+    "convex/schema.ts",
+    "convex/_generated/api.d.ts",
+    "src/app/(protected)/app/estimates/[id]/page.tsx",
+    "src/app/(protected)/app/estimates/layout.tsx",
+    "src/components/estimates/estimate-builder-state.ts",
+    "src/components/estimates/estimate-builder.tsx",
+    "tests/estimate-builder-state.test.mjs",
+    "tests/estimate-versioning.test.mjs"
+  ],
+  "tdd": {
+    "green": "Tenant-scoped drafts, server totals, optimistic revisions, stable retry request IDs, immutable approval snapshots, and stale-subscription preservation now pass focused and compatibility suites.",
+    "red": "The focused estimate versioning suite first failed because convex/estimates.ts did not exist. Independent-review edge cases were then reproduced before repair."
+  },
+  "verification": [
+    {
+      "command": "npx tsx --test tests/estimate-builder-state.test.mjs tests/estimate-versioning.test.mjs",
+      "result": "8/8 focused behavior and UI state tests",
+      "status": "passed"
+    },
+    {
+      "command": "npx tsx --test tests/estimate-builder-state.test.mjs tests/estimate-versioning.test.mjs tests/crm-opportunity-pipeline.test.mjs tests/convex-schema.test.mjs tests/cal-sync.test.mjs",
+      "result": "27/27 compatibility tests",
+      "status": "passed"
+    },
+    {
+      "command": "npx tsc -p convex/tsconfig.json --noEmit",
+      "result": "Convex TypeScript contract passes",
+      "status": "passed"
+    },
+    {
+      "command": "npx tsc --noEmit",
+      "result": "Application TypeScript contract passes",
+      "status": "passed"
+    },
+    {
+      "command": "npm run goal:verify -- --build",
+      "result": "Context7 evidence, lint, 564/564 tests, and local production build pass",
+      "status": "passed"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed"
+    },
+    {
+      "command": "git diff --cached --check",
+      "status": "passed"
+    }
+  ]
+}

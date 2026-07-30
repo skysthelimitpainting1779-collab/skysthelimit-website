@@ -9,6 +9,12 @@ const clerkLifecycleType = v.union(
   v.literal('user.updated'),
   v.literal('user.deleted'),
 );
+const estimateLineItem = v.object({
+  description: v.string(),
+  quantity: v.number(),
+  unitPriceCents: v.number(),
+  totalCents: v.number(),
+});
 
 export default defineSchema({
   users: defineTable({
@@ -194,6 +200,47 @@ export default defineSchema({
     .index('by_sourceSystem_sourceId', ['sourceSystem', 'sourceId'])
     .index('by_company_stage', ['companyId', 'stage'])
     .index('by_contact', ['contactId']),
+
+  estimates: defineTable({
+    companyId: v.id('companies'),
+    opportunityId: v.id('opportunities'),
+    title: v.string(),
+    status: v.union(v.literal('draft'), v.literal('approved')),
+    revision: v.number(),
+    nextVersionNumber: v.number(),
+    lineItems: v.array(estimateLineItem),
+    subtotalCents: v.number(),
+    discountCents: v.number(),
+    taxCents: v.number(),
+    totalCents: v.number(),
+    assumptions: v.array(v.string()),
+    latestApprovedVersionId: v.optional(v.id('estimateVersions')),
+    approvedRevision: v.optional(v.number()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index('by_company', ['companyId'])
+    .index('by_company_opportunity', ['companyId', 'opportunityId']),
+
+  estimateVersions: defineTable({
+    companyId: v.id('companies'),
+    estimateId: v.id('estimates'),
+    versionNumber: v.number(),
+    status: v.literal('approved'),
+    title: v.string(),
+    lineItems: v.array(estimateLineItem),
+    subtotalCents: v.number(),
+    discountCents: v.number(),
+    taxCents: v.number(),
+    totalCents: v.number(),
+    assumptions: v.array(v.string()),
+    contentHash: v.string(),
+    approvedByUserId: v.id('users'),
+    approvedAt: v.number(),
+    requestId: v.string(),
+  })
+    .index('by_estimate_versionNumber', ['estimateId', 'versionNumber'])
+    .index('by_company_approvedAt', ['companyId', 'approvedAt']),
 
   appointments: defineTable({
     companyId: v.id('companies'),

@@ -11,6 +11,7 @@
 import type * as appointments from "../appointments.js";
 import type * as clerkAuth from "../clerkAuth.js";
 import type * as crm from "../crm.js";
+import type * as estimates from "../estimates.js";
 import type * as http from "../http.js";
 import type * as invitations from "../invitations.js";
 import type * as invitationsInternal from "../invitationsInternal.js";
@@ -33,6 +34,7 @@ declare const fullApi: ApiFromModules<{
   appointments: typeof appointments;
   clerkAuth: typeof clerkAuth;
   crm: typeof crm;
+  estimates: typeof estimates;
   http: typeof http;
   invitations: typeof invitations;
   invitationsInternal: typeof invitationsInternal;
