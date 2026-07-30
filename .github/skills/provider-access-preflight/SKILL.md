@@ -14,37 +14,49 @@ Run it before OAuth or provider mutation.
 1. Read the canonical provider ledger at
    `.agents/governance/provider-access-ledger.json`. Do not supply a replacement.
 2. Use a provider read-only identity or metadata call to observe the account,
-   team, resource, environment, and permission. Do not start OAuth or mutation.
-3. Confirm the governed node has an active lifecycle lease in the shared SQLite
+   team, resource, and exact non-Production environment. Do not start OAuth or
+   mutation.
+3. For Vercel Preview work, write that secret-free read-only observation outside
+   the repository and refresh the canonical ledger through the reusable helper.
+   The helper validates the existing verified account/team/project IDs and the
+   authoritative ready export; it cannot grant Production:
+
+```powershell
+node .agents/skills/provider-access-preflight/scripts/refresh-vercel-ledger.mjs `
+  --observation <absolute-observation-path> `
+  --ready-export <absolute-authoritative-ready-export-path>
+```
+
+4. Confirm the governed node has an active lifecycle lease in the shared SQLite
    control plane. The command binds `nodeId` to that lease rather than trusting
    the request by itself.
-4. Write a temporary secret-free request outside the repository:
+5. Write a temporary secret-free request outside the repository:
 
 ```json
 {
   "schemaVersion": "1.0.0",
-  "nodeId": "STL-104",
+  "nodeId": "STL-206",
   "providerId": "vercel",
   "operation": "mutate",
   "accountId": "observed-account-id",
   "teamId": "observed-team-id-or-null",
-  "resourceType": "deployment",
-  "resourceId": "observed-resource-id",
+  "resourceType": "project",
+  "resourceId": "observed-project-id",
   "environment": "preview",
-  "permission": "deployment:preview",
+  "permission": "deployment:preview-write",
   "observedAt": "2026-07-29T15:42:00Z"
 }
 ```
 
-5. Run:
+6. Run:
 
 ```powershell
 npm run providers:preflight -- --input <absolute-request-path>
 ```
 
-6. Stop on any nonzero exit. Record the decision JSON, repository HEAD, provider
+7. Stop on any nonzero exit. Record the decision JSON, repository HEAD, provider
    read-only evidence reference, and timestamp in the node evidence.
-7. Continue only when `allowed` is `true` and every separate lifecycle,
+8. Continue only when `allowed` is `true` and every separate lifecycle,
    approval, and environment gate also passes.
 
 ## Rules
@@ -55,6 +67,9 @@ npm run providers:preflight -- --input <absolute-request-path>
   denial.
 - Refresh the canonical provider ledger with a read-only observation immediately
   before the gate. Stale ledger evidence is a denial.
+- A verified provider project may remain classified as `shared`. It satisfies a
+  Preview request only when the exact verified `preview` environment record
+  contains that exact project ID.
 - Mutation permissions must explicitly name a write capability and use an
   approved non-Production environment.
 - Treat an omitted team as a mismatch when the provider ledger names a team.

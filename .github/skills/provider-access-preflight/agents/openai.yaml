@@ -1,0 +1,4 @@
+interface:
+  display_name: "Provider Access Preflight"
+  short_description: "Verify provider identity and scope before external access"
+  default_prompt: "Run the fail-closed provider access preflight before OAuth or provider mutation."

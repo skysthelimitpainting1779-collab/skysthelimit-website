@@ -2,7 +2,7 @@
   "$schema": "./provider-access-ledger.schema.json",
   "schemaVersion": "1.0.0",
   "programId": "stl-post-g20-sequential-tdd-v1",
-  "capturedAt": "2026-07-29T14:20:00Z",
+  "capturedAt": "2026-07-30T19:45:35.645Z",
   "productionMutationAuthorized": false,
   "providers": [
     {
@@ -591,18 +591,20 @@
       "permissions": [
         "project:read",
         "deployment:preview",
+        "deployment:preview-write",
         "environment-metadata:read",
         "production-mutation:blocked"
       ],
       "requiredForNodes": [
         "STL-104",
         "STL-106",
+        "STL-206",
         "G70-PACKET-ASSEMBLE"
       ],
       "evidence": [
         {
           "kind": "provider-api",
-          "reference": "vercel whoami; vercel api /v9/projects/{projectId}",
+          "reference": "Vercel read-only connector: list_teams/get_project/list_deployments @ 2026-07-30T19:45:35.645Z",
           "verificationStatus": "verified"
         },
         {

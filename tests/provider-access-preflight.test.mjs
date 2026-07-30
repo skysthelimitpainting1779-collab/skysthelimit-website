@@ -16,18 +16,18 @@ import {
 } from '../scripts/provider-access-preflight.mjs';
 
 const programId = 'stl-post-g20-sequential-tdd-v1';
-const evaluatedAt = new Date('2026-07-29T14:25:00Z');
+const ledger = JSON.parse(
+  readFileSync('.agents/governance/provider-access-ledger.json', 'utf8'),
+);
+const evaluatedAt = new Date(Date.parse(ledger.capturedAt) + 60_000);
 const authority = {
   programId,
   checkpointId: 'cp-test-stl104',
   currentNodeId: 'STL-104',
   currentStageId: 'stage:STL-104:implement',
   active: true,
-  expiresAt: '2026-07-29T14:40:00+00:00',
+  expiresAt: new Date(evaluatedAt.valueOf() + 15 * 60_000).toISOString(),
 };
-const ledger = JSON.parse(
-  readFileSync('.agents/governance/provider-access-ledger.json', 'utf8'),
-);
 
 const validRequest = {
   schemaVersion: '1.0.0',
@@ -40,7 +40,7 @@ const validRequest = {
   resourceId: 'dpl_69Y7A2m1wZsGqy1N1goHp7bLcBFw',
   environment: 'preview',
   permission: 'deployment:preview',
-  observedAt: '2026-07-29T14:24:00Z',
+  observedAt: ledger.capturedAt,
 };
 
 function evaluate(ledgerInput, request, options = {}) {
@@ -200,10 +200,10 @@ test('mutation requires an explicit write capability in an approved environment'
   const provider = mutationLedger.providers.find(
     ({ providerId }) => providerId === 'vercel',
   );
-  provider.permissions.push(
-    'deployment:preview-write',
-    'deployment:viewer',
-  );
+  if (!provider.permissions.includes('deployment:preview-write')) {
+    provider.permissions.push('deployment:preview-write');
+  }
+  provider.permissions.push('deployment:viewer');
 
   const validMutation = evaluate(mutationLedger, {
     ...validRequest,
@@ -247,6 +247,85 @@ test('mutation requires an explicit write capability in an approved environment'
       environmentName,
     );
   }
+});
+
+test('verified shared project is valid only through exact non-Production environment membership', () => {
+  const sharedProjectLedger = clone(ledger);
+  const provider = sharedProjectLedger.providers.find(
+    ({ providerId }) => providerId === 'vercel',
+  );
+  if (!provider.permissions.includes('deployment:preview-write')) {
+    provider.permissions.push('deployment:preview-write');
+  }
+  if (!provider.requiredForNodes.includes('STL-206')) {
+    provider.requiredForNodes.push('STL-206');
+  }
+
+  const request = {
+    ...validRequest,
+    nodeId: 'STL-206',
+    operation: 'mutate',
+    resourceType: 'project',
+    resourceId: 'prj_L3ZMoQ79YLx9G2o6Lg9OubqO9H8m',
+    permission: 'deployment:preview-write',
+  };
+  const stl206Authority = {
+    ...authority,
+    currentNodeId: 'STL-206',
+    checkpointId: 'cp-test-stl206',
+  };
+
+  const allowed = evaluate(sharedProjectLedger, request, {
+    authority: stl206Authority,
+  });
+  assert.equal(allowed.allowed, true);
+  assert.equal(allowed.productionMutationAuthorized, false);
+  assert.equal(allowed.checks.every(({ status }) => status === 'passed'), true);
+
+  for (const mutation of [
+    (candidate) => {
+      candidate.environments.find(({ name }) => name === 'preview').resourceIds =
+        [];
+    },
+    (candidate) => {
+      candidate.environments.find(
+        ({ name }) => name === 'preview',
+      ).verificationStatus = 'unverified';
+    },
+    (candidate) => {
+      candidate.resources.find(
+        ({ id }) => id === request.resourceId,
+      ).verificationStatus = 'unverified';
+    },
+  ]) {
+    const hostileLedger = clone(sharedProjectLedger);
+    mutation(
+      hostileLedger.providers.find(
+        ({ providerId }) => providerId === 'vercel',
+      ),
+    );
+    const denied = evaluate(hostileLedger, request, {
+      authority: stl206Authority,
+    });
+    assert.equal(denied.allowed, false);
+    assert.match(
+      denied.errors.join('\n'),
+      /resource mismatch|environment mismatch/i,
+    );
+  }
+
+  const production = evaluate(sharedProjectLedger, {
+    ...request,
+    environment: 'production',
+  }, {
+    authority: stl206Authority,
+  });
+  assert.equal(production.allowed, false);
+  assert.equal(production.productionMutationAuthorized, false);
+  assert.match(
+    production.errors.join('\n'),
+    /approved non-Production environment|Production mutation/i,
+  );
 });
 
 test('preflight request validation rejects unknown, malformed, or secret input', () => {
@@ -381,4 +460,7 @@ test('Codex and GitHub install the same fail-closed preflight skill', () => {
   assert.match(agentsSkill, /never performs the provider operation/i);
   assert.match(agentsSkill, /active lifecycle lease/i);
   assert.match(agentsSkill, /canonical provider ledger/i);
+  assert.match(agentsSkill, /deployment:preview-write/);
+  assert.match(agentsSkill, /classified as `shared`/i);
+  assert.match(agentsSkill, /refresh-vercel-ledger\.mjs/);
 });

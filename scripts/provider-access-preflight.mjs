@@ -352,18 +352,21 @@ export function runProviderAccessPreflight(
   const resource = provider.resources.find(
     ({ id }) => id === request.resourceId,
   );
-  const resourcePassed =
-    resource?.resourceType === request.resourceType &&
-    resource?.environment === request.environment &&
-    resource?.verificationStatus === 'verified';
-  check('resource', resourcePassed, 'resource mismatch');
-
   const environment = provider.environments.find(
     ({ name }) => name === request.environment,
   );
   const environmentPassed =
     environment?.verificationStatus === 'verified' &&
     environment.resourceIds.includes(request.resourceId);
+  const resourceEnvironmentPassed =
+    resource?.environment === request.environment ||
+    (resource?.environment === 'shared' && environmentPassed);
+  const resourcePassed =
+    resource?.resourceType === request.resourceType &&
+    resourceEnvironmentPassed &&
+    resource?.verificationStatus === 'verified';
+  check('resource', resourcePassed, 'resource mismatch');
+
   check('environment', environmentPassed, 'environment mismatch');
 
   const permission = provider.permissions.find(
