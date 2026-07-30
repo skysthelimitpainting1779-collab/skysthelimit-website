@@ -174,6 +174,15 @@ export function buildAuthoritativeLedgerWave(input) {
   const heldLocks = new Set();
 
   for (const node of [...input.readyNodes].sort((a, b) => a.id.localeCompare(b.id))) {
+    if (
+      node.lifecycle?.authoritative === true &&
+      node.lifecycle?.status === 'ready' &&
+      node.verification?.independent !== true
+    ) {
+      throw new Error(
+        `authoritative executable node requires independent verification: ${node.id}`,
+      );
+    }
     if (node.lifecycle?.authoritative !== true || node.lifecycle?.status !== 'ready') {
       blocked.push({ nodeId: node.id, reason: 'node is not ledger-authoritative ready' });
       continue;
@@ -260,7 +269,11 @@ export function createCodexAssignmentPrompt({
         recovery:
           'Resume only the same attached task with no duplicate executor. Registry and content-addressed recovery audit must be strict JSON under the trusted dev agentgraph root, the worktree must be clean, and checkpoint head must be an ancestor of current HEAD.',
         heartbeat:
-          'The supervisor owns renewal before expiry and before long work, canonical telemetry from host-derived metrics, and checkpoint completion only after the independent verifier passes.',
+          'The same supervisor serially renews at a configured interval below the lease TTL throughout every unbounded executor and verifier wait; failure stops the same attached task and halts.',
+        telemetry:
+          'Canonical telemetry comes only from host-derived metrics, and checkpoint completion occurs only after the independent verifier passes.',
+        finalization:
+          'Persist prepared finalization before DB completion, persist finalized public receipt before successor launch, and reconcile resumeSnapshot by exact checkpoint/node/finalization hash.',
       },
       output: 'Return exactly one JSON object and no markdown.',
     },
@@ -502,6 +515,9 @@ export function createPythonLifecycleSupervisorBridge({
     completeAttachedCheckpoint(binding, completion) {
       return request('completion', binding, completion);
     },
+    reconcileAttachedCheckpointCompletion(binding, reconciliation) {
+      return request('reconcile', binding, reconciliation);
+    },
     async close() {
       if (closed) return;
       await request('shutdown', null);
@@ -551,18 +567,88 @@ function taskRegistrySnapshot(activeTasks, completedTasks) {
   };
 }
 
-async function saveSnapshot(saveState, state, activeTasks, completedTasks = []) {
+async function saveSnapshot(
+  saveState,
+  state,
+  activeTasks,
+  completedTasks = [],
+  lifecycleFinalization = null,
+) {
   const snapshot = {
     schemaVersion: '1.0.0',
     executionState: clone(state),
     tasks: taskSnapshot(activeTasks),
     taskRegistry: taskRegistrySnapshot(activeTasks, completedTasks),
     completedTasks: clone(completedTasks),
+    ...(lifecycleFinalization
+      ? { lifecycleFinalization: clone(lifecycleFinalization) }
+      : {}),
   };
   if (containsPrivateLifecycleMaterial(snapshot)) {
     throw new Error('task snapshot contained private material');
   }
   await saveState(snapshot);
+}
+
+function finalizationHash(document) {
+  return createHash('sha256')
+    .update(JSON.stringify(document))
+    .digest('hex');
+}
+
+function prepareLifecycleFinalization({ assignment, callback, candidate }) {
+  const exact = {
+    nodeId: assignment.nodeId,
+    verifierAssignment: clone(assignment),
+    verification: clone(callback),
+    candidate: {
+      state: clone(candidate.state),
+      assignments: clone(candidate.newAssignments),
+    },
+  };
+  return {
+    schemaVersion: '1.0.0',
+    phase: 'prepared',
+    ...exact,
+    sha256: finalizationHash(exact),
+  };
+}
+
+function assertLifecycleFinalization(journal) {
+  if (
+    !isRecord(journal) ||
+    journal.schemaVersion !== '1.0.0' ||
+    !['prepared', 'finalized'].includes(journal.phase) ||
+    !isRecord(journal.verifierAssignment) ||
+    journal.verifierAssignment.role !== 'verifier' ||
+    journal.verifierAssignment.nodeId !== journal.nodeId ||
+    !isRecord(journal.verification) ||
+    journal.verification.kind !== 'verification' ||
+    journal.verification.passed !== true ||
+    journal.verification.assignmentId !== journal.verifierAssignment.id ||
+    journal.verification.workerId !== journal.verifierAssignment.workerId ||
+    journal.verification.artifactId !== journal.verifierAssignment.artifactId ||
+    !isRecord(journal.candidate) ||
+    !isRecord(journal.candidate.state) ||
+    !Array.isArray(journal.candidate.assignments)
+  ) {
+    throw new Error('lifecycle finalization journal is invalid');
+  }
+  const exact = {
+    nodeId: journal.nodeId,
+    verifierAssignment: clone(journal.verifierAssignment),
+    verification: clone(journal.verification),
+    candidate: clone(journal.candidate),
+  };
+  if (journal.sha256 !== finalizationHash(exact)) {
+    throw new Error('lifecycle finalization journal hash does not match');
+  }
+  if (
+    journal.candidate.state.nodes?.[journal.nodeId]?.status !== 'completed'
+  ) {
+    throw new Error('lifecycle finalization candidate is not completed');
+  }
+  return clone(journal);
 }
 
 async function launchAssignments({
@@ -575,9 +661,12 @@ async function launchAssignments({
   saveState,
   completedTasks,
   executionBoundary,
+  lifecycleFinalization = null,
 }) {
   const launched = await Promise.all(
-    assignments.map(async (assignment) => {
+    assignments
+      .filter((assignment) => !activeTasks.has(assignment.id))
+      .map(async (assignment) => {
       const prompt = createCodexAssignmentPrompt({
         graph,
         state,
@@ -585,15 +674,26 @@ async function launchAssignments({
         target,
         executionBoundary,
       });
-      const task = await codex.createTask({ assignment: clone(assignment), prompt, target });
+      const task = await codex.createTask({
+        assignment: clone(assignment),
+        prompt,
+        target,
+        idempotencyKey: assignment.id,
+      });
       if (!isRecord(task) || typeof task.threadId !== 'string' || !task.threadId) {
         throw new Error(`Codex did not return a threadId for ${assignment.id}`);
       }
       return [assignment.id, { ...task, assignment: clone(assignment) }];
-    }),
+      }),
   );
   for (const [assignmentId, task] of launched) activeTasks.set(assignmentId, task);
-  await saveSnapshot(saveState, state, activeTasks, completedTasks);
+  await saveSnapshot(
+    saveState,
+    state,
+    activeTasks,
+    completedTasks,
+    lifecycleFinalization,
+  );
 }
 
 function terminalCallbackForFailure(assignment, error) {
@@ -644,32 +744,117 @@ export async function runAgentGraphWithCodex(input) {
     executionBoundary = DEFAULT_EXECUTION_BOUNDARY,
     saveState = async () => {},
     now = () => new Date().toISOString(),
+    resumeSnapshot = null,
   } = input || {};
   if (!isRecord(codex) || typeof codex.createTask !== 'function' || typeof codex.waitForAny !== 'function') {
     throw new Error('codex.createTask and codex.waitForAny are required');
   }
 
-  let dispatched = dispatchAgentGraph({
-    graph,
-    state: initialState,
-    workers,
-    maxConcurrentExecutors,
-    executionBoundary,
-    now: now(),
-  });
   const activeTasks = new Map();
-  const completedTasks = [];
-  await launchAssignments({
-    assignments: dispatched.newAssignments,
-    graph,
-    state: dispatched.state,
-    codex,
-    target,
-    activeTasks,
-    saveState,
-    completedTasks,
-    executionBoundary,
-  });
+  const completedTasks = clone(resumeSnapshot?.completedTasks || []);
+  let lifecycleFinalization = resumeSnapshot?.lifecycleFinalization
+    ? assertLifecycleFinalization(resumeSnapshot.lifecycleFinalization)
+    : null;
+  let dispatched;
+
+  if (lifecycleFinalization) {
+    if (lifecycleFinalization.phase === 'prepared') {
+      if (typeof codex.reconcilePreparedLifecycleFinalization !== 'function') {
+        throw new Error(
+          'prepared lifecycle finalization requires public DB reconciliation',
+        );
+      }
+      const reconciliation = await codex.reconcilePreparedLifecycleFinalization(
+        clone(lifecycleFinalization),
+      );
+      if (
+        !isRecord(reconciliation) ||
+        reconciliation.completed !== true ||
+        !isRecord(reconciliation.receipt)
+      ) {
+        throw new Error('prepared lifecycle finalization is not completed in the lifecycle DB');
+      }
+      if (containsPrivateLifecycleMaterial(reconciliation.receipt)) {
+        throw new Error('lifecycle completion reconciliation returned private material');
+      }
+      lifecycleFinalization = {
+        ...lifecycleFinalization,
+        phase: 'finalized',
+        completionReceipt: clone(reconciliation.receipt),
+        completionReceiptSha256: finalizationHash(reconciliation.receipt),
+      };
+    }
+    dispatched = {
+      status: lifecycleFinalization.candidate.state.status,
+      state: clone(lifecycleFinalization.candidate.state),
+      newAssignments: clone(lifecycleFinalization.candidate.assignments),
+      report: lifecycleFinalization.candidate.state.halt || null,
+    };
+    const byAssignmentId = new Map(
+      lifecycleFinalization.candidate.assignments.map((assignment) => [
+        assignment.id,
+        assignment,
+      ]),
+    );
+    for (const [assignmentId, record] of Object.entries(
+      resumeSnapshot?.taskRegistry || {},
+    )) {
+      const assignment = byAssignmentId.get(assignmentId);
+      if (
+        assignment &&
+        record?.status === 'running' &&
+        typeof record.threadId === 'string' &&
+        record.threadId
+      ) {
+        activeTasks.set(assignmentId, {
+          assignment: clone(assignment),
+          threadId: record.threadId,
+          hostId: record.hostId || null,
+          cursor: record.cursor || null,
+        });
+      }
+    }
+    await saveSnapshot(
+      saveState,
+      dispatched.state,
+      activeTasks,
+      completedTasks,
+      lifecycleFinalization,
+    );
+    await launchAssignments({
+      assignments: dispatched.newAssignments,
+      graph,
+      state: dispatched.state,
+      codex,
+      target,
+      activeTasks,
+      saveState,
+      completedTasks,
+      executionBoundary,
+      lifecycleFinalization,
+    });
+  } else {
+    dispatched = dispatchAgentGraph({
+      graph,
+      state: initialState,
+      workers,
+      maxConcurrentExecutors,
+      executionBoundary,
+      now: now(),
+    });
+    await launchAssignments({
+      assignments: dispatched.newAssignments,
+      graph,
+      state: dispatched.state,
+      codex,
+      target,
+      activeTasks,
+      saveState,
+      completedTasks,
+      executionBoundary,
+      lifecycleFinalization,
+    });
+  }
 
   while (dispatched.status !== 'complete' && dispatched.status !== 'halted') {
     if (activeTasks.size === 0) {
@@ -757,15 +942,93 @@ export async function runAgentGraphWithCodex(input) {
       parsedCallback?.kind === 'verification' &&
       parsedCallback.passed === true &&
       candidate.state.nodes[active.assignment.nodeId]?.status === 'completed' &&
-      typeof codex.completeVerifiedNodeLifecycle === 'function'
+      typeof codex.completeVerifiedNodeLifecycle === 'function' &&
+      (typeof codex.requiresLifecycleFinalization !== 'function' ||
+        (await codex.requiresLifecycleFinalization({
+          nodeId: active.assignment.nodeId,
+        })))
     ) {
+      lifecycleFinalization = prepareLifecycleFinalization({
+        assignment: active.assignment,
+        callback: parsedCallback,
+        candidate,
+      });
+      await saveSnapshot(
+        saveState,
+        previousState,
+        activeTasks,
+        completedTasks,
+        lifecycleFinalization,
+      );
+      const completionRequest = {
+        assignment: clone(active.assignment),
+        callback: clone(parsedCallback),
+        finalization: clone(lifecycleFinalization),
+      };
+      let completionReceipt = null;
+      let completionError = null;
       try {
-        await codex.completeVerifiedNodeLifecycle({
-          assignment: clone(active.assignment),
-          callback: clone(parsedCallback),
-        });
-      } catch (error) {
-        callbackInput = terminalCallbackForFailure(active.assignment, error.message);
+        completionReceipt =
+          await codex.completeVerifiedNodeLifecycle(completionRequest);
+      } catch (firstError) {
+        if (typeof codex.reconcilePreparedLifecycleFinalization === 'function') {
+          try {
+            const reconciliation =
+              await codex.reconcilePreparedLifecycleFinalization(
+                clone(lifecycleFinalization),
+              );
+            if (
+              isRecord(reconciliation) &&
+              reconciliation.completed === true &&
+              isRecord(reconciliation.receipt)
+            ) {
+              completionReceipt = reconciliation.receipt;
+            }
+          } catch {
+            // The one bounded retry below remains safe under the same private supervisor.
+          }
+        }
+        if (!completionReceipt) {
+          try {
+            completionReceipt =
+              await codex.completeVerifiedNodeLifecycle(completionRequest);
+          } catch (retryError) {
+            completionError = retryError;
+          }
+        }
+        if (!completionReceipt && !completionError) completionError = firstError;
+      }
+      if (!completionError) {
+        try {
+        if (!isRecord(completionReceipt)) {
+          throw new Error('lifecycle completion requires a public completion receipt');
+        }
+        if (containsPrivateLifecycleMaterial(completionReceipt)) {
+          throw new Error('lifecycle completion returned private material');
+        }
+        lifecycleFinalization = {
+          ...lifecycleFinalization,
+          phase: 'finalized',
+          completionReceipt: clone(completionReceipt),
+          completionReceiptSha256: finalizationHash(completionReceipt),
+        };
+        await saveSnapshot(
+          saveState,
+          candidate.state,
+          activeTasks,
+          completedTasks,
+          lifecycleFinalization,
+        );
+        } catch (error) {
+          if (lifecycleFinalization?.phase === 'finalized') throw error;
+          completionError = error;
+        }
+      }
+      if (completionError) {
+        callbackInput = terminalCallbackForFailure(
+          active.assignment,
+          completionError.message,
+        );
         candidate = dispatchAgentGraph({
           graph,
           state: previousState,
@@ -778,7 +1041,7 @@ export async function runAgentGraphWithCodex(input) {
         const taskRecord = completedTasks.at(-1);
         if (taskRecord?.assignmentId === active.assignment.id) {
           taskRecord.status = 'failed';
-          taskRecord.error = error.message;
+          taskRecord.error = completionError.message;
           delete taskRecord.callback;
         }
       }
@@ -806,15 +1069,25 @@ export async function runAgentGraphWithCodex(input) {
         saveState,
         completedTasks,
         executionBoundary,
+        lifecycleFinalization,
       });
     }
-    await saveSnapshot(saveState, dispatched.state, activeTasks, completedTasks);
+    await saveSnapshot(
+      saveState,
+      dispatched.state,
+      activeTasks,
+      completedTasks,
+      lifecycleFinalization,
+    );
   }
 
   return {
     ...dispatched,
     tasks: taskSnapshot(activeTasks),
     completedTasks: clone(completedTasks),
+    ...(lifecycleFinalization
+      ? { lifecycleFinalization: clone(lifecycleFinalization) }
+      : {}),
   };
 }
 
@@ -823,6 +1096,7 @@ export async function runAuthoritativeLedgerWaveWithCodex({
   codex,
   saveState,
   now,
+  resumeSnapshot,
 }) {
   const wave = buildAuthoritativeLedgerWave(ledgerInput);
   if (wave.assignments.length === 0) {
@@ -854,6 +1128,7 @@ export async function runAuthoritativeLedgerWaveWithCodex({
     executionBoundary: wave.boundary,
     saveState,
     now,
+    resumeSnapshot,
   });
   return { ...result, wave };
 }
@@ -985,9 +1260,20 @@ export function createInjectedHostTaskControlAdapter({
           typeof lifecycleRecovery.recoveryId !== 'string' ||
           !lifecycleRecovery.recoveryId ||
           !Number.isInteger(lifecycleRecovery.generation) ||
-          lifecycleRecovery.generation < 1
+          lifecycleRecovery.generation < 1 ||
+          (lifecycleRecovery.heartbeatIntervalMs !== undefined &&
+            (!Number.isInteger(lifecycleRecovery.heartbeatIntervalMs) ||
+              lifecycleRecovery.heartbeatIntervalMs < 1)) ||
+          (lifecycleRecovery.leaseTtlSeconds !== undefined &&
+            (!Number.isInteger(lifecycleRecovery.leaseTtlSeconds) ||
+              lifecycleRecovery.leaseTtlSeconds < 1))
         ) {
           throw new Error('authoritative lifecycle recovery binding is invalid');
+        }
+        const heartbeatIntervalMs = lifecycleRecovery.heartbeatIntervalMs ?? 60_000;
+        const leaseTtlSeconds = lifecycleRecovery.leaseTtlSeconds ?? 1800;
+        if (heartbeatIntervalMs >= leaseTtlSeconds * 1000) {
+          throw new Error('lifecycle heartbeat interval must be shorter than the lease TTL');
         }
         const registryPath = resolve(lifecycleRecovery.registryPath);
         const recoveryAuditPath = resolve(lifecycleRecovery.recoveryAuditPath);
@@ -1028,6 +1314,10 @@ export function createInjectedHostTaskControlAdapter({
         resumedLifecycle.set(args.assignment.id, {
           binding: clone(binding),
           completion: clone(lifecycleRecovery.completion || null),
+          threadId: attached.threadId,
+          hostId: attached.hostId || null,
+          heartbeatIntervalMs,
+          leaseTtlSeconds,
         });
       }
       attachments.delete(args.assignment.id);
@@ -1039,18 +1329,70 @@ export function createInjectedHostTaskControlAdapter({
       };
     },
     async waitForAny(tasks) {
-      for (const lifecycle of resumedLifecycle.values()) {
-        if (typeof lifecycleSupervisor.renewAttachedCheckpoint !== 'function') {
-          throw new Error('lifecycle supervisor heartbeat operation is required');
-        }
-        const renewed = await lifecycleSupervisor.renewAttachedCheckpoint(
-          clone(lifecycle.binding),
+      const hostWait = Promise.resolve()
+        .then(() => taskControl.waitForAny(tasks))
+        .then(
+          (value) => ({ kind: 'outcome', value }),
+          (error) => ({ kind: 'error', error }),
         );
-        if (containsPrivateLifecycleMaterial(renewed)) {
-          throw new Error('lifecycle heartbeat returned private material');
+      while (true) {
+        try {
+          for (const lifecycle of resumedLifecycle.values()) {
+            if (typeof lifecycleSupervisor.renewAttachedCheckpoint !== 'function') {
+              throw new Error('lifecycle supervisor heartbeat operation is required');
+            }
+            const renewed = await lifecycleSupervisor.renewAttachedCheckpoint(
+              clone(lifecycle.binding),
+              { ttlSeconds: lifecycle.leaseTtlSeconds },
+            );
+            if (containsPrivateLifecycleMaterial(renewed)) {
+              throw new Error('lifecycle heartbeat returned private material');
+            }
+          }
+        } catch (error) {
+          if (typeof taskControl.steerTask === 'function') {
+            await Promise.allSettled(
+              [...resumedLifecycle.values()].map((lifecycle) =>
+                taskControl.steerTask({
+                  threadId: lifecycle.threadId,
+                  ...(lifecycle.hostId ? { hostId: lifecycle.hostId } : {}),
+                  prompt:
+                    'Stop: the authoritative lifecycle heartbeat failed. Preserve state and do not continue.',
+                }),
+              ),
+            );
+          }
+          return {
+            assignmentId: tasks[0]?.assignmentId,
+            status: 'failed',
+            error: `lifecycle heartbeat failed: ${error.message}`,
+          };
         }
+        const heartbeatIntervalMs = Math.min(
+          ...[...resumedLifecycle.values()].map(
+            (lifecycle) => lifecycle.heartbeatIntervalMs,
+          ),
+        );
+        if (!Number.isFinite(heartbeatIntervalMs)) {
+          const settled = await hostWait;
+          if (settled.kind === 'error') throw settled.error;
+          return settled.value;
+        }
+        let timer;
+        const settled = await Promise.race([
+          hostWait,
+          new Promise((resolveWait) => {
+            timer = setTimeout(
+              () => resolveWait({ kind: 'heartbeat' }),
+              heartbeatIntervalMs,
+            );
+          }),
+        ]);
+        if (timer) clearTimeout(timer);
+        if (settled.kind === 'heartbeat') continue;
+        if (settled.kind === 'error') throw settled.error;
+        return settled.value;
       }
-      return taskControl.waitForAny(tasks);
     },
     async recordExecutorLifecycleTelemetry({ assignment, outcome }) {
       const lifecycle = resumedLifecycle.get(assignment.id);
@@ -1082,7 +1424,12 @@ export function createInjectedHostTaskControlAdapter({
       lifecycle.telemetryRecorded = true;
       return clone(telemetry);
     },
-    async completeVerifiedNodeLifecycle({ assignment, callback }) {
+    requiresLifecycleFinalization({ nodeId }) {
+      return [...resumedLifecycle.values()].some(
+        (lifecycle) => lifecycle.binding.node_id === nodeId,
+      );
+    },
+    async completeVerifiedNodeLifecycle({ assignment, callback, finalization }) {
       const entry = [...resumedLifecycle.entries()].find(
         ([, lifecycle]) => lifecycle.binding.node_id === assignment.nodeId,
       );
@@ -1091,7 +1438,10 @@ export function createInjectedHostTaskControlAdapter({
       if (
         callback?.kind !== 'verification' ||
         callback.passed !== true ||
-        lifecycle.telemetryRecorded !== true
+        lifecycle.telemetryRecorded !== true ||
+        finalization?.phase !== 'prepared' ||
+        finalization?.nodeId !== assignment.nodeId ||
+        !/^[0-9a-f]{64}$/.test(String(finalization?.sha256 || ''))
       ) {
         throw new Error('verified lifecycle completion requires passing independent verification');
       }
@@ -1108,6 +1458,10 @@ export function createInjectedHostTaskControlAdapter({
             artifactId: callback.artifactId,
             evidence: clone(callback.evidence || []),
           },
+          {
+            kind: 'agentgraph-finalization',
+            sha256: finalization.sha256,
+          },
         ],
       };
       const completion = await lifecycleSupervisor.completeAttachedCheckpoint(
@@ -1119,6 +1473,44 @@ export function createInjectedHostTaskControlAdapter({
       }
       resumedLifecycle.delete(executorAssignmentId);
       return clone(completion);
+    },
+    async reconcilePreparedLifecycleFinalization(journal) {
+      assertLifecycleFinalization(journal);
+      if (
+        !isRecord(lifecycleRecovery) ||
+        lifecycleRecovery.assignmentId !==
+          journal.candidate.state.nodes?.[journal.nodeId]?.executorAssignment?.id ||
+        typeof lifecycleRecovery.programId !== 'string' ||
+        !lifecycleRecovery.programId ||
+        typeof lifecycleRecovery.checkpointId !== 'string' ||
+        !lifecycleRecovery.checkpointId
+      ) {
+        throw new Error('prepared lifecycle reconciliation binding is invalid');
+      }
+      const attached = attachments.get(lifecycleRecovery.assignmentId);
+      if (!attached || attached.role !== 'executor') {
+        throw new Error('prepared lifecycle reconciliation requires the same attached executor');
+      }
+      if (
+        !isRecord(lifecycleSupervisor) ||
+        typeof lifecycleSupervisor.reconcileAttachedCheckpointCompletion !==
+          'function'
+      ) {
+        throw new Error('lifecycle supervisor completion reconciliation is required');
+      }
+      const reconciliation =
+        await lifecycleSupervisor.reconcileAttachedCheckpointCompletion(
+          {
+            program_id: lifecycleRecovery.programId,
+            checkpoint_id: lifecycleRecovery.checkpointId,
+            node_id: journal.nodeId,
+          },
+          { finalizationSha256: journal.sha256 },
+        );
+      if (containsPrivateLifecycleMaterial(reconciliation)) {
+        throw new Error('lifecycle completion reconciliation returned private material');
+      }
+      return clone(reconciliation);
     },
     ...(typeof taskControl.steerTask === 'function'
       ? {
@@ -1138,6 +1530,7 @@ export async function runAuthoritativeLedgerWaveWithAttachedHostTasks({
   lifecycleRecovery,
   saveState,
   now,
+  resumeSnapshot,
 }) {
   const authoritativeAssignments = new Map(
     buildAuthoritativeLedgerWave(ledgerInput).assignments.map((assignment) => [
@@ -1165,5 +1558,28 @@ export async function runAuthoritativeLedgerWaveWithAttachedHostTasks({
     codex: injectedTaskControl,
     saveState,
     now,
+    resumeSnapshot,
   });
+}
+
+export async function runAuthoritativeLedgerWaveWithPythonLifecycle({
+  pythonLifecycle,
+  createLifecycleBridge = createPythonLifecycleSupervisorBridge,
+  ...waveInput
+}) {
+  if (!isRecord(pythonLifecycle) || typeof createLifecycleBridge !== 'function') {
+    throw new Error('pythonLifecycle configuration and bridge factory are required');
+  }
+  const lifecycleSupervisor = createLifecycleBridge(pythonLifecycle);
+  if (!isRecord(lifecycleSupervisor) || typeof lifecycleSupervisor.close !== 'function') {
+    throw new Error('Python lifecycle bridge must provide close');
+  }
+  try {
+    return await runAuthoritativeLedgerWaveWithAttachedHostTasks({
+      ...waveInput,
+      lifecycleSupervisor,
+    });
+  } finally {
+    await lifecycleSupervisor.close();
+  }
 }

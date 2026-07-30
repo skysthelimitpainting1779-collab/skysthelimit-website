@@ -77,11 +77,44 @@ Reject the input if `source.kind` is not `authoritative-lifecycle-ledger`. Never
 7. Do not use generic or public MCP for capability-bearing lifecycle operations. Do not start an MCP subprocess. Do not edit the lifecycle database manually or directly. The worker never receives the lease capability; the supervisor keeps it in private memory and never prints, persists, evidences, or returns it.
 8. For a recoverable needs-attention executor, derive assignment/thread/worker/actor/session from the authoritative wave plus attached host task. Require strict JSON registry and content-addressed recovery audit paths under the trusted agentgraph root (`dev/agentgraph`), exact current-registry binding, a clean governed worktree, and checkpoint head as an ancestor of current HEAD.
 9. Resume the same attached task with no duplicate executor and preserve the same lease/base head. Rotate only the capability hash and expiry and append the public controller-resume event.
-10. The supervisor owns renewal before expiry and before long work and canonical telemetry from host-derived metrics. Checkpoint completion occurs only after the independent verifier passes; on successful completion the supervisor must delete the private capability.
+10. Configure `heartbeatIntervalMs` below `leaseTtlSeconds * 1000`. The same supervisor serially renews throughout every unbounded host wait, including verifier waits. A renewal failure steers the same attached task to stop and produces one terminal halt; never create a replacement executor.
+    Canonical telemetry uses host-derived metrics, and completion occurs only after the independent verifier passes.
 11. Accept only a strict JSON completion callback bound to the node, assignment, and worker IDs. Require a non-empty artifact ID and explicit `productionSideEffects: false` plus `providerMutations: false`.
 12. Launch a separate verifier worker for the emitted verifier assignment. Require its callback to bind the completion artifact ID.
-13. Mark the node complete and unlock successors only after verification passes.
-14. On missing callback, invalid identity, failed verification, or platform failure, halt once, persist the exact report, and steer remaining workers to stop.
+13. Before lifecycle DB completion, persist `lifecycleFinalization.phase = "prepared"` with the exact verifier assignment, callback, completed candidate state, successor assignments, and SHA-256. Add that SHA-256 as `agentgraph-finalization` completion evidence.
+14. After idempotent DB completion, persist `phase = "finalized"` with the public completion receipt. Launch successors only after that finalized snapshot succeeds. On restart, pass `resumeSnapshot`; reconcile the exact program/checkpoint/node/finalization hash through the same Python bridge and never re-release a completed node.
+15. An incomplete completion is reconciled and retried once through the same live private supervisor. Persistent failure stays halted with a durable prepared journal, active lease, and zero successor. A fresh controller cannot rotate an unexpired resumed lease; takeover requires expiry within the governed recovery grace.
+16. On missing callback, invalid identity, failed verification, heartbeat failure, or platform failure, halt once, persist the exact report, and steer remaining workers to stop.
+
+Use the executable host recipe with injected task controls; it never calls Codex app tools from repository code:
+
+```js
+import { createGovernedAgentGraphWaveController } from
+  './.agents/skills/agentgraph-wave-execution/scripts/run-governed-wave.mjs';
+
+const controller = createGovernedAgentGraphWaveController({
+  pythonLifecycle: {
+    pythonExecutable,
+    mcpServerPath,
+    databasePath,
+    trustedAgentGraphRoot,
+  },
+  ledgerInput,
+  attachedTasks,
+  taskControl,
+  lifecycleRecovery: {
+    ...hostOwnedRecovery,
+    heartbeatIntervalMs: 60_000,
+    leaseTtlSeconds: 1_800,
+  },
+  resumeSnapshot,
+  saveState: persistAuthoritativeSnapshot,
+});
+const result = await controller.run();
+await controller.close({ terminalPreserved: true });
+```
+
+The controller concretely creates one `createPythonLifecycleSupervisorBridge` and passes it with host-owned recovery into `runAuthoritativeLedgerWaveWithAttachedHostTasks`. A thrown run retains that same bridge for retry/reconciliation. `close({terminalPreserved: true})` is rejected until `saveState` durably records complete, halted, prepared, or finalized recovery state.
 
 ## Boundary
 

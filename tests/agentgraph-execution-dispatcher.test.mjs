@@ -84,6 +84,23 @@ test('turns dependency-ready plan nodes into concrete executor assignments', () 
   assert.equal(result.state.nodes.B.status, 'pending');
 });
 
+test('refuses to execute a graph node without mandatory independent verification', () => {
+  const unsafeGraph = graph();
+  unsafeGraph.nodes[0].verification.independent = false;
+
+  const result = dispatchAgentGraph({
+    graph: unsafeGraph,
+    state: createAgentGraphExecutionState(unsafeGraph),
+    workers: [{ id: 'self-worker', capabilities: ['execute', 'verify'] }],
+    now: NOW,
+  });
+
+  assert.equal(result.status, 'halted');
+  assert.equal(result.report.reason, 'independent_verification_required');
+  assert.deepEqual(result.newAssignments, []);
+  assert.equal(result.state.nodes.A.status, 'pending');
+});
+
 test('keeps dependents locked after an artifact until independent verification passes', () => {
   const first = dispatchAgentGraph({
     graph: graph(),
@@ -148,6 +165,55 @@ test('keeps dependents locked after an artifact until independent verification p
   assert.equal(verified.state.nodes.B.status, 'assigned');
   assert.equal(verified.newAssignments[0].nodeId, 'B');
   assert.equal(verified.newAssignments[0].role, 'executor');
+});
+
+test('self-verification cannot complete a node or release its dependent', () => {
+  const assigned = dispatchAgentGraph({
+    graph: graph(),
+    state: createAgentGraphExecutionState(graph()),
+    workers: workers(),
+    now: NOW,
+  });
+  const awaiting = dispatchAgentGraph({
+    graph: graph(),
+    state: assigned.state,
+    workers: workers(),
+    completions: [
+      {
+        nodeId: 'A',
+        assignmentId: 'assignment:A:1:executor',
+        workerId: 'executor-1',
+        artifact: { id: 'artifact:A:1', evidence: ['focused tests'] },
+      },
+    ],
+    now: NOW,
+  });
+  const maliciousState = structuredClone(awaiting.state);
+  maliciousState.nodes.A.verifierAssignment.workerId = 'executor-1';
+
+  const result = dispatchAgentGraph({
+    graph: graph(),
+    state: maliciousState,
+    workers: workers(),
+    verifications: [
+      {
+        nodeId: 'A',
+        assignmentId: 'assignment:A:1:verifier',
+        workerId: 'executor-1',
+        artifactId: 'artifact:A:1',
+        passed: true,
+        evidence: ['self-approved'],
+      },
+    ],
+    now: NOW,
+  });
+
+  assert.equal(result.status, 'halted');
+  assert.equal(result.report.reason, 'invalid_verification');
+  assert.match(result.report.errors[0], /independent/i);
+  assert.equal(result.state.nodes.A.status, 'awaiting_verification');
+  assert.equal(result.state.nodes.B.status, 'pending');
+  assert.deepEqual(result.newAssignments, []);
 });
 
 test('does not mark a node complete when verification fails', () => {
@@ -319,6 +385,7 @@ test('ready-node selection allows local, preview, sandbox, and production-read w
         dependsOn: [],
         execution: { environment: 'production' },
         permissions: ['deployment:production:promote'],
+        verification: { independent: true },
       },
     ],
   };
@@ -346,6 +413,7 @@ test('reports an execution-boundary blocker when the only dependency-ready node 
         dependsOn: [],
         execution: { environment: 'production' },
         permissions: ['deployment:production:promote'],
+        verification: { independent: true },
       },
     ],
   };

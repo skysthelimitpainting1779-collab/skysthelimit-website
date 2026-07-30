@@ -308,8 +308,7 @@ function assignVerifiers(graph, state, workers, createdAt) {
     const worker = verifierWorkers.find(
       (candidate) =>
         !usedWorkers.has(candidate.id) &&
-        (node.verification?.independent !== true ||
-          candidate.id !== runtime.executorAssignment.workerId),
+        candidate.id !== runtime.executorAssignment.workerId,
     );
     if (!worker) {
       return {
@@ -371,6 +370,13 @@ function applyVerifications(state, verifications, reportedAt) {
         verification,
         reportedAt,
         'verification worker does not own the active assignment',
+      );
+    }
+    if (verification.workerId === runtime.executorAssignment?.workerId) {
+      return invalidVerificationReport(
+        verification,
+        reportedAt,
+        'verification must be independent from the executor worker',
       );
     }
     if (verification.artifactId !== runtime.completionArtifact.id) {
@@ -493,6 +499,22 @@ export function dispatchAgentGraph(input) {
   }
 
   const state = clone(input.state);
+  const nonIndependentNodeIds = graphNodes(graph)
+    .filter(
+      (node) =>
+        state.nodes[node.id]?.status !== 'completed' &&
+        node.verification?.independent !== true,
+    )
+    .map((node) => node.id)
+    .sort();
+  if (nonIndependentNodeIds.length > 0) {
+    return halt(state, {
+      reason: 'independent_verification_required',
+      nodeIds: nonIndependentNodeIds,
+      errors: ['every executable node requires independent verification'],
+      reportedAt: createdAt,
+    });
+  }
   const completions = input.completions || [];
   const verifications = input.verifications || [];
   if (!Array.isArray(completions)) throw new Error('completions must be an array');
