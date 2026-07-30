@@ -1,3 +1,7 @@
+import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
+import { isAbsolute, resolve } from 'node:path';
+
 import {
   DEFAULT_EXECUTION_BOUNDARY,
   createAgentGraphExecutionState,
@@ -244,21 +248,18 @@ export function createCodexAssignmentPrompt({
     constraints: {
       ...spec.constraints,
       lifecycleTransport: {
-        preferred: 'Use the host app-registry lifecycle MCP tools when exposed.',
-        fallback:
-          'If app-registry lifecycle MCP exposure is unavailable, use the authorized official in-process mcp_server.py function transport.',
+        supervisor:
+          'The host must use the privileged injected in-process lifecycle supervisor for every capability-bearing lifecycle operation.',
         process:
-          'Use one long-lived Python control process; import the official mcp_server.py module exactly once and call its lifecycle functions directly.',
+          'Keep one long-lived Python control process and import the official mcp_server.py module exactly once.',
         forbidden:
-          'Do not start an MCP subprocess and do not edit the lifecycle database manually or directly.',
+          'Do not use generic or public MCP for capability-bearing lifecycle operations. Do not start an MCP subprocess. Do not edit the lifecycle database manually or directly.',
         capability:
-          'Keep the lease capability only in memory; never print it, persist it, include it in evidence, or return it in the callback.',
-        heartbeat:
-          'Call lifecycle_checkpoint_renew before the active lease expires and before any long-running test or build could cross its expiry.',
-        dirtyExecution:
-          'Renewal and recovery are allowed during legitimate dirty execution only while the governed repository, branch, and HEAD remain unchanged from the checkpoint binding.',
+          'The worker never receives the lease capability; the supervisor keeps it in private memory and never prints, persists, evidences, or returns it.',
         recovery:
-          'Use lifecycle_checkpoint_recover only for the exact checkpoint actor and session and within the lifecycle recovery grace window; keep its rotated capability memory-only.',
+          'Resume only the same attached task with no duplicate executor, using host-derived registry and recovery-audit bindings.',
+        heartbeat:
+          'The supervisor owns renewal before expiry and before long work, canonical telemetry, and checkpoint completion.',
       },
       output: 'Return exactly one JSON object and no markdown.',
     },
@@ -392,6 +393,7 @@ function taskSnapshot(activeTasks) {
         role: task.assignment.role,
         nodeId: task.assignment.nodeId,
         status: 'running',
+        ...(task.lifecycleResume ? { lifecycleResume: clone(task.lifecycleResume) } : {}),
       },
     ]),
   );
@@ -410,6 +412,7 @@ function taskRegistrySnapshot(activeTasks, completedTasks) {
         nodeId: task.nodeId,
         status: task.status,
         ...(task.error ? { error: task.error } : {}),
+        ...(task.lifecycleResume ? { lifecycleResume: clone(task.lifecycleResume) } : {}),
       },
     ]),
   );
@@ -570,6 +573,9 @@ export async function runAgentGraphWithCodex(input) {
         codexThreadId: outcome.codexThreadId || null,
         status: 'completed',
         callback: clone(callback),
+        ...(active.lifecycleResume
+          ? { lifecycleResume: clone(active.lifecycleResume) }
+          : {}),
       });
     } catch (error) {
       callbackInput = terminalCallbackForFailure(active.assignment, error.message);
@@ -587,6 +593,9 @@ export async function runAgentGraphWithCodex(input) {
             ? outcome.status
             : 'failed',
         error: error.message,
+        ...(active.lifecycleResume
+          ? { lifecycleResume: clone(active.lifecycleResume) }
+          : {}),
       });
     }
 
@@ -673,9 +682,57 @@ export async function runAuthoritativeLedgerWaveWithCodex({
   return { ...result, wave };
 }
 
+function containsPrivateLifecycleMaterial(value) {
+  if (Array.isArray(value)) return value.some(containsPrivateLifecycleMaterial);
+  if (!isRecord(value)) return false;
+  return Object.entries(value).some(([key, item]) => {
+    const normalized = key.toLowerCase();
+    return (
+      normalized.includes('capability') ||
+      normalized.includes('secret') ||
+      ['token', 'auth_token', 'access_token'].includes(normalized) ||
+      containsPrivateLifecycleMaterial(item)
+    );
+  });
+}
+
+function assertPublicLifecycleResume(result, binding) {
+  if (!isRecord(result) || containsPrivateLifecycleMaterial(result)) {
+    throw new Error('lifecycle supervisor returned private lifecycle material');
+  }
+  const event = result.event;
+  const payload = event?.payload;
+  const sha256 = /^[0-9a-f]{64}$/;
+  if (
+    result.generation !== binding.generation ||
+    !sha256.test(String(result.request_sha256 || '')) ||
+    !isRecord(event) ||
+    event.event_type !== 'writer_lease_controller_resumed' ||
+    !sha256.test(String(event.event_hash || '')) ||
+    !isRecord(payload) ||
+    payload.program_id !== binding.program_id ||
+    payload.checkpoint_id !== binding.checkpoint_id ||
+    payload.node_id !== binding.node_id ||
+    payload.assignment_id !== binding.assignment_id ||
+    payload.thread_id !== binding.thread_id ||
+    payload.worker_id !== binding.worker_id ||
+    payload.actor !== binding.actor ||
+    payload.session_id !== binding.session_id ||
+    payload.registry_sha256 !== binding.registry_sha256 ||
+    payload.recovery_audit_sha256 !== binding.recovery_audit_sha256 ||
+    payload.recovery_id !== binding.recovery_id ||
+    payload.generation !== binding.generation ||
+    payload.request_sha256 !== result.request_sha256
+  ) {
+    throw new Error('lifecycle supervisor resume receipt does not match the attached task');
+  }
+}
+
 export function createInjectedHostTaskControlAdapter({
   taskControl,
   attachedTasks,
+  lifecycleSupervisor,
+  lifecycleRecovery,
 }) {
   if (
     !isRecord(taskControl) ||
@@ -696,9 +753,14 @@ export function createInjectedHostTaskControlAdapter({
       typeof task.threadId !== 'string' ||
       !task.threadId ||
       !['executor', 'verifier'].includes(task.role) ||
-      task.status !== 'running'
+      !['running', 'needs-attention'].includes(task.status)
     ) {
-      throw new Error('attached host tasks require assignmentId, threadId, role, and running status');
+      throw new Error(
+        'attached host tasks require assignmentId, threadId, role, and running or needs-attention status',
+      );
+    }
+    if (task.status === 'needs-attention' && task.role !== 'executor') {
+      throw new Error('only an attached executor can use lifecycle recovery');
     }
     if (attachments.has(task.assignmentId)) {
       throw new Error(`duplicate attached assignment: ${task.assignmentId}`);
@@ -713,11 +775,75 @@ export function createInjectedHostTaskControlAdapter({
       if (attached.role !== args.assignment.role) {
         throw new Error(`attached task role does not match ${args.assignment.id}`);
       }
+      let lifecycleResume = null;
+      if (attached.status === 'needs-attention') {
+        if (
+          !isRecord(lifecycleSupervisor) ||
+          typeof lifecycleSupervisor.resumeAttachedCheckpoint !== 'function'
+        ) {
+          throw new Error('privileged in-process lifecycle supervisor is required');
+        }
+        if (
+          !isRecord(lifecycleRecovery) ||
+          lifecycleRecovery.assignmentId !== args.assignment.id ||
+          typeof lifecycleRecovery.programId !== 'string' ||
+          !lifecycleRecovery.programId ||
+          typeof lifecycleRecovery.checkpointId !== 'string' ||
+          !lifecycleRecovery.checkpointId ||
+          typeof lifecycleRecovery.registryPath !== 'string' ||
+          !isAbsolute(lifecycleRecovery.registryPath) ||
+          typeof lifecycleRecovery.recoveryAuditPath !== 'string' ||
+          !isAbsolute(lifecycleRecovery.recoveryAuditPath) ||
+          typeof lifecycleRecovery.recoveryId !== 'string' ||
+          !lifecycleRecovery.recoveryId ||
+          !Number.isInteger(lifecycleRecovery.generation) ||
+          lifecycleRecovery.generation < 1
+        ) {
+          throw new Error('authoritative lifecycle recovery binding is invalid');
+        }
+        const registryPath = resolve(lifecycleRecovery.registryPath);
+        const recoveryAuditPath = resolve(lifecycleRecovery.recoveryAuditPath);
+        const registrySha256 = createHash('sha256')
+          .update(readFileSync(registryPath))
+          .digest('hex');
+        const recoveryAuditSha256 = createHash('sha256')
+          .update(readFileSync(recoveryAuditPath))
+          .digest('hex');
+        const binding = {
+          program_id: lifecycleRecovery.programId,
+          checkpoint_id: lifecycleRecovery.checkpointId,
+          node_id: args.assignment.nodeId,
+          assignment_id: args.assignment.id,
+          thread_id: attached.threadId,
+          worker_id: args.assignment.workerId,
+          actor: `agent:${args.assignment.workerId}`,
+          session_id: args.assignment.id,
+          registry_path: registryPath,
+          registry_sha256: registrySha256,
+          recovery_audit_path: recoveryAuditPath,
+          recovery_audit_sha256: recoveryAuditSha256,
+          recovery_id: lifecycleRecovery.recoveryId,
+          generation: lifecycleRecovery.generation,
+        };
+        const publicResult = await lifecycleSupervisor.resumeAttachedCheckpoint(
+          clone(binding),
+        );
+        assertPublicLifecycleResume(publicResult, binding);
+        lifecycleResume = {
+          recoveryId: binding.recovery_id,
+          generation: binding.generation,
+          requestSha256: publicResult.request_sha256,
+          eventHash: publicResult.event.event_hash,
+          registrySha256,
+          recoveryAuditSha256,
+        };
+      }
       attachments.delete(args.assignment.id);
       return {
         threadId: attached.threadId,
         hostId: attached.hostId || null,
         cursor: attached.cursor || null,
+        ...(lifecycleResume ? { lifecycleResume } : {}),
       };
     },
     async waitForAny(tasks) {
@@ -737,6 +863,8 @@ export async function runAuthoritativeLedgerWaveWithAttachedHostTasks({
   ledgerInput,
   attachedTasks,
   taskControl,
+  lifecycleSupervisor,
+  lifecycleRecovery,
   saveState,
   now,
 }) {
@@ -757,6 +885,8 @@ export async function runAuthoritativeLedgerWaveWithAttachedHostTasks({
   const injectedTaskControl = createInjectedHostTaskControlAdapter({
     taskControl,
     attachedTasks,
+    lifecycleSupervisor,
+    lifecycleRecovery,
   });
   return runAuthoritativeLedgerWaveWithCodex({
     ledgerInput,

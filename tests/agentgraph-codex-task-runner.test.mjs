@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -126,7 +127,7 @@ test('prompt and callback preserve immutable assignment identity', () => {
   assert.equal(callback.artifact.id, 'artifact:READ-PACKAGE:1');
 });
 
-test('prompt requires the official in-process lifecycle fallback and lease heartbeat', () => {
+test('prompt requires the privileged in-process lifecycle supervisor', () => {
   const graph = proofGraph();
   const state = createAgentGraphExecutionState(graph);
   const assignment = {
@@ -138,34 +139,30 @@ test('prompt requires the official in-process lifecycle fallback and lease heart
 
   const prompt = createCodexAssignmentPrompt({ graph, state, assignment });
 
-  assert.match(prompt, /app-registry lifecycle MCP exposure is unavailable/i);
-  assert.match(prompt, /official in-process .*mcp_server\.py.*function transport/i);
+  assert.match(prompt, /privileged.*in-process lifecycle supervisor/i);
   assert.match(prompt, /import .*mcp_server\.py.*exactly once/i);
   assert.match(prompt, /do not start an MCP subprocess/i);
   assert.match(prompt, /do not edit the lifecycle database/i);
-  assert.match(prompt, /lease capability.*memory.*never print.*persist/i);
-  assert.match(prompt, /lifecycle_checkpoint_renew.*before.*lease.*expires/i);
-  assert.match(prompt, /renewal and recovery.*legitimate dirty execution/i);
-  assert.match(prompt, /repository.*branch.*HEAD.*unchanged/i);
-  assert.match(prompt, /lifecycle_checkpoint_recover.*actor.*session.*grace/i);
+  assert.match(prompt, /generic.*public MCP.*capability-bearing/i);
+  assert.match(prompt, /worker never receives.*lease capability/i);
+  assert.match(prompt, /resume.*same attached task.*no duplicate executor/i);
+  assert.match(prompt, /renewal.*telemetry.*completion/i);
 });
 
-test('wave skill carries the in-process lifecycle fallback and heartbeat contract', () => {
+test('wave skill carries the privileged lifecycle supervisor contract', () => {
   const skill = readFileSync(
     '.agents/skills/agentgraph-wave-execution/SKILL.md',
     'utf8',
   );
 
-  assert.match(skill, /app-registry lifecycle MCP exposure is unavailable/i);
-  assert.match(skill, /official in-process .*mcp_server\.py.*function transport/i);
+  assert.match(skill, /privileged.*in-process lifecycle supervisor/i);
   assert.match(skill, /import .*mcp_server\.py.*exactly once/i);
   assert.match(skill, /do not start an MCP subprocess/i);
   assert.match(skill, /do not edit the lifecycle database/i);
-  assert.match(skill, /lease capability.*memory.*never print.*persist/i);
-  assert.match(skill, /lifecycle_checkpoint_renew.*before.*lease.*expires/i);
-  assert.match(skill, /renewal and recovery.*legitimate dirty execution/i);
-  assert.match(skill, /repository.*branch.*HEAD.*unchanged/i);
-  assert.match(skill, /lifecycle_checkpoint_recover.*actor.*session.*grace/i);
+  assert.match(skill, /generic.*public MCP.*capability-bearing/i);
+  assert.match(skill, /worker never receives.*lease capability/i);
+  assert.match(skill, /resume.*same attached task.*no duplicate executor/i);
+  assert.match(skill, /renewal.*telemetry.*completion/i);
 });
 
 test('Codex app bridge maps create_thread and wait_threads results to assignment callbacks', async () => {
@@ -372,6 +369,142 @@ test('attaches an existing executor and durably advances its cursor before launc
     'completed',
   );
   assert.equal(result.completedTasks.length, 2);
+});
+
+test('resumes one needs-attention attachment through the privileged supervisor without creating a duplicate executor', async () => {
+  const root = mkdtempSync(join(tmpdir(), 'agentgraph-controller-resume-'));
+  const registryPath = join(root, 'registry.json');
+  const recoveryAuditPath = join(root, 'recovery-audit.json');
+  writeFileSync(registryPath, '{"registry":"host-owned"}');
+  writeFileSync(recoveryAuditPath, '{"audit":"host-owned"}');
+  let creates = 0;
+  const resumes = [];
+  const adapter = taskRunner.createInjectedHostTaskControlAdapter({
+    taskControl: {
+      async createTask() {
+        creates += 1;
+        return { threadId: 'duplicate-executor' };
+      },
+      async waitForAny() {
+        throw new Error('not used');
+      },
+    },
+    attachedTasks: [{ ...attachedExecutor(), status: 'needs-attention' }],
+    lifecycleRecovery: {
+      assignmentId: 'assignment:SAFE:1:executor',
+      programId: 'program-safe',
+      checkpointId: 'checkpoint-safe-1',
+      registryPath,
+      recoveryAuditPath,
+      recoveryId: 'recovery-safe-generation-1',
+      generation: 1,
+    },
+    lifecycleSupervisor: {
+      async resumeAttachedCheckpoint(binding) {
+        resumes.push(binding);
+        return {
+          request_sha256: '1'.repeat(64),
+          generation: 1,
+          event: {
+            event_type: 'writer_lease_controller_resumed',
+            event_hash: '2'.repeat(64),
+            payload: {
+              program_id: binding.program_id,
+              checkpoint_id: binding.checkpoint_id,
+              node_id: binding.node_id,
+              assignment_id: binding.assignment_id,
+              thread_id: binding.thread_id,
+              worker_id: binding.worker_id,
+              actor: binding.actor,
+              session_id: binding.session_id,
+              registry_sha256: binding.registry_sha256,
+              recovery_audit_sha256: binding.recovery_audit_sha256,
+              recovery_id: binding.recovery_id,
+              generation: binding.generation,
+              request_sha256: '1'.repeat(64),
+            },
+          },
+        };
+      },
+    },
+  });
+  const task = await adapter.createTask({
+    assignment: {
+      id: 'assignment:SAFE:1:executor',
+      nodeId: 'SAFE',
+      workerId: 'executor-1',
+      role: 'executor',
+    },
+    prompt: 'unused',
+    target: {},
+  });
+
+  assert.equal(creates, 0);
+  assert.equal(task.threadId, 'thread-existing-executor');
+  assert.equal(resumes.length, 1);
+  assert.equal(resumes[0].actor, 'agent:executor-1');
+  assert.equal(resumes[0].session_id, 'assignment:SAFE:1:executor');
+  assert.equal(
+    resumes[0].registry_sha256,
+    createHash('sha256').update(readFileSync(registryPath)).digest('hex'),
+  );
+  assert.equal(
+    resumes[0].recovery_audit_sha256,
+    createHash('sha256').update(readFileSync(recoveryAuditPath)).digest('hex'),
+  );
+  assert.equal(task.lifecycleResume.eventHash, '2'.repeat(64));
+  assert.equal(JSON.stringify(task).includes('lease_capability'), false);
+});
+
+test('rejects private material from the lifecycle supervisor before reusing or creating a task', async () => {
+  const root = mkdtempSync(join(tmpdir(), 'agentgraph-controller-secret-'));
+  const registryPath = join(root, 'registry.json');
+  const recoveryAuditPath = join(root, 'recovery-audit.json');
+  writeFileSync(registryPath, '{}');
+  writeFileSync(recoveryAuditPath, '{}');
+  let creates = 0;
+  const adapter = taskRunner.createInjectedHostTaskControlAdapter({
+    taskControl: {
+      async createTask() {
+        creates += 1;
+        return { threadId: 'must-not-create' };
+      },
+      async waitForAny() {
+        throw new Error('not used');
+      },
+    },
+    attachedTasks: [{ ...attachedExecutor(), status: 'needs-attention' }],
+    lifecycleRecovery: {
+      assignmentId: 'assignment:SAFE:1:executor',
+      programId: 'program-safe',
+      checkpointId: 'checkpoint-safe-1',
+      registryPath,
+      recoveryAuditPath,
+      recoveryId: 'recovery-safe-generation-1',
+      generation: 1,
+    },
+    lifecycleSupervisor: {
+      async resumeAttachedCheckpoint() {
+        return { lease_capability: 'must-never-cross-the-supervisor-boundary' };
+      },
+    },
+  });
+
+  await assert.rejects(
+    () =>
+      adapter.createTask({
+        assignment: {
+          id: 'assignment:SAFE:1:executor',
+          nodeId: 'SAFE',
+          workerId: 'executor-1',
+          role: 'executor',
+        },
+        prompt: 'unused',
+        target: {},
+      }),
+    /private lifecycle material/,
+  );
+  assert.equal(creates, 0);
 });
 
 test('halts once when an attached executor needs attention and does not launch a verifier', async () => {

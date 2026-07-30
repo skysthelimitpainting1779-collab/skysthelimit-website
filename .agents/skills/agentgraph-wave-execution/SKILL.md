@@ -73,11 +73,11 @@ Reject the input if `source.kind` is not `authoritative-lifecycle-ledger`. Never
 3. Acquire every assignment `resourceLocks` and file lock before launch. Defer conflicting nodes.
 4. Launch each assignment with `createCodexAppTaskBridge` when host task controls are injected. Use `createCodexCliTaskBridge` only from the exact target worktree when the host bridge is unavailable.
 5. Pass the ledger boundary to `runAgentGraphWithCodex`. Use `workspace-write` only for local files named by `allowedFiles`; use read-only mode for inspection/verifier work.
-6. Use host app-registry lifecycle MCP tools when exposed. If app-registry lifecycle MCP exposure is unavailable, use the authorized official in-process `mcp_server.py` function transport: keep one long-lived Python control process, import the official `mcp_server.py` module exactly once, and call its lifecycle functions directly.
-7. Do not start an MCP subprocess. Do not edit the lifecycle database manually or directly. Keep the lease capability only in memory; never print it, persist it, include it in evidence, or return it in a callback.
-8. Call `lifecycle_checkpoint_renew` before the active lease expires and before any long-running test or build could cross its expiry.
-9. Renewal and recovery are allowed during legitimate dirty execution only while the governed repository, branch, and HEAD remain unchanged from the checkpoint binding.
-10. Use `lifecycle_checkpoint_recover` only for the exact checkpoint actor and session and within the lifecycle recovery grace window. Keep its rotated capability memory-only under the same secrecy rules.
+6. Inject one privileged long-lived in-process lifecycle supervisor into the host controller for every capability-bearing lifecycle operation. Keep one Python control process and import the official `mcp_server.py` module exactly once.
+7. Do not use generic or public MCP for capability-bearing lifecycle operations. Do not start an MCP subprocess. Do not edit the lifecycle database manually or directly. The worker never receives the lease capability; the supervisor keeps it in private memory and never prints, persists, evidences, or returns it.
+8. For a recoverable needs-attention executor, derive assignment/thread/worker/actor/session from the authoritative wave plus attached host task, hash the host-owned registry and recovery audit, and let the supervisor verify their content against current Git and lease state.
+9. Resume the same attached task with no duplicate executor and preserve the same lease/base head. Rotate only the capability hash and expiry and append the public controller-resume event.
+10. The supervisor owns renewal before expiry and before long work, canonical telemetry, and checkpoint completion. On successful completion it must delete the private capability.
 11. Accept only a strict JSON completion callback bound to the node, assignment, and worker IDs. Require a non-empty artifact ID and explicit `productionSideEffects: false` plus `providerMutations: false`.
 12. Launch a separate verifier worker for the emitted verifier assignment. Require its callback to bind the completion artifact ID.
 13. Mark the node complete and unlock successors only after verification passes.
