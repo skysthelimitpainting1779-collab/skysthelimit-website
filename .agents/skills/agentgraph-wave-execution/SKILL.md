@@ -76,10 +76,12 @@ Reject the input if `source.kind` is not `authoritative-lifecycle-ledger`. Never
 6. Use host app-registry lifecycle MCP tools when exposed. If app-registry lifecycle MCP exposure is unavailable, use the authorized official in-process `mcp_server.py` function transport: keep one long-lived Python control process, import the official `mcp_server.py` module exactly once, and call its lifecycle functions directly.
 7. Do not start an MCP subprocess. Do not edit the lifecycle database manually or directly. Keep the lease capability only in memory; never print it, persist it, include it in evidence, or return it in a callback.
 8. Call `lifecycle_checkpoint_renew` before the active lease expires and before any long-running test or build could cross its expiry.
-9. Accept only a strict JSON completion callback bound to the node, assignment, and worker IDs. Require a non-empty artifact ID and explicit `productionSideEffects: false` plus `providerMutations: false`.
-10. Launch a separate verifier worker for the emitted verifier assignment. Require its callback to bind the completion artifact ID.
-11. Mark the node complete and unlock successors only after verification passes.
-12. On missing callback, invalid identity, failed verification, or platform failure, halt once, persist the exact report, and steer remaining workers to stop.
+9. Renewal and recovery are allowed during legitimate dirty execution only while the governed repository, branch, and HEAD remain unchanged from the checkpoint binding.
+10. Use `lifecycle_checkpoint_recover` only for the exact checkpoint actor and session and within the lifecycle recovery grace window. Keep its rotated capability memory-only under the same secrecy rules.
+11. Accept only a strict JSON completion callback bound to the node, assignment, and worker IDs. Require a non-empty artifact ID and explicit `productionSideEffects: false` plus `providerMutations: false`.
+12. Launch a separate verifier worker for the emitted verifier assignment. Require its callback to bind the completion artifact ID.
+13. Mark the node complete and unlock successors only after verification passes.
+14. On missing callback, invalid identity, failed verification, or platform failure, halt once, persist the exact report, and steer remaining workers to stop.
 
 ## Boundary
 

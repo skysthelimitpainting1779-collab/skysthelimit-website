@@ -145,6 +145,9 @@ test('prompt requires the official in-process lifecycle fallback and lease heart
   assert.match(prompt, /do not edit the lifecycle database/i);
   assert.match(prompt, /lease capability.*memory.*never print.*persist/i);
   assert.match(prompt, /lifecycle_checkpoint_renew.*before.*lease.*expires/i);
+  assert.match(prompt, /renewal and recovery.*legitimate dirty execution/i);
+  assert.match(prompt, /repository.*branch.*HEAD.*unchanged/i);
+  assert.match(prompt, /lifecycle_checkpoint_recover.*actor.*session.*grace/i);
 });
 
 test('wave skill carries the in-process lifecycle fallback and heartbeat contract', () => {
@@ -160,6 +163,9 @@ test('wave skill carries the in-process lifecycle fallback and heartbeat contrac
   assert.match(skill, /do not edit the lifecycle database/i);
   assert.match(skill, /lease capability.*memory.*never print.*persist/i);
   assert.match(skill, /lifecycle_checkpoint_renew.*before.*lease.*expires/i);
+  assert.match(skill, /renewal and recovery.*legitimate dirty execution/i);
+  assert.match(skill, /repository.*branch.*HEAD.*unchanged/i);
+  assert.match(skill, /lifecycle_checkpoint_recover.*actor.*session.*grace/i);
 });
 
 test('Codex app bridge maps create_thread and wait_threads results to assignment callbacks', async () => {

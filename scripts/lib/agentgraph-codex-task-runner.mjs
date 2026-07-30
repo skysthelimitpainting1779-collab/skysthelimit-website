@@ -255,6 +255,10 @@ export function createCodexAssignmentPrompt({
           'Keep the lease capability only in memory; never print it, persist it, include it in evidence, or return it in the callback.',
         heartbeat:
           'Call lifecycle_checkpoint_renew before the active lease expires and before any long-running test or build could cross its expiry.',
+        dirtyExecution:
+          'Renewal and recovery are allowed during legitimate dirty execution only while the governed repository, branch, and HEAD remain unchanged from the checkpoint binding.',
+        recovery:
+          'Use lifecycle_checkpoint_recover only for the exact checkpoint actor and session and within the lifecycle recovery grace window; keep its rotated capability memory-only.',
       },
       output: 'Return exactly one JSON object and no markdown.',
     },
