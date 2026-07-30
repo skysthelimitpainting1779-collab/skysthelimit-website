@@ -9,6 +9,7 @@ import { PassThrough } from 'node:stream';
 import test from 'node:test';
 
 import { createAgentGraphExecutionState } from '../scripts/lib/agentgraph-execution-dispatcher.mjs';
+import { createCodexCliTaskBridge } from '../scripts/lib/agentgraph-codex-cli-bridge.mjs';
 import {
   createCodexAppTaskBridge,
   createCodexAssignmentPrompt,
@@ -138,6 +139,107 @@ function lifecycleResumeReceipt(binding) {
   };
 }
 
+async function activateAttachedTask(args) {
+  return { activationId: args.activationId, status: 'activated' };
+}
+
+function directLifecycleBinding(nodeId = 'A', nextNode = 'B') {
+  return {
+    programId: 'program-proof',
+    checkpointId: `checkpoint-${nodeId}`,
+    nodeId,
+    completionSpec: {
+      evidence: [],
+      completed_stage: `stage:${nodeId}:verify`,
+      handoff_id: `handoff-${nodeId}`,
+      next_node: nextNode,
+      next_stage: `stage:${nextNode}:plan`,
+      summary: `${nodeId} verified.`,
+      blockers: [],
+    },
+  };
+}
+
+function completionReceiptFor(finalization) {
+  const lifecycle = finalization.lifecycle;
+  const spec = lifecycle.completionSpec;
+  return {
+    checkpoint: {
+      event_type: 'checkpoint_completed',
+      program_id: lifecycle.programId,
+      checkpoint_id: lifecycle.checkpointId,
+      node_id: lifecycle.nodeId,
+      payload: {
+        evidence: [
+          ...(spec.evidence || []),
+          { kind: 'agentgraph-finalization', sha256: finalization.sha256 },
+        ],
+      },
+    },
+    handoff: {
+      handoff_id: spec.handoff_id,
+      program_id: lifecycle.programId,
+      checkpoint_id: lifecycle.checkpointId,
+      node_id: lifecycle.nodeId,
+      next_node: spec.next_node,
+      next_stage: spec.next_stage,
+    },
+  };
+}
+
+function preparedFinalizationFor(nodeId = 'A', nextNode = 'B') {
+  const state = createAgentGraphExecutionState({
+    nodes: [{ id: nodeId, dependsOn: [] }, { id: nextNode, dependsOn: [nodeId] }],
+  });
+  state.status = 'running';
+  state.nodes[nodeId].status = 'completed';
+  state.nodes[nextNode].status = 'assigned';
+  const verifierAssignment = {
+    id: `assignment:${nodeId}:1:verifier`,
+    nodeId,
+    workerId: 'codex-verifier-1',
+    role: 'verifier',
+    artifactId: `artifact:${nodeId}:1`,
+  };
+  const successor = {
+    id: `assignment:${nextNode}:1:executor`,
+    nodeId: nextNode,
+    workerId: 'codex-executor-1',
+    role: 'executor',
+  };
+  const exact = {
+    nodeId,
+    verifierAssignment,
+    verification: {
+      kind: 'verification',
+      nodeId,
+      assignmentId: verifierAssignment.id,
+      workerId: verifierAssignment.workerId,
+      artifactId: verifierAssignment.artifactId,
+      passed: true,
+      evidence: ['independent verification'],
+      errors: [],
+    },
+    lifecycle: directLifecycleBinding(nodeId, nextNode),
+    candidate: {
+      state,
+      assignments: [successor],
+      successorAssignmentIds: [successor.id],
+      successorContract: {
+        kind: 'candidate-successor',
+        assignmentId: successor.id,
+        nodeId: nextNode,
+      },
+    },
+  };
+  return {
+    schemaVersion: '1.0.0',
+    phase: 'prepared',
+    ...exact,
+    sha256: createHash('sha256').update(JSON.stringify(exact)).digest('hex'),
+  };
+}
+
 test('authoritative wave rejects executable nodes without mandatory independent verification', () => {
   const ledgerInput = attachedLedgerInput();
   ledgerInput.readyNodes[0].verification.independent = false;
@@ -237,13 +339,16 @@ test('wave skill carries the privileged lifecycle supervisor contract', () => {
   assert.match(skill, /Before lifecycle DB completion.*prepared/i);
   assert.match(skill, /phase = "finalized".*successor/i);
   assert.match(skill, /resumeSnapshot.*exact.*finalization hash/i);
-  assert.match(recipe, /createPythonLifecycleSupervisorBridge/);
-  assert.match(recipe, /runAuthoritativeLedgerWaveWithAttachedHostTasks/);
-  assert.match(recipe, /lifecycleSupervisor\.close/);
+  assert.match(recipe, /createAuthoritativeLedgerWavePythonLifecycleController/);
   assert.match(skill, /one long-lived.*bridge.*not.*per operation/i);
   assert.match(skill, /trusted.*agentgraph root/i);
   assert.match(skill, /clean.*checkpoint head.*ancestor/i);
   assert.match(skill, /host-derived metrics.*completion.*after.*verifier.*passes/i);
+  assert.match(skill, /list_threads.*limit <= 50/i);
+  assert.match(skill, /bootstrap marker.*read_thread/i);
+  assert.match(skill, /send_message_to_thread.*idempotency/i);
+  assert.match(skill, /baselineTurnId.*exact turn.*completed/i);
+  assert.match(skill, /merely prepared journal is not close-safe/i);
 });
 
 test('governed wave controller retains one bridge until recovery state is durably preserved', async () => {
@@ -256,6 +361,7 @@ test('governed wave controller retains one bridge until recovery state is durabl
   let failSave = true;
   const controller = createGovernedAgentGraphWaveController({
     pythonLifecycle: {},
+    taskControl: { async activateTask() {} },
     createLifecycleBridge() {
       bridgeCreates += 1;
       return {
@@ -268,7 +374,7 @@ test('governed wave controller retains one bridge until recovery state is durabl
       runs += 1;
       await saveState({
         executionState: { status: 'halted' },
-        lifecycleFinalization: { phase: 'prepared' },
+        taskRegistry: {},
       });
       return { status: 'halted' };
     },
@@ -287,6 +393,76 @@ test('governed wave controller retains one bridge until recovery state is durabl
   assert.equal(bridgeCreates, 1);
   assert.equal(runs, 2);
   assert.equal(closes, 1);
+});
+
+test('retained controller refuses incomplete prepared close and finalizes exact DB reconciliation before closing', async () => {
+  const prepared = preparedFinalizationFor();
+  const persisted = [];
+  let completed = false;
+  let failFinalizedSave = true;
+  let closes = 0;
+  let reconciliations = 0;
+  const controller =
+    taskRunner.createAuthoritativeLedgerWavePythonLifecycleController({
+      pythonLifecycle: {},
+      createLifecycleBridge() {
+        return {
+          async reconcileAttachedCheckpointCompletion(binding, request) {
+            reconciliations += 1;
+            assert.deepEqual(binding, {
+              program_id: prepared.lifecycle.programId,
+              checkpoint_id: prepared.lifecycle.checkpointId,
+              node_id: prepared.nodeId,
+            });
+            assert.equal(request.finalizationSha256, prepared.sha256);
+            return completed
+              ? { completed: true, receipt: completionReceiptFor(prepared) }
+              : { completed: false, receipt: null };
+          },
+          async close() {
+            closes += 1;
+          },
+        };
+      },
+      async runWave({ saveState }) {
+        await saveState({
+          executionState: { status: 'halted' },
+          taskRegistry: {},
+          lifecycleFinalization: prepared,
+        });
+        return { status: 'halted' };
+      },
+      async saveState(snapshot) {
+        if (
+          failFinalizedSave &&
+          snapshot.lifecycleFinalization?.phase === 'finalized'
+        ) {
+          throw new Error('finalized persistence failed');
+        }
+        persisted.push(structuredClone(snapshot));
+      },
+    });
+  await controller.run();
+  await assert.rejects(
+    () => controller.close({ terminalPreserved: true }),
+    /prepared completion is unresolved/i,
+  );
+  assert.equal(closes, 0);
+  completed = true;
+  await assert.rejects(
+    () => controller.close({ terminalPreserved: true }),
+    /finalized persistence failed/i,
+  );
+  assert.equal(closes, 0);
+  failFinalizedSave = false;
+  await controller.close({ terminalPreserved: true });
+  assert.equal(closes, 1);
+  assert.equal(reconciliations, 3);
+  assert.equal(persisted.at(-1).lifecycleFinalization.phase, 'finalized');
+  assert.equal(
+    persisted.at(-1).lifecycleFinalization.completionReceipt.handoff.next_node,
+    'B',
+  );
 });
 
 test('Codex app bridge maps create_thread and wait_threads results to assignment callbacks', async () => {
@@ -315,6 +491,7 @@ test('Codex app bridge maps create_thread and wait_threads results to assignment
   const task = await bridge.createTask({
     prompt: 'assignment prompt',
     target: { type: 'project', projectId: 'project-1', environment: { type: 'local' } },
+    idempotencyKey: 'assignment:A:1:executor',
   });
   const outcome = await bridge.waitForAny([
     {
@@ -324,7 +501,11 @@ test('Codex app bridge maps create_thread and wait_threads results to assignment
     },
   ]);
 
-  assert.deepEqual(task, { threadId: 'thread-live-1', hostId: 'local' });
+  assert.deepEqual(task, {
+    threadId: 'thread-live-1',
+    hostId: 'local',
+    bootstrapTag: 'agentgraph-assignment:assignment:A:1:executor',
+  });
   assert.deepEqual(outcome, {
     assignmentId: 'assignment:A:1:executor',
     status: 'completed',
@@ -332,18 +513,340 @@ test('Codex app bridge maps create_thread and wait_threads results to assignment
     cursor: 'cursor-1',
   });
   assert.equal(calls[0][0], 'create');
+  assert.equal('idempotencyKey' in calls[0][1], false);
   assert.equal(calls[1][0], 'wait');
+});
+
+test('Codex app bridge falls back to bounded recent threads and validates the exact bootstrap marker', async () => {
+  const listCalls = [];
+  let creates = 0;
+  const saved = [];
+  const bootstrapTag =
+    'agentgraph-assignment:assignment:SAFE:1:executor';
+  const bridge = createCodexAppTaskBridge({
+    async createThread() {
+      creates += 1;
+      throw new Error('existing tagged thread must be reused');
+    },
+    async listThreads(request) {
+      listCalls.push(request);
+      if ('query' in request) throw new Error('Unrecognized key: query');
+      return {
+        threads: [
+          {
+            id: 'thread-existing',
+            projectId: 'project-safe',
+            hostId: 'local',
+            summary: 'untrusted summary without the marker',
+          },
+        ],
+      };
+    },
+    async readThread() {
+      return {
+        thread: { id: 'thread-existing', status: { type: 'idle' } },
+        turns: [
+          {
+            id: 'turn-bootstrap',
+            status: 'completed',
+            items: [{ type: 'userMessage', text: `${bootstrapTag}\nwork` }],
+          },
+        ],
+      };
+    },
+    async saveLaunchMapping(key, mapping) {
+      saved.push([key, mapping]);
+    },
+    timeoutMs: 1,
+    pollIntervalMs: 0,
+  });
+
+  const task = await bridge.createTask({
+    prompt: 'work',
+    target: { projectId: 'project-safe' },
+    idempotencyKey: 'assignment:SAFE:1:executor',
+  });
+
+  assert.equal(task.threadId, 'thread-existing');
+  assert.equal(creates, 0);
+  assert.deepEqual(listCalls, [
+    { query: bootstrapTag, limit: 50 },
+    { limit: 50 },
+  ]);
+  assert.equal(saved.length, 1);
+});
+
+test('Codex app bridge reconciles setup-only create responses and rejects ambiguous tags', async () => {
+  const bootstrapTag =
+    'agentgraph-assignment:assignment:SAFE:1:executor';
+  let listed = 0;
+  const bridge = createCodexAppTaskBridge({
+    async createThread(request) {
+      assert.equal('idempotencyKey' in request, false);
+      return { clientThreadId: 'client-setup-only' };
+    },
+    async listThreads(request) {
+      listed += 1;
+      if ('query' in request) throw new Error('Unrecognized key: query');
+      if (listed < 4) return { threads: [] };
+      return {
+        threads: [
+          { id: 'thread-reconciled', projectId: 'project-safe', hostId: 'local' },
+        ],
+      };
+    },
+    async readThread() {
+      return {
+        turns: [
+          {
+            id: 'turn-bootstrap',
+            items: [{ type: 'userMessage', text: bootstrapTag }],
+          },
+        ],
+      };
+    },
+    timeoutMs: 1,
+    pollIntervalMs: 0,
+    reconciliationAttempts: 3,
+  });
+  const task = await bridge.createTask({
+    prompt: 'work',
+    target: { projectId: 'project-safe' },
+    idempotencyKey: 'assignment:SAFE:1:executor',
+  });
+  assert.equal(task.threadId, 'thread-reconciled');
+
+  const ambiguous = createCodexAppTaskBridge({
+    async createThread() {
+      throw new Error('must not create');
+    },
+    async listThreads(request) {
+      if ('query' in request) throw new Error('Unrecognized key: query');
+      return {
+        threads: [
+          { id: 'thread-1', projectId: 'project-safe' },
+          { id: 'thread-2', projectId: 'project-safe' },
+        ],
+      };
+    },
+    async readThread({ threadId }) {
+      return {
+        turns: [
+          {
+            id: `turn-${threadId}`,
+            items: [{ type: 'userMessage', text: bootstrapTag }],
+          },
+        ],
+      };
+    },
+    timeoutMs: 1,
+    pollIntervalMs: 0,
+  });
+  await assert.rejects(
+    () =>
+      ambiguous.createTask({
+        prompt: 'work',
+        target: { projectId: 'project-safe' },
+        idempotencyKey: 'assignment:SAFE:1:executor',
+      }),
+    /ambiguous.*bootstrap tag/i,
+  );
+});
+
+test('Codex app activation waits for the marked turn to complete and ignores the stale prior turn', async () => {
+  const reads = [];
+  const sends = [];
+  const responses = [
+    {
+      turns: [
+        {
+          id: 'turn-old',
+          status: 'completed',
+          items: [{ type: 'agentMessage', text: '{"stale":true}' }],
+        },
+      ],
+    },
+    {
+      turns: [
+        {
+          id: 'turn-activation',
+          status: 'inProgress',
+          items: [
+            {
+              type: 'userMessage',
+              text: 'agentgraph-activation:activation-safe\nwork',
+            },
+          ],
+        },
+        {
+          id: 'turn-old',
+          status: 'completed',
+          items: [{ type: 'agentMessage', text: '{"stale":true}' }],
+        },
+      ],
+    },
+    {
+      thread: { id: 'thread-existing', status: { type: 'active' } },
+      turns: [
+        {
+          id: 'turn-activation',
+          status: 'inProgress',
+          items: [{ type: 'userMessage', text: 'activation prompt' }],
+        },
+        {
+          id: 'turn-old',
+          status: 'completed',
+          items: [{ type: 'agentMessage', text: '{"stale":true}' }],
+        },
+      ],
+    },
+    {
+      thread: { id: 'thread-existing', status: { type: 'idle' } },
+      turns: [
+        {
+          id: 'turn-activation',
+          status: 'completed',
+          items: [
+            { type: 'userMessage', text: 'activation prompt' },
+            { type: 'agentMessage', text: '{"fresh":true}' },
+          ],
+        },
+        {
+          id: 'turn-old',
+          status: 'completed',
+          items: [{ type: 'agentMessage', text: '{"stale":true}' }],
+        },
+      ],
+    },
+  ];
+  const bridge = createCodexAppTaskBridge({
+    async createThread() {
+      throw new Error('not used');
+    },
+    async readThread(request) {
+      reads.push(request);
+      return responses.shift();
+    },
+    async sendMessageToThread(request) {
+      sends.push(request);
+      assert.equal('idempotencyKey' in request, false);
+      return { accepted: true };
+    },
+    timeoutMs: 100,
+    pollIntervalMs: 0,
+  });
+  const activation = await bridge.activateTask({
+    threadId: 'thread-existing',
+    hostId: 'local',
+    prompt: 'work',
+    activationId: 'activation-safe',
+  });
+  assert.equal(activation.baselineTurnId, 'turn-activation');
+  assert.equal(sends.length, 1);
+  assert.match(sends[0].prompt, /^agentgraph-activation:activation-safe\n/);
+
+  const outcome = await bridge.waitForAny([
+    {
+      assignmentId: 'assignment:SAFE:1:executor',
+      threadId: 'thread-existing',
+      hostId: 'local',
+      baselineTurnId: activation.baselineTurnId,
+    },
+  ]);
+  assert.equal(reads.length, 4);
+  assert.deepEqual(outcome, {
+    assignmentId: 'assignment:SAFE:1:executor',
+    status: 'completed',
+    final: '{"fresh":true}',
+    cursor: null,
+  });
+});
+
+test('Codex app activation recovery never resends an existing marker', async () => {
+  let sends = 0;
+  const marker = 'agentgraph-activation:activation-safe';
+  const bridge = createCodexAppTaskBridge({
+    async createThread() {
+      throw new Error('not used');
+    },
+    async readThread() {
+      return {
+        turns: [
+          {
+            id: 'turn-activation',
+            items: [{ type: 'userMessage', text: `${marker}\nwork` }],
+          },
+        ],
+      };
+    },
+    async sendMessageToThread() {
+      sends += 1;
+    },
+    timeoutMs: 1,
+  });
+  const receipt = await bridge.activateTask({
+    threadId: 'thread-existing',
+    prompt: 'work',
+    activationId: 'activation-safe',
+  });
+  assert.equal(receipt.recovered, true);
+  assert.equal(receipt.baselineTurnId, 'turn-activation');
+  assert.equal(sends, 0);
+});
+
+test('Codex CLI bridge reuses one stable assignment process and cached outcome', async () => {
+  let spawns = 0;
+  let outputPath;
+  const child = new EventEmitter();
+  child.stdout = new PassThrough();
+  child.stderr = new PassThrough();
+  child.stdin = { end() {} };
+  child.kill = () => true;
+  const bridge = createCodexCliTaskBridge({
+    cwd: 'C:\\repo',
+    command: 'codex',
+    commandPrefix: [],
+    spawnProcess(_command, args) {
+      spawns += 1;
+      outputPath = args[args.indexOf('--output-last-message') + 1];
+      return child;
+    },
+  });
+  const assignment = { id: 'assignment:SAFE:1:executor' };
+  const first = await bridge.createTask({
+    assignment,
+    prompt: 'work',
+    idempotencyKey: assignment.id,
+  });
+  const second = await bridge.createTask({
+    assignment,
+    prompt: 'work again',
+    idempotencyKey: assignment.id,
+  });
+  assert.deepEqual(second, first);
+  assert.equal(spawns, 1);
+  writeFileSync(outputPath, '{"kind":"completion"}');
+  child.emit('close', 0);
+  const outcome1 = await bridge.waitForAny([
+    { assignmentId: assignment.id, threadId: first.threadId },
+  ]);
+  const outcome2 = await bridge.waitForAny([
+    { assignmentId: assignment.id, threadId: first.threadId },
+  ]);
+  assert.deepEqual(outcome2, outcome1);
 });
 
 test('Python lifecycle bridge uses one long-lived supervisor process for all operations', async () => {
   let spawnCount = 0;
   const operations = [];
+  const bridgeRequests = [];
   const child = new EventEmitter();
   child.stdout = new PassThrough();
   child.stderr = new PassThrough();
   child.stdin = {
     write(line) {
       const request = JSON.parse(line);
+      bridgeRequests.push(request);
       operations.push(request.operation);
       const results = {
         resume: {
@@ -408,7 +911,31 @@ test('Python lifecycle bridge uses one long-lived supervisor process for all ope
     'reconcile',
     'shutdown',
   ]);
+  assert.deepEqual(
+    bridgeRequests.find((request) => request.operation === 'reconcile').payload,
+    { finalization_sha256: 'a'.repeat(64) },
+  );
   assert.equal(JSON.stringify(operations).includes('capability'), false);
+});
+
+test('real Python bridge receives the exact canonical finalization SHA for reconciliation', async () => {
+  const pythonExecutable = spawnSync('where.exe', ['python'], {
+    encoding: 'utf8',
+  }).stdout.trim().split(/\r?\n/)[0];
+  const root = mkdtempSync(join(tmpdir(), 'agentgraph-real-python-reconcile-'));
+  const bridge = taskRunner.createPythonLifecycleSupervisorBridge({
+    pythonExecutable,
+    mcpServerPath: join(process.cwd(), '..', '..', 'dev', 'mcp_server.py'),
+    databasePath: join(root, 'lifecycle.db'),
+    trustedAgentGraphRoot: root,
+  });
+  const result = await bridge.reconcileAttachedCheckpointCompletion(
+    { program_id: 'program-1', checkpoint_id: 'checkpoint-1', node_id: 'NODE-1' },
+    { finalizationSha256: 'a'.repeat(64) },
+  );
+  await bridge.close();
+
+  assert.deepEqual(result, { completed: false, receipt: null });
 });
 
 test('concrete Python lifecycle wave wrapper owns one bridge until terminal state is saved', async () => {
@@ -419,12 +946,20 @@ test('concrete Python lifecycle wave wrapper owns one bridge until terminal stat
   writeFileSync(recoveryAuditPath, '{}');
   const events = [];
   let bridgeCreates = 0;
-  const result = await taskRunner.runAuthoritativeLedgerWaveWithPythonLifecycle({
+  const controller =
+    taskRunner.runAuthoritativeLedgerWaveWithPythonLifecycle({
     ledgerInput: attachedLedgerInput(),
     attachedTasks: [{ ...attachedExecutor(), status: 'needs-attention' }],
     taskControl: {
+      activateTask: activateAttachedTask,
       async createTask() {
         throw new Error('duplicate task must not be created');
+      },
+      async activateTask(args) {
+        assert.match(args.prompt, /assignment:SAFE:1:executor/);
+        assert.ok(events.at(-1).startsWith('save:'));
+        events.push(`activate:${args.activationId}`);
+        return { activationId: args.activationId, status: 'activated' };
       },
       async waitForAny() {
         return {
@@ -472,11 +1007,20 @@ test('concrete Python lifecycle wave wrapper owns one bridge until terminal stat
     },
     now: () => '2026-07-30T23:45:00.000Z',
   });
+  const result = await controller.run();
 
   assert.equal(result.status, 'halted');
   assert.equal(bridgeCreates, 1);
-  assert.equal(events.at(-1), 'close');
-  assert.ok(events.indexOf('close') > events.findLastIndex((event) => event.startsWith('save:')));
+  assert.ok(
+    events.findIndex((event) => event.startsWith('activate:')) <
+      events.indexOf('resume'),
+  );
+  assert.equal(events.includes('close'), false);
+  await assert.rejects(
+    () => controller.close({ terminalPreserved: true }),
+    /unresolved lifecycle/i,
+  );
+  assert.equal(events.includes('close'), false);
 });
 
 test('runner fans out, independently verifies, and completes two ready nodes', async () => {
@@ -550,6 +1094,66 @@ test('runner fans out, independently verifies, and completes two ready nodes', a
   assert.equal(result.completedTasks.length, 4);
   assert.equal(result.completedTasks.every((task) => task.status === 'completed'), true);
   assert.equal(snapshots.at(-1).completedTasks.length, 4);
+});
+
+test('parallel launch persists each assignment mapping before the next create and retry reuses it', async () => {
+  const graph = proofGraph();
+  const physicalCreates = new Map();
+  const mappings = new Map();
+  const snapshots = [];
+  let failSecond = true;
+  const codex = {
+    async createTask({ assignment, idempotencyKey }) {
+      if (mappings.has(idempotencyKey)) return mappings.get(idempotencyKey);
+      if (failSecond && mappings.size === 1) {
+        throw new Error('second create transport failed');
+      }
+      physicalCreates.set(
+        assignment.id,
+        (physicalCreates.get(assignment.id) || 0) + 1,
+      );
+      const mapping = { threadId: `thread:${assignment.id}` };
+      mappings.set(idempotencyKey, mapping);
+      return mapping;
+    },
+    async waitForAny(tasks) {
+      return {
+        assignmentId: tasks[0].assignmentId,
+        status: 'failed',
+        error: 'bounded retry stop',
+      };
+    },
+  };
+  await assert.rejects(
+    () =>
+      runAgentGraphWithCodex({
+        graph,
+        initialState: createAgentGraphExecutionState(graph),
+        workers: workers(),
+        codex,
+        saveState: async (snapshot) =>
+          snapshots.push(structuredClone(snapshot)),
+      }),
+    /second create transport failed/,
+  );
+  const [firstAssignmentId] = Object.keys(snapshots.at(-1).tasks);
+  assert.equal(Object.keys(snapshots.at(-1).tasks).length, 1);
+  assert.equal(
+    snapshots.at(-1).tasks[firstAssignmentId].threadId,
+    `thread:${firstAssignmentId}`,
+  );
+
+  failSecond = false;
+  const retried = await runAgentGraphWithCodex({
+    graph,
+    initialState: createAgentGraphExecutionState(graph),
+    workers: workers(),
+    codex,
+    saveState: async () => {},
+  });
+  assert.equal(retried.status, 'halted');
+  assert.equal(physicalCreates.size, 2);
+  assert.equal([...physicalCreates.values()].every((count) => count === 1), true);
 });
 
 test('attaches an existing executor and durably advances its cursor before launching a verifier', async () => {
@@ -649,6 +1253,7 @@ test('resumes one needs-attention attachment through the privileged supervisor w
   const resumes = [];
   const adapter = taskRunner.createInjectedHostTaskControlAdapter({
     taskControl: {
+      activateTask: activateAttachedTask,
       async createTask() {
         creates += 1;
         return { threadId: 'duplicate-executor' };
@@ -706,6 +1311,15 @@ test('resumes one needs-attention attachment through the privileged supervisor w
     prompt: 'unused',
     target: {},
   });
+  await adapter.activateTask({
+    assignmentId: 'assignment:SAFE:1:executor',
+    activationId: task.activation.activationId,
+    threadId: task.threadId,
+    prompt: 'exact prompt',
+  });
+  task.lifecycleResume = await adapter.resumeTaskLifecycle({
+    assignmentId: 'assignment:SAFE:1:executor',
+  });
 
   assert.equal(creates, 0);
   assert.equal(task.threadId, 'thread-existing-executor');
@@ -724,6 +1338,141 @@ test('resumes one needs-attention attachment through the privileged supervisor w
   assert.equal(JSON.stringify(task).includes('lease_capability'), false);
 });
 
+test('refuses lifecycle resume when the idle attached host cannot be activated', async () => {
+  const root = mkdtempSync(join(tmpdir(), 'agentgraph-no-activation-'));
+  const registryPath = join(root, 'registry.json');
+  const recoveryAuditPath = join(root, 'recovery-audit.json');
+  writeFileSync(registryPath, '{}');
+  writeFileSync(recoveryAuditPath, '{}');
+  let resumes = 0;
+  const adapter = taskRunner.createInjectedHostTaskControlAdapter({
+    taskControl: {
+      async createTask() {
+        throw new Error('must not create');
+      },
+      async waitForAny() {
+        throw new Error('must not wait');
+      },
+    },
+    attachedTasks: [{ ...attachedExecutor(), status: 'needs-attention' }],
+    lifecycleRecovery: {
+      assignmentId: 'assignment:SAFE:1:executor',
+      programId: 'program-safe',
+      checkpointId: 'checkpoint-safe-1',
+      registryPath,
+      recoveryAuditPath,
+      recoveryId: 'recovery-safe-generation-1',
+      generation: 1,
+    },
+    lifecycleSupervisor: {
+      async resumeAttachedCheckpoint() {
+        resumes += 1;
+      },
+    },
+  });
+  await assert.rejects(
+    () =>
+      adapter.createTask({
+        assignment: {
+          id: 'assignment:SAFE:1:executor',
+          nodeId: 'SAFE',
+          workerId: 'executor-1',
+          role: 'executor',
+        },
+      }),
+    /activation capability.*before lifecycle resume/i,
+  );
+  assert.equal(resumes, 0);
+});
+
+test('activation failure persists pending and restart activates once without resending activated', async () => {
+  const root = mkdtempSync(join(tmpdir(), 'agentgraph-activation-restart-'));
+  const registryPath = join(root, 'registry.json');
+  const recoveryAuditPath = join(root, 'recovery-audit.json');
+  writeFileSync(registryPath, '{}');
+  writeFileSync(recoveryAuditPath, '{}');
+  const recovery = {
+    assignmentId: 'assignment:SAFE:1:executor',
+    programId: 'program-safe',
+    checkpointId: 'checkpoint-safe-1',
+    registryPath,
+    recoveryAuditPath,
+    recoveryId: 'recovery-safe-generation-1',
+    generation: 1,
+  };
+  let activations = 0;
+  const supervisor = {
+    async resumeAttachedCheckpoint(binding) {
+      return lifecycleResumeReceipt(binding);
+    },
+    async renewAttachedCheckpoint() {
+      return { event: { event_type: 'writer_lease_renewed' } };
+    },
+  };
+  const controls = {
+    async createTask() {
+      throw new Error('duplicate executor must not be created');
+    },
+    async activateTask(args) {
+      activations += 1;
+      if (activations === 1) throw new Error('activation transport failed');
+      return { activationId: args.activationId, status: 'activated' };
+    },
+    async waitForAny() {
+      return {
+        assignmentId: 'assignment:SAFE:1:executor',
+        status: 'needs_attention',
+        error: 'bounded stop',
+      };
+    },
+  };
+  const firstSnapshots = [];
+  await assert.rejects(
+    () =>
+      runAuthoritativeLedgerWaveWithAttachedHostTasks({
+        ledgerInput: attachedLedgerInput(),
+        attachedTasks: [{ ...attachedExecutor(), status: 'needs-attention' }],
+        taskControl: controls,
+        lifecycleSupervisor: supervisor,
+        lifecycleRecovery: recovery,
+        saveState: async (snapshot) => firstSnapshots.push(structuredClone(snapshot)),
+      }),
+    /activation transport failed/,
+  );
+  assert.equal(
+    firstSnapshots.at(-1).taskRegistry['assignment:SAFE:1:executor'].activation.status,
+    'pending',
+  );
+
+  const secondSnapshots = [];
+  await runAuthoritativeLedgerWaveWithAttachedHostTasks({
+    ledgerInput: attachedLedgerInput(),
+    attachedTasks: [{ ...attachedExecutor(), status: 'needs-attention' }],
+    taskControl: controls,
+    lifecycleSupervisor: supervisor,
+    lifecycleRecovery: recovery,
+    resumeSnapshot: firstSnapshots.at(-1),
+    saveState: async (snapshot) => secondSnapshots.push(structuredClone(snapshot)),
+  });
+  assert.equal(activations, 2);
+  const activatedSnapshot = secondSnapshots.at(-1);
+  assert.equal(
+    activatedSnapshot.taskRegistry['assignment:SAFE:1:executor'].activation.status,
+    'activated',
+  );
+
+  await runAuthoritativeLedgerWaveWithAttachedHostTasks({
+    ledgerInput: attachedLedgerInput(),
+    attachedTasks: [{ ...attachedExecutor(), status: 'needs-attention' }],
+    taskControl: controls,
+    lifecycleSupervisor: supervisor,
+    lifecycleRecovery: recovery,
+    resumeSnapshot: activatedSnapshot,
+    saveState: async () => {},
+  });
+  assert.equal(activations, 2);
+});
+
 test('periodically serializes lifecycle heartbeats while an attached host task is still waiting', async () => {
   const root = mkdtempSync(join(tmpdir(), 'agentgraph-periodic-heartbeat-'));
   const registryPath = join(root, 'registry.json');
@@ -740,6 +1489,7 @@ test('periodically serializes lifecycle heartbeats while an attached host task i
   let creates = 0;
   const adapter = taskRunner.createInjectedHostTaskControlAdapter({
     taskControl: {
+      activateTask: activateAttachedTask,
       async createTask() {
         creates += 1;
         return { threadId: 'duplicate-executor' };
@@ -781,7 +1531,7 @@ test('periodically serializes lifecycle heartbeats while an attached host task i
       },
     },
   });
-  await adapter.createTask({
+  const task = await adapter.createTask({
     assignment: {
       id: 'assignment:SAFE:1:executor',
       nodeId: 'SAFE',
@@ -790,6 +1540,15 @@ test('periodically serializes lifecycle heartbeats while an attached host task i
     },
     prompt: 'unused',
     target: {},
+  });
+  await adapter.activateTask({
+    assignmentId: 'assignment:SAFE:1:executor',
+    activationId: task.activation.activationId,
+    threadId: task.threadId,
+    prompt: 'exact prompt',
+  });
+  await adapter.resumeTaskLifecycle({
+    assignmentId: 'assignment:SAFE:1:executor',
   });
   const safety = setTimeout(
     () =>
@@ -825,6 +1584,7 @@ test('heartbeat failure stops the same attached task and returns one terminal fa
   let creates = 0;
   const adapter = taskRunner.createInjectedHostTaskControlAdapter({
     taskControl: {
+      activateTask: activateAttachedTask,
       async createTask() {
         creates += 1;
         return { threadId: 'duplicate-executor' };
@@ -857,7 +1617,7 @@ test('heartbeat failure stops the same attached task and returns one terminal fa
       },
     },
   });
-  await adapter.createTask({
+  const task = await adapter.createTask({
     assignment: {
       id: 'assignment:SAFE:1:executor',
       nodeId: 'SAFE',
@@ -866,6 +1626,15 @@ test('heartbeat failure stops the same attached task and returns one terminal fa
     },
     prompt: 'unused',
     target: {},
+  });
+  await adapter.activateTask({
+    assignmentId: 'assignment:SAFE:1:executor',
+    activationId: task.activation.activationId,
+    threadId: task.threadId,
+    prompt: 'exact prompt',
+  });
+  await adapter.resumeTaskLifecycle({
+    assignmentId: 'assignment:SAFE:1:executor',
   });
 
   const outcome = await adapter.waitForAny([
@@ -895,6 +1664,7 @@ test('rejects private material from the lifecycle supervisor before reusing or c
   let creates = 0;
   const adapter = taskRunner.createInjectedHostTaskControlAdapter({
     taskControl: {
+      activateTask: activateAttachedTask,
       async createTask() {
         creates += 1;
         return { threadId: 'must-not-create' };
@@ -920,9 +1690,7 @@ test('rejects private material from the lifecycle supervisor before reusing or c
     },
   });
 
-  await assert.rejects(
-    () =>
-      adapter.createTask({
+  const task = await adapter.createTask({
         assignment: {
           id: 'assignment:SAFE:1:executor',
           nodeId: 'SAFE',
@@ -931,6 +1699,17 @@ test('rejects private material from the lifecycle supervisor before reusing or c
         },
         prompt: 'unused',
         target: {},
+      });
+  await adapter.activateTask({
+    assignmentId: 'assignment:SAFE:1:executor',
+    activationId: task.activation.activationId,
+    threadId: task.threadId,
+    prompt: 'exact prompt',
+  });
+  await assert.rejects(
+    () =>
+      adapter.resumeTaskLifecycle({
+        assignmentId: 'assignment:SAFE:1:executor',
       }),
     /private lifecycle material/,
   );
@@ -986,33 +1765,55 @@ test('attached-task controller drives resume heartbeat telemetry and completion 
         completion.handoff_id,
         completion.evidence,
       ]);
-      return { event: { event_type: 'checkpoint_completed' } };
+      const finalization = completion.evidence.find(
+        (item) => item.kind === 'agentgraph-finalization',
+      );
+      return {
+        checkpoint: {
+          event_type: 'checkpoint_completed',
+          program_id: binding.program_id,
+          checkpoint_id: binding.checkpoint_id,
+          node_id: binding.node_id,
+          payload: { evidence: completion.evidence },
+        },
+        handoff: {
+          handoff_id: completion.handoff_id,
+          program_id: binding.program_id,
+          checkpoint_id: binding.checkpoint_id,
+          node_id: binding.node_id,
+          next_node: completion.next_node,
+          next_stage: completion.next_stage,
+        },
+        finalization,
+      };
     },
   };
   let verifierCreates = 0;
+  const lifecycleRecovery = {
+    assignmentId: 'assignment:SAFE:1:executor',
+    programId: 'program-safe',
+    checkpointId: 'checkpoint-safe-1',
+    registryPath,
+    recoveryAuditPath,
+    recoveryId: 'recovery-safe-generation-1',
+    generation: 1,
+    completion: {
+      evidence: [{ kind: 'focused-test', sha256: '3'.repeat(64) }],
+      completed_stage: 'stage:SAFE:verify',
+      handoff_id: 'handoff-safe-1',
+      next_node: 'NEXT',
+      next_stage: 'stage:NEXT:plan',
+      summary: 'SAFE verified.',
+      blockers: [],
+    },
+  };
   const result = await runAuthoritativeLedgerWaveWithAttachedHostTasks({
     ledgerInput: attachedLedgerInput(),
     attachedTasks: [{ ...attachedExecutor(), status: 'needs-attention' }],
     lifecycleSupervisor: supervisor,
-    lifecycleRecovery: {
-      assignmentId: 'assignment:SAFE:1:executor',
-      programId: 'program-safe',
-      checkpointId: 'checkpoint-safe-1',
-      registryPath,
-      recoveryAuditPath,
-      recoveryId: 'recovery-safe-generation-1',
-      generation: 1,
-      completion: {
-        evidence: [{ kind: 'focused-test', sha256: '3'.repeat(64) }],
-        completed_stage: 'stage:SAFE:verify',
-        handoff_id: 'handoff-safe-1',
-        next_node: 'NEXT',
-        next_stage: 'stage:NEXT:plan',
-        summary: 'SAFE verified.',
-        blockers: [],
-      },
-    },
+    lifecycleRecovery,
     taskControl: {
+      activateTask: activateAttachedTask,
       async createTask({ assignment }) {
         assert.equal(assignment.role, 'verifier');
         assert.equal(
@@ -1073,11 +1874,20 @@ test('attached-task controller drives resume heartbeat telemetry and completion 
         };
       },
     },
+    saveState: async (snapshot) => {
+      if (snapshot.lifecycleFinalization?.phase === 'prepared') {
+        lifecycleRecovery.completion.next_node = 'MUTATED-AFTER-PREPARE';
+        lifecycleRecovery.completion.next_stage =
+          'stage:MUTATED-AFTER-PREPARE:plan';
+      }
+    },
     now: () => '2026-07-30T23:30:00.000Z',
   });
 
   assert.equal(result.status, 'complete');
   assert.equal(verifierCreates, 1);
+  assert.equal(operations.at(-1)[2], 'handoff-safe-1');
+  assert.equal(result.lifecycleFinalization.completionReceipt.handoff.next_node, 'NEXT');
   assert.deepEqual(
     operations.map((operation) => operation[0]),
     ['resume', 'heartbeat', 'telemetry', 'heartbeat', 'completion'],
@@ -1145,6 +1955,7 @@ test('failed independent verification leaves the resumed lease active without co
       },
     },
     taskControl: {
+      activateTask: activateAttachedTask,
       async createTask({ assignment }) {
         assert.equal(assignment.role, 'verifier');
         creates += 1;
@@ -1260,7 +2071,10 @@ test('prepared lifecycle journal must persist before DB completion or successor 
     requiresLifecycleFinalization({ nodeId }) {
       return nodeId === 'A';
     },
-    async completeVerifiedNodeLifecycle() {
+    getLifecycleCompletionBinding() {
+      return directLifecycleBinding();
+    },
+    async completeVerifiedNodeLifecycle({ finalization }) {
       lifecycleCompletions += 1;
       return { event: { event_type: 'checkpoint_completed' } };
     },
@@ -1288,6 +2102,77 @@ test('prepared lifecycle journal must persist before DB completion or successor 
     launched.map(({ nodeId, role }) => `${nodeId}:${role}`),
     ['A:executor', 'A:verifier'],
   );
+});
+
+test('lifecycle next_node must match a dependency-unlocked candidate executor', async () => {
+  const executionGraph = dependentProofGraph();
+  const queue = [];
+  let lifecycleCompletions = 0;
+  const codex = {
+    async createTask({ assignment }) {
+      if (assignment.nodeId !== 'A') {
+        throw new Error('mismatched successor must not launch');
+      }
+      queue.push(
+        assignment.role === 'executor'
+          ? {
+              assignmentId: assignment.id,
+              status: 'completed',
+              final: JSON.stringify({
+                kind: 'completion',
+                nodeId: 'A',
+                assignmentId: assignment.id,
+                workerId: assignment.workerId,
+                artifact: {
+                  id: 'artifact:A:1',
+                  evidence: ['focused tests'],
+                  productionSideEffects: false,
+                  providerMutations: false,
+                },
+              }),
+            }
+          : {
+              assignmentId: assignment.id,
+              status: 'completed',
+              final: JSON.stringify({
+                kind: 'verification',
+                nodeId: 'A',
+                assignmentId: assignment.id,
+                workerId: assignment.workerId,
+                artifactId: 'artifact:A:1',
+                passed: true,
+                evidence: ['independent verification'],
+                errors: [],
+              }),
+            },
+      );
+      return { threadId: `thread:${assignment.id}` };
+    },
+    async waitForAny() {
+      return queue.shift();
+    },
+    requiresLifecycleFinalization({ nodeId }) {
+      return nodeId === 'A';
+    },
+    getLifecycleCompletionBinding() {
+      return directLifecycleBinding('A', 'NOT-UNLOCKED');
+    },
+    async completeVerifiedNodeLifecycle() {
+      lifecycleCompletions += 1;
+    },
+  };
+  await assert.rejects(
+    () =>
+      runAgentGraphWithCodex({
+        graph: executionGraph,
+        initialState: createAgentGraphExecutionState(executionGraph),
+        workers: workers(),
+        codex,
+        saveState: async () => {},
+      }),
+    /next_node.*dependency-unlocked candidate executor/i,
+  );
+  assert.equal(lifecycleCompletions, 0);
 });
 
 test('reconciles then retries one incomplete prepared DB completion before successor launch', async () => {
@@ -1343,13 +2228,14 @@ test('reconciles then retries one incomplete prepared DB completion before succe
     requiresLifecycleFinalization({ nodeId }) {
       return nodeId === 'A';
     },
-    async completeVerifiedNodeLifecycle() {
+    getLifecycleCompletionBinding() {
+      return directLifecycleBinding();
+    },
+    async completeVerifiedNodeLifecycle({ finalization }) {
       completionAttempts += 1;
       events.push(`completion:${completionAttempts}`);
       if (completionAttempts === 1) throw new Error('transient DB completion failure');
-      return {
-        checkpoint: { event_type: 'checkpoint_completed', event_hash: '9'.repeat(64) },
-      };
+      return completionReceiptFor(finalization);
     },
     async reconcilePreparedLifecycleFinalization() {
       events.push('reconcile:incomplete');
@@ -1442,6 +2328,9 @@ test('persistent DB completion failure returns a durable resumable prepared jour
       requiresLifecycleFinalization({ nodeId }) {
         return nodeId === 'A';
       },
+      getLifecycleCompletionBinding() {
+        return directLifecycleBinding();
+      },
       async completeVerifiedNodeLifecycle() {
         completionAttempts += 1;
         throw new Error('persistent DB completion failure');
@@ -1460,6 +2349,127 @@ test('persistent DB completion failure returns a durable resumable prepared jour
   assert.equal(result.lifecycleFinalization.phase, 'prepared');
   assert.equal(snapshots.at(-1).lifecycleFinalization.phase, 'prepared');
   assert.notEqual(result.state.nodes.A.status, 'completed');
+});
+
+test('finalized restart requires an exact completion receipt bound to its finalization hash', async () => {
+  const executionGraph = { nodes: [proofGraph().nodes[0]] };
+  const state = createAgentGraphExecutionState(executionGraph);
+  state.status = 'complete';
+  state.nodes['READ-PACKAGE'].status = 'completed';
+  const verifierAssignment = {
+    id: 'assignment:READ-PACKAGE:1:verifier',
+    nodeId: 'READ-PACKAGE',
+    workerId: 'codex-verifier-1',
+    role: 'verifier',
+    artifactId: 'artifact:READ-PACKAGE:1',
+  };
+  const verification = {
+    kind: 'verification',
+    nodeId: 'READ-PACKAGE',
+    assignmentId: verifierAssignment.id,
+    workerId: verifierAssignment.workerId,
+    artifactId: verifierAssignment.artifactId,
+    passed: true,
+  };
+  const exact = {
+    nodeId: 'READ-PACKAGE',
+    verifierAssignment,
+    verification,
+    lifecycle: directLifecycleBinding('READ-PACKAGE', 'NEXT'),
+    candidate: {
+      state,
+      assignments: [],
+      successorAssignmentIds: [],
+      successorContract: { kind: 'terminal-no-successor', nextNode: 'NEXT' },
+    },
+  };
+  const sha256 = createHash('sha256').update(JSON.stringify(exact)).digest('hex');
+  const completionReceipt = completionReceiptFor({ ...exact, sha256 });
+  const valid = {
+    schemaVersion: '1.0.0',
+    phase: 'finalized',
+    ...exact,
+    sha256,
+    completionReceipt,
+    completionReceiptSha256: createHash('sha256')
+      .update(JSON.stringify(completionReceipt))
+      .digest('hex'),
+  };
+  const baseInput = {
+    graph: executionGraph,
+    initialState: createAgentGraphExecutionState(executionGraph),
+    workers: workers(),
+    codex: {
+      async createTask() {
+        throw new Error('completed finalization must not relaunch');
+      },
+      async waitForAny() {
+        throw new Error('completed finalization must not wait');
+      },
+    },
+    saveState: async () => {},
+  };
+  for (const journal of [
+    { ...valid, completionReceipt: undefined },
+    { ...valid, completionReceiptSha256: '0'.repeat(64) },
+    {
+      ...valid,
+      completionReceipt: {
+        checkpoint: { event_type: 'checkpoint_completed', payload: { evidence: [] } },
+      },
+    },
+    (() => {
+      const wrongReceipt = structuredClone(completionReceipt);
+      wrongReceipt.handoff.next_node = 'WRONG-NEXT';
+      return {
+        ...valid,
+        completionReceipt: wrongReceipt,
+        completionReceiptSha256: createHash('sha256')
+          .update(JSON.stringify(wrongReceipt))
+          .digest('hex'),
+      };
+    })(),
+  ]) {
+    await assert.rejects(
+      () =>
+        runAgentGraphWithCodex({
+          ...baseInput,
+          resumeSnapshot: { completedTasks: [], taskRegistry: {}, lifecycleFinalization: journal },
+        }),
+      /exact public completion receipt/,
+    );
+  }
+  const recomputedContractTamper = structuredClone(valid);
+  delete recomputedContractTamper.completionReceipt;
+  delete recomputedContractTamper.completionReceiptSha256;
+  recomputedContractTamper.phase = 'prepared';
+  recomputedContractTamper.candidate.successorContract.nextNode = 'WRONG-NEXT';
+  const {
+    schemaVersion: _schemaVersion,
+    phase: _phase,
+    sha256: _oldSha,
+    ...tamperedExact
+  } = recomputedContractTamper;
+  recomputedContractTamper.sha256 = createHash('sha256')
+    .update(JSON.stringify(tamperedExact))
+    .digest('hex');
+  await assert.rejects(
+    () =>
+      runAgentGraphWithCodex({
+        ...baseInput,
+        resumeSnapshot: {
+          completedTasks: [],
+          taskRegistry: {},
+          lifecycleFinalization: recomputedContractTamper,
+        },
+      }),
+    /terminal lifecycle finalization contract does not match/i,
+  );
+  const result = await runAgentGraphWithCodex({
+    ...baseInput,
+    resumeSnapshot: { completedTasks: [], taskRegistry: {}, lifecycleFinalization: valid },
+  });
+  assert.equal(result.status, 'complete');
 });
 
 test('reconciles a durable prepared journal after DB completion before launching a successor', async () => {
@@ -1515,11 +2525,12 @@ test('reconciles a durable prepared journal after DB completion before launching
     requiresLifecycleFinalization({ nodeId }) {
       return nodeId === 'A';
     },
-    async completeVerifiedNodeLifecycle() {
+    getLifecycleCompletionBinding() {
+      return directLifecycleBinding();
+    },
+    async completeVerifiedNodeLifecycle({ finalization }) {
       lifecycleCompletions += 1;
-      return {
-        checkpoint: { event_type: 'checkpoint_completed', event_hash: '9'.repeat(64) },
-      };
+      return completionReceiptFor(finalization);
     },
   };
 
@@ -1564,12 +2575,7 @@ test('reconciles a durable prepared journal after DB completion before launching
             assert.equal(journal.phase, 'prepared');
             return {
               completed: true,
-              receipt: {
-                checkpoint: {
-                  event_type: 'checkpoint_completed',
-                  event_hash: '9'.repeat(64),
-                },
-              },
+              receipt: completionReceiptFor(journal),
             };
           },
           async createTask({ assignment, idempotencyKey }) {
@@ -1600,6 +2606,41 @@ test('reconciles a durable prepared journal after DB completion before launching
     'saved:finalized',
     'created:assignment:B:1:executor',
   ]);
+});
+
+test('prepared restart rejects a recomputed DB receipt with the wrong handoff successor', async () => {
+  const prepared = preparedFinalizationFor();
+  const wrongReceipt = completionReceiptFor(prepared);
+  wrongReceipt.handoff.next_node = 'WRONG-NEXT';
+  let creates = 0;
+  await assert.rejects(
+    () =>
+      runAgentGraphWithCodex({
+        graph: dependentProofGraph(),
+        initialState: createAgentGraphExecutionState(dependentProofGraph()),
+        workers: workers(),
+        codex: {
+          async createTask() {
+            creates += 1;
+            throw new Error('wrong reconciliation must not launch');
+          },
+          async waitForAny() {
+            throw new Error('wrong reconciliation must not wait');
+          },
+          async reconcilePreparedLifecycleFinalization() {
+            return { completed: true, receipt: wrongReceipt };
+          },
+        },
+        resumeSnapshot: {
+          completedTasks: [],
+          taskRegistry: {},
+          lifecycleFinalization: prepared,
+        },
+        saveState: async () => {},
+      }),
+    /exact public completion receipt/i,
+  );
+  assert.equal(creates, 0);
 });
 
 test('real injected adapter reconciles the same checkpoint and prepared journal hash', async () => {
@@ -1647,17 +2688,30 @@ test('real injected adapter reconciles the same checkpoint and prepared journal 
           async recordAttachedTelemetryDecision() {
             return { observation: { allowed: true } };
           },
-          async completeAttachedCheckpoint(_binding, payload) {
+          async completeAttachedCheckpoint(binding, payload) {
             completionPayload = payload;
             return {
               checkpoint: {
                 event_type: 'checkpoint_completed',
                 event_hash: '9'.repeat(64),
+                program_id: binding.program_id,
+                checkpoint_id: binding.checkpoint_id,
+                node_id: binding.node_id,
+                payload: { evidence: payload.evidence },
+              },
+              handoff: {
+                handoff_id: payload.handoff_id,
+                program_id: binding.program_id,
+                checkpoint_id: binding.checkpoint_id,
+                node_id: binding.node_id,
+                next_node: payload.next_node,
+                next_stage: payload.next_stage,
               },
             };
           },
         },
         taskControl: {
+          activateTask: activateAttachedTask,
           async createTask({ assignment }) {
             verifierCreates += 1;
             return { threadId: `thread:${assignment.id}` };
@@ -1728,16 +2782,12 @@ test('real injected adapter reconciles the same checkpoint and prepared journal 
         reconcileCalls.push({ binding, options });
         return {
           completed: true,
-          receipt: {
-            checkpoint: {
-              event_type: 'checkpoint_completed',
-              event_hash: '9'.repeat(64),
-            },
-          },
+          receipt: completionReceiptFor(prepared.lifecycleFinalization),
         };
       },
     },
     taskControl: {
+      activateTask: activateAttachedTask,
       async createTask() {
         throw new Error('completed node must not relaunch');
       },

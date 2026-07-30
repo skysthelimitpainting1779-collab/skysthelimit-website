@@ -2,7 +2,6 @@ import { spawn } from 'node:child_process';
 import { readFile, unlink } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { randomUUID } from 'node:crypto';
 
 function codexThreadId(stdout) {
   for (const line of stdout.split(/\r?\n/)) {
@@ -34,8 +33,15 @@ export function createCodexCliTaskBridge({
   const jobs = new Map();
 
   return {
-    async createTask({ assignment, prompt }) {
-      const taskId = `codex-cli:${assignment.id}:${randomUUID()}`;
+    async createTask({ assignment, prompt, idempotencyKey }) {
+      const stableKey = idempotencyKey || assignment.id;
+      if (typeof stableKey !== 'string' || !stableKey) {
+        throw new Error('Codex CLI task requires an assignment idempotency key');
+      }
+      const taskId = `codex-cli:${stableKey}`;
+      if (jobs.has(taskId)) {
+        return { threadId: taskId, hostId: 'codex-cli' };
+      }
       const outputPath = join(tmpdir(), `${taskId.replaceAll(':', '-')}.json`);
       const args = [
         '--sandbox',
@@ -108,7 +114,6 @@ export function createCodexCliTaskBridge({
         return job.done.then((outcome) => ({ ...outcome, threadId: task.threadId }));
       });
       const outcome = await Promise.race(pending);
-      jobs.delete(outcome.threadId);
       return outcome;
     },
 

@@ -329,25 +329,274 @@ export function parseCodexAssignmentCallback(text, assignment) {
 
 export function createCodexAppTaskBridge({
   createThread,
+  listThreads,
+  readThread,
   waitThreads,
   sendMessageToThread,
+  loadLaunchMapping = async () => null,
+  saveLaunchMapping = async () => {},
   timeoutMs = 120_000,
+  pollIntervalMs = 250,
+  sleep = (delayMs) => new Promise((resolveSleep) => setTimeout(resolveSleep, delayMs)),
+  reconciliationAttempts = 3,
 }) {
-  if (typeof createThread !== 'function' || typeof waitThreads !== 'function') {
-    throw new Error('Codex app createThread and waitThreads functions are required');
+  if (
+    typeof createThread !== 'function' ||
+    (typeof readThread !== 'function' && typeof waitThreads !== 'function')
+  ) {
+    throw new Error(
+      'Codex app createThread plus listThreads/readThread task controls are required',
+    );
+  }
+  const launches = new Map();
+  const launchLocks = new Map();
+  let listQuerySupported = null;
+  const threadIdOf = (value) =>
+    value?.threadId || value?.id || value?.thread?.id || null;
+  const threadListOf = (value) =>
+    value?.threads || value?.items || value?.data?.threads || [];
+  const textLeaves = (value, output = []) => {
+    if (typeof value === 'string') {
+      output.push(value);
+    } else if (Array.isArray(value)) {
+      for (const item of value) textLeaves(item, output);
+    } else if (isRecord(value)) {
+      for (const item of Object.values(value)) textLeaves(item, output);
+    }
+    return output;
+  };
+  const turnItems = (response) =>
+    (response?.turns || response?.thread?.turns || [])
+      .flatMap((turn) => turn?.items || [])
+      .filter(isRecord);
+  const latestAssistantText = (response) => {
+    const turns = response?.turns || response?.thread?.turns || [];
+    for (const turn of turns) {
+      for (const item of turn?.items || []) {
+        const role = item?.role || item?.message?.role;
+        if (
+          role === 'assistant' ||
+          [
+            'agentMessage',
+            'assistantMessage',
+            'agent_message',
+            'assistant_message',
+            'output_text',
+          ].includes(item?.type)
+        ) {
+          const text =
+            item?.text ||
+            item?.message?.text ||
+            textLeaves(item?.content || item?.message?.content || []).find(
+              (leaf) => leaf.trim(),
+            );
+          if (text) return text;
+        }
+      }
+      const legacy =
+        turn?.assistantMessage?.text ||
+        turn?.latestAssistantMessage?.text ||
+        turn?.text;
+      if (legacy) return legacy;
+    }
+    return (
+      response?.latestAssistantMessage?.text ||
+      response?.thread?.latestAssistantMessage?.text ||
+      ''
+    );
+  };
+  async function listRecentThreads(tag) {
+    if (typeof listThreads !== 'function') return [];
+    if (listQuerySupported !== false) {
+      try {
+        const response = parsedToolResult(
+          await listThreads({ query: tag, limit: 50 }),
+        );
+        listQuerySupported = true;
+        return threadListOf(response);
+      } catch {
+        listQuerySupported = false;
+      }
+    }
+    const response = parsedToolResult(await listThreads({ limit: 50 }));
+    return threadListOf(response);
+  }
+  const turnIdOf = (turn) => turn?.id || turn?.turnId || null;
+  function activationMarkerTurns(response, marker) {
+    const turns = response?.turns || response?.thread?.turns || [];
+    return turns.filter((turn) =>
+      (turn?.items || []).some((item) => {
+        const role = item?.role || item?.message?.role;
+        const isUser =
+          role === 'user' ||
+          ['userMessage', 'user_message', 'input_text'].includes(item?.type);
+        return (
+          isUser &&
+          textLeaves(item).some((leaf) => leaf.includes(marker))
+        );
+      }),
+    );
+  }
+  async function findByBootstrapTag(tag, target) {
+    const recentThreads = await listRecentThreads(tag);
+    const matches = [];
+    for (const thread of recentThreads) {
+      if (
+        target?.projectId &&
+        thread.projectId &&
+        thread.projectId !== target.projectId
+      ) {
+        continue;
+      }
+      const threadId = threadIdOf(thread);
+      if (!threadId) continue;
+      if (typeof readThread !== 'function') {
+        throw new Error('Codex bootstrap reconciliation requires readThread');
+      }
+      const response = parsedToolResult(
+        await readThread({
+          threadId,
+          ...(thread.hostId ? { hostId: thread.hostId } : {}),
+        }),
+      );
+      if (textLeaves(response).some((leaf) => leaf.includes(tag))) {
+        matches.push(thread);
+      }
+    }
+    if (matches.length > 1) {
+      throw new Error(`ambiguous Codex assignment bootstrap tag: ${tag}`);
+    }
+    if (matches.length === 0) return null;
+    const threadId = threadIdOf(matches[0]);
+    if (!threadId) throw new Error('matched Codex thread has no threadId');
+    return { threadId, hostId: matches[0].hostId || null };
+  }
+  async function reconcileBootstrapTag(tag, target) {
+    for (let attempt = 0; attempt < reconciliationAttempts; attempt += 1) {
+      const mapping = await findByBootstrapTag(tag, target);
+      if (mapping) return mapping;
+      if (attempt + 1 < reconciliationAttempts) await sleep(pollIntervalMs);
+    }
+    return null;
   }
   return {
-    async createTask({ prompt, target }) {
-      const created = parsedToolResult(await createThread({ prompt, target }));
-      if (!isRecord(created) || typeof created.threadId !== 'string' || !created.threadId) {
-        throw new Error('Codex create_thread did not return a ready threadId');
+    async createTask({ prompt, target, idempotencyKey, assignment }) {
+      const key = idempotencyKey || assignment?.id;
+      if (typeof key !== 'string' || !key) {
+        throw new Error('Codex app task creation requires an assignment idempotency key');
       }
-      return {
-        threadId: created.threadId,
-        hostId: created.hostId || null,
-      };
+      if (launches.has(key)) return clone(launches.get(key));
+      if (launchLocks.has(key)) return clone(await launchLocks.get(key));
+      const pending = (async () => {
+        const durable = await loadLaunchMapping(key);
+        if (isRecord(durable) && typeof durable.threadId === 'string') {
+          launches.set(key, clone(durable));
+          return clone(durable);
+        }
+        const bootstrapTag = `agentgraph-assignment:${key}`;
+        let mapping = await findByBootstrapTag(bootstrapTag, target);
+        if (!mapping) {
+          const created = parsedToolResult(
+            await createThread({
+              prompt: `${bootstrapTag}\n${prompt}`,
+              target,
+            }),
+          );
+          const readyThreadId = threadIdOf(created);
+          if (readyThreadId && !created?.clientThreadId) {
+            mapping = {
+              threadId: readyThreadId,
+              hostId: created.hostId || null,
+              bootstrapTag,
+            };
+          } else {
+            mapping = await reconcileBootstrapTag(bootstrapTag, target);
+            if (!mapping) {
+              throw new Error(
+                'Codex create_thread returned setup-only clientThreadId without a reconciled thread',
+              );
+            }
+            mapping.bootstrapTag = bootstrapTag;
+          }
+        }
+        await saveLaunchMapping(key, clone(mapping));
+        launches.set(key, clone(mapping));
+        return clone(mapping);
+      })();
+      launchLocks.set(key, pending);
+      try {
+        return clone(await pending);
+      } finally {
+        launchLocks.delete(key);
+      }
     },
     async waitForAny(tasks) {
+      if (typeof readThread === 'function') {
+        const deadline = Date.now() + timeoutMs;
+        do {
+          for (const task of tasks) {
+            const response = parsedToolResult(
+              await readThread({
+                threadId: task.threadId,
+                ...(task.hostId ? { hostId: task.hostId } : {}),
+              }),
+            );
+            const thread = response?.thread || response;
+            const turns = response?.turns || thread?.turns || [];
+            let eligibleTurns = turns;
+            if (task.baselineTurnId) {
+              const baselineIndex = turns.findIndex(
+                (turn) => turnIdOf(turn) === task.baselineTurnId,
+              );
+              if (baselineIndex < 0) {
+                throw new Error(
+                  `Codex activation baseline turn is missing: ${task.baselineTurnId}`,
+                );
+              }
+              eligibleTurns = [turns[baselineIndex]];
+            }
+            const latest =
+              eligibleTurns[0] ||
+              (!task.baselineTurnId
+                ? response?.latestTurn || thread?.latestTurn || null
+                : null);
+            const assistantText = latestAssistantText(
+              task.baselineTurnId ? { turns: eligibleTurns } : response,
+            );
+            const status =
+              latest?.status ||
+              thread?.status?.type ||
+              thread?.status ||
+              response?.status?.type ||
+              response?.status;
+            if (
+              latest &&
+              (latest.status === 'completed' ||
+                (status === 'idle' && assistantText))
+            ) {
+              return {
+                assignmentId: task.assignmentId,
+                status: 'completed',
+                final: assistantText,
+                cursor: null,
+              };
+            }
+            if (latest?.error || thread?.error || status === 'failed') {
+              return {
+                assignmentId: task.assignmentId,
+                status: 'failed',
+                error: latest?.error || thread?.error || 'Codex thread failed',
+              };
+            }
+          }
+          if (Date.now() < deadline) await sleep(pollIntervalMs);
+        } while (Date.now() < deadline);
+        return {
+          assignmentId: tasks[0]?.assignmentId,
+          status: 'timed_out',
+          error: 'no Codex completion was present in read_thread',
+        };
+      }
       const response = parsedToolResult(
         await waitThreads({
           targets: tasks.map((task) => ({
@@ -392,6 +641,72 @@ export function createCodexAppTaskBridge({
               ...(hostId ? { hostId } : {}),
               prompt,
             });
+          },
+        }
+      : {}),
+    ...(typeof sendMessageToThread === 'function'
+      ? {
+          async activateTask({
+            threadId,
+            hostId,
+            prompt,
+            activationId,
+          }) {
+            const activationMarker = `agentgraph-activation:${activationId}`;
+            let response = parsedToolResult(
+              await readThread({
+                threadId,
+                ...(hostId ? { hostId } : {}),
+              }),
+            );
+            let markerTurns = activationMarkerTurns(response, activationMarker);
+            if (markerTurns.length > 1) {
+              throw new Error(`ambiguous Codex activation marker: ${activationMarker}`);
+            }
+            let recovered = markerTurns.length === 1;
+            if (markerTurns.length === 0) {
+              await sendMessageToThread({
+                threadId,
+                ...(hostId ? { hostId } : {}),
+                prompt: `${activationMarker}\n${prompt}`,
+              });
+              for (
+                let attempt = 0;
+                attempt < reconciliationAttempts && markerTurns.length === 0;
+                attempt += 1
+              ) {
+                response = parsedToolResult(
+                  await readThread({
+                    threadId,
+                    ...(hostId ? { hostId } : {}),
+                  }),
+                );
+                markerTurns = activationMarkerTurns(response, activationMarker);
+                if (markerTurns.length > 1) {
+                  throw new Error(
+                    `ambiguous Codex activation marker: ${activationMarker}`,
+                  );
+                }
+                if (
+                  markerTurns.length === 0 &&
+                  attempt + 1 < reconciliationAttempts
+                ) {
+                  await sleep(pollIntervalMs);
+                }
+              }
+            }
+            const baselineTurnId = turnIdOf(markerTurns[0]);
+            if (!baselineTurnId) {
+              throw new Error(
+                `Codex activation marker was not reconciled: ${activationMarker}`,
+              );
+            }
+            return {
+              activationId,
+              activationMarker,
+              baselineTurnId,
+              recovered,
+            };
           },
         }
       : {}),
@@ -516,7 +831,9 @@ export function createPythonLifecycleSupervisorBridge({
       return request('completion', binding, completion);
     },
     reconcileAttachedCheckpointCompletion(binding, reconciliation) {
-      return request('reconcile', binding, reconciliation);
+      return request('reconcile', binding, {
+        finalization_sha256: reconciliation.finalizationSha256,
+      });
     },
     async close() {
       if (closed) return;
@@ -539,6 +856,7 @@ function taskSnapshot(activeTasks) {
         nodeId: task.assignment.nodeId,
         status: 'running',
         ...(task.lifecycleResume ? { lifecycleResume: clone(task.lifecycleResume) } : {}),
+        ...(task.activation ? { activation: clone(task.activation) } : {}),
       },
     ]),
   );
@@ -558,6 +876,7 @@ function taskRegistrySnapshot(activeTasks, completedTasks) {
         status: task.status,
         ...(task.error ? { error: task.error } : {}),
         ...(task.lifecycleResume ? { lifecycleResume: clone(task.lifecycleResume) } : {}),
+        ...(task.activation ? { activation: clone(task.activation) } : {}),
       },
     ]),
   );
@@ -596,14 +915,58 @@ function finalizationHash(document) {
     .digest('hex');
 }
 
-function prepareLifecycleFinalization({ assignment, callback, candidate }) {
+function prepareLifecycleFinalization({
+  assignment,
+  callback,
+  candidate,
+  lifecycleBinding,
+}) {
+  if (!isRecord(lifecycleBinding)) {
+    throw new Error('lifecycle finalization requires an immutable completion binding');
+  }
+  if (
+    lifecycleBinding.nodeId !== assignment.nodeId ||
+    typeof lifecycleBinding.programId !== 'string' ||
+    !lifecycleBinding.programId ||
+    typeof lifecycleBinding.checkpointId !== 'string' ||
+    !lifecycleBinding.checkpointId ||
+    !isRecord(lifecycleBinding.completionSpec)
+  ) {
+    throw new Error('lifecycle finalization completion binding is invalid');
+  }
+  const successorAssignments = candidate.newAssignments.filter(
+    (item) => item.role === 'executor',
+  );
+  const selectedSuccessor = successorAssignments.find(
+    (item) => item.nodeId === lifecycleBinding.completionSpec?.next_node,
+  );
+  if (successorAssignments.length > 0 && !selectedSuccessor) {
+    throw new Error(
+      'lifecycle next_node does not match a dependency-unlocked candidate executor',
+    );
+  }
   const exact = {
     nodeId: assignment.nodeId,
     verifierAssignment: clone(assignment),
     verification: clone(callback),
+    lifecycle: clone(lifecycleBinding),
     candidate: {
       state: clone(candidate.state),
       assignments: clone(candidate.newAssignments),
+      successorAssignmentIds: candidate.newAssignments
+        .filter((item) => item.role === 'executor')
+        .map((item) => item.id)
+        .sort(),
+      successorContract: selectedSuccessor
+        ? {
+            kind: 'candidate-successor',
+            assignmentId: selectedSuccessor.id,
+            nodeId: selectedSuccessor.nodeId,
+          }
+        : {
+            kind: 'terminal-no-successor',
+            nextNode: lifecycleBinding.completionSpec?.next_node || null,
+          },
     },
   };
   return {
@@ -630,7 +993,15 @@ function assertLifecycleFinalization(journal) {
     journal.verification.artifactId !== journal.verifierAssignment.artifactId ||
     !isRecord(journal.candidate) ||
     !isRecord(journal.candidate.state) ||
-    !Array.isArray(journal.candidate.assignments)
+    !Array.isArray(journal.candidate.assignments) ||
+    !Array.isArray(journal.candidate.successorAssignmentIds) ||
+    !isRecord(journal.lifecycle) ||
+    journal.lifecycle.nodeId !== journal.nodeId ||
+    typeof journal.lifecycle.programId !== 'string' ||
+    !journal.lifecycle.programId ||
+    typeof journal.lifecycle.checkpointId !== 'string' ||
+    !journal.lifecycle.checkpointId ||
+    !isRecord(journal.lifecycle.completionSpec)
   ) {
     throw new Error('lifecycle finalization journal is invalid');
   }
@@ -638,10 +1009,90 @@ function assertLifecycleFinalization(journal) {
     nodeId: journal.nodeId,
     verifierAssignment: clone(journal.verifierAssignment),
     verification: clone(journal.verification),
+    lifecycle: clone(journal.lifecycle),
     candidate: clone(journal.candidate),
   };
   if (journal.sha256 !== finalizationHash(exact)) {
     throw new Error('lifecycle finalization journal hash does not match');
+  }
+  const completionSpec = journal.lifecycle.completionSpec;
+  for (const field of [
+    'completed_stage',
+    'handoff_id',
+    'next_node',
+    'next_stage',
+    'summary',
+  ]) {
+    if (typeof completionSpec[field] !== 'string' || !completionSpec[field]) {
+      throw new Error(`lifecycle finalization completion binding requires ${field}`);
+    }
+  }
+  if (!Array.isArray(completionSpec.blockers)) {
+    throw new Error('lifecycle finalization completion binding requires blockers');
+  }
+  const successorAssignments = journal.candidate.assignments.filter(
+    (assignment) => assignment?.role === 'executor',
+  );
+  const exactSuccessorIds = successorAssignments
+    .map((assignment) => assignment.id)
+    .sort();
+  if (
+    JSON.stringify(journal.candidate.successorAssignmentIds) !==
+    JSON.stringify(exactSuccessorIds)
+  ) {
+    throw new Error('lifecycle finalization successor assignment ids do not match');
+  }
+  const selectedSuccessor = successorAssignments.find(
+    (assignment) => assignment.nodeId === completionSpec.next_node,
+  );
+  const successorContract = journal.candidate.successorContract;
+  if (
+    successorAssignments.length > 0 &&
+    (!selectedSuccessor ||
+      successorContract?.kind !== 'candidate-successor' ||
+      successorContract.assignmentId !== selectedSuccessor.id ||
+      successorContract.nodeId !== selectedSuccessor.nodeId)
+  ) {
+    throw new Error('lifecycle finalization successor contract does not match');
+  }
+  if (
+    successorAssignments.length === 0 &&
+    (successorContract?.kind !== 'terminal-no-successor' ||
+      successorContract.nextNode !== completionSpec.next_node)
+  ) {
+    throw new Error('terminal lifecycle finalization contract does not match');
+  }
+  if (journal.phase === 'finalized') {
+    const receipt = journal.completionReceipt;
+    const receiptSha256 = String(journal.completionReceiptSha256 || '');
+    const checkpoint = receipt?.checkpoint;
+    const handoff = receipt?.handoff;
+    const evidence = checkpoint?.payload?.evidence;
+    if (
+      !isRecord(receipt) ||
+      !/^[0-9a-f]{64}$/.test(receiptSha256) ||
+      receiptSha256 !== finalizationHash(receipt) ||
+      checkpoint?.event_type !== 'checkpoint_completed' ||
+      checkpoint?.program_id !== journal.lifecycle.programId ||
+      checkpoint?.checkpoint_id !== journal.lifecycle.checkpointId ||
+      checkpoint?.node_id !== journal.nodeId ||
+      handoff?.handoff_id !== completionSpec.handoff_id ||
+      handoff?.program_id !== journal.lifecycle.programId ||
+      handoff?.checkpoint_id !== journal.lifecycle.checkpointId ||
+      handoff?.node_id !== journal.nodeId ||
+      handoff?.next_node !== completionSpec.next_node ||
+      handoff?.next_stage !== completionSpec.next_stage ||
+      !Array.isArray(evidence) ||
+      !evidence.some(
+        (item) =>
+          item?.kind === 'agentgraph-finalization' &&
+          item?.sha256 === journal.sha256,
+      )
+    ) {
+      throw new Error(
+        'finalized lifecycle journal requires an exact public completion receipt',
+      );
+    }
   }
   if (
     journal.candidate.state.nodes?.[journal.nodeId]?.status !== 'completed'
@@ -663,37 +1114,102 @@ async function launchAssignments({
   executionBoundary,
   lifecycleFinalization = null,
 }) {
-  const launched = await Promise.all(
-    assignments
-      .filter((assignment) => !activeTasks.has(assignment.id))
-      .map(async (assignment) => {
-      const prompt = createCodexAssignmentPrompt({
+  for (const assignment of assignments) {
+    if (activeTasks.has(assignment.id)) continue;
+    const prompt = createCodexAssignmentPrompt({
         graph,
         state,
         assignment,
         target,
         executionBoundary,
       });
-      const task = await codex.createTask({
-        assignment: clone(assignment),
-        prompt,
-        target,
-        idempotencyKey: assignment.id,
-      });
-      if (!isRecord(task) || typeof task.threadId !== 'string' || !task.threadId) {
-        throw new Error(`Codex did not return a threadId for ${assignment.id}`);
+    const task = await codex.createTask({
+      assignment: clone(assignment),
+      prompt,
+      target,
+      idempotencyKey: assignment.id,
+    });
+    if (!isRecord(task) || typeof task.threadId !== 'string' || !task.threadId) {
+      throw new Error(`Codex did not return a threadId for ${assignment.id}`);
+    }
+    task.assignment = clone(assignment);
+    task.activationPrompt = prompt;
+    activeTasks.set(assignment.id, task);
+    await saveSnapshot(
+      saveState,
+      state,
+      activeTasks,
+      completedTasks,
+      lifecycleFinalization,
+    );
+    if (task.activation?.status === 'pending') {
+      if (typeof codex.activateTask !== 'function') {
+        throw new Error('attached task activation capability is required');
       }
-      return [assignment.id, { ...task, assignment: clone(assignment) }];
-      }),
-  );
-  for (const [assignmentId, task] of launched) activeTasks.set(assignmentId, task);
-  await saveSnapshot(
-    saveState,
-    state,
-    activeTasks,
-    completedTasks,
-    lifecycleFinalization,
-  );
+      try {
+        const receipt = await codex.activateTask({
+          assignmentId: task.assignment.id,
+          activationId: task.activation.activationId,
+          threadId: task.threadId,
+          hostId: task.hostId || undefined,
+          prompt: task.activationPrompt,
+        });
+        task.activation = {
+          ...task.activation,
+          status: 'activated',
+          receipt: clone(receipt),
+        };
+        delete task.activationPrompt;
+        await saveSnapshot(
+          saveState,
+          state,
+          activeTasks,
+          completedTasks,
+          lifecycleFinalization,
+        );
+      } catch (error) {
+        task.activation = {
+          ...task.activation,
+          status: 'pending',
+          error: error.message,
+        };
+        delete task.activationPrompt;
+        await saveSnapshot(
+          saveState,
+          state,
+          activeTasks,
+          completedTasks,
+          lifecycleFinalization,
+        );
+        throw error;
+      }
+    } else {
+      delete task.activationPrompt;
+    }
+    if (task.requiresLifecycleResume) {
+      if (
+        task.activation?.status !== 'activated' ||
+        typeof codex.resumeTaskLifecycle !== 'function'
+      ) {
+        throw new Error('attached task must be activated before lifecycle resume');
+      }
+      const lifecycleResume = await codex.resumeTaskLifecycle({
+        assignmentId: task.assignment.id,
+      });
+      if (!isRecord(lifecycleResume) || containsPrivateLifecycleMaterial(lifecycleResume)) {
+        throw new Error('attached lifecycle resume returned an invalid public receipt');
+      }
+      task.lifecycleResume = clone(lifecycleResume);
+      delete task.requiresLifecycleResume;
+      await saveSnapshot(
+        saveState,
+        state,
+        activeTasks,
+        completedTasks,
+        lifecycleFinalization,
+      );
+    }
+  }
 }
 
 function terminalCallbackForFailure(assignment, error) {
@@ -783,6 +1299,7 @@ export async function runAgentGraphWithCodex(input) {
         completionReceipt: clone(reconciliation.receipt),
         completionReceiptSha256: finalizationHash(reconciliation.receipt),
       };
+      assertLifecycleFinalization(lifecycleFinalization);
     }
     dispatched = {
       status: lifecycleFinalization.candidate.state.status,
@@ -811,6 +1328,10 @@ export async function runAgentGraphWithCodex(input) {
           threadId: record.threadId,
           hostId: record.hostId || null,
           cursor: record.cursor || null,
+          ...(record.lifecycleResume
+            ? { lifecycleResume: clone(record.lifecycleResume) }
+            : {}),
+          ...(record.activation ? { activation: clone(record.activation) } : {}),
         });
       }
     }
@@ -866,6 +1387,8 @@ export async function runAgentGraphWithCodex(input) {
         threadId: task.threadId,
         hostId: task.hostId || undefined,
         cursor: task.cursor || undefined,
+        baselineTurnId:
+          task.activation?.receipt?.baselineTurnId || undefined,
       })),
     );
     const active = activeTasks.get(outcome?.assignmentId);
@@ -905,6 +1428,7 @@ export async function runAgentGraphWithCodex(input) {
         ...(active.lifecycleResume
           ? { lifecycleResume: clone(active.lifecycleResume) }
           : {}),
+        ...(active.activation ? { activation: clone(active.activation) } : {}),
       });
     } catch (error) {
       callbackInput = terminalCallbackForFailure(active.assignment, error.message);
@@ -925,6 +1449,7 @@ export async function runAgentGraphWithCodex(input) {
         ...(active.lifecycleResume
           ? { lifecycleResume: clone(active.lifecycleResume) }
           : {}),
+        ...(active.activation ? { activation: clone(active.activation) } : {}),
       });
     }
 
@@ -952,6 +1477,12 @@ export async function runAgentGraphWithCodex(input) {
         assignment: active.assignment,
         callback: parsedCallback,
         candidate,
+        lifecycleBinding:
+          typeof codex.getLifecycleCompletionBinding === 'function'
+            ? await codex.getLifecycleCompletionBinding(
+                active.assignment.nodeId,
+              )
+            : null,
       });
       await saveSnapshot(
         saveState,
@@ -1012,6 +1543,7 @@ export async function runAgentGraphWithCodex(input) {
           completionReceipt: clone(completionReceipt),
           completionReceiptSha256: finalizationHash(completionReceipt),
         };
+        assertLifecycleFinalization(lifecycleFinalization);
         await saveSnapshot(
           saveState,
           candidate.state,
@@ -1195,6 +1727,7 @@ export function createInjectedHostTaskControlAdapter({
   lifecycleSupervisor,
   lifecycleRecovery,
   lifecycleNow = () => new Date().toISOString(),
+  resumeSnapshot = null,
 }) {
   if (
     !isRecord(taskControl) ||
@@ -1208,6 +1741,7 @@ export function createInjectedHostTaskControlAdapter({
   }
   const attachments = new Map();
   const resumedLifecycle = new Map();
+  const pendingLifecycle = new Map();
   for (const task of attachedTasks) {
     if (
       !isRecord(task) ||
@@ -1238,8 +1772,12 @@ export function createInjectedHostTaskControlAdapter({
       if (attached.role !== args.assignment.role) {
         throw new Error(`attached task role does not match ${args.assignment.id}`);
       }
-      let lifecycleResume = null;
       if (attached.status === 'needs-attention') {
+        if (typeof taskControl.activateTask !== 'function') {
+          throw new Error(
+            'attached task activation capability is required before lifecycle resume',
+          );
+        }
         if (
           !isRecord(lifecycleSupervisor) ||
           typeof lifecycleSupervisor.resumeAttachedCheckpoint !== 'function'
@@ -1299,34 +1837,87 @@ export function createInjectedHostTaskControlAdapter({
           recovery_id: lifecycleRecovery.recoveryId,
           generation: lifecycleRecovery.generation,
         };
-        const publicResult = await lifecycleSupervisor.resumeAttachedCheckpoint(
-          clone(binding),
-        );
-        assertPublicLifecycleResume(publicResult, binding);
-        lifecycleResume = {
-          recoveryId: binding.recovery_id,
-          generation: binding.generation,
-          requestSha256: publicResult.request_sha256,
-          eventHash: publicResult.event.event_hash,
-          registrySha256,
-          recoveryAuditSha256,
-        };
-        resumedLifecycle.set(args.assignment.id, {
+        const lifecycle = {
           binding: clone(binding),
           completion: clone(lifecycleRecovery.completion || null),
           threadId: attached.threadId,
           hostId: attached.hostId || null,
           heartbeatIntervalMs,
           leaseTtlSeconds,
-        });
+        };
+        pendingLifecycle.set(args.assignment.id, lifecycle);
+        const activationId = createHash('sha256')
+          .update(
+            JSON.stringify({
+              assignmentId: args.assignment.id,
+              threadId: attached.threadId,
+              recoveryId: lifecycleRecovery.recoveryId,
+              generation: lifecycleRecovery.generation,
+            }),
+          )
+          .digest('hex');
+        const persistedActivation =
+          resumeSnapshot?.taskRegistry?.[args.assignment.id]?.activation || null;
+        if (
+          persistedActivation &&
+          persistedActivation.activationId !== activationId
+        ) {
+          throw new Error('persisted attached task activation does not match');
+        }
+        if (typeof taskControl.activateTask === 'function') {
+          attached.activation = persistedActivation
+            ? clone(persistedActivation)
+            : { activationId, status: 'pending' };
+        }
       }
       attachments.delete(args.assignment.id);
       return {
         threadId: attached.threadId,
         hostId: attached.hostId || null,
         cursor: attached.cursor || null,
-        ...(lifecycleResume ? { lifecycleResume } : {}),
+        ...(resumeSnapshot?.taskRegistry?.[args.assignment.id]?.lifecycleResume
+          ? {
+              lifecycleResume: clone(
+                resumeSnapshot.taskRegistry[args.assignment.id].lifecycleResume,
+              ),
+            }
+          : {}),
+        ...(pendingLifecycle.has(args.assignment.id)
+          ? { requiresLifecycleResume: true }
+          : {}),
+        ...(attached.activation ? { activation: clone(attached.activation) } : {}),
       };
+    },
+    async activateTask(args) {
+      const receipt = await taskControl.activateTask(clone(args));
+      if (containsPrivateLifecycleMaterial(receipt)) {
+        throw new Error('attached task activation returned private material');
+      }
+      return clone(receipt || { activationId: args.activationId });
+    },
+    async resumeTaskLifecycle({ assignmentId }) {
+      const lifecycle = pendingLifecycle.get(assignmentId);
+      if (!lifecycle) return null;
+      if (resumedLifecycle.has(assignmentId)) {
+        return clone(
+          resumeSnapshot?.taskRegistry?.[assignmentId]?.lifecycleResume || null,
+        );
+      }
+      const publicResult = await lifecycleSupervisor.resumeAttachedCheckpoint(
+        clone(lifecycle.binding),
+      );
+      assertPublicLifecycleResume(publicResult, lifecycle.binding);
+      const lifecycleResume = {
+        recoveryId: lifecycle.binding.recovery_id,
+        generation: lifecycle.binding.generation,
+        requestSha256: publicResult.request_sha256,
+        eventHash: publicResult.event.event_hash,
+        registrySha256: lifecycle.binding.registry_sha256,
+        recoveryAuditSha256: lifecycle.binding.recovery_audit_sha256,
+      };
+      resumedLifecycle.set(assignmentId, lifecycle);
+      pendingLifecycle.delete(assignmentId);
+      return lifecycleResume;
     },
     async waitForAny(tasks) {
       const hostWait = Promise.resolve()
@@ -1429,6 +2020,35 @@ export function createInjectedHostTaskControlAdapter({
         (lifecycle) => lifecycle.binding.node_id === nodeId,
       );
     },
+    getLifecycleCompletionBinding(nodeId) {
+      const lifecycle = [...resumedLifecycle.values()].find(
+        (item) => item.binding.node_id === nodeId,
+      );
+      if (!lifecycle || !isRecord(lifecycle.completion)) {
+        throw new Error('host-owned lifecycle completion binding is required');
+      }
+      const completionSpec = clone(lifecycle.completion);
+      for (const field of [
+        'completed_stage',
+        'handoff_id',
+        'next_node',
+        'next_stage',
+        'summary',
+      ]) {
+        if (typeof completionSpec[field] !== 'string' || !completionSpec[field]) {
+          throw new Error(`lifecycle completion binding requires ${field}`);
+        }
+      }
+      if (!Array.isArray(completionSpec.blockers)) {
+        throw new Error('lifecycle completion binding requires blockers');
+      }
+      return {
+        programId: lifecycle.binding.program_id,
+        checkpointId: lifecycle.binding.checkpoint_id,
+        nodeId,
+        completionSpec,
+      };
+    },
     async completeVerifiedNodeLifecycle({ assignment, callback, finalization }) {
       const entry = [...resumedLifecycle.entries()].find(
         ([, lifecycle]) => lifecycle.binding.node_id === assignment.nodeId,
@@ -1449,9 +2069,9 @@ export function createInjectedHostTaskControlAdapter({
         throw new Error('lifecycle supervisor completion operation is required');
       }
       const completionInput = {
-        ...clone(lifecycle.completion),
+        ...clone(finalization.lifecycle.completionSpec),
         evidence: [
-          ...clone(lifecycle.completion.evidence || []),
+          ...clone(finalization.lifecycle.completionSpec.evidence || []),
           {
             kind: 'agentgraph-verification',
             assignmentId: assignment.id,
@@ -1483,7 +2103,10 @@ export function createInjectedHostTaskControlAdapter({
         typeof lifecycleRecovery.programId !== 'string' ||
         !lifecycleRecovery.programId ||
         typeof lifecycleRecovery.checkpointId !== 'string' ||
-        !lifecycleRecovery.checkpointId
+        !lifecycleRecovery.checkpointId ||
+        lifecycleRecovery.programId !== journal.lifecycle.programId ||
+        lifecycleRecovery.checkpointId !== journal.lifecycle.checkpointId ||
+        journal.lifecycle.nodeId !== journal.nodeId
       ) {
         throw new Error('prepared lifecycle reconciliation binding is invalid');
       }
@@ -1501,8 +2124,8 @@ export function createInjectedHostTaskControlAdapter({
       const reconciliation =
         await lifecycleSupervisor.reconcileAttachedCheckpointCompletion(
           {
-            program_id: lifecycleRecovery.programId,
-            checkpoint_id: lifecycleRecovery.checkpointId,
+            program_id: journal.lifecycle.programId,
+            checkpoint_id: journal.lifecycle.checkpointId,
             node_id: journal.nodeId,
           },
           { finalizationSha256: journal.sha256 },
@@ -1552,6 +2175,7 @@ export async function runAuthoritativeLedgerWaveWithAttachedHostTasks({
     lifecycleSupervisor,
     lifecycleRecovery,
     lifecycleNow: now,
+    resumeSnapshot,
   });
   return runAuthoritativeLedgerWaveWithCodex({
     ledgerInput,
@@ -1562,24 +2186,113 @@ export async function runAuthoritativeLedgerWaveWithAttachedHostTasks({
   });
 }
 
-export async function runAuthoritativeLedgerWaveWithPythonLifecycle({
+export function createAuthoritativeLedgerWavePythonLifecycleController({
   pythonLifecycle,
   createLifecycleBridge = createPythonLifecycleSupervisorBridge,
+  runWave = runAuthoritativeLedgerWaveWithAttachedHostTasks,
+  saveState = async () => {},
   ...waveInput
 }) {
-  if (!isRecord(pythonLifecycle) || typeof createLifecycleBridge !== 'function') {
-    throw new Error('pythonLifecycle configuration and bridge factory are required');
+  if (
+    !isRecord(pythonLifecycle) ||
+    typeof createLifecycleBridge !== 'function' ||
+    typeof runWave !== 'function' ||
+    typeof saveState !== 'function'
+  ) {
+    throw new Error(
+      'pythonLifecycle configuration, bridge factory, wave runner, and saveState are required',
+    );
   }
   const lifecycleSupervisor = createLifecycleBridge(pythonLifecycle);
   if (!isRecord(lifecycleSupervisor) || typeof lifecycleSupervisor.close !== 'function') {
     throw new Error('Python lifecycle bridge must provide close');
   }
-  try {
-    return await runAuthoritativeLedgerWaveWithAttachedHostTasks({
-      ...waveInput,
-      lifecycleSupervisor,
-    });
-  } finally {
-    await lifecycleSupervisor.close();
-  }
+  let latestSnapshot = null;
+  let closed = false;
+  const preservingSaveState = async (snapshot) => {
+    await saveState(snapshot);
+    latestSnapshot = clone(snapshot);
+  };
+  const unresolvedLifecycle = (snapshot) =>
+    Object.values(snapshot?.taskRegistry || {}).some(
+      (record) => isRecord(record?.lifecycleResume),
+    );
+  const isTerminalWithoutUnresolvedLifecycle = (snapshot) =>
+    ['complete', 'halted'].includes(snapshot?.executionState?.status) &&
+    !snapshot?.lifecycleFinalization &&
+    !unresolvedLifecycle(snapshot);
+
+  return {
+    async run(overrides = {}) {
+      if (closed) throw new Error('Python lifecycle controller is closed');
+      return runWave({
+        ...waveInput,
+        ...overrides,
+        lifecycleSupervisor,
+        saveState: preservingSaveState,
+      });
+    },
+    async close({ terminalPreserved = false } = {}) {
+      if (closed) return;
+      if (!terminalPreserved || !latestSnapshot) {
+        throw new Error('cannot close lifecycle supervisor before terminal preservation');
+      }
+      let journal = latestSnapshot.lifecycleFinalization || null;
+      if (journal?.phase === 'prepared') {
+        assertLifecycleFinalization(journal);
+        if (
+          typeof lifecycleSupervisor.reconcileAttachedCheckpointCompletion !==
+          'function'
+        ) {
+          throw new Error(
+            'prepared lifecycle finalization requires completion reconciliation before close',
+          );
+        }
+        const reconciliation =
+          await lifecycleSupervisor.reconcileAttachedCheckpointCompletion(
+            {
+              program_id: journal.lifecycle.programId,
+              checkpoint_id: journal.lifecycle.checkpointId,
+              node_id: journal.nodeId,
+            },
+            { finalizationSha256: journal.sha256 },
+          );
+        if (
+          !isRecord(reconciliation) ||
+          reconciliation.completed !== true ||
+          !isRecord(reconciliation.receipt)
+        ) {
+          throw new Error(
+            'cannot close lifecycle supervisor while prepared completion is unresolved',
+          );
+        }
+        journal = {
+          ...journal,
+          phase: 'finalized',
+          completionReceipt: clone(reconciliation.receipt),
+          completionReceiptSha256: finalizationHash(reconciliation.receipt),
+        };
+        assertLifecycleFinalization(journal);
+        const reconciledSnapshot = {
+          ...clone(latestSnapshot),
+          executionState: clone(journal.candidate.state),
+          lifecycleFinalization: clone(journal),
+        };
+        await preservingSaveState(reconciledSnapshot);
+      }
+      if (
+        journal?.phase !== 'finalized' &&
+        !isTerminalWithoutUnresolvedLifecycle(latestSnapshot)
+      ) {
+        throw new Error('cannot close lifecycle supervisor with unresolved lifecycle state');
+      }
+      if (journal?.phase === 'finalized') assertLifecycleFinalization(journal);
+      await lifecycleSupervisor.close();
+      closed = true;
+    },
+  };
+}
+
+export function runAuthoritativeLedgerWaveWithPythonLifecycle(options) {
+  return createAuthoritativeLedgerWavePythonLifecycleController(options);
 }
