@@ -10,6 +10,11 @@ const nextConfig: NextConfig = {
   // Next.js 16 Cache Components / PPR
   cacheComponents: true,
 
+  experimental: {
+    // Keep build type-checking on the same bounded CLI path used by CI.
+    useTypeScriptCli: true,
+  },
+
   poweredByHeader: false,
   compress: true,
 

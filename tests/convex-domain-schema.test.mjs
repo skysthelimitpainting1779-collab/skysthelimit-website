@@ -8,7 +8,8 @@ test('Convex schema defines the CRM and operational foundation with access-path 
   for (const table of [
     'users', 'companies', 'memberships', 'invitations', 'resourceGrants', 'leads',
     'contacts', 'properties', 'projects', 'opportunities',
-    'events', 'idempotencyKeys', 'webhookReceipts', 'auditFacts', 'migrationReconciliation',
+    'appointments', 'calReconciliationJobs', 'events', 'idempotencyKeys',
+    'webhookReceipts', 'auditFacts', 'migrationReconciliation',
   ]) {
     assert.match(schema, new RegExp(`${table}: defineTable`));
   }
@@ -19,6 +20,13 @@ test('Convex schema defines the CRM and operational foundation with access-path 
   assert.match(schema, /\.index\(['"]by_eventId['"], \[['"]eventId['"]\]\)/);
   assert.match(schema, /\.index\(['"]by_scope_key['"], \[['"]scope['"], ['"]key['"]\]\)/);
   assert.match(schema, /\.index\(['"]by_provider_eventId['"], \[['"]provider['"], ['"]eventId['"]\]\)/);
+  assert.match(schema, /\.index\(['"]by_company_provider_booking['"], \[['"]companyId['"], ['"]provider['"], ['"]providerBookingUid['"]\]\)/);
+  assert.match(schema, /\.index\(['"]by_provider_organization_booking['"], \[['"]provider['"], ['"]providerOrganizationId['"], ['"]providerBookingUid['"]\]\)/);
+  assert.match(schema, /\.index\(['"]by_company_supersedes_booking['"], \[['"]companyId['"], ['"]provider['"], ['"]providerOrganizationId['"], ['"]supersedesProviderBookingUid['"]\]\)/);
+  assert.match(schema, /\.index\(['"]by_company_organization_run['"], \[['"]companyId['"], ['"]providerOrganizationId['"], ['"]runId['"]\]\)/);
+  assert.match(schema, /participantCount: v\.number\(\)/);
+  assert.match(schema, /participantTimeZones: v\.array\(v\.string\(\)\)/);
+  assert.doesNotMatch(schema, /participants: v\.array\(v\.object/);
   assert.match(schema, /\.index\(['"]by_run_canonical_id['"], \[['"]runId['"], ['"]canonicalId['"]\]\)/);
   assert.match(schema, /\.index\(['"]by_clerkInvitationId['"], \[['"]clerkInvitationId['"]\]\)/);
   assert.match(schema, /\.index\(['"]by_migrationCanonicalId['"], \[['"]migrationCanonicalId['"]\]\)/);

@@ -48,6 +48,10 @@
     {
       "path": "/api/cron/seo-ping",
       "schedule": "0 8 * * *"
+    },
+    {
+      "path": "/api/cron/cal-reconciliation",
+      "schedule": "0 9 * * *"
     }
   ],
   "git": {

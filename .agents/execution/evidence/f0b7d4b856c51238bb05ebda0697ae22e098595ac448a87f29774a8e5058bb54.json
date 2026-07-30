@@ -1,0 +1,165 @@
+{
+  "baseHeadSha": "065c0e4178763a4d5a7f69bd98cb1d58bf09ab15",
+  "checkpointId": "cp-20260729-stl202-001",
+  "checkpointPurpose": "Implement durable, tenant-scoped Cal.com synchronization with authenticated webhooks, monotonic appointment state, resumable reconciliation, and bounded retry behavior.",
+  "documentation": [
+    {
+      "authority": "Cal.com official API documentation",
+      "decisions": [
+        "Verify the webhook against the unmodified request body.",
+        "Pin the webhook payload version to 2021-10-20.",
+        "Pin reconciliation requests to API version 2026-05-01."
+      ]
+    },
+    {
+      "authority": "Convex official documentation",
+      "decisions": [
+        "Throw a structured ConvexError inside the mutation so conflicting webhook identity writes roll back transactionally.",
+        "Use durable database state for leases, cursors, and idempotency."
+      ]
+    },
+    {
+      "authority": "Next.js official documentation",
+      "decisions": [
+        "Retain build-time TypeScript checking.",
+        "Use experimental.useTypeScriptCli so Next.js invokes the bounded project-local TypeScript CLI instead of the hanging compiler API worker."
+      ]
+    },
+    {
+      "authority": "Vercel official documentation",
+      "decisions": [
+        "Run reconciliation through a protected cron route.",
+        "Retry only timeout, rate-limit, and server failures with an explicit attempt cap."
+      ]
+    }
+  ],
+  "implementation": {
+    "apiVersion": "2026-05-01",
+    "calendarValidation": "Strict RFC3339 timestamps and canonical IANA time zones; ambiguous aliases such as CST and US/Central are rejected.",
+    "conflictHandling": "The appointment mutation throws ConvexError code conflicting_webhook_identity; the HTTP boundary maps that code to status 409.",
+    "reconciliation": "Durable tenant leases, expiry protection, bounded page count, validated cursor checkpoints, provider/persistence error separation, and failure-isolated tenant fanout.",
+    "rescheduling": "rescheduledToUid records the superseded-by direction and prevents branching chains.",
+    "sequenceOrdering": "Provider sequence comparison is applied only when the provider booking UID is unchanged; same-timestamp replacement across UIDs remains valid.",
+    "webhookVersion": "2021-10-20"
+  },
+  "nodeId": "STL-202",
+  "prerequisites": [
+    {
+      "evidenceSha256": "61cfaf211e405cc9e939410733efe0ca942e01489979e1ff1c63ce033cbf20d8",
+      "purpose": "Convex TypeScript compatibility repair detected by the authoritative Vercel Preview build."
+    }
+  ],
+  "productionMutationAuthorized": false,
+  "programId": "stl-post-g20-sequential-tdd-v1",
+  "remoteRecovery": {
+    "action": "Publish the governed commit chain to a new recovery branch and Draft PR; do not force-push the old branch.",
+    "quarantinedCommit": "1c1e637d4e46020c9d591461c0971fbb727ae4ca",
+    "quarantinedReason": "The candidate commit bypassed hooks and lacked required execution trailers.",
+    "remoteDriftCommits": [
+      "8ecb10b69200b02139a7f9212bb9a0961035351f",
+      "d916ca1e207584d4beabc08af6ee8e75f510e5b4"
+    ],
+    "supersededPullRequest": 169
+  },
+  "reviewAudit": [
+    {
+      "finding": "Provider contract review found five defects; all were repaired and the shard was re-reviewed clean.",
+      "reviewer": "Galileo",
+      "taskId": "019faf69-7e58-76a0-8ed5-a27cb39aef7e"
+    },
+    {
+      "finding": "Convergence review found a transaction rollback defect and cross-booking sequence comparison; both were reproduced, repaired, and re-reviewed as addressed with no new Critical or Important findings.",
+      "reviewer": "Copernicus",
+      "taskId": "019faf69-7a8f-7de3-819b-45a57f6cc905"
+    }
+  ],
+  "schemaVersion": 1,
+  "scope": [
+    "convex/_generated/api.d.ts",
+    "convex/appointments.ts",
+    "convex/http.ts",
+    "convex/lib/cal.ts",
+    "convex/lib/events.ts",
+    "convex/schema.ts",
+    "next.config.ts",
+    "src/app/api/cron/cal-reconciliation/handler.ts",
+    "src/app/api/cron/cal-reconciliation/route.ts",
+    "tests/cal-reconciliation-state.test.mjs",
+    "tests/cal-synchronization.test.mjs",
+    "tests/convex-domain-schema.test.mjs",
+    "vercel.json"
+  ],
+  "sourceArtifacts": [
+    {
+      "path": "C:/Users/Johnny Cage/.codex/artifacts/stl-202-repair-shard-b-1c1e637d.patch",
+      "sha256": "a08c18db64ce45aa546b22c15619704a687178a196c5412261f35a115454353d"
+    },
+    {
+      "path": "C:/Users/Johnny Cage/.codex/artifacts/stl-202-repair-shard-b-round2-native-1c1e637d.patch",
+      "sha256": "618e170aa3330ed1e83dc3140eeebc20a09f5406fd952623fb1daf8421a91929"
+    }
+  ],
+  "stalenessAtCheckpoint": {
+    "executionCursorFinding": "The imported audited JSONL cursor still reports AUDIT-SECURITY-REMEDIATION instead of the live lifecycle checkpoint. Source and live cursor status must be exposed separately.",
+    "graphBuiltAtCommit": "0204e8b2594acf3d10866f8748672b5dbd638441",
+    "graphCommitLagBeforeCommit": 1,
+    "resolution": "Rebuild Graphify at this governed commit, sync graphify.db, and verify zero structural lag."
+  },
+  "tdd": {
+    "green": [
+      "Cal reconciliation state tests pass 8/8.",
+      "Cal synchronization and Convex schema tests pass 14/14.",
+      "The complete repository suite passes 556/556.",
+      "Convex TypeScript checking, lint, and the production Next.js build pass."
+    ],
+    "red": [
+      "Initial contract suite failed 7/11 before implementation.",
+      "Round-two adversarial state suite failed 4/8 before lease, cursor, and state-machine repairs.",
+      "The targeted HTTP conflict test exposed an uncaught ConvexError before boundary mapping.",
+      "Two Next.js builds stalled in the type-checking compiler API worker while the exact project-local TypeScript CLI completed successfully."
+    ]
+  },
+  "verification": [
+    {
+      "command": "node --test tests/cal-reconciliation-state.test.mjs",
+      "result": "8/8",
+      "status": "passed"
+    },
+    {
+      "command": "node --test tests/cal-synchronization.test.mjs tests/convex-domain-schema.test.mjs",
+      "result": "14/14",
+      "status": "passed"
+    },
+    {
+      "command": "npx tsc -p convex/tsconfig.json --noEmit",
+      "result": "0 TypeScript errors",
+      "status": "passed"
+    },
+    {
+      "command": "npm test",
+      "durationSeconds": 55.157,
+      "result": "556/556",
+      "status": "passed"
+    },
+    {
+      "command": "npm run lint",
+      "durationSeconds": 35,
+      "result": "No errors, warnings, architecture violations, or Git standards violations.",
+      "status": "passed"
+    },
+    {
+      "command": "npm run build",
+      "durationSeconds": 206,
+      "result": "45 pages generated; /api/cron/cal-reconciliation included; TypeScript checking enabled.",
+      "status": "passed"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed"
+    },
+    {
+      "command": "git diff --cached --check",
+      "status": "passed"
+    }
+  ]
+}

@@ -195,6 +195,84 @@ export default defineSchema({
     .index('by_company_stage', ['companyId', 'stage'])
     .index('by_contact', ['contactId']),
 
+  appointments: defineTable({
+    companyId: v.id('companies'),
+    provider: v.literal('cal.com'),
+    providerOrganizationId: v.string(),
+    providerBookingUid: v.string(),
+    providerBookingId: v.string(),
+    providerEventTypeId: v.string(),
+    title: v.string(),
+    startsAt: v.number(),
+    endsAt: v.number(),
+    timeZone: v.string(),
+    status: v.union(
+      v.literal('scheduled'),
+      v.literal('pending'),
+      v.literal('cancelled'),
+      v.literal('completed'),
+      v.literal('rescheduled'),
+    ),
+    iCalUid: v.optional(v.string()),
+    providerSequence: v.optional(v.number()),
+    supersedesProviderBookingUid: v.optional(v.string()),
+    supersededByProviderBookingUid: v.optional(v.string()),
+    participantCount: v.number(),
+    participantTimeZones: v.array(v.string()),
+    stateHash: v.string(),
+    lastSyncSource: v.union(
+      v.literal('webhook'),
+      v.literal('reconciliation'),
+    ),
+    lastProviderEventId: v.string(),
+    lastPayloadHash: v.string(),
+    lastProviderOccurredAt: v.number(),
+    lastObservedAt: v.number(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index('by_company_provider_booking', ['companyId', 'provider', 'providerBookingUid'])
+    .index('by_provider_organization_booking', ['provider', 'providerOrganizationId', 'providerBookingUid'])
+    .index('by_company_supersedes_booking', ['companyId', 'provider', 'providerOrganizationId', 'supersedesProviderBookingUid'])
+    .index('by_company_startsAt', ['companyId', 'startsAt'])
+    .index('by_company_status', ['companyId', 'status']),
+
+  calReconciliationJobs: defineTable({
+    companyId: v.id('companies'),
+    providerOrganizationId: v.string(),
+    runId: v.string(),
+    bookingStatus: v.union(
+      v.literal('upcoming'),
+      v.literal('recurring'),
+      v.literal('past'),
+      v.literal('cancelled'),
+      v.literal('unconfirmed'),
+    ),
+    status: v.union(
+      v.literal('pending'),
+      v.literal('running'),
+      v.literal('completed'),
+      v.literal('failed'),
+    ),
+    cursor: v.optional(v.string()),
+    pageNumber: v.number(),
+    pageFailureCount: v.number(),
+    leaseToken: v.optional(v.string()),
+    leaseExpiresAt: v.optional(v.number()),
+    nextAttemptAt: v.optional(v.number()),
+    lastRequestId: v.optional(v.string()),
+    totalApplied: v.number(),
+    totalStale: v.number(),
+    totalUnchanged: v.number(),
+    totalAppointments: v.number(),
+    totalPages: v.number(),
+    startedAt: v.number(),
+    updatedAt: v.number(),
+    completedAt: v.optional(v.number()),
+  })
+    .index('by_company_organization_run', ['companyId', 'providerOrganizationId', 'runId'])
+    .index('by_status_nextAttemptAt', ['status', 'nextAttemptAt']),
+
   events: defineTable({
     eventId: v.string(),
     companyId: v.id('companies'),
@@ -226,6 +304,7 @@ export default defineSchema({
   webhookReceipts: defineTable({
     provider: v.string(),
     eventId: v.string(),
+    companyId: v.optional(v.id('companies')),
     payloadHash: v.string(),
     verificationStatus: v.literal('verified'),
     processingStatus: v.union(v.literal('received'), v.literal('processing'), v.literal('succeeded'), v.literal('failed')),
