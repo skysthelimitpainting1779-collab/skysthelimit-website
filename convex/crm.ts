@@ -55,7 +55,7 @@ function nextActionForStage(stage: OpportunityStage): string | null {
 
 function stageFromUnknown(value: unknown): OpportunityStage | undefined {
   return typeof value === 'string' &&
-    Object.hasOwn(OPPORTUNITY_STAGE_TRANSITIONS, value)
+    Object.prototype.hasOwnProperty.call(OPPORTUNITY_STAGE_TRANSITIONS, value)
     ? (value as OpportunityStage)
     : undefined;
 }

@@ -1,0 +1,38 @@
+{
+  "baseHeadSha": "0204e8b2594acf3d10866f8748672b5dbd638441",
+  "checkpointId": "cp-20260729-stl202-001",
+  "checkpointPurpose": "Repair the exact Convex TypeScript compatibility failure detected by Vercel monitoring before STL-202 implementation proceeds.",
+  "nodeId": "STL-202",
+  "productionMutationAuthorized": false,
+  "programId": "stl-post-g20-sequential-tdd-v1",
+  "schemaVersion": 1,
+  "scope": [
+    "convex/crm.ts"
+  ],
+  "tdd": {
+    "green": "The Convex-specific TypeScript check passes after replacing Object.hasOwn with the compatible intrinsic ownership check.",
+    "red": "npx tsc -p convex/tsconfig.json --noEmit failed at convex/crm.ts:58 with TS2550, matching the authoritative Vercel Preview failure."
+  },
+  "verification": [
+    {
+      "command": "npx tsc -p convex/tsconfig.json --noEmit",
+      "result": "0 TypeScript errors",
+      "status": "passed"
+    },
+    {
+      "command": "npx tsx --test tests/crm-pipeline.test.mjs",
+      "result": "5/5",
+      "status": "passed"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed"
+    }
+  ],
+  "vercelFailure": {
+    "deploymentId": "dpl_FUbtTADHuR26aWM7hDjy1HSBFztS",
+    "errorCode": "lint_or_type_error",
+    "exactCommit": "0204e8b2594acf3d10866f8748672b5dbd638441",
+    "target": "preview"
+  }
+}
