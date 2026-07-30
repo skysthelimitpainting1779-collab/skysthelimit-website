@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto';
+import { spawn as spawnChild } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { isAbsolute, resolve } from 'node:path';
 
@@ -251,15 +252,15 @@ export function createCodexAssignmentPrompt({
         supervisor:
           'The host must use the privileged injected in-process lifecycle supervisor for every capability-bearing lifecycle operation.',
         process:
-          'Keep one long-lived Python control process and import the official mcp_server.py module exactly once.',
+          'Use one long-lived privileged Python bridge and import the official mcp_server.py module exactly once; do not launch a process per operation.',
         forbidden:
           'Do not use generic or public MCP for capability-bearing lifecycle operations. Do not start an MCP subprocess. Do not edit the lifecycle database manually or directly.',
         capability:
           'The worker never receives the lease capability; the supervisor keeps it in private memory and never prints, persists, evidences, or returns it.',
         recovery:
-          'Resume only the same attached task with no duplicate executor, using host-derived registry and recovery-audit bindings.',
+          'Resume only the same attached task with no duplicate executor. Registry and content-addressed recovery audit must be strict JSON under the trusted dev agentgraph root, the worktree must be clean, and checkpoint head must be an ancestor of current HEAD.',
         heartbeat:
-          'The supervisor owns renewal before expiry and before long work, canonical telemetry, and checkpoint completion.',
+          'The supervisor owns renewal before expiry and before long work, canonical telemetry from host-derived metrics, and checkpoint completion only after the independent verifier passes.',
       },
       output: 'Return exactly one JSON object and no markdown.',
     },
@@ -283,6 +284,9 @@ export function parseCodexAssignmentCallback(text, assignment) {
     throw new Error('Codex task callback must be a single JSON object');
   }
   if (!isRecord(callback)) throw new Error('Codex task callback must be an object');
+  if (containsPrivateLifecycleMaterial(callback)) {
+    throw new Error('Codex task callback contained private material');
+  }
   const expectedKind = assignment.role === 'executor' ? 'completion' : 'verification';
   if (callback.kind !== expectedKind) {
     throw new Error(`Codex task callback kind must be ${expectedKind}`);
@@ -381,6 +385,131 @@ export function createCodexAppTaskBridge({
   };
 }
 
+export function createPythonLifecycleSupervisorBridge({
+  pythonExecutable,
+  mcpServerPath,
+  databasePath,
+  trustedAgentGraphRoot,
+  spawnProcess = spawnChild,
+}) {
+  for (const [name, value] of Object.entries({
+    pythonExecutable,
+    mcpServerPath,
+    databasePath,
+    trustedAgentGraphRoot,
+  })) {
+    if (typeof value !== 'string' || !isAbsolute(value)) {
+      throw new Error(`${name} must be an absolute path`);
+    }
+  }
+  if (typeof spawnProcess !== 'function') {
+    throw new Error('spawnProcess must be a function');
+  }
+  const child = spawnProcess(
+    pythonExecutable,
+    [
+      '-u',
+      mcpServerPath,
+      '--privileged-lifecycle-bridge',
+      '--db-path',
+      databasePath,
+      '--agentgraph-root',
+      trustedAgentGraphRoot,
+    ],
+    {
+      stdio: ['pipe', 'pipe', 'pipe'],
+      windowsHide: true,
+    },
+  );
+  if (!child?.stdin || !child?.stdout || typeof child.stdin.write !== 'function') {
+    throw new Error('privileged lifecycle bridge did not start');
+  }
+  let sequence = 0;
+  let buffer = '';
+  let closed = false;
+  const pending = new Map();
+
+  child.stdout.on('data', (chunk) => {
+    buffer += chunk.toString('utf8');
+    while (buffer.includes('\n')) {
+      const newline = buffer.indexOf('\n');
+      const line = buffer.slice(0, newline);
+      buffer = buffer.slice(newline + 1);
+      if (!line.trim()) continue;
+      let response;
+      try {
+        response = JSON.parse(line);
+      } catch {
+        for (const request of pending.values()) {
+          request.reject(new Error('privileged lifecycle bridge returned invalid JSON'));
+        }
+        pending.clear();
+        continue;
+      }
+      const request = pending.get(response.id);
+      if (!request) continue;
+      pending.delete(response.id);
+      if (response.ok !== true) {
+        request.reject(
+          new Error(response.error || 'privileged lifecycle operation failed'),
+        );
+      } else if (containsPrivateLifecycleMaterial(response.result)) {
+        request.reject(
+          new Error('privileged lifecycle bridge returned private material'),
+        );
+      } else {
+        request.resolve(response.result);
+      }
+    }
+  });
+  child.on('exit', () => {
+    closed = true;
+    for (const request of pending.values()) {
+      request.reject(new Error('privileged lifecycle bridge exited'));
+    }
+    pending.clear();
+  });
+
+  function request(operation, binding, payload = {}) {
+    if (closed) return Promise.reject(new Error('privileged lifecycle bridge is closed'));
+    const message = {
+      id: `lifecycle-${++sequence}`,
+      operation,
+      ...(binding ? { binding: clone(binding) } : {}),
+      ...(Object.keys(payload).length ? { payload: clone(payload) } : {}),
+    };
+    if (containsPrivateLifecycleMaterial(message)) {
+      return Promise.reject(
+        new Error('privileged lifecycle request contained private material'),
+      );
+    }
+    return new Promise((resolveRequest, rejectRequest) => {
+      pending.set(message.id, { resolve: resolveRequest, reject: rejectRequest });
+      child.stdin.write(`${JSON.stringify(message)}\n`);
+    });
+  }
+
+  return {
+    resumeAttachedCheckpoint(binding, { ttlSeconds = 1800 } = {}) {
+      return request('resume', binding, { ttl_seconds: ttlSeconds });
+    },
+    renewAttachedCheckpoint(binding, { ttlSeconds = 1800 } = {}) {
+      return request('heartbeat', binding, { ttl_seconds: ttlSeconds });
+    },
+    recordAttachedTelemetryDecision(binding, telemetryRequest) {
+      return request('telemetry', binding, { request: telemetryRequest });
+    },
+    completeAttachedCheckpoint(binding, completion) {
+      return request('completion', binding, completion);
+    },
+    async close() {
+      if (closed) return;
+      await request('shutdown', null);
+      closed = true;
+    },
+  };
+}
+
 function taskSnapshot(activeTasks) {
   return Object.fromEntries(
     [...activeTasks.entries()].map(([assignmentId, task]) => [
@@ -423,13 +552,17 @@ function taskRegistrySnapshot(activeTasks, completedTasks) {
 }
 
 async function saveSnapshot(saveState, state, activeTasks, completedTasks = []) {
-  await saveState({
+  const snapshot = {
     schemaVersion: '1.0.0',
     executionState: clone(state),
     tasks: taskSnapshot(activeTasks),
     taskRegistry: taskRegistrySnapshot(activeTasks, completedTasks),
     completedTasks: clone(completedTasks),
-  });
+  };
+  if (containsPrivateLifecycleMaterial(snapshot)) {
+    throw new Error('task snapshot contained private material');
+  }
+  await saveState(snapshot);
 }
 
 async function launchAssignments({
@@ -556,11 +689,22 @@ export async function runAgentGraphWithCodex(input) {
     activeTasks.delete(active.assignment.id);
 
     let callbackInput;
+    let parsedCallback = null;
     try {
       if (outcome.status !== 'completed') {
         throw new Error(outcome.error || `Codex task ended with status ${outcome.status || 'unknown'}`);
       }
       const callback = parseCodexAssignmentCallback(outcome.final, active.assignment);
+      parsedCallback = callback;
+      if (
+        active.assignment.role === 'executor' &&
+        typeof codex.recordExecutorLifecycleTelemetry === 'function'
+      ) {
+        await codex.recordExecutorLifecycleTelemetry({
+          assignment: clone(active.assignment),
+          outcome: clone(outcome),
+        });
+      }
       callbackInput = dispatcherInputForCallback(callback);
       completedTasks.push({
         assignmentId: active.assignment.id,
@@ -599,15 +743,47 @@ export async function runAgentGraphWithCodex(input) {
       });
     }
 
-    dispatched = dispatchAgentGraph({
+    const previousState = dispatched.state;
+    let candidate = dispatchAgentGraph({
       graph,
-      state: dispatched.state,
+      state: previousState,
       workers,
       maxConcurrentExecutors,
       executionBoundary,
       ...callbackInput,
       now: now(),
     });
+    if (
+      parsedCallback?.kind === 'verification' &&
+      parsedCallback.passed === true &&
+      candidate.state.nodes[active.assignment.nodeId]?.status === 'completed' &&
+      typeof codex.completeVerifiedNodeLifecycle === 'function'
+    ) {
+      try {
+        await codex.completeVerifiedNodeLifecycle({
+          assignment: clone(active.assignment),
+          callback: clone(parsedCallback),
+        });
+      } catch (error) {
+        callbackInput = terminalCallbackForFailure(active.assignment, error.message);
+        candidate = dispatchAgentGraph({
+          graph,
+          state: previousState,
+          workers,
+          maxConcurrentExecutors,
+          executionBoundary,
+          ...callbackInput,
+          now: now(),
+        });
+        const taskRecord = completedTasks.at(-1);
+        if (taskRecord?.assignmentId === active.assignment.id) {
+          taskRecord.status = 'failed';
+          taskRecord.error = error.message;
+          delete taskRecord.callback;
+        }
+      }
+    }
+    dispatched = candidate;
     if (dispatched.status === 'halted' && typeof codex.steerTask === 'function') {
       await Promise.all(
         [...activeTasks.values()].map((task) =>
@@ -684,13 +860,23 @@ export async function runAuthoritativeLedgerWaveWithCodex({
 
 function containsPrivateLifecycleMaterial(value) {
   if (Array.isArray(value)) return value.some(containsPrivateLifecycleMaterial);
+  if (typeof value === 'string') {
+    return (
+      /\b(?:authorization\s*:\s*)?bearer\s+[a-z0-9._~+/=-]{8,}/i.test(value) ||
+      /\bhttps?:\/\/[^/\s:@]+:[^@\s/]+@/i.test(value)
+    );
+  }
   if (!isRecord(value)) return false;
   return Object.entries(value).some(([key, item]) => {
-    const normalized = key.toLowerCase();
+    const normalized = key.toLowerCase().replace(/[^a-z0-9]/g, '');
     return (
       normalized.includes('capability') ||
       normalized.includes('secret') ||
-      ['token', 'auth_token', 'access_token'].includes(normalized) ||
+      normalized.includes('credential') ||
+      normalized.includes('password') ||
+      ['token', 'authtoken', 'accesstoken', 'authorization', 'apikey', 'passwd'].includes(
+        normalized,
+      ) ||
       containsPrivateLifecycleMaterial(item)
     );
   });
@@ -733,6 +919,7 @@ export function createInjectedHostTaskControlAdapter({
   attachedTasks,
   lifecycleSupervisor,
   lifecycleRecovery,
+  lifecycleNow = () => new Date().toISOString(),
 }) {
   if (
     !isRecord(taskControl) ||
@@ -745,6 +932,7 @@ export function createInjectedHostTaskControlAdapter({
     throw new Error('attachedTasks must contain at least one host task');
   }
   const attachments = new Map();
+  const resumedLifecycle = new Map();
   for (const task of attachedTasks) {
     if (
       !isRecord(task) ||
@@ -837,6 +1025,10 @@ export function createInjectedHostTaskControlAdapter({
           registrySha256,
           recoveryAuditSha256,
         };
+        resumedLifecycle.set(args.assignment.id, {
+          binding: clone(binding),
+          completion: clone(lifecycleRecovery.completion || null),
+        });
       }
       attachments.delete(args.assignment.id);
       return {
@@ -847,7 +1039,86 @@ export function createInjectedHostTaskControlAdapter({
       };
     },
     async waitForAny(tasks) {
+      for (const lifecycle of resumedLifecycle.values()) {
+        if (typeof lifecycleSupervisor.renewAttachedCheckpoint !== 'function') {
+          throw new Error('lifecycle supervisor heartbeat operation is required');
+        }
+        const renewed = await lifecycleSupervisor.renewAttachedCheckpoint(
+          clone(lifecycle.binding),
+        );
+        if (containsPrivateLifecycleMaterial(renewed)) {
+          throw new Error('lifecycle heartbeat returned private material');
+        }
+      }
       return taskControl.waitForAny(tasks);
+    },
+    async recordExecutorLifecycleTelemetry({ assignment, outcome }) {
+      const lifecycle = resumedLifecycle.get(assignment.id);
+      if (!lifecycle) return null;
+      if (typeof lifecycleSupervisor.recordAttachedTelemetryDecision !== 'function') {
+        throw new Error('lifecycle supervisor telemetry operation is required');
+      }
+      if (!isRecord(outcome.hostMetrics)) {
+        throw new Error('host-derived lifecycle metrics are required');
+      }
+      if (!isRecord(lifecycle.completion)) {
+        throw new Error('host-derived lifecycle completion binding is required');
+      }
+      const telemetryRequest = {
+        schemaVersion: '1.0.0',
+        programId: lifecycle.binding.program_id,
+        checkpointId: lifecycle.binding.checkpoint_id,
+        nodeId: lifecycle.binding.node_id,
+        observedAt: lifecycleNow(),
+        metrics: clone(outcome.hostMetrics),
+      };
+      const telemetry = await lifecycleSupervisor.recordAttachedTelemetryDecision(
+        clone(lifecycle.binding),
+        telemetryRequest,
+      );
+      if (containsPrivateLifecycleMaterial(telemetry)) {
+        throw new Error('lifecycle telemetry returned private material');
+      }
+      lifecycle.telemetryRecorded = true;
+      return clone(telemetry);
+    },
+    async completeVerifiedNodeLifecycle({ assignment, callback }) {
+      const entry = [...resumedLifecycle.entries()].find(
+        ([, lifecycle]) => lifecycle.binding.node_id === assignment.nodeId,
+      );
+      if (!entry) return null;
+      const [executorAssignmentId, lifecycle] = entry;
+      if (
+        callback?.kind !== 'verification' ||
+        callback.passed !== true ||
+        lifecycle.telemetryRecorded !== true
+      ) {
+        throw new Error('verified lifecycle completion requires passing independent verification');
+      }
+      if (typeof lifecycleSupervisor.completeAttachedCheckpoint !== 'function') {
+        throw new Error('lifecycle supervisor completion operation is required');
+      }
+      const completionInput = {
+        ...clone(lifecycle.completion),
+        evidence: [
+          ...clone(lifecycle.completion.evidence || []),
+          {
+            kind: 'agentgraph-verification',
+            assignmentId: assignment.id,
+            artifactId: callback.artifactId,
+            evidence: clone(callback.evidence || []),
+          },
+        ],
+      };
+      const completion = await lifecycleSupervisor.completeAttachedCheckpoint(
+        clone(lifecycle.binding),
+        completionInput,
+      );
+      if (containsPrivateLifecycleMaterial(completion)) {
+        throw new Error('lifecycle completion returned private material');
+      }
+      resumedLifecycle.delete(executorAssignmentId);
+      return clone(completion);
     },
     ...(typeof taskControl.steerTask === 'function'
       ? {
@@ -887,6 +1158,7 @@ export async function runAuthoritativeLedgerWaveWithAttachedHostTasks({
     attachedTasks,
     lifecycleSupervisor,
     lifecycleRecovery,
+    lifecycleNow: now,
   });
   return runAuthoritativeLedgerWaveWithCodex({
     ledgerInput,

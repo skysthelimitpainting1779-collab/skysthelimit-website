@@ -1,9 +1,11 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
+import { EventEmitter } from 'node:events';
 import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { PassThrough } from 'node:stream';
 import test from 'node:test';
 
 import { createAgentGraphExecutionState } from '../scripts/lib/agentgraph-execution-dispatcher.mjs';
@@ -96,6 +98,32 @@ function attachedExecutor() {
   };
 }
 
+function lifecycleResumeReceipt(binding) {
+  return {
+    request_sha256: '1'.repeat(64),
+    generation: binding.generation,
+    event: {
+      event_type: 'writer_lease_controller_resumed',
+      event_hash: '2'.repeat(64),
+      payload: {
+        program_id: binding.program_id,
+        checkpoint_id: binding.checkpoint_id,
+        node_id: binding.node_id,
+        assignment_id: binding.assignment_id,
+        thread_id: binding.thread_id,
+        worker_id: binding.worker_id,
+        actor: binding.actor,
+        session_id: binding.session_id,
+        registry_sha256: binding.registry_sha256,
+        recovery_audit_sha256: binding.recovery_audit_sha256,
+        recovery_id: binding.recovery_id,
+        generation: binding.generation,
+        request_sha256: '1'.repeat(64),
+      },
+    },
+  };
+}
+
 test('prompt and callback preserve immutable assignment identity', () => {
   const graph = proofGraph();
   const state = createAgentGraphExecutionState(graph);
@@ -147,6 +175,10 @@ test('prompt requires the privileged in-process lifecycle supervisor', () => {
   assert.match(prompt, /worker never receives.*lease capability/i);
   assert.match(prompt, /resume.*same attached task.*no duplicate executor/i);
   assert.match(prompt, /renewal.*telemetry.*completion/i);
+  assert.match(prompt, /one long-lived.*bridge.*not.*per operation/i);
+  assert.match(prompt, /trusted.*agentgraph root/i);
+  assert.match(prompt, /clean.*checkpoint head.*ancestor/i);
+  assert.match(prompt, /host-derived metrics.*completion.*after.*verifier.*passes/i);
 });
 
 test('wave skill carries the privileged lifecycle supervisor contract', () => {
@@ -163,6 +195,10 @@ test('wave skill carries the privileged lifecycle supervisor contract', () => {
   assert.match(skill, /worker never receives.*lease capability/i);
   assert.match(skill, /resume.*same attached task.*no duplicate executor/i);
   assert.match(skill, /renewal.*telemetry.*completion/i);
+  assert.match(skill, /one long-lived.*bridge.*not.*per operation/i);
+  assert.match(skill, /trusted.*agentgraph root/i);
+  assert.match(skill, /clean.*checkpoint head.*ancestor/i);
+  assert.match(skill, /host-derived metrics.*completion.*after.*verifier.*passes/i);
 });
 
 test('Codex app bridge maps create_thread and wait_threads results to assignment callbacks', async () => {
@@ -209,6 +245,67 @@ test('Codex app bridge maps create_thread and wait_threads results to assignment
   });
   assert.equal(calls[0][0], 'create');
   assert.equal(calls[1][0], 'wait');
+});
+
+test('Python lifecycle bridge uses one long-lived supervisor process for all operations', async () => {
+  let spawnCount = 0;
+  const operations = [];
+  const child = new EventEmitter();
+  child.stdout = new PassThrough();
+  child.stderr = new PassThrough();
+  child.stdin = {
+    write(line) {
+      const request = JSON.parse(line);
+      operations.push(request.operation);
+      const results = {
+        resume: {
+          request_sha256: '1'.repeat(64),
+          generation: 1,
+          event: {
+            event_type: 'writer_lease_controller_resumed',
+            event_hash: '2'.repeat(64),
+          },
+        },
+        heartbeat: { event: { event_type: 'writer_lease_renewed' } },
+        telemetry: { observation: { allowed: true } },
+        completion: { event: { event_type: 'checkpoint_completed' } },
+        shutdown: { status: 'stopped' },
+      };
+      child.stdout.write(
+        `${JSON.stringify({ id: request.id, ok: true, result: results[request.operation] })}\n`,
+      );
+      if (request.operation === 'shutdown') queueMicrotask(() => child.emit('exit', 0));
+      return true;
+    },
+  };
+  const bridge = taskRunner.createPythonLifecycleSupervisorBridge({
+    pythonExecutable: 'C:\\Python\\python.exe',
+    mcpServerPath: 'C:\\DEV\\dev\\mcp_server.py',
+    databasePath: 'C:\\DEV\\dev\\graphify.db',
+    trustedAgentGraphRoot: 'C:\\DEV\\dev\\agentgraph',
+    spawnProcess() {
+      spawnCount += 1;
+      return child;
+    },
+  });
+
+  await bridge.resumeAttachedCheckpoint({});
+  await bridge.renewAttachedCheckpoint({});
+  await bridge.recordAttachedTelemetryDecision({}, { metrics: { inputTokens: 1 } });
+  await bridge.completeAttachedCheckpoint({}, {
+    evidence: [],
+    completed_stage: 'stage:verify',
+    handoff_id: 'handoff-1',
+    next_node: 'NODE-2',
+    next_stage: 'stage:plan',
+    summary: 'Verified.',
+    blockers: [],
+  });
+  await bridge.close();
+
+  assert.equal(spawnCount, 1);
+  assert.deepEqual(operations, ['resume', 'heartbeat', 'telemetry', 'completion', 'shutdown']);
+  assert.equal(JSON.stringify(operations).includes('capability'), false);
 });
 
 test('runner fans out, independently verifies, and completes two ready nodes', async () => {
@@ -505,6 +602,309 @@ test('rejects private material from the lifecycle supervisor before reusing or c
     /private lifecycle material/,
   );
   assert.equal(creates, 0);
+});
+
+test('attached-task controller drives resume heartbeat telemetry and completion on one supervisor', async () => {
+  const root = mkdtempSync(join(tmpdir(), 'agentgraph-controller-lifecycle-'));
+  const registryPath = join(root, 'registry.json');
+  const recoveryAuditPath = join(root, 'recovery-audit.json');
+  writeFileSync(registryPath, '{"registry":"host-owned"}');
+  writeFileSync(recoveryAuditPath, '{"audit":"host-owned"}');
+  const operations = [];
+  const supervisor = {
+    async resumeAttachedCheckpoint(binding) {
+      operations.push(['resume', binding.assignment_id]);
+      return {
+        request_sha256: '1'.repeat(64),
+        generation: 1,
+        event: {
+          event_type: 'writer_lease_controller_resumed',
+          event_hash: '2'.repeat(64),
+          payload: {
+            program_id: binding.program_id,
+            checkpoint_id: binding.checkpoint_id,
+            node_id: binding.node_id,
+            assignment_id: binding.assignment_id,
+            thread_id: binding.thread_id,
+            worker_id: binding.worker_id,
+            actor: binding.actor,
+            session_id: binding.session_id,
+            registry_sha256: binding.registry_sha256,
+            recovery_audit_sha256: binding.recovery_audit_sha256,
+            recovery_id: binding.recovery_id,
+            generation: binding.generation,
+            request_sha256: '1'.repeat(64),
+          },
+        },
+      };
+    },
+    async renewAttachedCheckpoint(binding) {
+      operations.push(['heartbeat', binding.assignment_id]);
+      return { event: { event_type: 'writer_lease_renewed' } };
+    },
+    async recordAttachedTelemetryDecision(binding, request) {
+      operations.push(['telemetry', binding.assignment_id, request.metrics.toolCalls]);
+      return { observation: { allowed: true } };
+    },
+    async completeAttachedCheckpoint(binding, completion) {
+      operations.push([
+        'completion',
+        binding.assignment_id,
+        completion.handoff_id,
+        completion.evidence.at(-1),
+      ]);
+      return { event: { event_type: 'checkpoint_completed' } };
+    },
+  };
+  let verifierCreates = 0;
+  const result = await runAuthoritativeLedgerWaveWithAttachedHostTasks({
+    ledgerInput: attachedLedgerInput(),
+    attachedTasks: [{ ...attachedExecutor(), status: 'needs-attention' }],
+    lifecycleSupervisor: supervisor,
+    lifecycleRecovery: {
+      assignmentId: 'assignment:SAFE:1:executor',
+      programId: 'program-safe',
+      checkpointId: 'checkpoint-safe-1',
+      registryPath,
+      recoveryAuditPath,
+      recoveryId: 'recovery-safe-generation-1',
+      generation: 1,
+      completion: {
+        evidence: [{ kind: 'focused-test', sha256: '3'.repeat(64) }],
+        completed_stage: 'stage:SAFE:verify',
+        handoff_id: 'handoff-safe-1',
+        next_node: 'NEXT',
+        next_stage: 'stage:NEXT:plan',
+        summary: 'SAFE verified.',
+        blockers: [],
+      },
+    },
+    taskControl: {
+      async createTask({ assignment }) {
+        assert.equal(assignment.role, 'verifier');
+        assert.equal(
+          operations.some((operation) => operation[0] === 'completion'),
+          false,
+          'checkpoint completion must wait for independent verification',
+        );
+        verifierCreates += 1;
+        return { threadId: 'thread-verifier', hostId: 'local' };
+      },
+      async waitForAny(tasks) {
+        const task = tasks[0];
+        if (task.assignmentId.endsWith(':executor')) {
+          return {
+            assignmentId: task.assignmentId,
+            status: 'completed',
+            hostMetrics: {
+              inputTokens: 10,
+              outputTokens: 5,
+              toolCalls: 2,
+              retries: 0,
+              waitMilliseconds: 0,
+              agentSpawns: 0,
+              externalProviderCalls: 0,
+              elapsedMilliseconds: 100,
+              aiUsd: 0,
+              infrastructureUsd: 0,
+              externalUsd: 0,
+            },
+            final: JSON.stringify({
+              kind: 'completion',
+              nodeId: 'SAFE',
+              assignmentId: task.assignmentId,
+              workerId: 'executor-1',
+              artifact: {
+                id: 'artifact:SAFE:1',
+                evidence: ['focused tests'],
+                summary: 'Completed.',
+                productionSideEffects: false,
+                providerMutations: false,
+              },
+            }),
+          };
+        }
+        return {
+          assignmentId: task.assignmentId,
+          status: 'completed',
+          final: JSON.stringify({
+            kind: 'verification',
+            nodeId: 'SAFE',
+            assignmentId: task.assignmentId,
+            workerId: 'verifier-1',
+            artifactId: 'artifact:SAFE:1',
+            passed: true,
+            evidence: ['independent check'],
+            errors: [],
+          }),
+        };
+      },
+    },
+    now: () => '2026-07-30T23:30:00.000Z',
+  });
+
+  assert.equal(result.status, 'complete');
+  assert.equal(verifierCreates, 1);
+  assert.deepEqual(
+    operations.map((operation) => operation[0]),
+    ['resume', 'heartbeat', 'telemetry', 'heartbeat', 'completion'],
+  );
+  assert.deepEqual(operations.at(-1)[3], {
+    kind: 'agentgraph-verification',
+    assignmentId: 'assignment:SAFE:1:verifier',
+    artifactId: 'artifact:SAFE:1',
+    evidence: ['independent check'],
+  });
+});
+
+test('failed independent verification leaves the resumed lease active without completion or successor', async () => {
+  const root = mkdtempSync(join(tmpdir(), 'agentgraph-controller-verify-fail-'));
+  const registryPath = join(root, 'registry.json');
+  const recoveryAuditPath = join(root, 'recovery-audit.json');
+  writeFileSync(registryPath, '{}');
+  writeFileSync(recoveryAuditPath, '{}');
+  let completions = 0;
+  let creates = 0;
+  const result = await runAuthoritativeLedgerWaveWithAttachedHostTasks({
+    ledgerInput: attachedLedgerInput(),
+    attachedTasks: [{ ...attachedExecutor(), status: 'needs-attention' }],
+    lifecycleSupervisor: {
+      async resumeAttachedCheckpoint(binding) {
+        return lifecycleResumeReceipt(binding);
+      },
+      async renewAttachedCheckpoint() {
+        return { event: { event_type: 'writer_lease_renewed' } };
+      },
+      async recordAttachedTelemetryDecision() {
+        return { observation: { allowed: true } };
+      },
+      async completeAttachedCheckpoint() {
+        completions += 1;
+        return { event: { event_type: 'checkpoint_completed' } };
+      },
+    },
+    lifecycleRecovery: {
+      assignmentId: 'assignment:SAFE:1:executor',
+      programId: 'program-safe',
+      checkpointId: 'checkpoint-safe-1',
+      registryPath,
+      recoveryAuditPath,
+      recoveryId: 'recovery-safe-generation-1',
+      generation: 1,
+      completion: {
+        evidence: [],
+        completed_stage: 'stage:SAFE:verify',
+        handoff_id: 'handoff-safe-1',
+        next_node: 'NEXT',
+        next_stage: 'stage:NEXT:plan',
+        summary: 'SAFE verified.',
+        blockers: [],
+      },
+    },
+    taskControl: {
+      async createTask({ assignment }) {
+        assert.equal(assignment.role, 'verifier');
+        creates += 1;
+        return { threadId: 'thread-verifier-failure' };
+      },
+      async waitForAny(tasks) {
+        const task = tasks[0];
+        if (task.assignmentId.endsWith(':executor')) {
+          return {
+            assignmentId: task.assignmentId,
+            status: 'completed',
+            hostMetrics: {
+              inputTokens: 1,
+              outputTokens: 1,
+              toolCalls: 1,
+              retries: 0,
+              waitMilliseconds: 0,
+              agentSpawns: 0,
+              externalProviderCalls: 0,
+              elapsedMilliseconds: 1,
+              aiUsd: 0,
+              infrastructureUsd: 0,
+              externalUsd: 0,
+            },
+            final: JSON.stringify({
+              kind: 'completion',
+              nodeId: 'SAFE',
+              assignmentId: task.assignmentId,
+              workerId: 'executor-1',
+              artifact: {
+                id: 'artifact:SAFE:1',
+                evidence: ['focused tests'],
+                productionSideEffects: false,
+                providerMutations: false,
+              },
+            }),
+          };
+        }
+        return {
+          assignmentId: task.assignmentId,
+          status: 'completed',
+          final: JSON.stringify({
+            kind: 'verification',
+            nodeId: 'SAFE',
+            assignmentId: task.assignmentId,
+            workerId: 'verifier-1',
+            artifactId: 'artifact:SAFE:1',
+            passed: false,
+            evidence: ['failed independent check'],
+            errors: ['verification failed'],
+          }),
+        };
+      },
+    },
+    now: () => '2026-07-30T23:32:00.000Z',
+  });
+
+  assert.equal(result.status, 'halted');
+  assert.equal(creates, 1);
+  assert.equal(completions, 0);
+  assert.notEqual(result.state.nodes.SAFE.status, 'completed');
+});
+
+test('rejects private callback material before any snapshot can persist it', async () => {
+  const graph = { nodes: [proofGraph().nodes[0]] };
+  const snapshots = [];
+  let creates = 0;
+  const result = await runAgentGraphWithCodex({
+    graph,
+    initialState: createAgentGraphExecutionState(graph),
+    workers: [{ id: 'codex-executor-1', capabilities: ['execute'] }],
+    codex: {
+      async createTask() {
+        creates += 1;
+        return { threadId: 'thread-private-callback' };
+      },
+      async waitForAny(tasks) {
+        return {
+          assignmentId: tasks[0].assignmentId,
+          status: 'completed',
+          final: JSON.stringify({
+            kind: 'completion',
+            nodeId: 'READ-PACKAGE',
+            assignmentId: tasks[0].assignmentId,
+            workerId: 'codex-executor-1',
+            artifact: {
+              id: 'artifact-private',
+              evidence: ['Authorization: Bearer abcdefghijklmnopqrstuvwxyz'],
+              productionSideEffects: false,
+              providerMutations: false,
+            },
+          }),
+        };
+      },
+    },
+    saveState: async (snapshot) => snapshots.push(snapshot),
+    now: () => '2026-07-30T23:31:00.000Z',
+  });
+
+  assert.equal(result.status, 'halted');
+  assert.equal(creates, 1);
+  assert.equal(JSON.stringify(snapshots).includes('abcdefghijklmnopqrstuvwxyz'), false);
+  assert.match(result.report.errors[0], /private material/i);
 });
 
 test('halts once when an attached executor needs attention and does not launch a verifier', async () => {
