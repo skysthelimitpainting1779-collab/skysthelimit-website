@@ -377,11 +377,34 @@ function taskSnapshot(activeTasks) {
   );
 }
 
+function taskRegistrySnapshot(activeTasks, completedTasks) {
+  const registry = Object.fromEntries(
+    completedTasks.map((task) => [
+      task.assignmentId,
+      {
+        assignmentId: task.assignmentId,
+        threadId: task.threadId,
+        hostId: task.hostId || null,
+        cursor: task.cursor || null,
+        role: task.role,
+        nodeId: task.nodeId,
+        status: task.status,
+        ...(task.error ? { error: task.error } : {}),
+      },
+    ]),
+  );
+  return {
+    ...registry,
+    ...taskSnapshot(activeTasks),
+  };
+}
+
 async function saveSnapshot(saveState, state, activeTasks, completedTasks = []) {
   await saveState({
     schemaVersion: '1.0.0',
     executionState: clone(state),
     tasks: taskSnapshot(activeTasks),
+    taskRegistry: taskRegistrySnapshot(activeTasks, completedTasks),
     completedTasks: clone(completedTasks),
   });
 }
@@ -506,6 +529,7 @@ export async function runAgentGraphWithCodex(input) {
     );
     const active = activeTasks.get(outcome?.assignmentId);
     if (!active) throw new Error('Codex returned an outcome for an unknown assignment');
+    active.cursor = outcome?.cursor || active.cursor || null;
     activeTasks.delete(active.assignment.id);
 
     let callbackInput;
@@ -521,6 +545,8 @@ export async function runAgentGraphWithCodex(input) {
         role: active.assignment.role,
         workerId: active.assignment.workerId,
         threadId: active.threadId,
+        hostId: active.hostId || null,
+        cursor: active.cursor,
         codexThreadId: outcome.codexThreadId || null,
         status: 'completed',
         callback: clone(callback),
@@ -533,8 +559,13 @@ export async function runAgentGraphWithCodex(input) {
         role: active.assignment.role,
         workerId: active.assignment.workerId,
         threadId: active.threadId,
+        hostId: active.hostId || null,
+        cursor: active.cursor,
         codexThreadId: outcome?.codexThreadId || null,
-        status: 'failed',
+        status:
+          outcome?.status && outcome.status !== 'completed'
+            ? outcome.status
+            : 'failed',
         error: error.message,
       });
     }
@@ -620,4 +651,97 @@ export async function runAuthoritativeLedgerWaveWithCodex({
     now,
   });
   return { ...result, wave };
+}
+
+export function createInjectedHostTaskControlAdapter({
+  taskControl,
+  attachedTasks,
+}) {
+  if (
+    !isRecord(taskControl) ||
+    typeof taskControl.createTask !== 'function' ||
+    typeof taskControl.waitForAny !== 'function'
+  ) {
+    throw new Error('taskControl.createTask and taskControl.waitForAny are required');
+  }
+  if (!Array.isArray(attachedTasks) || attachedTasks.length === 0) {
+    throw new Error('attachedTasks must contain at least one host task');
+  }
+  const attachments = new Map();
+  for (const task of attachedTasks) {
+    if (
+      !isRecord(task) ||
+      typeof task.assignmentId !== 'string' ||
+      !task.assignmentId ||
+      typeof task.threadId !== 'string' ||
+      !task.threadId ||
+      !['executor', 'verifier'].includes(task.role) ||
+      task.status !== 'running'
+    ) {
+      throw new Error('attached host tasks require assignmentId, threadId, role, and running status');
+    }
+    if (attachments.has(task.assignmentId)) {
+      throw new Error(`duplicate attached assignment: ${task.assignmentId}`);
+    }
+    attachments.set(task.assignmentId, clone(task));
+  }
+
+  return {
+    async createTask(args) {
+      const attached = attachments.get(args.assignment.id);
+      if (!attached) return taskControl.createTask(args);
+      if (attached.role !== args.assignment.role) {
+        throw new Error(`attached task role does not match ${args.assignment.id}`);
+      }
+      attachments.delete(args.assignment.id);
+      return {
+        threadId: attached.threadId,
+        hostId: attached.hostId || null,
+        cursor: attached.cursor || null,
+      };
+    },
+    async waitForAny(tasks) {
+      return taskControl.waitForAny(tasks);
+    },
+    ...(typeof taskControl.steerTask === 'function'
+      ? {
+          async steerTask(args) {
+            return taskControl.steerTask(args);
+          },
+        }
+      : {}),
+  };
+}
+
+export async function runAuthoritativeLedgerWaveWithAttachedHostTasks({
+  ledgerInput,
+  attachedTasks,
+  taskControl,
+  saveState,
+  now,
+}) {
+  const authoritativeAssignments = new Map(
+    buildAuthoritativeLedgerWave(ledgerInput).assignments.map((assignment) => [
+      assignment.assignmentId,
+      assignment,
+    ]),
+  );
+  for (const task of attachedTasks || []) {
+    const assignment = authoritativeAssignments.get(task?.assignmentId);
+    if (!assignment || assignment.role !== task?.role) {
+      throw new Error(
+        `attached task is not in the authoritative wave: ${task?.assignmentId || '<missing>'}`,
+      );
+    }
+  }
+  const injectedTaskControl = createInjectedHostTaskControlAdapter({
+    taskControl,
+    attachedTasks,
+  });
+  return runAuthoritativeLedgerWaveWithCodex({
+    ledgerInput,
+    codex: injectedTaskControl,
+    saveState,
+    now,
+  });
 }

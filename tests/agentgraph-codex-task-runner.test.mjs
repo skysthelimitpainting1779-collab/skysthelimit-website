@@ -11,6 +11,7 @@ import {
   createCodexAssignmentPrompt,
   parseCodexAssignmentCallback,
   runAgentGraphWithCodex,
+  runAuthoritativeLedgerWaveWithAttachedHostTasks,
 } from '../scripts/lib/agentgraph-codex-task-runner.mjs';
 import * as taskRunner from '../scripts/lib/agentgraph-codex-task-runner.mjs';
 
@@ -39,6 +40,59 @@ function workers() {
     { id: 'codex-verifier-1', capabilities: ['verify'] },
     { id: 'codex-verifier-2', capabilities: ['verify'] },
   ];
+}
+
+function attachedLedgerInput() {
+  return {
+    source: {
+      kind: 'authoritative-lifecycle-ledger',
+      ledgerId: 'governed-execution',
+      revision: 'handoff-1@head-1',
+    },
+    completedNodeIds: ['FOUNDATION'],
+    target: {
+      worktreePath: 'C:\\repo\\governed-worktree',
+      environment: 'local',
+    },
+    boundary: {
+      allowedEnvironments: ['local', 'preview', 'test', 'sandbox'],
+      allowReadOnlyProductionMetadata: true,
+      allowPreviewDeployments: true,
+      allowTestSandboxIntegrations: true,
+      allowProductionMutations: false,
+    },
+    workers: [
+      { id: 'executor-1', capabilities: ['execute'] },
+      { id: 'verifier-1', capabilities: ['verify'] },
+    ],
+    maxConcurrentExecutors: 1,
+    readyNodes: [
+      {
+        id: 'SAFE',
+        title: 'Safe governed node',
+        objective: 'Produce and independently verify local evidence.',
+        dependsOn: ['FOUNDATION'],
+        permissions: ['repository:read', 'repository:write'],
+        lifecycle: { authoritative: true, status: 'ready', attempt: 1 },
+        verification: {
+          independent: true,
+          requiredEvidence: ['focused tests'],
+          successCondition: 'The local evidence passes.',
+        },
+      },
+    ],
+  };
+}
+
+function attachedExecutor() {
+  return {
+    assignmentId: 'assignment:SAFE:1:executor',
+    threadId: 'thread-existing-executor',
+    hostId: 'local',
+    cursor: 'cursor-executor-1',
+    role: 'executor',
+    status: 'running',
+  };
 }
 
 test('prompt and callback preserve immutable assignment identity', () => {
@@ -189,6 +243,193 @@ test('runner fans out, independently verifies, and completes two ready nodes', a
   assert.equal(result.completedTasks.length, 4);
   assert.equal(result.completedTasks.every((task) => task.status === 'completed'), true);
   assert.equal(snapshots.at(-1).completedTasks.length, 4);
+});
+
+test('attaches an existing executor and durably advances its cursor before launching a verifier', async () => {
+  const created = [];
+  const snapshots = [];
+  const taskControl = {
+    async createTask({ assignment }) {
+      created.push(assignment);
+      assert.equal(assignment.role, 'verifier');
+      return {
+        threadId: 'thread-new-verifier',
+        hostId: 'local',
+        cursor: 'cursor-verifier-1',
+      };
+    },
+    async waitForAny(tasks) {
+      const task = tasks[0];
+      if (task.assignmentId === 'assignment:SAFE:1:executor') {
+        assert.equal(task.threadId, 'thread-existing-executor');
+        assert.equal(task.cursor, 'cursor-executor-1');
+        return {
+          assignmentId: task.assignmentId,
+          status: 'completed',
+          cursor: 'cursor-executor-2',
+          final: JSON.stringify({
+            kind: 'completion',
+            nodeId: 'SAFE',
+            assignmentId: task.assignmentId,
+            workerId: 'executor-1',
+            artifact: {
+              id: 'artifact:SAFE:1',
+              evidence: ['focused tests'],
+              summary: 'Local implementation complete.',
+              productionSideEffects: false,
+              providerMutations: false,
+            },
+          }),
+        };
+      }
+      assert.equal(task.assignmentId, 'assignment:SAFE:1:verifier');
+      return {
+        assignmentId: task.assignmentId,
+        status: 'completed',
+        cursor: 'cursor-verifier-2',
+        final: JSON.stringify({
+          kind: 'verification',
+          nodeId: 'SAFE',
+          assignmentId: task.assignmentId,
+          workerId: 'verifier-1',
+          artifactId: 'artifact:SAFE:1',
+          passed: true,
+          evidence: ['focused tests independently rerun'],
+          errors: [],
+        }),
+      };
+    },
+  };
+
+  const result = await runAuthoritativeLedgerWaveWithAttachedHostTasks({
+    ledgerInput: attachedLedgerInput(),
+    attachedTasks: [attachedExecutor()],
+    taskControl,
+    saveState: async (snapshot) => snapshots.push(snapshot),
+    now: () => '2026-07-30T23:00:00.000Z',
+  });
+
+  assert.equal(result.status, 'complete');
+  assert.equal(created.length, 1);
+  assert.equal(created[0].role, 'verifier');
+  assert.deepEqual(snapshots[0].taskRegistry['assignment:SAFE:1:executor'], {
+    assignmentId: 'assignment:SAFE:1:executor',
+    threadId: 'thread-existing-executor',
+    hostId: 'local',
+    cursor: 'cursor-executor-1',
+    role: 'executor',
+    nodeId: 'SAFE',
+    status: 'running',
+  });
+  assert.equal(
+    snapshots.at(-1).taskRegistry['assignment:SAFE:1:executor'].cursor,
+    'cursor-executor-2',
+  );
+  assert.equal(
+    snapshots.at(-1).taskRegistry['assignment:SAFE:1:verifier'].status,
+    'completed',
+  );
+  assert.equal(result.completedTasks.length, 2);
+});
+
+test('halts once when an attached executor needs attention and does not launch a verifier', async () => {
+  let waits = 0;
+  let creates = 0;
+  const snapshots = [];
+  const result = await runAuthoritativeLedgerWaveWithAttachedHostTasks({
+    ledgerInput: attachedLedgerInput(),
+    attachedTasks: [attachedExecutor()],
+    taskControl: {
+      async createTask() {
+        creates += 1;
+        throw new Error('verifier must not launch');
+      },
+      async waitForAny() {
+        waits += 1;
+        return {
+          assignmentId: 'assignment:SAFE:1:executor',
+          status: 'needs_attention',
+          cursor: 'cursor-needs-attention',
+          error: 'official lifecycle writer lease is unavailable',
+        };
+      },
+    },
+    saveState: async (snapshot) => snapshots.push(snapshot),
+    now: () => '2026-07-30T23:01:00.000Z',
+  });
+
+  assert.equal(result.status, 'halted');
+  assert.equal(result.report.reason, 'invalid_completion_artifact');
+  assert.equal(waits, 1);
+  assert.equal(creates, 0);
+  assert.deepEqual(
+    snapshots.at(-1).taskRegistry['assignment:SAFE:1:executor'],
+    {
+      assignmentId: 'assignment:SAFE:1:executor',
+      threadId: 'thread-existing-executor',
+      hostId: 'local',
+      cursor: 'cursor-needs-attention',
+      role: 'executor',
+      nodeId: 'SAFE',
+      status: 'needs_attention',
+      error: 'official lifecycle writer lease is unavailable',
+    },
+  );
+});
+
+test('halts once on a missing attached executor callback', async () => {
+  let waits = 0;
+  const result = await runAuthoritativeLedgerWaveWithAttachedHostTasks({
+    ledgerInput: attachedLedgerInput(),
+    attachedTasks: [attachedExecutor()],
+    taskControl: {
+      async createTask() {
+        throw new Error('verifier must not launch');
+      },
+      async waitForAny() {
+        waits += 1;
+        return {
+          assignmentId: 'assignment:SAFE:1:executor',
+          status: 'completed',
+          cursor: 'cursor-missing-callback',
+          final: '',
+        };
+      },
+    },
+    now: () => '2026-07-30T23:02:00.000Z',
+  });
+
+  assert.equal(result.status, 'halted');
+  assert.equal(result.report.reason, 'invalid_completion_artifact');
+  assert.equal(waits, 1);
+  assert.match(result.report.errors[0], /no completion callback/);
+});
+
+test('rejects an attachment outside the authoritative wave before creating a duplicate task', async () => {
+  let creates = 0;
+  await assert.rejects(
+    () =>
+      runAuthoritativeLedgerWaveWithAttachedHostTasks({
+        ledgerInput: attachedLedgerInput(),
+        attachedTasks: [
+          {
+            ...attachedExecutor(),
+            assignmentId: 'assignment:STALE:1:executor',
+          },
+        ],
+        taskControl: {
+          async createTask() {
+            creates += 1;
+            return { threadId: 'duplicate-task' };
+          },
+          async waitForAny() {
+            throw new Error('must not wait');
+          },
+        },
+      }),
+    /attached task is not in the authoritative wave/,
+  );
+  assert.equal(creates, 0);
 });
 
 test('rejects production/provider mutation assignments before task creation', () => {
