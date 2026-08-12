@@ -48,7 +48,7 @@
     "graph:wiki": "node scripts/graph-context.mjs wiki",
     "host:compile": "node scripts/compile-host-native.mjs",
     "skills:validate": "node scripts/validate-skill-routing.mjs",
-    "test": "tsx --test tests/*.mjs",
+    "test": "node --import tsx --test tests/*.mjs",
     "smoke:site": "node scripts/smoke-site.mjs",
     "learn:prevent:test": "node scripts/active-prevention.mjs self-test",
     "learn:prevent:rebuild": "node scripts/active-prevention.mjs rebuild",
