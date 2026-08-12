@@ -1,8 +1,8 @@
 import type { MetadataRoute } from 'next';
-import { ENV } from '../lib/env';
+import { CANONICAL_ORIGIN } from '../lib/site';
 import { landingPages, landingPagePath } from '../data/landingPages';
 
-const site = ENV.SITE_URL.replace(/\/$/, '');
+const site = CANONICAL_ORIGIN;
 
 const staticRoutes: { path: string; changeFrequency: MetadataRoute.Sitemap[0]['changeFrequency']; priority: number }[] =
   [

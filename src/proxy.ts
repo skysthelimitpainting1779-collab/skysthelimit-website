@@ -2,6 +2,7 @@ import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 import { updateSession } from './lib/supabase/middleware';
 import { gatePortalAccess, isProtectedPortalPath, portalLoginUrl } from './lib/auth/portal';
+import { APEX_HOST, CANONICAL_HOST } from './lib/site';
 
 /**
  * Next.js proxy (session refresh + portal/admin route protection).
@@ -9,6 +10,18 @@ import { gatePortalAccess, isProtectedPortalPath, portalLoginUrl } from './lib/a
  * Payload admin routes (/admin/[[...segments]]) are excluded; Payload handles its own auth.
  */
 export async function proxy(request: NextRequest) {
+  // Consolidate the apex and HTTP variants before Google can index duplicates.
+  // Preview deployments and localhost remain usable for review and development.
+  const forwardedHost = request.headers.get('x-forwarded-host')?.split(',')[0]?.trim();
+  const host = (forwardedHost || request.headers.get('host') || '').split(':')[0].toLowerCase();
+  const forwardedProto = request.headers.get('x-forwarded-proto')?.split(',')[0]?.trim();
+  if (host === APEX_HOST || (host === CANONICAL_HOST && forwardedProto === 'http')) {
+    const url = request.nextUrl.clone();
+    url.protocol = 'https:';
+    url.host = CANONICAL_HOST;
+    return NextResponse.redirect(url, 308);
+  }
+
   // Always refresh session cookies when this proxy runs
   let response = await updateSession(request);
 
@@ -71,9 +84,7 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Exclude Payload admin routes — Payload handles its own auth internally
-    '/portal',
-    '/portal/:path*',
-    '/auth/callback',
+    // Run canonical-host consolidation for public pages while skipping static assets.
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|webp|gif|ico|css|js|map|xml|txt|mp4)$).*)',
   ],
 };

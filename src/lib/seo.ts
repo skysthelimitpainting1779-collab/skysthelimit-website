@@ -1,6 +1,7 @@
 import { ENV } from './env';
+import { CANONICAL_ORIGIN } from './site';
 
-const siteUrl = ENV.SITE_URL.replace(/\/$/, '');
+const siteUrl = CANONICAL_ORIGIN;
 
 export const businessSchema = {
   '@context': 'https://schema.org',
@@ -80,6 +81,35 @@ export const businessSchema = {
     'Guardrail painting',
     'Light pole painting',
   ],
+};
+
+export const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': `${siteUrl}/#website`,
+      url: siteUrl,
+      name: "Sky's the Limit Painting LLC",
+      publisher: { '@id': `${siteUrl}/#business` },
+      inLanguage: 'en-US',
+    },
+    {
+      ...businessSchema,
+      '@id': `${siteUrl}/#business`,
+    },
+  ],
+};
+
+export const homePageSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  '@id': `${siteUrl}/#webpage`,
+  url: siteUrl,
+  name: 'Twin Cities Painting Contractor | Sky\'s the Limit Painting LLC',
+  isPartOf: { '@id': `${siteUrl}/#website` },
+  about: { '@id': `${siteUrl}/#business` },
+  inLanguage: 'en-US',
 };
 
 export function serviceSchema(name: string, description: string, path: string) {
