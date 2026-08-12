@@ -4,6 +4,27 @@ import { v } from 'convex/values';
 const activeDisabled = v.union(v.literal('active'), v.literal('disabled'));
 const membershipStatus = v.union(v.literal('active'), v.literal('disabled'), v.literal('revoked'));
 const resourceGrantStatus = v.union(v.literal('active'), v.literal('revoked'));
+const acquisitionLane = v.union(
+  v.literal('high_access'),
+  v.literal('property_facility'),
+  v.literal('subcontract_referral'),
+  v.literal('affluent_residential'),
+  v.literal('public_institutional'),
+);
+const leadStatus = v.union(
+  v.literal('new'),
+  v.literal('discovered'),
+  v.literal('verified'),
+  v.literal('qualified'),
+  v.literal('contacted'),
+  v.literal('replied'),
+  v.literal('estimate_requested'),
+  v.literal('won'),
+  v.literal('lost'),
+  v.literal('suppressed'),
+  v.literal('converted'),
+  v.literal('closed'),
+);
 const clerkLifecycleType = v.union(
   v.literal('user.created'),
   v.literal('user.updated'),
@@ -101,8 +122,40 @@ export default defineSchema({
     sourceId: v.optional(v.string()),
     sourceChecksum: v.optional(v.string()),
     companyId: v.optional(v.id('companies')),
+    companyName: v.optional(v.string()),
+    city: v.optional(v.string()),
+    publicEmail: v.optional(v.string()),
+    publicContactUrl: v.optional(v.string()),
+    sourceUrl: v.optional(v.string()),
+    dedupeKey: v.optional(v.string()),
+    lane: v.optional(acquisitionLane),
+    score: v.optional(v.number()),
+    scoreBreakdown: v.optional(
+      v.object({
+        serviceFit: v.number(),
+        urgency: v.number(),
+        geography: v.number(),
+        contactQuality: v.number(),
+        proofMatch: v.number(),
+        operationalFit: v.number(),
+      }),
+    ),
+    scoreDisposition: v.optional(
+      v.union(
+        v.literal('work_now'),
+        v.literal('monitor'),
+        v.literal('low_priority'),
+        v.literal('blocked'),
+      ),
+    ),
+    blockers: v.optional(v.array(v.string())),
+    nextAction: v.optional(v.string()),
+    nextActionAt: v.optional(v.number()),
+    lastTouchedAt: v.optional(v.number()),
+    stopReason: v.optional(v.string()),
+    createdByRunId: v.optional(v.string()),
     source: v.string(),
-    status: v.union(v.literal('new'), v.literal('qualified'), v.literal('converted'), v.literal('closed')),
+    status: leadStatus,
     idempotencyKey: v.optional(v.string()),
     submittedAt: v.number(),
     updatedAt: v.number(),
@@ -111,7 +164,166 @@ export default defineSchema({
     .index('by_canonicalId', ['canonicalId'])
     .index('by_sourceSystem_sourceId', ['sourceSystem', 'sourceId'])
     .index('by_company_status', ['companyId', 'status'])
+    .index('by_company_dedupeKey', ['companyId', 'dedupeKey'])
+    .index('by_company_lane_and_status', ['companyId', 'lane', 'status'])
+    .index('by_company_status_and_nextActionAt', ['companyId', 'status', 'nextActionAt'])
     .index('by_idempotencyKey', ['idempotencyKey']),
+
+  acquisitionSignals: defineTable({
+    companyId: v.id('companies'),
+    leadId: v.optional(v.id('leads')),
+    signalKey: v.string(),
+    type: v.union(
+      v.literal('inbound'),
+      v.literal('permit'),
+      v.literal('planning'),
+      v.literal('public_bid'),
+      v.literal('bid_award'),
+      v.literal('property_event'),
+      v.literal('storm'),
+      v.literal('referral'),
+      v.literal('directory'),
+      v.literal('engagement'),
+    ),
+    title: v.string(),
+    sourceUrl: v.string(),
+    location: v.optional(v.string()),
+    status: v.union(
+      v.literal('new'),
+      v.literal('qualified'),
+      v.literal('acted'),
+      v.literal('dismissed'),
+      v.literal('expired'),
+    ),
+    score: v.optional(v.number()),
+    dueAt: v.optional(v.number()),
+    detectedAt: v.number(),
+    lastSeenAt: v.number(),
+    metadata: v.optional(v.any()),
+  })
+    .index('by_company_signalKey', ['companyId', 'signalKey'])
+    .index('by_company_status_and_dueAt', ['companyId', 'status', 'dueAt'])
+    .index('by_lead_detectedAt', ['leadId', 'detectedAt']),
+
+  acquisitionLeadIdentities: defineTable({
+    companyId: v.id('companies'),
+    key: v.string(),
+    leadId: v.id('leads'),
+    createdAt: v.number(),
+  })
+    .index('by_company_key', ['companyId', 'key'])
+    .index('by_lead', ['leadId']),
+
+  acquisitionTouches: defineTable({
+    companyId: v.id('companies'),
+    leadId: v.id('leads'),
+    channel: v.union(
+      v.literal('email'),
+      v.literal('facebook'),
+      v.literal('website'),
+      v.literal('bid_portal'),
+      v.literal('phone'),
+      v.literal('sms'),
+      v.literal('in_person'),
+    ),
+    direction: v.union(
+      v.literal('inbound'),
+      v.literal('outbound'),
+      v.literal('system'),
+    ),
+    status: v.union(
+      v.literal('planned'),
+      v.literal('sent'),
+      v.literal('delivered'),
+      v.literal('replied'),
+      v.literal('bounced'),
+      v.literal('opted_out'),
+      v.literal('failed'),
+    ),
+    isDeliveredOutbound: v.optional(v.boolean()),
+    summary: v.string(),
+    externalId: v.optional(v.string()),
+    idempotencyKey: v.string(),
+    occurredAt: v.number(),
+    followUpAt: v.optional(v.number()),
+    runId: v.optional(v.string()),
+  })
+    .index('by_company_idempotencyKey', ['companyId', 'idempotencyKey'])
+    .index('by_lead_occurredAt', ['leadId', 'occurredAt'])
+    .index('by_lead_deliveredOutbound_and_occurredAt', ['leadId', 'isDeliveredOutbound', 'occurredAt'])
+    .index('by_company_status_and_occurredAt', ['companyId', 'status', 'occurredAt']),
+
+  acquisitionRuns: defineTable({
+    companyId: v.id('companies'),
+    runKey: v.string(),
+    kind: v.union(
+      v.literal('lead_engine'),
+      v.literal('bid_watch'),
+      v.literal('content'),
+      v.literal('migration'),
+    ),
+    lane: v.optional(acquisitionLane),
+    status: v.union(
+      v.literal('started'),
+      v.literal('succeeded'),
+      v.literal('partial'),
+      v.literal('failed'),
+      v.literal('no_change'),
+    ),
+    startedAt: v.number(),
+    completedAt: v.optional(v.number()),
+    cursor: v.optional(v.string()),
+    counts: v.optional(v.any()),
+    receipt: v.optional(v.any()),
+    lastError: v.optional(v.string()),
+  })
+    .index('by_company_runKey', ['companyId', 'runKey'])
+    .index('by_company_status_and_startedAt', ['companyId', 'status', 'startedAt']),
+
+  contentQueue: defineTable({
+    companyId: v.id('companies'),
+    channel: v.union(
+      v.literal('facebook'),
+      v.literal('instagram'),
+      v.literal('google_business_profile'),
+      v.literal('nextdoor'),
+      v.literal('email'),
+    ),
+    status: v.union(
+      v.literal('drafted'),
+      v.literal('scheduled'),
+      v.literal('published'),
+      v.literal('failed'),
+      v.literal('cancelled'),
+    ),
+    contentHash: v.string(),
+    message: v.string(),
+    externalId: v.optional(v.string()),
+    lastError: v.optional(v.string()),
+    scheduledAt: v.optional(v.number()),
+    publishedAt: v.optional(v.number()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index('by_company_contentHash', ['companyId', 'contentHash'])
+    .index('by_company_status_and_scheduledAt', ['companyId', 'status', 'scheduledAt']),
+
+  acquisitionSuppressions: defineTable({
+    companyId: v.id('companies'),
+    key: v.string(),
+    reason: v.string(),
+    source: v.union(
+      v.literal('reply'),
+      v.literal('bounce'),
+      v.literal('opt_out'),
+      v.literal('manual'),
+      v.literal('policy'),
+    ),
+    createdAt: v.number(),
+    expiresAt: v.optional(v.number()),
+  })
+    .index('by_company_key', ['companyId', 'key'])
+    .index('by_company_createdAt', ['companyId', 'createdAt']),
 
   contacts: defineTable({
     migrationCanonicalId: v.optional(v.string()),
