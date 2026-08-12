@@ -9,6 +9,8 @@ import Link from 'next/link';
 import { Inter } from 'next/font/google';
 import { cn } from '../lib/utils';
 import { ENV } from '../lib/env';
+import { CANONICAL_ORIGIN } from '../lib/site';
+import { websiteSchema } from '../lib/seo';
 
 const businessSameAs = [
   ENV.FACEBOOK_URL,
@@ -18,7 +20,7 @@ const businessSameAs = [
   ENV.GOOGLE_BUSINESS_URL,
 ].filter(Boolean);
 
-const siteUrl = ENV.SITE_URL.replace(/\/$/, '') || 'https://www.skysthelimitpaintingllc.com';
+const siteUrl = CANONICAL_ORIGIN;
 
 const inter = Inter({
   subsets: ['latin'],
@@ -86,14 +88,18 @@ export default function RootLayout({
     <html lang="en" className={cn(inter.variable, 'dark antialiased')}>
       <head>
         <link rel="llms" href={`${siteUrl}/llms.txt`} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        />
         {/* next/font (Inter) only — no blocking multi-family Google Fonts CSS */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               '@context': 'https://schema.org',
-              '@type': 'PaintingContractor',
               '@id': `${siteUrl}/#business`,
+              '@type': 'HousePainter',
               name: "Sky's the Limit Painting LLC",
               founder: 'Anthony Briseno',
               telephone: '+1-651-410-4196',

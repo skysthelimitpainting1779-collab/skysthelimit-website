@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
-import { ENV } from '../lib/env';
+import { CANONICAL_ORIGIN } from '../lib/site';
 
-const site = ENV.SITE_URL.replace(/\/$/, '');
+const site = CANONICAL_ORIGIN;
 
 /**
  * App Router robots — prefer this over a stale public/robots.txt when Next serves it.

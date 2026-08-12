@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import HomeClient from './HomeClient';
+import JsonLd from '../components/JsonLd';
+import { homePageSchema } from '../lib/seo';
 
 export const metadata: Metadata = {
   title: "Prep-First Painting Contractor Twin Cities | Sky's the Limit Painting LLC",
@@ -19,5 +21,5 @@ export const metadata: Metadata = {
 };
 
 export default function HomePage() {
-  return <HomeClient />;
+  return <><JsonLd data={homePageSchema} /><HomeClient /></>;
 }
