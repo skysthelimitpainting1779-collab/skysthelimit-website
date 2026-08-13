@@ -1,0 +1,4 @@
+interface:
+  display_name: "Repeatable Workflow Capture"
+  short_description: "Turn recurring work into repository skills"
+  default_prompt: "Use $repeatable-workflow-capture to package this recurring workflow as a reusable repository skill."

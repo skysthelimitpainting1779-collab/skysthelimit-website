@@ -1,88 +1,124 @@
-# CI/CD workflows
+# CI/CD Workflows
 
 ## Ownership model
 
-GitHub validates source code and security. Vercel owns every Preview and Production Deployment through the repository's native Git integration.
+GitHub validates source, branch flow, lifecycle evidence, review, and security. Vercel owns
+Preview and Production deployments through the native Git integration.
 
-GitHub Actions must never run `vercel build`, `vercel deploy`, `vercel promote`, `vercel alias`, Vercel domain commands, or a second `npm run build`.
+GitHub Actions must not run a second application deployment. It may inspect an immutable
+Vercel deployment, verify its exact commit and canonical project, and smoke-test routes.
 
-## Pipeline topology
+## Core pipeline
 
 | Workflow | Trigger | Responsibility |
 |---|---|---|
-| `ci.yml` | Pull requests and pushes for `main` and `staging` | Workflow contract, Git standards, lockfile install, TypeScript checks, and tests |
-| `security.yml` | Pull requests, pushes, weekly schedule, manual dispatch | CodeQL, dependency review, and production dependency audit |
-| `deployment-verification.yml` | Vercel deployment events, daily schedule, manual dispatch | Smoke-test the exact Vercel deployment URL or the production customer domain |
+| `branch-policy.yml` | `pull_request_target` after the workflow exists on default `main` | validate allowed base/head edge using trusted default-branch code |
+| `pr-approval.yml` | pull-request and review events after the workflow exists on default `main` | require independent approval of the exact head |
+| `ci.yml` | pull requests and pushes for `main` and `dev` | validate the live base/head edge, lifecycle, lint, types, and tests |
+| `security.yml` | pull requests, pushes, schedule, manual dispatch | CodeQL, dependency review, production dependency audit |
+| `deployment-verification.yml` | Vercel deployment events | verify canonical project, exact SHA, READY state, and routes |
 
-Exactly these three YAML files belong in `.github/workflows`.
+Additional repository automation may exist, but no workflow may weaken the branch,
+environment, deployment, or production-effect boundaries in `AGENTS.md`.
 
 ## Local source-validation gate
 
 ```bash
+node --test tests/branch-policy.test.mjs
 npm ci
 npm run ci:contract
+npm run lifecycle:verify
 node scripts/enforce-git.js
 npm run lint:ci
 npm test
+npm run build
 ```
 
-The GitHub CI workflow intentionally does not run `npm run build`. Vercel's Preview Deployment is the authoritative Next.js build with the correct Vercel environment and project configuration.
+GitHub CI intentionally does not run a second Vercel deployment. The canonical Preview is
+the authoritative framework build in the selected Vercel environment.
 
-## Vercel project
+## Canonical Vercel project
 
-- Project: `website`
-- Project ID: `prj_L3ZMoQ79YLx9G2o6Lg9OubqO9H8m`
-- Team ID: `team_bseTA2AuCO6A2fCOVY9ubrJo`
-- Framework: Next.js
-- Node.js: `24.x`
-- Production branch: `main`
+```text
+Project:           website
+Project ID:        prj_L3ZMoQ79YLx9G2o6Lg9OubqO9H8m
+Team ID:           team_bseTA2AuCO6A2fCOVY9ubrJo
+Status context:    Vercel – website
+Framework:         Next.js
+Node.js:           24.x
+Production branch: main
+Preview staging:   dev
+```
 
-`vercel.json` uses `npm ci`, enables Git deployment for `main`, and disables Git deployment for `entire/*` agent branches.
+`vercel.json` enables Git deployment for `main` and `dev` and disables deployment for
+`entire/*` checkpoint branches. Other governed work branches receive pull-request
+Previews.
 
-Pull requests should receive a Vercel Preview Deployment. A merge to `main` should create the Vercel Production Deployment without a GitHub Actions token or manual promotion workflow.
+A status from any other Vercel project is not release evidence.
 
-## Required secret
+## Required secrets
 
-`VERCEL_AUTOMATION_BYPASS_SECRET` is optional for public deployments and required when Vercel Deployment Protection blocks automated access to preview URLs.
+### `VERCEL_TOKEN`
 
-Create the secret in Vercel's automated-access settings and save the same value as a GitHub Actions repository secret. The smoke runner sends it only as the `x-vercel-protection-bypass` request header and never prints it.
+Required only by deployment verification so it can inspect the exact deployment and prove
+that it belongs to the canonical team/project. Use the narrowest available access and
+never print the value.
 
-No `VERCEL_TOKEN` repository secret is required for CI/CD.
+### `VERCEL_AUTOMATION_BYPASS_SECRET`
+
+Required when Deployment Protection blocks automated Preview smoke tests. Store the same
+dedicated value in Vercel and GitHub Actions. The smoke runner sends it only as the
+protection-bypass header.
+
+Project and team IDs are public identifiers committed as constants; they are not secrets.
 
 ## Deployment events
 
-The preferred trigger is Vercel's `repository_dispatch` integration:
+The preferred trigger is Vercel repository dispatch:
 
 - `vercel.deployment.success`
 - `vercel.deployment.promoted`
 
-`deployment_status` remains as a compatibility fallback until Vercel is confirmed to send repository-dispatch events for this repository. Remove the fallback only after a successful dispatch-triggered run has been observed.
+GitHub `deployment_status` remains a compatibility fallback. The workflow rejects events
+without an exact SHA or a canonical `website-*.vercel.app` host family or approved
+production domain.
 
-## Required merge checks
+## Required checks
 
-Protect `main` and require:
+Protect `dev` immediately with:
 
-- `CI / Repository Quality`
-- `Security / CodeQL JavaScript and TypeScript`
-- `Security / Dependency Review`
-- `Security / Production Dependency Audit`
-- The Vercel Preview Deployment check
+- `Repository Quality`, which includes the live base/head branch-policy check;
+- `CodeQL JavaScript and TypeScript`;
+- `Production Dependency Audit`;
+- `Vercel – website`;
+- the native pull-request, Code Owner, and approval rules in `.github/rulesets/dev.json`.
 
-Do not enable dependency auto-merge unless the repository ruleset enforces every required check.
+Do not require `Validate Branch Flow` or `Independent PR Approval` on `dev` until their
+`pull_request_target` workflow definitions exist on default `main` and have emitted those
+exact checks. GitHub takes `pull_request_target` workflow code from the default branch, so
+requiring a not-yet-emitted context would leave the branch permanently pending.
+
+The `main` desired-state ruleset may require the two trusted custom checks only after this
+foundation reaches the default branch and their live context names are verified.
+`Dependency Review` is also required for dependency-changing pull requests.
 
 ## Failure routing
 
-- **Validate workflow contracts:** a workflow references a missing npm script, local file, or inconsistent action SHA.
-- **Enforce branch and commit standards:** the PR title or branch name violates repository conventions.
-- **Lint and typecheck:** TypeScript or React-version validation failed.
-- **Run tests:** an application or pipeline contract failed.
-- **CodeQL:** static security analysis found or failed to analyze code.
-- **Dependency Review:** a pull request introduces a dependency at moderate or higher severity.
-- **Production Dependency Audit:** npm reports a critical production vulnerability.
-- **Verify Vercel Routes:** the reported deployment URL, customer route, expected content, or production domain is unhealthy.
+- **Validate Branch Flow:** base/head branches violate the governed graph.
+- **Repository Quality:** lifecycle, branch, lint, type, or test contract failed.
+- **Independent PR Approval:** the PR is draft, lacks an independent approval, or changed
+  after approval.
+- **CodeQL:** static security analysis found a problem or failed to analyze.
+- **Dependency Review:** the PR introduces a dependency at moderate or higher severity.
+- **Production Dependency Audit:** npm reports a high or critical production issue.
+- **Vercel status:** the canonical project failed to build or deploy.
+- **Verify Vercel Routes:** the event, project, commit, URL, READY state, or customer route
+  is invalid.
+
+Do not rerun a failed check until the root cause or transient provider state is identified.
 
 ## Production rollback
 
-Rollback is owned by Vercel. Select the previous healthy Production Deployment in the Vercel dashboard and promote or roll it back there. Do not recreate a GitHub Actions deployment workflow to perform recovery.
-
-After rollback, run `deployment-verification.yml` manually to verify the production customer routes.
+Rollback is owned by the canonical Vercel project. Promote the previous healthy deployment
+or use Vercel rollback, pause external effects, then verify production routes and Convex
+state. Follow `docs/runbooks/platform-rollback.md`.

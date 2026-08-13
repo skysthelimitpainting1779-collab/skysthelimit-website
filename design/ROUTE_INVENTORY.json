@@ -1,0 +1,535 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-07-27T12:55:28+00:00",
+  "routes": [
+    {
+      "route": "/",
+      "surface": "public",
+      "templateId": "P01",
+      "status": "current-redesign",
+      "navigation": "primary",
+      "primaryAction": "Check project range",
+      "notes": ""
+    },
+    {
+      "route": "/residential",
+      "surface": "public",
+      "templateId": "P02",
+      "status": "current-redesign",
+      "navigation": "primary",
+      "primaryAction": "Start residential scope",
+      "notes": ""
+    },
+    {
+      "route": "/commercial",
+      "surface": "public",
+      "templateId": "P02",
+      "status": "current-redesign",
+      "navigation": "primary",
+      "primaryAction": "Request property scope review",
+      "notes": ""
+    },
+    {
+      "route": "/public-sector",
+      "surface": "public",
+      "templateId": "P02",
+      "status": "current-redesign",
+      "navigation": "primary",
+      "primaryAction": "Review capability fit",
+      "notes": ""
+    },
+    {
+      "route": "/painting-services/[slug]",
+      "surface": "public",
+      "templateId": "P03",
+      "status": "current-redesign",
+      "navigation": "contextual",
+      "primaryAction": "Check service fit",
+      "notes": ""
+    },
+    {
+      "route": "/service-area",
+      "surface": "public",
+      "templateId": "P04",
+      "status": "current-redesign",
+      "navigation": "primary",
+      "primaryAction": "Find coverage",
+      "notes": ""
+    },
+    {
+      "route": "/service-areas/[slug]",
+      "surface": "public",
+      "templateId": "P05",
+      "status": "current-redesign",
+      "navigation": "contextual",
+      "primaryAction": "Request local estimate",
+      "notes": ""
+    },
+    {
+      "route": "/projects",
+      "surface": "public",
+      "templateId": "P06",
+      "status": "current-redesign",
+      "navigation": "primary",
+      "primaryAction": "View verified work",
+      "notes": ""
+    },
+    {
+      "route": "/projects/[slug]",
+      "surface": "public",
+      "templateId": "P07",
+      "status": "target",
+      "navigation": "contextual",
+      "primaryAction": "Request similar scope",
+      "notes": ""
+    },
+    {
+      "route": "/estimate",
+      "surface": "public",
+      "templateId": "P08",
+      "status": "current-redesign",
+      "navigation": "primary",
+      "primaryAction": "Submit scope",
+      "notes": ""
+    },
+    {
+      "route": "/contact",
+      "surface": "public",
+      "templateId": "P09",
+      "status": "current-redesign",
+      "navigation": "primary",
+      "primaryAction": "Contact Anthony",
+      "notes": ""
+    },
+    {
+      "route": "/about",
+      "surface": "public",
+      "templateId": "P10",
+      "status": "current-redesign",
+      "navigation": "primary",
+      "primaryAction": "Start a conversation",
+      "notes": ""
+    },
+    {
+      "route": "/capabilities",
+      "surface": "public",
+      "templateId": "P11",
+      "status": "current-redesign",
+      "navigation": "primary",
+      "primaryAction": "Request capability conversation",
+      "notes": ""
+    },
+    {
+      "route": "/refer",
+      "surface": "public",
+      "templateId": "P12",
+      "status": "current-redesign",
+      "navigation": "utility",
+      "primaryAction": "Create referral code",
+      "notes": ""
+    },
+    {
+      "route": "/review",
+      "surface": "public",
+      "templateId": "P13",
+      "status": "current-policy-fix",
+      "navigation": "utility",
+      "primaryAction": "Share honest feedback",
+      "notes": ""
+    },
+    {
+      "route": "/resources",
+      "surface": "public",
+      "templateId": "P14",
+      "status": "target",
+      "navigation": "primary",
+      "primaryAction": "Choose a guide",
+      "notes": ""
+    },
+    {
+      "route": "/resources/[slug]",
+      "surface": "public",
+      "templateId": "P15",
+      "status": "target",
+      "navigation": "contextual",
+      "primaryAction": "Apply guide to project",
+      "notes": ""
+    },
+    {
+      "route": "/portal/login",
+      "surface": "public",
+      "templateId": "P16",
+      "status": "current-migrate",
+      "navigation": "utility",
+      "primaryAction": "Sign in or accept invite",
+      "notes": ""
+    },
+    {
+      "route": "/privacy",
+      "surface": "public",
+      "templateId": "P17",
+      "status": "target",
+      "navigation": "footer",
+      "primaryAction": "Understand data use",
+      "notes": ""
+    },
+    {
+      "route": "/terms",
+      "surface": "public",
+      "templateId": "P17",
+      "status": "target",
+      "navigation": "footer",
+      "primaryAction": "Review terms",
+      "notes": ""
+    },
+    {
+      "route": "/404",
+      "surface": "public",
+      "templateId": "P18",
+      "status": "current-redesign",
+      "navigation": "system",
+      "primaryAction": "Return to a valid path",
+      "notes": ""
+    },
+    {
+      "route": "/error",
+      "surface": "public",
+      "templateId": "P18",
+      "status": "target",
+      "navigation": "system",
+      "primaryAction": "Retry or contact",
+      "notes": ""
+    },
+    {
+      "route": "/portal",
+      "surface": "customer",
+      "templateId": "C01",
+      "status": "target",
+      "navigation": "Overview",
+      "primaryAction": "Open next action",
+      "notes": ""
+    },
+    {
+      "route": "/portal/projects/[id]",
+      "surface": "customer",
+      "templateId": "C02",
+      "status": "target",
+      "navigation": "Projects",
+      "primaryAction": "Review project status",
+      "notes": ""
+    },
+    {
+      "route": "/portal/appointments/[id]",
+      "surface": "customer",
+      "templateId": "C03",
+      "status": "target",
+      "navigation": "Appointments",
+      "primaryAction": "Confirm or reschedule",
+      "notes": ""
+    },
+    {
+      "route": "/portal/estimates/[id]",
+      "surface": "customer",
+      "templateId": "C04",
+      "status": "target",
+      "navigation": "Project",
+      "primaryAction": "Review estimate",
+      "notes": ""
+    },
+    {
+      "route": "/portal/proposals/[id]",
+      "surface": "customer",
+      "templateId": "C05",
+      "status": "target",
+      "navigation": "Project",
+      "primaryAction": "Approve proposal",
+      "notes": ""
+    },
+    {
+      "route": "/portal/agreements/[id]",
+      "surface": "customer",
+      "templateId": "C06",
+      "status": "target",
+      "navigation": "Project",
+      "primaryAction": "Sign agreement",
+      "notes": ""
+    },
+    {
+      "route": "/portal/payments/[id]",
+      "surface": "customer",
+      "templateId": "C07",
+      "status": "target",
+      "navigation": "Payments",
+      "primaryAction": "Complete test/live-gated payment",
+      "notes": ""
+    },
+    {
+      "route": "/portal/files",
+      "surface": "customer",
+      "templateId": "C08",
+      "status": "target",
+      "navigation": "Documents",
+      "primaryAction": "Open authorized file",
+      "notes": ""
+    },
+    {
+      "route": "/portal/change-orders/[id]",
+      "surface": "customer",
+      "templateId": "C09",
+      "status": "target",
+      "navigation": "Project",
+      "primaryAction": "Approve or decline change",
+      "notes": ""
+    },
+    {
+      "route": "/portal/messages",
+      "surface": "customer",
+      "templateId": "C10",
+      "status": "target",
+      "navigation": "Messages",
+      "primaryAction": "Read or send update",
+      "notes": ""
+    },
+    {
+      "route": "/portal/settings",
+      "surface": "customer",
+      "templateId": "C11",
+      "status": "target",
+      "navigation": "Account",
+      "primaryAction": "Manage account",
+      "notes": ""
+    },
+    {
+      "route": "/app",
+      "surface": "operator",
+      "templateId": "O01",
+      "status": "target",
+      "navigation": "Overview",
+      "primaryAction": "Open highest-priority item",
+      "notes": ""
+    },
+    {
+      "route": "/app/leads",
+      "surface": "operator",
+      "templateId": "O02",
+      "status": "target",
+      "navigation": "Leads",
+      "primaryAction": "Qualify lead",
+      "notes": ""
+    },
+    {
+      "route": "/app/pipeline",
+      "surface": "operator",
+      "templateId": "O03",
+      "status": "target",
+      "navigation": "Pipeline",
+      "primaryAction": "Move opportunity",
+      "notes": ""
+    },
+    {
+      "route": "/app/opportunities/[id]",
+      "surface": "operator",
+      "templateId": "O04",
+      "status": "target",
+      "navigation": "Pipeline",
+      "primaryAction": "Complete next action",
+      "notes": ""
+    },
+    {
+      "route": "/app/contacts/[id]",
+      "surface": "operator",
+      "templateId": "O05",
+      "status": "target",
+      "navigation": "Contacts",
+      "primaryAction": "Review relationship",
+      "notes": ""
+    },
+    {
+      "route": "/app/properties/[id]",
+      "surface": "operator",
+      "templateId": "O05",
+      "status": "target",
+      "navigation": "Properties",
+      "primaryAction": "Review property",
+      "notes": ""
+    },
+    {
+      "route": "/app/calendar",
+      "surface": "operator",
+      "templateId": "O06",
+      "status": "target",
+      "navigation": "Calendar",
+      "primaryAction": "Schedule appointment",
+      "notes": ""
+    },
+    {
+      "route": "/app/estimates/[id]",
+      "surface": "operator",
+      "templateId": "O07",
+      "status": "target",
+      "navigation": "Estimates",
+      "primaryAction": "Issue estimate version",
+      "notes": ""
+    },
+    {
+      "route": "/app/proposals/[id]",
+      "surface": "operator",
+      "templateId": "O08",
+      "status": "target",
+      "navigation": "Proposals",
+      "primaryAction": "Send proposal",
+      "notes": ""
+    },
+    {
+      "route": "/app/revenue",
+      "surface": "operator",
+      "templateId": "O09",
+      "status": "target",
+      "navigation": "Revenue",
+      "primaryAction": "Resolve agreement/payment state",
+      "notes": ""
+    },
+    {
+      "route": "/app/projects/[id]",
+      "surface": "operator",
+      "templateId": "O10",
+      "status": "target",
+      "navigation": "Projects",
+      "primaryAction": "Advance project",
+      "notes": ""
+    },
+    {
+      "route": "/app/crews",
+      "surface": "operator",
+      "templateId": "O11",
+      "status": "target",
+      "navigation": "Crews",
+      "primaryAction": "Assign work",
+      "notes": ""
+    },
+    {
+      "route": "/app/files",
+      "surface": "operator",
+      "templateId": "O12",
+      "status": "target",
+      "navigation": "Files",
+      "primaryAction": "Manage authorized document",
+      "notes": ""
+    },
+    {
+      "route": "/app/change-orders",
+      "surface": "operator",
+      "templateId": "O13",
+      "status": "target",
+      "navigation": "Change Orders",
+      "primaryAction": "Resolve change",
+      "notes": ""
+    },
+    {
+      "route": "/app/tasks",
+      "surface": "operator",
+      "templateId": "O14",
+      "status": "target",
+      "navigation": "Tasks",
+      "primaryAction": "Complete due action",
+      "notes": ""
+    },
+    {
+      "route": "/app/automations",
+      "surface": "operator",
+      "templateId": "O15",
+      "status": "target",
+      "navigation": "Automations",
+      "primaryAction": "Inspect workflow",
+      "notes": ""
+    },
+    {
+      "route": "/app/integrations",
+      "surface": "operator",
+      "templateId": "O16",
+      "status": "target",
+      "navigation": "Integrations",
+      "primaryAction": "Resolve connection health",
+      "notes": ""
+    },
+    {
+      "route": "/app/content",
+      "surface": "operator",
+      "templateId": "O17",
+      "status": "target",
+      "navigation": "Content",
+      "primaryAction": "Publish verified content",
+      "notes": ""
+    },
+    {
+      "route": "/app/growth",
+      "surface": "operator",
+      "templateId": "O18",
+      "status": "target",
+      "navigation": "Growth",
+      "primaryAction": "Review SEO/GBP action",
+      "notes": ""
+    },
+    {
+      "route": "/app/reputation",
+      "surface": "operator",
+      "templateId": "O19",
+      "status": "target",
+      "navigation": "Reputation",
+      "primaryAction": "Resolve review/referral item",
+      "notes": ""
+    },
+    {
+      "route": "/app/analytics",
+      "surface": "operator",
+      "templateId": "O20",
+      "status": "target",
+      "navigation": "Analytics",
+      "primaryAction": "Review revenue facts",
+      "notes": ""
+    },
+    {
+      "route": "/app/users",
+      "surface": "operator",
+      "templateId": "O21",
+      "status": "target",
+      "navigation": "Users",
+      "primaryAction": "Manage invitation or role",
+      "notes": ""
+    },
+    {
+      "route": "/app/settings",
+      "surface": "operator",
+      "templateId": "O22",
+      "status": "target",
+      "navigation": "Settings",
+      "primaryAction": "Update governed setting",
+      "notes": ""
+    },
+    {
+      "route": "/manage",
+      "surface": "legacy",
+      "templateId": "LEGACY",
+      "status": "disable-and-redirect",
+      "navigation": "none",
+      "primaryAction": "None",
+      "notes": "Legacy Supabase admin"
+    },
+    {
+      "route": "/admin",
+      "surface": "legacy",
+      "templateId": "LEGACY",
+      "status": "migration-only",
+      "navigation": "none",
+      "primaryAction": "None",
+      "notes": "Legacy Payload admin"
+    }
+  ],
+  "counts": {
+    "routes": 58,
+    "public": 22,
+    "customer": 11,
+    "operator": 23,
+    "legacy": 2
+  }
+}

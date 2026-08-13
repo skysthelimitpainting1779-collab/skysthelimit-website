@@ -18,6 +18,6 @@ Allow: src/views/**, src/data/**, src/components/LeadForm*, src/components/Marke
 
 Deny: src/app/api/**, src/components/ui/**, .github/**, scripts/**
 
-Skills: none
+Skills: .agents/skills/lead-revenue-operations/SKILL.md, .agents/skills/local-seo-proof/SKILL.md
 
 Follow root AGENTS.md.

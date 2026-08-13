@@ -1,0 +1,1446 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-07-27T07:26:26+00:00",
+  "policy": {
+    "everyGraphNodeRequiresPrimarySkill": true,
+    "everyExternalLibraryTaskRequiresCurrentDocs": true,
+    "everyVercelTaskRequiresVercelPluginAndOfficialDocs": true,
+    "highRiskRequiresIndependentVerifierSkill": true
+  },
+  "skillCatalog": {
+    "vercel-platform-operations": {
+      "source": "package-domain-skill",
+      "path": "domain-skills/vercel-platform-operations/SKILL.md"
+    },
+    "vercel-services-architecture": {
+      "source": "package-domain-skill",
+      "path": "domain-skills/vercel-services-architecture/SKILL.md"
+    },
+    "vercel-integrations-connect": {
+      "source": "package-domain-skill",
+      "path": "domain-skills/vercel-integrations-connect/SKILL.md"
+    },
+    "convex-domain-backend": {
+      "source": "package-domain-skill",
+      "path": "domain-skills/convex-domain-backend/SKILL.md"
+    },
+    "clerk-convex-authorization": {
+      "source": "package-domain-skill",
+      "path": "domain-skills/clerk-convex-authorization/SKILL.md"
+    },
+    "durable-vercel-workflows": {
+      "source": "package-domain-skill",
+      "path": "domain-skills/durable-vercel-workflows/SKILL.md"
+    },
+    "private-file-boundaries": {
+      "source": "package-domain-skill",
+      "path": "domain-skills/private-file-boundaries/SKILL.md"
+    },
+    "legacy-data-reconciliation": {
+      "source": "package-domain-skill",
+      "path": "domain-skills/legacy-data-reconciliation/SKILL.md"
+    },
+    "lead-revenue-operations": {
+      "source": "package-domain-skill",
+      "path": "domain-skills/lead-revenue-operations/SKILL.md"
+    },
+    "nextjs-public-platform": {
+      "source": "package-domain-skill",
+      "path": "domain-skills/nextjs-public-platform/SKILL.md"
+    },
+    "shadcn-measured-craft": {
+      "source": "package-domain-skill",
+      "path": "domain-skills/shadcn-measured-craft/SKILL.md"
+    },
+    "stripe-checkout-boundaries": {
+      "source": "package-domain-skill",
+      "path": "domain-skills/stripe-checkout-boundaries/SKILL.md"
+    },
+    "calendar-webhook-sync": {
+      "source": "package-domain-skill",
+      "path": "domain-skills/calendar-webhook-sync/SKILL.md"
+    },
+    "customer-portal-isolation": {
+      "source": "package-domain-skill",
+      "path": "domain-skills/customer-portal-isolation/SKILL.md"
+    },
+    "first-party-attribution": {
+      "source": "package-domain-skill",
+      "path": "domain-skills/first-party-attribution/SKILL.md"
+    },
+    "local-seo-proof": {
+      "source": "package-domain-skill",
+      "path": "domain-skills/local-seo-proof/SKILL.md"
+    },
+    "security-verification": {
+      "source": "package-domain-skill",
+      "path": "domain-skills/security-verification/SKILL.md"
+    },
+    "react-best-practices": {
+      "source": "installed-plugin",
+      "plugin": "build-web-apps"
+    },
+    "shadcn": {
+      "source": "installed-plugin",
+      "plugin": "build-web-apps"
+    },
+    "stripe-best-practices": {
+      "source": "installed-plugin",
+      "plugin": "build-web-apps"
+    },
+    "supabase-postgres-best-practices": {
+      "source": "installed-plugin",
+      "plugin": "build-web-apps"
+    },
+    "test-driven-development": {
+      "source": "installed-plugin",
+      "plugin": "superpowers"
+    },
+    "systematic-debugging": {
+      "source": "installed-plugin",
+      "plugin": "superpowers"
+    },
+    "verification-before-completion": {
+      "source": "installed-plugin",
+      "plugin": "superpowers"
+    },
+    "using-git-worktrees": {
+      "source": "installed-plugin",
+      "plugin": "superpowers"
+    },
+    "requesting-code-review": {
+      "source": "installed-plugin",
+      "plugin": "superpowers"
+    },
+    "ship-loop": {
+      "source": "repository",
+      "path": ".agents/skills/ship-loop/SKILL.md"
+    },
+    "seo-audit": {
+      "source": "repository-or-install",
+      "path": ".agents/skills/seo-audit/SKILL.md"
+    },
+    "ai-seo": {
+      "source": "repository-or-install",
+      "path": ".agents/skills/ai-seo/SKILL.md"
+    }
+  },
+  "routes": [
+    {
+      "nodeId": "INSPECT-REPOSITORY",
+      "title": "Inspect repository and environment",
+      "primarySkill": "vercel-platform-operations",
+      "supportingSkills": [
+        "using-git-worktrees",
+        "ship-loop",
+        "verification-before-completion",
+        "vercel-services-architecture"
+      ],
+      "requiredTools": [
+        "Graphifyy",
+        "Vercel plugin",
+        "GitHub connector",
+        "Vercel Services",
+        "Vercel official documentation search"
+      ],
+      "requiredContext7LibrariesOrDocs": [],
+      "vercelPluginRequired": true,
+      "independentVerifierSkill": null,
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "G00-AUDIT-LOCKED",
+      "title": "Audit and architecture baseline locked",
+      "primarySkill": "vercel-platform-operations",
+      "supportingSkills": [
+        "requesting-code-review",
+        "verification-before-completion",
+        "vercel-services-architecture"
+      ],
+      "requiredTools": [
+        "Graphifyy",
+        "Vercel plugin",
+        "Context7",
+        "Vercel Services",
+        "Vercel official documentation search"
+      ],
+      "requiredContext7LibrariesOrDocs": [],
+      "vercelPluginRequired": true,
+      "independentVerifierSkill": "security-verification",
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "G10-STABILIZED",
+      "title": "Revenue and security stabilization passed",
+      "primarySkill": "security-verification",
+      "supportingSkills": [
+        "requesting-code-review",
+        "verification-before-completion"
+      ],
+      "requiredTools": [
+        "Graphifyy",
+        "Vercel plugin",
+        "GitHub connector",
+        "Vercel official documentation search"
+      ],
+      "requiredContext7LibrariesOrDocs": [],
+      "vercelPluginRequired": true,
+      "independentVerifierSkill": "security-verification",
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "ADR-AUTH-PROVIDER",
+      "title": "Approve canonical identity provider ADR",
+      "primarySkill": "vercel-platform-operations",
+      "supportingSkills": [
+        "requesting-code-review",
+        "verification-before-completion"
+      ],
+      "requiredTools": [
+        "Graphifyy",
+        "Vercel plugin",
+        "Context7",
+        "Vercel official documentation search"
+      ],
+      "requiredContext7LibrariesOrDocs": [],
+      "vercelPluginRequired": true,
+      "independentVerifierSkill": "security-verification",
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "G20-FOUNDATION-READY",
+      "title": "Identity, authorization, Convex, and migration foundation passed",
+      "primarySkill": "security-verification",
+      "supportingSkills": [
+        "requesting-code-review",
+        "verification-before-completion"
+      ],
+      "requiredTools": [
+        "Graphifyy",
+        "Vercel plugin",
+        "GitHub connector",
+        "Vercel official documentation search"
+      ],
+      "requiredContext7LibrariesOrDocs": [],
+      "vercelPluginRequired": true,
+      "independentVerifierSkill": "security-verification",
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "G30-PUBLIC-CMS-READY",
+      "title": "Design, public site, CMS, SEO, and local growth passed",
+      "primarySkill": "security-verification",
+      "supportingSkills": [
+        "requesting-code-review",
+        "verification-before-completion"
+      ],
+      "requiredTools": [
+        "Graphifyy",
+        "Vercel plugin",
+        "GitHub connector",
+        "Vercel official documentation search"
+      ],
+      "requiredContext7LibrariesOrDocs": [],
+      "vercelPluginRequired": true,
+      "independentVerifierSkill": "security-verification",
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "G31-VISITOR-TO-BOOKING",
+      "title": "Visitor to durable lead to booked estimate passed",
+      "primarySkill": "security-verification",
+      "supportingSkills": [
+        "requesting-code-review",
+        "verification-before-completion"
+      ],
+      "requiredTools": [
+        "Graphifyy",
+        "Vercel plugin",
+        "GitHub connector",
+        "Vercel official documentation search"
+      ],
+      "requiredContext7LibrariesOrDocs": [],
+      "vercelPluginRequired": true,
+      "independentVerifierSkill": "security-verification",
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "G40-PROPOSAL-TO-DEPOSIT",
+      "title": "Estimate to proposal to agreement to posted deposit passed",
+      "primarySkill": "security-verification",
+      "supportingSkills": [
+        "requesting-code-review",
+        "verification-before-completion"
+      ],
+      "requiredTools": [
+        "Graphifyy",
+        "Vercel plugin",
+        "GitHub connector",
+        "Vercel official documentation search"
+      ],
+      "requiredContext7LibrariesOrDocs": [],
+      "vercelPluginRequired": true,
+      "independentVerifierSkill": "security-verification",
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "G50-PORTAL-OPS-READY",
+      "title": "Customer portal, project operations, and automation cockpit passed",
+      "primarySkill": "security-verification",
+      "supportingSkills": [
+        "requesting-code-review",
+        "verification-before-completion"
+      ],
+      "requiredTools": [
+        "Graphifyy",
+        "Vercel plugin",
+        "GitHub connector",
+        "Vercel official documentation search"
+      ],
+      "requiredContext7LibrariesOrDocs": [],
+      "vercelPluginRequired": true,
+      "independentVerifierSkill": "security-verification",
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "G60-MEASUREMENT-READY",
+      "title": "Revenue attribution, dashboards, and experiments reconcile",
+      "primarySkill": "security-verification",
+      "supportingSkills": [
+        "requesting-code-review",
+        "verification-before-completion"
+      ],
+      "requiredTools": [
+        "Graphifyy",
+        "Vercel plugin",
+        "GitHub connector",
+        "Vercel official documentation search"
+      ],
+      "requiredContext7LibrariesOrDocs": [],
+      "vercelPluginRequired": true,
+      "independentVerifierSkill": "security-verification",
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "G70-CUTOVER-READY",
+      "title": "All product, data, security, SEO, and restore gates ready for cutover",
+      "primarySkill": "security-verification",
+      "supportingSkills": [
+        "requesting-code-review",
+        "verification-before-completion"
+      ],
+      "requiredTools": [
+        "Graphifyy",
+        "Vercel plugin",
+        "GitHub connector",
+        "Vercel official documentation search"
+      ],
+      "requiredContext7LibrariesOrDocs": [],
+      "vercelPluginRequired": true,
+      "independentVerifierSkill": "security-verification",
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "G80-CUTOVER-COMPLETE",
+      "title": "Production cutover completed and reconciled",
+      "primarySkill": "security-verification",
+      "supportingSkills": [
+        "requesting-code-review",
+        "verification-before-completion"
+      ],
+      "requiredTools": [
+        "Graphifyy",
+        "Vercel plugin",
+        "GitHub connector",
+        "Vercel official documentation search"
+      ],
+      "requiredContext7LibrariesOrDocs": [],
+      "vercelPluginRequired": true,
+      "independentVerifierSkill": "security-verification",
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "G85-ROLLBACK-WINDOW-CLEARED",
+      "title": "Monitored rollback window cleared",
+      "primarySkill": "security-verification",
+      "supportingSkills": [
+        "requesting-code-review",
+        "verification-before-completion"
+      ],
+      "requiredTools": [
+        "Graphifyy",
+        "Vercel plugin",
+        "GitHub connector",
+        "Vercel official documentation search"
+      ],
+      "requiredContext7LibrariesOrDocs": [],
+      "vercelPluginRequired": true,
+      "independentVerifierSkill": "security-verification",
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "G90-DECOMMISSIONED",
+      "title": "Legacy services decommissioned with restore evidence retained",
+      "primarySkill": "security-verification",
+      "supportingSkills": [
+        "requesting-code-review",
+        "verification-before-completion"
+      ],
+      "requiredTools": [
+        "Graphifyy",
+        "Vercel plugin",
+        "GitHub connector",
+        "Vercel official documentation search"
+      ],
+      "requiredContext7LibrariesOrDocs": [],
+      "vercelPluginRequired": true,
+      "independentVerifierSkill": "security-verification",
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-001",
+      "title": "Make lead creation durable/fail-closed",
+      "primarySkill": "lead-revenue-operations",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "durable-vercel-workflows",
+        "requesting-code-review"
+      ],
+      "requiredTools": [
+        "Graphifyy",
+        "Vercel plugin",
+        "Vercel official documentation search"
+      ],
+      "requiredContext7LibrariesOrDocs": [
+        "/vercel/workflow"
+      ],
+      "vercelPluginRequired": true,
+      "independentVerifierSkill": "security-verification",
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-002",
+      "title": "Fix estimate payload and corrupted copy",
+      "primarySkill": "lead-revenue-operations",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": null,
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-003",
+      "title": "Disable public manage sign-up and enforce staff authorization",
+      "primarySkill": "clerk-convex-authorization",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "security-verification",
+        "requesting-code-review"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [
+        "/websites/convex_dev",
+        "/clerk/clerk-docs"
+      ],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": "security-verification",
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-004",
+      "title": "Make lead/project uploads private",
+      "primarySkill": "private-file-boundaries",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "security-verification",
+        "requesting-code-review"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": "security-verification",
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-005",
+      "title": "Repair cabinet/commercial service pages or redirects",
+      "primarySkill": "nextjs-public-platform",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "react-best-practices"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [
+        "Current Next.js/React docs"
+      ],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": null,
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-006",
+      "title": "Correct 404 canonical/robots metadata",
+      "primarySkill": "nextjs-public-platform",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "react-best-practices"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [
+        "Current Next.js/React docs"
+      ],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": null,
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-007",
+      "title": "Resolve SSR search-param bailout",
+      "primarySkill": "nextjs-public-platform",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "react-best-practices"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [
+        "Current Next.js/React docs"
+      ],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": null,
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-008",
+      "title": "Replace optional webhook authentication",
+      "primarySkill": "security-verification",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "security-verification",
+        "durable-vercel-workflows",
+        "requesting-code-review"
+      ],
+      "requiredTools": [
+        "Graphifyy",
+        "Vercel plugin",
+        "Vercel official documentation search"
+      ],
+      "requiredContext7LibrariesOrDocs": [
+        "/vercel/workflow"
+      ],
+      "vercelPluginRequired": true,
+      "independentVerifierSkill": "security-verification",
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-009",
+      "title": "Expand smoke/E2E critical journeys",
+      "primarySkill": "nextjs-public-platform",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "react-best-practices"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [
+        "Current Next.js/React docs"
+      ],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": null,
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-010",
+      "title": "Add lead-delivery reconciliation queue",
+      "primarySkill": "lead-revenue-operations",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "durable-vercel-workflows"
+      ],
+      "requiredTools": [
+        "Graphifyy",
+        "Vercel plugin",
+        "Vercel official documentation search"
+      ],
+      "requiredContext7LibrariesOrDocs": [
+        "/vercel/workflow"
+      ],
+      "vercelPluginRequired": true,
+      "independentVerifierSkill": null,
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-101",
+      "title": "Add Convex environments/provider",
+      "primarySkill": "vercel-integrations-connect",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "convex-domain-backend",
+        "durable-vercel-workflows",
+        "vercel-services-architecture"
+      ],
+      "requiredTools": [
+        "Graphifyy",
+        "Vercel plugin",
+        "Vercel Services",
+        "Vercel official documentation search"
+      ],
+      "requiredContext7LibrariesOrDocs": [
+        "/websites/convex_dev",
+        "/vercel/workflow"
+      ],
+      "vercelPluginRequired": true,
+      "independentVerifierSkill": null,
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-102",
+      "title": "Integrate approved identity provider",
+      "primarySkill": "clerk-convex-authorization",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "security-verification",
+        "requesting-code-review"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [
+        "/websites/convex_dev",
+        "/clerk/clerk-docs"
+      ],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": "security-verification",
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-103",
+      "title": "Implement Convex authz/audit",
+      "primarySkill": "clerk-convex-authorization",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "security-verification",
+        "requesting-code-review"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [
+        "/websites/convex_dev",
+        "/clerk/clerk-docs"
+      ],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": "security-verification",
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-104",
+      "title": "Split marketing/portal/ops route groups",
+      "primarySkill": "nextjs-public-platform",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "react-best-practices",
+        "durable-vercel-workflows",
+        "vercel-services-architecture"
+      ],
+      "requiredTools": [
+        "Graphifyy",
+        "Vercel plugin",
+        "Vercel Services",
+        "Vercel official documentation search"
+      ],
+      "requiredContext7LibrariesOrDocs": [
+        "/vercel/workflow",
+        "Current Next.js/React docs"
+      ],
+      "vercelPluginRequired": true,
+      "independentVerifierSkill": null,
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-105",
+      "title": "Strict server/client env schema",
+      "primarySkill": "vercel-platform-operations",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "convex-domain-backend",
+        "durable-vercel-workflows",
+        "vercel-services-architecture"
+      ],
+      "requiredTools": [
+        "Graphifyy",
+        "Vercel plugin",
+        "Vercel Services",
+        "Vercel official documentation search"
+      ],
+      "requiredContext7LibrariesOrDocs": [
+        "/websites/convex_dev",
+        "/vercel/workflow"
+      ],
+      "vercelPluginRequired": true,
+      "independentVerifierSkill": null,
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-106",
+      "title": "CRM foundational schema",
+      "primarySkill": "lead-revenue-operations",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": null,
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-107",
+      "title": "Domain events/idempotency/webhook receipts",
+      "primarySkill": "security-verification",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "security-verification",
+        "durable-vercel-workflows",
+        "vercel-services-architecture",
+        "requesting-code-review"
+      ],
+      "requiredTools": [
+        "Graphifyy",
+        "Vercel plugin",
+        "Vercel Services",
+        "Vercel official documentation search"
+      ],
+      "requiredContext7LibrariesOrDocs": [
+        "/vercel/workflow"
+      ],
+      "vercelPluginRequired": true,
+      "independentVerifierSkill": "security-verification",
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-108",
+      "title": "Supabase live inventory/export",
+      "primarySkill": "legacy-data-reconciliation",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "supabase-postgres-best-practices",
+        "security-verification"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [
+        "Current Supabase/Postgres docs"
+      ],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": null,
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-109",
+      "title": "Payload/Directus inventory/export",
+      "primarySkill": "legacy-data-reconciliation",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "supabase-postgres-best-practices",
+        "security-verification"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [
+        "Current Supabase/Postgres docs"
+      ],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": null,
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-110",
+      "title": "Migration mapping/reconciliation framework",
+      "primarySkill": "legacy-data-reconciliation",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "supabase-postgres-best-practices",
+        "security-verification"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [
+        "Current Supabase/Postgres docs"
+      ],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": null,
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-201",
+      "title": "Dynamic estimate funnel",
+      "primarySkill": "lead-revenue-operations",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": null,
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-202",
+      "title": "Cal synchronization",
+      "primarySkill": "calendar-webhook-sync",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "durable-vercel-workflows"
+      ],
+      "requiredTools": [
+        "Graphifyy",
+        "Vercel plugin",
+        "Vercel official documentation search"
+      ],
+      "requiredContext7LibrariesOrDocs": [
+        "/vercel/workflow",
+        "Current Cal.com/provider docs"
+      ],
+      "vercelPluginRequired": true,
+      "independentVerifierSkill": null,
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-203",
+      "title": "Lead assignment/SLA workflows",
+      "primarySkill": "lead-revenue-operations",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "durable-vercel-workflows"
+      ],
+      "requiredTools": [
+        "Graphifyy",
+        "Vercel plugin",
+        "Vercel official documentation search"
+      ],
+      "requiredContext7LibrariesOrDocs": [
+        "/vercel/workflow"
+      ],
+      "vercelPluginRequired": true,
+      "independentVerifierSkill": null,
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-204",
+      "title": "CRM pipeline/operator drawer",
+      "primarySkill": "lead-revenue-operations",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": null,
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-205",
+      "title": "Estimate builder/versioning",
+      "primarySkill": "lead-revenue-operations",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": null,
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-206",
+      "title": "Proposal builder/viewer",
+      "primarySkill": "lead-revenue-operations",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": null,
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-207",
+      "title": "Agreement signing evidence",
+      "primarySkill": "lead-revenue-operations",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "security-verification",
+        "requesting-code-review"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": "security-verification",
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-208",
+      "title": "Stripe deposit/invoice",
+      "primarySkill": "stripe-checkout-boundaries",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "stripe-best-practices",
+        "security-verification",
+        "durable-vercel-workflows",
+        "requesting-code-review"
+      ],
+      "requiredTools": [
+        "Graphifyy",
+        "Vercel plugin",
+        "Vercel official documentation search"
+      ],
+      "requiredContext7LibrariesOrDocs": [
+        "/vercel/workflow",
+        "Stripe official docs through stripe-best-practices"
+      ],
+      "vercelPluginRequired": true,
+      "independentVerifierSkill": "security-verification",
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-209",
+      "title": "Proposal/deposit workflows",
+      "primarySkill": "lead-revenue-operations",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "durable-vercel-workflows",
+        "requesting-code-review"
+      ],
+      "requiredTools": [
+        "Graphifyy",
+        "Vercel plugin",
+        "Vercel official documentation search"
+      ],
+      "requiredContext7LibrariesOrDocs": [
+        "/vercel/workflow"
+      ],
+      "vercelPluginRequired": true,
+      "independentVerifierSkill": "security-verification",
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-301",
+      "title": "Design tokens/shadcn baseline",
+      "primarySkill": "nextjs-public-platform",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "react-best-practices",
+        "shadcn-measured-craft",
+        "shadcn"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [
+        "Current Next.js/React docs"
+      ],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": null,
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-302",
+      "title": "Public templates/home/service/location",
+      "primarySkill": "nextjs-public-platform",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "react-best-practices",
+        "shadcn-measured-craft",
+        "shadcn"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [
+        "Current Next.js/React docs"
+      ],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": null,
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-303",
+      "title": "Convex CMS/versioning/preview",
+      "primarySkill": "convex-domain-backend",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "nextjs-public-platform"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [
+        "/websites/convex_dev",
+        "Current Next.js/React docs"
+      ],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": null,
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-304",
+      "title": "Content/media migration",
+      "primarySkill": "legacy-data-reconciliation",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "supabase-postgres-best-practices",
+        "security-verification",
+        "requesting-code-review"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [
+        "Current Supabase/Postgres docs"
+      ],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": "security-verification",
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-305",
+      "title": "Technical SEO fixes",
+      "primarySkill": "local-seo-proof",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "seo-audit",
+        "ai-seo"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": null,
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-306",
+      "title": "GBP integrity audit with owner access",
+      "primarySkill": "local-seo-proof",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "seo-audit",
+        "ai-seo",
+        "requesting-code-review"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": "security-verification",
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-307",
+      "title": "GBP workspace",
+      "primarySkill": "local-seo-proof",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "seo-audit",
+        "ai-seo"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": null,
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-308",
+      "title": "Review policy/system",
+      "primarySkill": "local-seo-proof",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "seo-audit",
+        "ai-seo"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": null,
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-309",
+      "title": "Local content proof gates",
+      "primarySkill": "local-seo-proof",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "seo-audit",
+        "ai-seo"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": null,
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-401",
+      "title": "Customer portal shell/next action",
+      "primarySkill": "nextjs-public-platform",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "react-best-practices",
+        "shadcn-measured-craft",
+        "shadcn"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [
+        "Current Next.js/React docs"
+      ],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": null,
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-402",
+      "title": "Property/appointment/proposal/payment views",
+      "primarySkill": "nextjs-public-platform",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "react-best-practices",
+        "shadcn-measured-craft",
+        "shadcn",
+        "requesting-code-review"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [
+        "Current Next.js/React docs"
+      ],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": "security-verification",
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-403",
+      "title": "Projects/files/updates",
+      "primarySkill": "private-file-boundaries",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "security-verification",
+        "requesting-code-review"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": "security-verification",
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-404",
+      "title": "Change orders",
+      "primarySkill": "customer-portal-isolation",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "lead-revenue-operations",
+        "security-verification",
+        "requesting-code-review"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": "security-verification",
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-405",
+      "title": "Project closeout/review/referral",
+      "primarySkill": "local-seo-proof",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "seo-audit",
+        "ai-seo"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": null,
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-406",
+      "title": "Crew/project assignments",
+      "primarySkill": "customer-portal-isolation",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "lead-revenue-operations",
+        "security-verification"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": null,
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-407",
+      "title": "Automation Center UI",
+      "primarySkill": "nextjs-public-platform",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "react-best-practices",
+        "shadcn-measured-craft",
+        "shadcn"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [
+        "Current Next.js/React docs"
+      ],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": null,
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-408",
+      "title": "System health/integration dashboard",
+      "primarySkill": "vercel-platform-operations",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "first-party-attribution",
+        "durable-vercel-workflows",
+        "vercel-services-architecture"
+      ],
+      "requiredTools": [
+        "Graphifyy",
+        "Vercel plugin",
+        "Vercel Services",
+        "Vercel official documentation search"
+      ],
+      "requiredContext7LibrariesOrDocs": [
+        "/vercel/workflow"
+      ],
+      "vercelPluginRequired": true,
+      "independentVerifierSkill": null,
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-501",
+      "title": "First-party attribution ledger",
+      "primarySkill": "first-party-attribution",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": null,
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-502",
+      "title": "Revenue dashboards",
+      "primarySkill": "first-party-attribution",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": null,
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-503",
+      "title": "Experiment framework",
+      "primarySkill": "first-party-attribution",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": null,
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-504",
+      "title": "Final dual-read/write cutover",
+      "primarySkill": "legacy-data-reconciliation",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "supabase-postgres-best-practices",
+        "security-verification",
+        "durable-vercel-workflows",
+        "vercel-services-architecture",
+        "requesting-code-review"
+      ],
+      "requiredTools": [
+        "Graphifyy",
+        "Vercel plugin",
+        "Vercel Services",
+        "Vercel official documentation search"
+      ],
+      "requiredContext7LibrariesOrDocs": [
+        "/vercel/workflow",
+        "Current Supabase/Postgres docs"
+      ],
+      "vercelPluginRequired": true,
+      "independentVerifierSkill": "security-verification",
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-505",
+      "title": "Supabase/Payload/Directus removal",
+      "primarySkill": "legacy-data-reconciliation",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "supabase-postgres-best-practices",
+        "security-verification",
+        "requesting-code-review"
+      ],
+      "requiredTools": [
+        "Graphifyy"
+      ],
+      "requiredContext7LibrariesOrDocs": [
+        "Current Supabase/Postgres docs"
+      ],
+      "vercelPluginRequired": false,
+      "independentVerifierSkill": "security-verification",
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    },
+    {
+      "nodeId": "STL-506",
+      "title": "Restore/decommission runbooks",
+      "primarySkill": "legacy-data-reconciliation",
+      "supportingSkills": [
+        "test-driven-development",
+        "verification-before-completion",
+        "supabase-postgres-best-practices",
+        "security-verification",
+        "durable-vercel-workflows",
+        "vercel-services-architecture",
+        "requesting-code-review"
+      ],
+      "requiredTools": [
+        "Graphifyy",
+        "Vercel plugin",
+        "Vercel Services",
+        "Vercel official documentation search"
+      ],
+      "requiredContext7LibrariesOrDocs": [
+        "/vercel/workflow",
+        "Current Supabase/Postgres docs"
+      ],
+      "vercelPluginRequired": true,
+      "independentVerifierSkill": "security-verification",
+      "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+    }
+  ]
+}

@@ -3,7 +3,7 @@
     "devhealer": {
       "command": "python",
       "args": [
-        "c:/Users/Johnny Cage/DEV/skysthelimit-collab/.agents/plugins/dev-healer/mcp/server.py"
+        ".agents/plugins/dev-healer/mcp/server.py"
       ]
     },
     "graphify": {
@@ -12,8 +12,25 @@
         "--from",
         "graphifyy",
         "graphify-mcp",
-        "c:/Users/Johnny Cage/DEV/skysthelimit-collab/graphify-out/graph.json"
+        "graphify-out/graph.json"
       ]
+    },
+    "agentgraph-dev": {
+      "command": "python",
+      "args": [
+        "scripts/execution/start_agentgraph_mcp.py"
+      ],
+      "cwd": "."
+    },
+    "shadcn": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "shadcn@4.16.0",
+        "mcp"
+      ],
+      "cwd": ".",
+      "disabled": false
     }
   }
 }

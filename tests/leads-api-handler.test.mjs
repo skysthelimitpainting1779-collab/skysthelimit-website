@@ -29,7 +29,7 @@ async function withMockWebhookServer(handler) {
 }
 
 describe('api/leads Route Handler', () => {
-  test('successfully processes valid lead payload with mocked webhook', async () => {
+  test('fails closed before webhook delivery when canonical persistence is unavailable', async () => {
     await withMockWebhookServer(async (webhookUrl) => {
       process.env.LEAD_WEBHOOK_URL = webhookUrl;
       process.env.RESEND_API_KEY = '';
@@ -59,11 +59,10 @@ describe('api/leads Route Handler', () => {
       });
 
       const response = await POST(req);
-      assert.equal(response.status, 201);
+      assert.equal(response.status, 503);
       
       const body = await response.json();
-      assert.equal(body.ok, true);
-      assert.ok(body.leadId.startsWith('SKY-'));
+      assert.match(body.error, /could not safely save/i);
     });
   });
 

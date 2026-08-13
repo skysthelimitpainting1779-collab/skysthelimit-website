@@ -2,13 +2,14 @@ name: CI
 
 on:
   push:
-    branches: [main, staging]
+    branches: [main, dev]
   pull_request:
-    branches: [main, staging]
+    branches: [main, dev]
   workflow_dispatch:
 
 permissions:
   contents: read
+  pull-requests: read
 
 concurrency:
   group: ci-${{ github.event.pull_request.number || github.ref }}
@@ -24,12 +25,14 @@ jobs:
   quality:
     name: Repository Quality
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - name: Checkout full history
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
 
       - name: Setup Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -37,11 +40,40 @@ jobs:
           node-version-file: '.nvmrc'
           cache: npm
 
+      - name: Verify branch and deployment policy contract
+        run: node --test tests/branch-policy.test.mjs
+
+      - name: Validate current pull request branch flow
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        run: node scripts/branch-policy.mjs check-pr
+
       - name: Install dependencies
         run: npm ci
 
+      - name: Setup Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.13'
+          cache: pip
+          cache-dependency-path: requirements-lifecycle.txt
+
+      - name: Install lifecycle validator
+        run: python -m pip install --requirement requirements-lifecycle.txt
+
       - name: Validate workflow contracts
         run: npm run ci:contract
+
+      - name: Verify development lifecycle
+        env:
+          LIFECYCLE_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          npm run lifecycle:verify
+          python scripts/execution/validate_execution_graph.py \
+            .agents/execution/skys-limit-sequential-tdd-execution-graph-audited.jsonl \
+            --schema .agents/execution/skys-limit-sequential-tdd-execution-graph-audited.schema.json
 
       - name: Enforce branch and commit standards
         run: node scripts/enforce-git.js

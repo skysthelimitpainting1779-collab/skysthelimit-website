@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
 import { ReactNode } from 'react';
 
 interface HoverLiftProps {
@@ -10,6 +10,12 @@ interface HoverLiftProps {
 }
 
 export default function HoverLift({ children, className = '', liftAmount = -8 }: HoverLiftProps) {
+  const prefersReducedMotion = useReducedMotion();
+
+  if (prefersReducedMotion) {
+    return <div className={className}>{children}</div>;
+  }
+
   return (
     <motion.div
       className={className}

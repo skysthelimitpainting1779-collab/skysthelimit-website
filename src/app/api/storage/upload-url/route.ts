@@ -6,7 +6,9 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 const ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp', '.heic'];
+const ALLOWED_CONTENT_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/heic'];
 const MAX_FILENAME_LENGTH = 128;
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 const ipCache = new Map<string, { count: number; lastReset: number }>();
 const LIMIT_WINDOW_MS = 60 * 1000;
@@ -64,10 +66,31 @@ export async function POST(req: NextRequest) {
     if (!fileName) {
       return NextResponse.json({ error: 'Invalid file name. Use alphanumeric characters with a supported image extension (.jpg, .jpeg, .png, .webp, .heic).' }, { status: 400 });
     }
+    const contentType = typeof body?.contentType === 'string' ? body.contentType : '';
+    const size = Number(body?.size);
+    if (!ALLOWED_CONTENT_TYPES.includes(contentType) || !Number.isSafeInteger(size) || size <= 0 || size > MAX_FILE_SIZE) {
+      return NextResponse.json({ error: 'Invalid image type or size.' }, { status: 400 });
+    }
 
-    const uniqueName = `${Date.now()}-${fileName}`;
+    const fileId = globalThis.crypto.randomUUID();
+    const uniqueName = `intake/${fileId}/${fileName}`;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
     const bucketName = 'lead-photos';
+
+    const { error: intentError } = await supabase
+      .from('private_file_intents')
+      .insert({
+        id: fileId,
+        bucket_id: bucketName,
+        object_key: uniqueName,
+        expected_mime: contentType,
+        expected_size: size,
+        privacy_class: 'lead_private',
+        scan_state: 'pending',
+      });
+    if (intentError) {
+      return NextResponse.json({ error: 'Failed to register private upload.' }, { status: 503 });
+    }
 
     const { data, error } = await supabase.storage
       .from(bucketName)
@@ -77,11 +100,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Failed to generate upload URL.' }, { status: 500 });
     }
 
-    const publicUrl = `${supabaseUrl}/storage/v1/object/public/${bucketName}/${uniqueName}`;
-
     return NextResponse.json({
       uploadUrl: data.signedUrl,
-      publicUrl
+      fileId,
+      expiresInSeconds: 120,
     });
   } catch (err) {
     console.error('Storage upload URL generation failed:', err);

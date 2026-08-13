@@ -1,0 +1,48 @@
+{
+  "baseHeadSha": "4bae6eeff7e0d50157817f75d3007a31ace4ce4c",
+  "checkpointId": "cp-20260730-platform-foundation-green-001",
+  "checkpointPurpose": "Establish the executable dev integration branch model, canonical Vercel deployment authority, protected-branch desired state, core agent policy, and environment effect boundaries.",
+  "graphSha256": "4f6a7d81e9c46ecbf886703fcf03988dd317115f9577152aa7ac09bd5ec532c9",
+  "nodeId": "G26-AUDIT-REMEDIATION-READY",
+  "programId": "stl-post-g20-sequential-tdd-v1",
+  "schemaVersion": 1,
+  "tdd": {
+    "redCheckpoints": [
+      "cp-20260730-platform-foundation-red-001",
+      "cp-20260730-platform-foundation-red-002"
+    ],
+    "green": "All five focused branch, approval, lifecycle, Vercel identity, ruleset, and documentation contracts pass."
+  },
+  "verification": [
+    {
+      "command": "node --test tests/branch-policy.test.mjs",
+      "result": "5 tests passed; 0 failed",
+      "status": "passed"
+    },
+    {
+      "command": "node scripts/branch-policy.mjs check-pr --base dev --head infra/platform-foundation",
+      "result": "allowed integration edge confirmed",
+      "status": "passed"
+    },
+    {
+      "command": "node scripts/branch-policy.mjs check-pr --base main --head feat/new-page (expected rejection)",
+      "result": "forbidden feature-to-production edge rejected",
+      "status": "passed"
+    },
+    {
+      "command": "node --check scripts/branch-policy.mjs && node --check scripts/enforce-git.js && node --check scripts/normalize-branch.mjs",
+      "result": "all policy scripts parsed successfully",
+      "status": "passed"
+    },
+    {
+      "command": "python in-memory JSON and YAML syntax validation",
+      "result": "platform manifest, lifecycle config, Vercel config, rulesets, Dependabot, and five workflow files parsed successfully",
+      "status": "passed"
+    },
+    {
+      "command": "python in-memory architecture decision contract",
+      "result": "Convex, Clerk, authorization, migration, private-file, privacy, canonical project, and no-stale-instruction requirements passed",
+      "status": "passed"
+    }
+  ]
+}

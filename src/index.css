@@ -9,7 +9,8 @@
   ─────────────────────────────────────────────────────────────────────────
   Aesthetic: prep-first, industrial-editorial. A deep charcoal foundation,
   warm "paper" light sections, one restrained terracotta accent, and white
-  reserved for the primary conversion action. Radii are 0 (machined edges).
+  reserved for evidence and high-contrast text. Geometry is semantic:
+  industrial content can stay square while controls use accessible radii.
 
   CONSTRAINTS (do not violate — keeps every page coherent):
     • Surfaces: use the `surface-*` (dark) / `paper-*` (light) tokens only.
@@ -25,46 +26,58 @@
 */
 
 @theme {
-  /* ── Charcoal surface scale (dark) ───────────────────────────────── */
-  --color-surface-void: #0A0A0A;   /* page floor / deepest */
-  --color-surface-base: #070706;   /* hero + primary dark sections */
-  --color-surface-sunken: #080807; /* alternating dark band */
-  --color-surface-raised: #11100d; /* cards / panels on dark */
-  --color-surface-slate: #182023;  /* cool contrast band */
+  /* ── Locked Measured Craft primitives ────────────────────────────── */
+  --color-canvas: #070706;
+  --color-surface-1: #0D0D0B;
+  --color-surface-2: #15130F;
+  --color-ink: #F7F5F0;
+  --color-ink-muted: #B7B0A4;
+  --color-ink-faint: #7D776E;
+  --color-signal: #FF5A00;
+  --color-signal-hover: #E94F00;
+  --color-trust: #2E7D32;
+  --color-warning: #D9A441;
+  --color-danger: #C64232;
+  --color-danger-hover: #A73528;
+  --color-rule: rgba(255, 255, 255, 0.12);
+  --color-paper: #EEE8DD;
+  --color-paper-raised: #FFFFFF;
+  --color-paper-muted: #DED6C8;
+  --color-paper-ink: #191713;
+  --color-paper-muted-ink: #5F5A52;
+  --color-control-border-light: #7D776E;
+  --color-control-border-dark: #625C54;
 
-  /* ── Paper scale (warm light sections) ───────────────────────────── */
-  --color-paper: #e6dfd2;          /* light section base */
-  --color-paper-raised: #f5f0e7;   /* cards on paper */
+  /* ── Surface and text utility aliases ────────────────────────────── */
+  --color-surface-void: var(--color-canvas);
+  --color-surface-base: var(--color-canvas);
+  --color-surface-sunken: #080807;
+  --color-surface-raised: var(--color-surface-1);
+  --color-surface-slate: #182023;
+  --color-ink-1: var(--color-ink);
+  --color-ink-2: #E7DFD2;
+  --color-ink-3: #C9C1B4;
+  --color-ink-4: var(--color-ink-muted);
 
-  /* ── Ink (text) ──────────────────────────────────────────────────── */
-  --color-ink: #171512;            /* text on paper */
-  --color-ink-1: #f7f7f7;          /* primary text on dark / near-white */
-  --color-ink-2: #e7dfd2;          /* warm secondary on dark */
-  --color-ink-3: #c9c1b4;          /* warm body on dark */
-  --color-ink-4: #9ca3af;          /* muted / captions */
-
-  /* ── Brand accent (single terracotta) + trust ────────────────────── */
-  /* Named `brand`, NOT `accent`, on purpose: the shadcn `@theme inline`
-     block below already binds `--color-accent` to a neutral gray var, so a
-     token named `accent` here would be silently overridden. */
-  --color-brand: #FF5A00;          /* the ONE accent (bg-brand/text-brand) */
-  --color-brand-soft: #FF5A00;     /* accent on paper (eyebrows) */
-  --color-green-trust: #2E7D32;
+  /* ── Brand/status utility aliases ────────────────────────────────── */
+  --color-brand: var(--color-signal);
+  --color-brand-soft: var(--color-signal);
+  --color-green-trust: var(--color-trust);
 
   /* ── Hairlines ───────────────────────────────────────────────────── */
-  --color-line: rgba(255, 255, 255, 0.10);
+  --color-line: var(--color-rule);
   --color-line-strong: rgba(255, 255, 255, 0.22);
-  --color-line-warm: #d8c7aa;
+  --color-line-warm: #D8C7AA;
 
   /* ── Back-compat aliases (legacy class names) ────────────────────── */
-  --color-page-bg: #050505;
-  --color-page-text: #F7F7F7;
-  --color-black-primary: #050505;
-  --color-black-charcoal: #111111;
-  --color-text-black: #171717;
-  --color-gray-muted: #9CA3AF;
+  --color-page-bg: var(--color-canvas);
+  --color-page-text: var(--color-ink);
+  --color-black-primary: var(--color-canvas);
+  --color-black-charcoal: var(--color-surface-1);
+  --color-text-black: var(--color-paper-ink);
+  --color-gray-muted: var(--color-ink-faint);
   --color-gray-warm: #1F2937;
-  --color-orange-safety: #FF5A00;
+  --color-orange-safety: var(--color-signal);
   --color-orange-deep: #D94D00;
 
   /* ── Typography ──────────────────────────────────────────────────── */
@@ -73,14 +86,14 @@
   --font-body: var(--font-sans), system-ui, -apple-system, sans-serif;
   --font-mono: ui-monospace, "Cascadia Code", "Segoe UI Mono", monospace;
 
-  /* ── Radii (machined edges — intentionally square) ───────────────── */
-  --radius-xs: 0px;
-  --radius-sm: 0px;
-  --radius-md: 0px;
-  --radius-lg: 0px;
-  --radius-xl: 0px;
-  --radius-2xl: 0px;
-  --radius-3xl: 0px;
+  /* ── Geometry primitives (industrial blocks opt into rounded-none) ─ */
+  --radius-xs: 0.125rem;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.625rem;
+  --radius-2xl: 0.75rem;
+  --radius-3xl: 1rem;
 
   /* ── Motion tokens ───────────────────────────────────────────────── */
   --ease-premium: cubic-bezier(0.32, 0.72, 0, 1);
@@ -122,7 +135,6 @@
   * {
     box-sizing: border-box;
     min-width: 0;
-    border-radius: 0 !important;
     @apply border-border outline-ring/50;
   }
 
@@ -139,7 +151,11 @@
   h1,
   h2,
   h3,
-  h4,
+  h4 {
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+
   p,
   span,
   a {
@@ -156,8 +172,19 @@
   select:focus-visible,
   textarea:focus-visible,
   [tabindex]:focus-visible {
-    outline: 2px solid #F7F7F7;
-    outline-offset: 4px;
+    outline: var(--focus-ring-width) solid var(--ring) !important;
+    outline-offset: var(--focus-ring-offset) !important;
+  }
+
+  @media (pointer: coarse) {
+    :where(button, [role="button"], input, select, textarea, summary, a[href][data-slot="badge"]) {
+      min-block-size: 2.75rem;
+      min-inline-size: 2.75rem;
+    }
+  }
+
+  body:has([data-estimate-planner]) .mobile-estimate-cta {
+    display: none;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -400,21 +427,21 @@
 
 /* Leaflet UI Dark Custom Theme */
 .leaflet-container {
-  background-color: #050505 !important;
+  background-color: var(--color-canvas) !important;
   outline: none;
 }
 .leaflet-popup-content-wrapper {
-  background: #0B0B0D !important;
-  color: #F7F7F7 !important;
+  background: var(--color-surface-1) !important;
+  color: var(--color-ink) !important;
   border: 1px solid rgba(255, 255, 255, 0.25) !important;
-  border-radius: 0px !important;
+  border-radius: var(--radius-md) !important;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7) !important;
 }
 .leaflet-popup-content {
   margin: 10px 14px !important;
 }
 .leaflet-popup-tip {
-  background: #0B0B0D !important;
+  background: var(--color-surface-1) !important;
   border-left: 1px solid rgba(255, 255, 255, 0.25) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.25) !important;
 }
@@ -426,18 +453,18 @@
 }
 .leaflet-bar {
   border: 1px solid rgba(255, 255, 255, 0.15) !important;
-  border-radius: 0px !important;
+  border-radius: var(--radius-md) !important;
 }
 .leaflet-bar a {
-  background-color: #0B0B0D !important;
-  color: #F7F7F7 !important;
+  background-color: var(--color-surface-1) !important;
+  color: var(--color-ink) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 0px !important;
+  border-radius: var(--radius-xs) !important;
   transition: background-color 0.2s;
 }
 .leaflet-bar a:hover {
-  background-color: #F7F7F7 !important;
-  color: #050505 !important;
+  background-color: var(--color-ink) !important;
+  color: var(--color-canvas) !important;
 }
 
 /* Spec Inspector mode active style overrides */
@@ -499,70 +526,78 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 3px;
+  --background: var(--color-paper);
+  --foreground: var(--color-paper-ink);
+  --card: var(--color-paper-raised);
+  --card-foreground: var(--color-paper-ink);
+  --popover: var(--color-paper-raised);
+  --popover-foreground: var(--color-paper-ink);
+  --primary: var(--color-signal);
+  --primary-hover: var(--color-signal-hover);
+  --primary-foreground: var(--color-canvas);
+  --secondary: var(--color-paper-muted);
+  --secondary-foreground: var(--color-paper-ink);
+  --muted: var(--color-paper-muted);
+  --muted-foreground: var(--color-paper-muted-ink);
+  --accent: var(--color-paper-muted);
+  --accent-foreground: var(--color-paper-ink);
+  --destructive: var(--color-danger);
+  --destructive-hover: var(--color-danger-hover);
+  --destructive-foreground: var(--color-paper-raised);
+  --border: var(--color-line-warm);
+  --input: var(--color-control-border-light);
+  --ring: var(--color-orange-deep);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
-  --radius: 0rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --radius: 8px;
+  --sidebar: var(--color-paper-raised);
+  --sidebar-foreground: var(--color-paper-ink);
+  --sidebar-primary: var(--color-signal);
+  --sidebar-primary-foreground: var(--color-canvas);
+  --sidebar-accent: var(--color-paper-muted);
+  --sidebar-accent-foreground: var(--color-paper-ink);
+  --sidebar-border: var(--color-line-warm);
+  --sidebar-ring: var(--color-orange-deep);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
+  --background: var(--color-canvas);
+  --foreground: var(--color-ink);
+  --card: var(--color-surface-1);
+  --card-foreground: var(--color-ink);
+  --popover: var(--color-surface-1);
+  --popover-foreground: var(--color-ink);
+  --primary: var(--color-signal);
+  --primary-hover: var(--color-signal-hover);
+  --primary-foreground: var(--color-canvas);
+  --secondary: var(--color-surface-2);
+  --secondary-foreground: var(--color-ink);
+  --muted: var(--color-surface-2);
+  --muted-foreground: var(--color-ink-muted);
+  --accent: var(--color-surface-2);
+  --accent-foreground: var(--color-ink);
+  --destructive: var(--color-danger);
+  --destructive-hover: var(--color-danger-hover);
+  --destructive-foreground: var(--color-paper-raised);
+  --border: var(--color-rule);
+  --input: var(--color-control-border-dark);
+  --ring: var(--color-signal);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --sidebar: var(--color-surface-1);
+  --sidebar-foreground: var(--color-ink);
+  --sidebar-primary: var(--color-signal);
+  --sidebar-primary-foreground: var(--color-canvas);
+  --sidebar-accent: var(--color-surface-2);
+  --sidebar-accent-foreground: var(--color-ink);
+  --sidebar-border: var(--color-rule);
+  --sidebar-ring: var(--color-signal);
 }

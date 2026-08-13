@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "1.0.0",
+  "programId": "stl-post-g20-sequential-tdd-v1",
+  "maxObservationAgeMilliseconds": 600000,
+  "maxTotalTokens": 500000,
+  "maxToolCalls": 180,
+  "maxWaitMilliseconds": 1200000,
+  "maxAgentSpawns": 4,
+  "maxExternalProviderCalls": 20,
+  "maxElapsedMilliseconds": 7200000,
+  "productionMutationAuthorized": false
+}

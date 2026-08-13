@@ -168,7 +168,13 @@ function mirrorSkills() {
     for (const t of targets) {
       const dest = join(t, name.name);
       if (existsSync(dest)) rmSync(dest, { recursive: true, force: true });
-      cpSync(src, dest, { recursive: true });
+      cpSync(src, dest, {
+        recursive: true,
+        filter: (source) => {
+          const normalized = source.replaceAll('\\', '/');
+          return !normalized.includes('/__pycache__/') && !normalized.endsWith('.pyc');
+        },
+      });
       written.push(dest.replace(ROOT + '\\', '').replace(ROOT + '/', ''));
     }
   }
@@ -371,7 +377,8 @@ npm run host:compile
 | **Copilot** | \`.github/copilot-instructions.md\` | (path rules) | \`.github/skills/\` |
 | **Gemini CLI** | \`context.fileName\`: AGENTS + GEMINI | same | \`.agents/skills/\` |
 
-Compile: \`npm run host:compile\`  
+Compile: \`npm run host:compile\`
+
 Clean custom domains: \`npm run host:compile -- --clean-domains\`
 `,
     ),

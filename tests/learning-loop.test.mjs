@@ -4,6 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
 import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 
 import {
   classifyFailure,
@@ -50,54 +51,44 @@ test('classifyFailure maps PowerShell switch errors', () => {
 });
 
 test('learning-loop CLI record dedupes second identical failure', () => {
-  const root = process.cwd();
-  // Use real repo learning loop via CLI so index lands in .learnings — isolate by unique title token
+  const root = mkdtempSync(join(tmpdir(), 'learning-loop-test-'));
+  const script = fileURLToPath(new URL('../scripts/learning-loop.mjs', import.meta.url));
   const token = `dedupe-test-${Date.now()}`;
   const title = `Synthetic failure ${token}`;
   const error = `unique-marker-${token} boom`;
 
-  const r1 = spawnSync(
-    process.execPath,
-    [
-      'scripts/learning-loop.mjs',
-      'record',
-      '--title',
-      title,
-      '--error',
-      error,
-      '--command',
-      'node -e "process.exit(1)"',
-      '--area',
-      'test',
-    ],
-    { encoding: 'utf8', cwd: root }
-  );
-  assert.equal(r1.status, 0, r1.stderr || r1.stdout);
-  assert.match(r1.stdout, /Recorded ERR-/);
+  try {
+    const record = () => spawnSync(
+      process.execPath,
+      [
+        script,
+        'record',
+        '--title',
+        title,
+        '--error',
+        error,
+        '--command',
+        'node -e "process.exit(1)"',
+        '--area',
+        'test',
+      ],
+      { encoding: 'utf8', cwd: root },
+    );
+    const r1 = record();
+    assert.equal(r1.status, 0, r1.stderr || r1.stdout);
+    assert.match(r1.stdout, /Recorded ERR-/);
 
-  const r2 = spawnSync(
-    process.execPath,
-    [
-      'scripts/learning-loop.mjs',
-      'record',
-      '--title',
-      title,
-      '--error',
-      error,
-      '--command',
-      'node -e "process.exit(1)"',
-      '--area',
-      'test',
-    ],
-    { encoding: 'utf8', cwd: root }
-  );
-  assert.equal(r2.status, 0, r2.stderr || r2.stdout);
-  assert.match(r2.stdout, /Duplicate suppressed/);
+    const r2 = record();
+    assert.equal(r2.status, 0, r2.stderr || r2.stdout);
+    assert.match(r2.stdout, /Duplicate suppressed/);
 
-  assert.ok(existsSync(join(root, '.learnings', 'ERRORS_INDEX.md')));
-  assert.ok(existsSync(join(root, '.learnings', 'index.json')));
-  const index = JSON.parse(readFileSync(join(root, '.learnings', 'index.json'), 'utf8'));
-  assert.ok(index.stats.duplicates_suppressed >= 1);
+    assert.ok(existsSync(join(root, '.learnings', 'ERRORS_INDEX.md')));
+    assert.ok(existsSync(join(root, '.learnings', 'index.json')));
+    const index = JSON.parse(readFileSync(join(root, '.learnings', 'index.json'), 'utf8'));
+    assert.ok(index.stats.duplicates_suppressed >= 1);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
 });
 
 test('agent OS kernel quarantines without git checkout rollback', () => {

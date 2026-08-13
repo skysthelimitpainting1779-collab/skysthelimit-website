@@ -1,0 +1,25 @@
+{
+  "baseHeadSha": "cd83deb09c22ee43913642015367be15f6d7020d",
+  "checkpointId": "cp-20260730-platform-foundation-telemetry-cli-red-001",
+  "checkpointPurpose": "Require AGENTS.md to document the telemetry gate with the mandatory --input request path instead of a bare invocation that always fails argument validation.",
+  "graphSha256": "4f6a7d81e9c46ecbf886703fcf03988dd317115f9577152aa7ac09bd5ec532c9",
+  "nodeId": "G26-AUDIT-REMEDIATION-READY",
+  "programId": "stl-post-g20-sequential-tdd-v1",
+  "schemaVersion": 1,
+  "tdd": {
+    "red": "AGENTS.md documents npm run telemetry:gate without -- --input <absolute-request-path>, while scripts/node-telemetry-gate.mjs rejects every invocation that does not provide exactly that argument pair.",
+    "expectedFailure": "telemetry gate requires an explicit absolute request path"
+  },
+  "verification": [
+    {
+      "command": "node --test tests/agents-telemetry-command.test.mjs (isolated fixture using cd83deb AGENTS.md)",
+      "result": "expected red failure observed: telemetry gate requires an explicit absolute request path",
+      "status": "passed"
+    },
+    {
+      "command": "source review of scripts/node-telemetry-gate.mjs parseArguments",
+      "result": "the CLI accepts exactly --input followed by one non-option path and otherwise returns invalid command arguments",
+      "status": "passed"
+    }
+  ]
+}

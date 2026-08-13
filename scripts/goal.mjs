@@ -8,6 +8,8 @@
  *   npm run goal:verify
  *   npm run goal -- done
  *   npm run goal -- list
+ *   npm run goal -- pause
+ *   npm run goal -- resume <slug>
  *   npm run goal -- abort
  *
  * State: .agents/goals/<slug>/GOAL.md + phase files + active.json
@@ -21,7 +23,12 @@ import {
   rmSync,
 } from 'node:fs';
 import { join } from 'node:path';
+import { homedir } from 'node:os';
 import { spawnSync } from 'node:child_process';
+import {
+  redactEvidenceOutput,
+  sensitiveEnvironmentValues,
+} from './lib/evidence-output.mjs';
 
 const ROOT = process.cwd();
 const GOALS = join(ROOT, '.agents', 'goals');
@@ -70,6 +77,10 @@ function cmdStart(title) {
   }
   const slug = slugify(title);
   const dir = goalDir(slug);
+  if (existsSync(dir)) {
+    console.error(`[goal] Goal already exists: ${slug}\n  resume with: npm run goal -- resume ${slug}`);
+    process.exit(1);
+  }
   mkdirSync(dir, { recursive: true });
   const now = new Date().toISOString();
   const goalMd = `---
@@ -110,7 +121,7 @@ npm run goal -- done
   writeFileSync(join(dir, 'GOAL.md'), goalMd);
   writeFileSync(
     join(dir, 'research.md'),
-    `# Research — ${title}\n\n## Graph query\n\n\`\`\`bash\nnpm run graph:query -- "${title}"\n\`\`\`\n\n## Files / flows\n\n- \n\n## Risks\n\n- \n`,
+    `# Research — ${title}\n\n## Graph query\n\n\`\`\`bash\nnpm run graph:query -- "${title}"\n\`\`\`\n\n## Context7 contracts\n\n- Applicability: not-applicable — no external library or provider behavior is changed\n\n## Files / flows\n\n- \n\n## Risks\n\n- \n`,
   );
   writeFileSync(
     join(dir, 'plan.md'),
@@ -186,6 +197,7 @@ function cmdPhase(phase) {
 
 function runVerify({ build = false } = {}) {
   const steps = [
+    { name: 'context7', cmd: ['node', 'scripts/validate-context7-contract.mjs'] },
     { name: 'lint', cmd: ['npm', 'run', 'lint'] },
     { name: 'test', cmd: ['npm', 'test'] },
   ];
@@ -206,7 +218,11 @@ function runVerify({ build = false } = {}) {
       name: s.name,
       pass,
       status: r.status,
-      tail: `${r.stdout || ''}${r.stderr || ''}`.slice(-1200),
+      tail: redactEvidenceOutput(`${r.stdout || ''}${r.stderr || ''}`, {
+        workspaceRoot: ROOT,
+        homeDirectory: homedir(),
+        sensitiveValues: sensitiveEnvironmentValues(process.env),
+      }).slice(-1200),
     });
   }
   return { ok, at: new Date().toISOString(), results };
@@ -288,6 +304,59 @@ function cmdAbort() {
   console.log(JSON.stringify({ ok: true, action: 'abort', slug: active.slug }));
 }
 
+function cmdPause() {
+  const active = readActive();
+  if (!active?.slug) {
+    console.error('[goal] No active goal to pause.');
+    process.exit(1);
+  }
+  active.status = 'paused';
+  active.paused = new Date().toISOString();
+  const dir = goalDir(active.slug);
+  if (!existsSync(dir)) {
+    console.error(`[goal] Goal directory missing: ${active.slug}`);
+    process.exit(1);
+  }
+  writeFileSync(join(dir, 'meta.json'), JSON.stringify(active, null, 2) + '\n');
+  if (existsSync(ACTIVE)) rmSync(ACTIVE);
+  console.log(JSON.stringify({ ok: true, action: 'pause', slug: active.slug, path: active.path }, null, 2));
+}
+
+function cmdResume(slug) {
+  const active = readActive();
+  if (active?.slug && active.status === 'active') {
+    console.error(`[goal] Already active: ${active.slug}\n  pause with: npm run goal -- pause`);
+    process.exit(1);
+  }
+  if (!slug) {
+    console.error('[goal] resume requires a goal slug.');
+    process.exit(1);
+  }
+  const dir = goalDir(slug);
+  const metaPath = join(dir, 'meta.json');
+  if (!existsSync(metaPath)) {
+    console.error(`[goal] Goal not found: ${slug}`);
+    process.exit(1);
+  }
+  let goal;
+  try {
+    goal = JSON.parse(readFileSync(metaPath, 'utf8'));
+  } catch {
+    console.error(`[goal] Invalid goal metadata: ${slug}`);
+    process.exit(1);
+  }
+  if (goal.status !== 'paused') {
+    console.error(`[goal] Goal is not paused: ${slug} (${goal.status || 'unknown'})`);
+    process.exit(1);
+  }
+  goal.status = 'active';
+  goal.resumed = new Date().toISOString();
+  goal.path ||= `.agents/goals/${slug}`;
+  writeFileSync(metaPath, JSON.stringify(goal, null, 2) + '\n');
+  writeActive(goal);
+  console.log(JSON.stringify({ ok: true, action: 'resume', slug, path: goal.path }, null, 2));
+}
+
 function cmdStatus() {
   const active = readActive();
   if (!active) {
@@ -341,6 +410,8 @@ function cmdHelp() {
   npm run goal -- start "title"
   npm run goal -- status
   npm run goal -- list
+  npm run goal -- pause
+  npm run goal -- resume <slug>
   npm run goal -- phase research|plan|implement
   npm run goal:verify [--build]
   npm run goal -- done
@@ -363,6 +434,10 @@ if (sub === 'start') {
   cmdVerify(args.slice(1));
 } else if (sub === 'done') {
   cmdDone();
+} else if (sub === 'pause') {
+  cmdPause();
+} else if (sub === 'resume') {
+  cmdResume(args[1] || '');
 } else if (sub === 'abort') {
   cmdAbort();
 } else if (sub === 'status') {

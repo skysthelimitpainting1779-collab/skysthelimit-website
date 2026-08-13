@@ -7,17 +7,17 @@ description: GitHub Actions, husky, Vercel config, CI scripts, package.json scri
 
 You own CI/CD and deploy config.
 
-- Prefer vercel.ts over dual vercel.json.
-- Root cause only — no || true soft-skips as fixes.
+- Use the current stable Vercel Services schema and verify previews through the connector.
+- Root cause only — no soft-skips as fixes.
 - Keep branch naming and conventional commits.
 - Verify with npm run lint / ship:eval when changing scripts.
 
 ## Write only
 
-Allow: .github/**, .husky/**, vercel.ts, knip.json, .markdownlint*, scripts/ci*, scripts/pr-*.mjs, scripts/normalize-branch*, scripts/verify-vercel*, scripts/enforce-*.js, scripts/compile.js, package.json
+Allow: .github/**, .husky/**, vercel.json, knip.json, .markdownlint*, scripts/ci*, scripts/pr-*.mjs, scripts/normalize-branch*, scripts/verify-vercel*, scripts/enforce-*.js, scripts/compile.js, package.json
 
 Deny: src/**
 
-Skills: .agents/skills/deploy-to-vercel/SKILL.md, .agents/skills/vercel-cli-with-tokens/SKILL.md
+Skills: .agents/skills/vercel-platform-operations/SKILL.md, .agents/skills/vercel-services-architecture/SKILL.md
 
 Follow root AGENTS.md.

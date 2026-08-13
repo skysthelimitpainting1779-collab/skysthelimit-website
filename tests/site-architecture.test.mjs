@@ -10,12 +10,12 @@ test('top-level routes use the three-market architecture in Next.js filesystem r
   assert.ok(!appExists, 'src/App.tsx should be deleted to clean up Vite router remnants');
 
   for (const route of ['', 'residential', 'commercial', 'public-sector', 'projects', 'about', 'contact', 'service-area']) {
-    const pagePath = route === '' ? 'src/app/page.tsx' : `src/app/${route}/page.tsx`;
+    const pagePath = route === '' ? 'src/app/(marketing)/page.tsx' : `src/app/(marketing)/${route}/page.tsx`;
     assert.ok(existsSync(new URL(`../${pagePath}`, import.meta.url)), `${pagePath} should exist`);
   }
 
-  assert.ok(existsSync(new URL('../src/app/service-areas/[slug]/page.tsx', import.meta.url)));
-  assert.ok(existsSync(new URL('../src/app/painting-services/[slug]/page.tsx', import.meta.url)));
+  assert.ok(existsSync(new URL('../src/app/(marketing)/service-areas/[slug]/page.tsx', import.meta.url)));
+  assert.ok(existsSync(new URL('../src/app/(marketing)/painting-services/[slug]/page.tsx', import.meta.url)));
 });
 
 test('primary navigation leads with residential, commercial, and public sector', () => {
@@ -32,7 +32,7 @@ test('primary navigation leads with residential, commercial, and public sector',
 });
 
 test('homepage states the approved positioning and avoids forbidden claims', () => {
-  const home = read('src/app/HomeClient.tsx');
+  const home = read('src/app/(marketing)/HomeClient.tsx');
 
   assert.match(home, /Residential detail\. Commercial discipline\.[\s\S]*Preps[\s\S]*first\./i);
   assert.match(home, /registered Minnesota Specialty Contractor \(Painting\)/);
@@ -48,7 +48,7 @@ test('remediation guardrails cover secrets, headers, App Router SEO, and accessi
   assert.ok(!existsSync(new URL('../vercel.ts', import.meta.url)), 'legacy vercel.ts should remain deleted');
   assert.ok(existsSync(new URL('../vercel.json', import.meta.url)), 'vercel.json should exist');
   const vercelJson = read('vercel.json');
-  const rootLayout = read('src/app/layout.tsx');
+  const rootLayout = read('src/app/(marketing)/layout.tsx');
   const slider = read('src/components/BeforeAfterSlider.tsx');
   const leadForm = read('src/components/LeadForm.tsx');
   const serviceAreaMap = read('src/components/ServiceAreaMap.tsx');
@@ -70,11 +70,20 @@ test('remediation guardrails cover secrets, headers, App Router SEO, and accessi
   ]) {
     assert.match(vercelJson, new RegExp(escapeRegExp(key)), `${key} header is missing`);
   }
-  assert.ok(!Object.hasOwn(JSON.parse(vercelJson), 'rewrites'));
+  const vercel = JSON.parse(vercelJson);
+  const rewrites = vercel.rewrites ?? [];
+  const blanketRewrite = rewrites.find(({ source }) => source === '/(.*)');
+  assert.equal(blanketRewrite, undefined);
+  assert.equal(
+    rewrites.some(
+      ({ source, destination }) => source === '/(.*)' && typeof destination === 'string'
+    ),
+    false
+  );
 
   // Real App Router surface — not Vite prerender.mjs theater
   for (const route of ['residential', 'commercial', 'public-sector', 'projects', 'about', 'contact', 'capabilities', 'service-area']) {
-    assert.ok(existsSync(new URL(`../src/app/${route}/page.tsx`, import.meta.url)), `src/app/${route}/page.tsx missing`);
+    assert.ok(existsSync(new URL(`../src/app/(marketing)/${route}/page.tsx`, import.meta.url)), `src/app/(marketing)/${route}/page.tsx missing`);
   }
   assert.match(rootLayout, /application\/ld\+json/);
   assert.doesNotMatch(rootLayout, /ssr:\s*false/);
@@ -124,12 +133,12 @@ test('local SEO and service landing pages are routable and listed in the sitemap
   assert.match(landingRoute, /landingPagePath/);
 
   // Assert that App Router dynamic page has generateMetadata for SEO headers
-  const appSlugPage = read('src/app/service-areas/[slug]/page.tsx');
+  const appSlugPage = read('src/app/(marketing)/service-areas/[slug]/page.tsx');
   assert.match(appSlugPage, /generateMetadata/);
 });
 
 test('M2 compliance and contractor registration statements are correctly set', () => {
-  const layout = read('src/app/layout.tsx');
+  const layout = read('src/app/(marketing)/layout.tsx');
   const footerCta = read('src/components/ConversionFooterCta.tsx');
   const refer = read('src/views/Refer.tsx');
   const estimate = read('src/views/Estimate.tsx');

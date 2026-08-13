@@ -1,0 +1,213 @@
+{
+  "schemaVersion": "1.0.0",
+  "repository": "skysthelimitpainting1779-collab/skys-the-limit-painting-llc-website",
+  "baselineCommit": "c7e94605eefdace7a76ce5145808478df8503dbb",
+  "note": "All 52 STL implementation nodes are assigned exactly once. Canonical graph dependencies and approval gates remain authoritative.",
+  "batches": [
+    {
+      "id": "B00",
+      "title": "Control-plane alignment and baseline",
+      "risk": "medium",
+      "graphNodes": [],
+      "purpose": "Make /goal, Graphify, specialists, and Graph Engineer obey one target architecture before product implementation.",
+      "tasks": [
+        "Preserve/checkpoint any working-tree changes and record HEAD.",
+        "Expose goal, goal:verify, ship:eval, ship:improve, and graph:* commands when their scripts exist.",
+        "Install CURRENT_DECISIONS.md and add a deterministic stale-architecture guard.",
+        "Align AGENTS.md, .agents/STACK.md, .agents/specialists.json, generated host-native specialists, and Codex config.",
+        "Replace the absolute Graphify path with a repository/worktree-safe binding.",
+        "Install or verify Graph Engineer v2 and copy the canonical graph/ledger structure into .graph.",
+        "Run npm ci, Graphify status/fixtures, lint, test, build, and save complete baseline logs.",
+        "Use the Vercel plugin to snapshot project, deployments, runtime errors, production deployment, and rollback reference.",
+        "Use Vercel CLI to inventory Marketplace Integration resources, project links, environment scopes, and connectors without changing production.",
+        "Install package domain skills into .agents/skills, verify installed/repository skills, compile host adapters, and validate every graph node skill route.",
+        "Search current Vercel Services documentation and produce the preview topology/configuration contract for web and integrations services."
+      ],
+      "exit": [
+        "All control-plane commands execute.",
+        "Stale architecture instructions cannot silently override the approved decisions.",
+        "Baseline failures are recorded before product edits."
+      ],
+      "parallelism": {
+        "writers": 1,
+        "readOnly": 1
+      },
+      "productionSideEffects": false
+    },
+    {
+      "id": "B10",
+      "title": "Revenue and security stabilization",
+      "risk": "high",
+      "graphNodes": [
+        "STL-001",
+        "STL-002",
+        "STL-003",
+        "STL-004",
+        "STL-005",
+        "STL-006",
+        "STL-007",
+        "STL-008",
+        "STL-009",
+        "STL-010"
+      ],
+      "purpose": "Close confirmed lead-loss, auth, file privacy, route, webhook, and critical-journey failures.",
+      "exit": [
+        "G10-STABILIZED passes with deterministic evidence and preview-safe tests."
+      ],
+      "parallelism": {
+        "writers": 2,
+        "readOnly": 1,
+        "rule": "Separate revenue and security/route worktrees with disjoint locks."
+      },
+      "productionSideEffects": false
+    },
+    {
+      "id": "B20",
+      "title": "Convex, Clerk, authorization, and migration foundation",
+      "risk": "high",
+      "graphNodes": [
+        "STL-101",
+        "STL-102",
+        "STL-103",
+        "STL-104",
+        "STL-105",
+        "STL-106",
+        "STL-107",
+        "STL-108",
+        "STL-109",
+        "STL-110"
+      ],
+      "purpose": "Build target identity/data foundations and complete verified legacy inventories and reconciliation tools. Implement the Vercel Services web/integrations topology and project/resource links in preview-safe form.",
+      "exit": [
+        "G20-FOUNDATION-READY passes with authz, lifecycle, audit, event, idempotency, and migration evidence.",
+        "A preview deployment builds both Vercel services, service binding works, integrations service is internal except explicit rewrites, and Vercel plugin evidence is recorded."
+      ],
+      "parallelism": {
+        "writers": 2,
+        "readOnly": 2,
+        "rule": "Identity/security and data/migration paths integrate through typed contracts."
+      },
+      "productionSideEffects": false
+    },
+    {
+      "id": "B30",
+      "title": "Public site, design, CMS, SEO, and local growth",
+      "risk": "high",
+      "graphNodes": [
+        "STL-301",
+        "STL-302",
+        "STL-303",
+        "STL-304",
+        "STL-305",
+        "STL-306",
+        "STL-307",
+        "STL-308",
+        "STL-309"
+      ],
+      "purpose": "Consolidate public templates, publication authority, route registry, SEO, reviews, proof, and GBP workspace.",
+      "exit": [
+        "G30-PUBLIC-CMS-READY passes with crawl, accessibility, provenance, preview, and migration evidence."
+      ],
+      "parallelism": {
+        "writers": 2,
+        "readOnly": 1,
+        "rule": "Design/templates and CMS/migration use separate worktrees."
+      },
+      "productionSideEffects": false
+    },
+    {
+      "id": "B31",
+      "title": "Visitor-to-booking and revenue workflow",
+      "risk": "high",
+      "graphNodes": [
+        "STL-201",
+        "STL-202",
+        "STL-203",
+        "STL-204",
+        "STL-205",
+        "STL-206",
+        "STL-207",
+        "STL-208",
+        "STL-209"
+      ],
+      "purpose": "Complete durable lead, booking, CRM, estimate, proposal, agreement, deposit, and follow-up in test/preview mode.",
+      "exit": [
+        "G31-VISITOR-TO-BOOKING and G40-PROPOSAL-TO-DEPOSIT pass in preview/test mode."
+      ],
+      "parallelism": {
+        "writers": 2,
+        "readOnly": 1,
+        "rule": "Funnel/CRM and proposal/payment paths share typed domain contracts."
+      },
+      "productionSideEffects": false
+    },
+    {
+      "id": "B50",
+      "title": "Customer portal and operator cockpit",
+      "risk": "high",
+      "graphNodes": [
+        "STL-401",
+        "STL-402",
+        "STL-403",
+        "STL-404",
+        "STL-405",
+        "STL-406",
+        "STL-407",
+        "STL-408"
+      ],
+      "purpose": "Build resource-isolated portal, project operations, private files, change orders, crew assignment, automations, and health views.",
+      "exit": [
+        "G50-PORTAL-OPS-READY passes with cross-customer isolation and project workflow evidence."
+      ],
+      "parallelism": {
+        "writers": 2,
+        "readOnly": 1,
+        "rule": "Portal and operator writers consume generated DTO contracts, not raw database clients."
+      },
+      "productionSideEffects": false
+    },
+    {
+      "id": "B60",
+      "title": "Measurement, cutover preparation, and rollback",
+      "risk": "high",
+      "graphNodes": [
+        "STL-501",
+        "STL-502",
+        "STL-503",
+        "STL-504",
+        "STL-505",
+        "STL-506"
+      ],
+      "purpose": "Reconcile attribution, migration state, canaries, rollback exports, restore evidence, and decommission readiness.",
+      "exit": [
+        "G60-MEASUREMENT-READY passes and G70 has a complete approval packet."
+      ],
+      "parallelism": {
+        "writers": 1,
+        "readOnly": 2
+      },
+      "productionSideEffects": false
+    },
+    {
+      "id": "B70",
+      "title": "Separately authorized production cutover",
+      "risk": "high",
+      "graphNodes": [],
+      "gates": [
+        "G70-CUTOVER-READY",
+        "G80-CUTOVER-COMPLETE",
+        "G85-ROLLBACK-WINDOW-CLEARED",
+        "G90-DECOMMISSIONED"
+      ],
+      "purpose": "Perform only explicitly approved production actions and preserve rollback capability.",
+      "exit": [
+        "Production reconciles, the monitored window clears, and legacy removal receives separate approval."
+      ],
+      "parallelism": {
+        "writers": 1,
+        "readOnly": 2
+      },
+      "productionSideEffects": true
+    }
+  ]
+}

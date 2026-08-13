@@ -1,168 +1,290 @@
-# Design System: skysthelimit (Sky's the Limit Painting)
+# Sky’s the Limit — Product and Marketing Design System
 
-> **SSOT for visual product + marketing.** Used by agents, shadcn product UI, and [Google Stitch](https://labs.google.com/stitch).  
-> Package / project slug: **`skysthelimit`**. Templates: `docs/templates/DESIGN.md`.
+**Status:** implementation-locked
+**Version:** 3.0.0
+**Prepared:** 2026-07-27T12:55:28+00:00
+**Audit reference:** `c7e94605eefdace7a76ce5145808478df8503dbb`
 
----
+This file and the files under `design/` are the visual and interaction source of truth. Codex implements them; it does not reopen the design unless a current route or verified requirement cannot be represented.
 
-## 1. Visual Theme & Atmosphere
+## 1. Product idea
 
-A **premium industrial craftsman** interface: dark workshop meets blueprint precision. Density is **balanced-cockpit** for homebase/admin (6–7) and **gallery-confident** for marketing (4–5). Variance is **asymmetric-editorial** on public pages; product UI is more predictable grids. Motion is **fluid CSS + spring-like easing**, never noisy.
+**Measured Craft**
 
-Mood words: raw mechanical tension · high contrast · safety-orange signal · trust green sparingly · no neon SaaS purple.
+A premium contractor system that combines the physical honesty of a prepared jobsite with the precision of a measured scope. The interface should feel established, direct, and useful—not like a generic SaaS dashboard or a luxury mood board.
 
----
+### Principles
 
-## 2. Color Palette & Roles
+1. **Proof before polish**
+2. **Preparation is visible**
+3. **One next action per screen**
+4. **Information density follows the user**
+5. **Orange signals action, not decoration**
+6. **Customer files and business facts feel controlled**
+7. **Every claim can point to evidence**
 
-| Name | Hex | Role |
-|------|-----|------|
-| **Pitch Canvas** | `#050505` | Primary page background (`--color-page-bg`) |
-| **Off-White Ink** | `#F7F7F7` | Primary text (`--color-page-text`) |
-| **Muted Steel** | `#9CA3AF` | Secondary text, captions (`--color-gray-muted`) |
-| **Safety Orange** | `#FF5A00` | **Single primary accent** — CTAs, focus, active (`--color-orange-safety`) |
-| **Deep Industrial Orange** | `#E94F00` | Hover / pressed accent (`--color-orange-deep`) |
-| **Forest Trust** | `#2E7D32` | Success / trust badges only (`--color-green-trust`) |
-| **Golden Outline** | `#f0c067` | Links, hairline highlights (secondary signal, not button fill) |
-| **Whisper Border** | `rgba(255,255,255,0.10)` | Structural borders on dark surfaces |
+## 2. Surfaces
 
-**Rules:** Max **one** primary accent (Safety Orange). No purple/neon glows. No pure black `#000000` for text blocks (use Pitch Canvas). Prefer theme tokens in product UI (`bg-background`, `text-muted-foreground` via shadcn) mapped to this palette.
+| Surface | Route group | Character | Density |
+|---|---|---|---:|
+| Public marketing | `/` | Editorial contractor confidence | 4/10 |
+| Customer portal | `/portal` | Calm project clarity | 6/10 |
+| Operator cockpit | `/app` | Dense operational command | 8/10 |
+| Legacy surfaces | `/manage`, `/admin` | Migration-only; no new design work | — |
 
----
+## 3. Brand and color
 
-## 3. Typography Rules
+### Core tokens
 
-| Role | Font | Notes |
-|------|------|--------|
-| **Display** | Satoshi | Bold, modern; marketing headings; controlled uppercase where brand already uses it |
-| **Body** | Geist | Readable longform and UI |
-| **Mono** | Fira Code / Geist Mono | IDs, metrics, timestamps, code |
+| Token | Value | Use |
+|---|---|---|
+| `--canvas` | `#070706` | Main dark background |
+| `--surface-1` | `#0D0D0B` | Raised panels |
+| `--surface-2` | `#15130F` | Active/selected panels |
+| `--ink` | `#F7F5F0` | Primary text |
+| `--ink-muted` | `#B7B0A4` | Secondary text |
+| `--ink-faint` | `#7D776E` | Captions/disabled |
+| `--signal` | `#FF5A00` | Primary action and active state |
+| `--signal-hover` | `#E94F00` | Hover/pressed action |
+| `--trust` | `#2E7D32` | Verified success only |
+| `--warning` | `#D9A441` | Due/attention state |
+| `--danger` | `#C64232` | Destructive/error state |
+| `--rule` | `rgba(255,255,255,.12)` | Borders/dividers |
+| `--paper` | `#EEE8DD` | Warm light document surface |
+| `--paper-ink` | `#191713` | Text on paper |
 
-- Hierarchy via **weight + color**, not only size  
-- Body max ~65ch on long marketing copy  
-- **Banned:** Inter as brand face · generic Georgia/Times for UI · serif in dashboards  
-- Homebase density ≥7: numbers in mono  
+### Usage
 
----
+- Orange is reserved for the most important available action, focus, and selected navigation.
+- Never make every icon or heading orange.
+- Status color never replaces a text label.
+- Light paper surfaces are used for estimates, proposals, agreements, and document previews.
+- No purple AI gradients, neon bloom, or fake metallic effects.
 
-## 4. Component Stylings
+## 4. Typography
 
-### Marketing
-- **Radius:** strict **0px** (raw mechanical tension)  
-- **Cards / blocks:** sharp borders `border-white/10` or gold-tinted left rules  
-- **CTAs:** Safety Orange fill; tactile active press; optional shimmer overlay (existing `.shimmer-cta`)  
-- **Hero:** asymmetric preferred; no “scroll to explore” chevrons  
+- **Body/UI:** Geist Sans
+- **Display:** Satoshi only when a licensed local asset already exists; otherwise Geist Sans 800/900
+- **Data/IDs:** Geist Mono
+- Do not fetch blocking web fonts.
+- Public H1: `clamp(3rem, 7vw, 7rem)`, tight but readable.
+- Product page title: 28–36px.
+- Body: 16–18px public, 14–16px product.
+- Long copy width: 60–68 characters.
 
-### Product (homebase / portal / shadcn)
-- Style: existing `components.json` (**base-nova**); compose with Card, Table, Badge, Tabs, Sheet  
-- Density: comfortable (`p-4`/`p-6`, `text-sm`)  
-- Destructive: **AlertDialog**, not Dialog  
-- Empty / loading: Skeleton + designed empty Card — no bare “No data”  
+## 5. Geometry and spacing
 
----
+- Public sections use a 12-column grid, max width 1440px.
+- Portal uses 12 columns with a 280px navigation rail on desktop.
+- Operator uses a 240px rail, sticky command bar, and resizable detail regions.
+- Base spacing unit: 4px.
+- Public section rhythm: 80–128px desktop, 56–80px mobile.
+- Product region gaps: 16–24px.
+- Industrial content blocks: 0–4px radius.
+- Inputs, buttons, dialogs, and interactive cards: semantic 6–12px radius.
+- Do not globally force radius zero.
 
-## 5. Layout Principles
+## 6. Navigation
 
-- Marketing: spacious vertical rhythm (`py-20`–`py-24`)  
-- Product: sidebar + main; sticky page headers  
-- Max content width containment on marketing (~1400px)  
-- Mobile: single column under 768px; 44px touch targets  
-- No equal 3-card feature rows on marketing; prefer zig-zag or bento  
+### Public
 
----
+Utility strip → primary navigation → contextual breadcrumb where required.
 
-## 6. Motion & Interaction
+Primary items:
 
-- Easing: `cubic-bezier(0.32, 0.72, 0, 1)` (`--ease-premium`)  
-- Entries: fade-up (`.reveal-up`)  
-- Marquee OK for proof/trust strips  
-- Animate **transform/opacity only**  
-- Prefer reduced-motion respect for a11y  
+- Residential
+- Commercial
+- Public Sector
+- Projects
+- Service Areas
+- About
+- Resources
 
----
+Persistent actions:
 
-## 7. Anti-Patterns (Banned)
+- Check project range
+- Call Anthony
 
-- Emojis in product chrome  
-- Inter as primary UI font  
-- Pure black text on pure black  
-- Neon outer glow / purple AI gradients  
-- Glassmorphism on every card  
-- Generic “Elevate / Seamless / Unleash” copy  
-- Fake stats (`99.9%`) without source  
-- Centered hero + three equal cards default layout  
-- Mounting `/cms` over `/admin`  
-- Ignoring `docs/NAMING.md` slug  
+### Customer
 
----
+- Overview
+- Project
+- Appointments
+- Documents
+- Payments
+- Messages
 
-## 8. Surfaces map
+### Operator
 
-| Surface | Path | Design mode |
-|---------|------|-------------|
-| Marketing | `/`, markets, estimate | Industrial craftsman dark |
-| Client portal | `/portal` | Product dark, shadcn, calm |
-| Painter homebase | `/admin` | Product dark, dense tables/board |
-| CMS | `/cms` | Payload admin (minimal brand chrome) |
+- Overview
+- Leads
+- Pipeline
+- Calendar
+- Estimates
+- Proposals
+- Projects
+- Tasks
+- Automations
+- Content
+- Growth
+- Analytics
+- Settings
 
----
+## 7. Public-page conversion pattern
 
-## 9. Target look — homepage hero (LOCKED)
+1. Context-specific headline
+2. Specific outcome and audience
+3. Primary action
+4. Real proof near the action
+5. What happens next
+6. Scope/capability clarity
+7. Objection handling
+8. Project evidence
+9. Final action
 
-**Reference:** `references/frontend-target-hero.png` (source of truth for marketing chrome).
+No public page should begin with an internal company biography.
 
-### Layout
+## 8. Components
 
-| Zone | Spec |
-|------|------|
-| **Utility bar** | Full-width black strip: phone · email left; trust line right (desktop) |
-| **Primary nav** | Logo mark + wordmark left; nav center/right (Residential · Commercial · Public Sector · Projects · About · Resources) · **Price Range** orange pill · **Call / phone** orange outline |
-| **Hero** | Full-bleed real-work photo (painter on exterior, warm daylight); **left-weighted dark gradient** so type stays legible |
-| **Trust chips** | Row of dark rounded-rect badges under subhead (Twin Cities Metro · MN ID · Fully Insured · Public-sector ready) |
-| **H1** | Large white display; **one orange accent word** (e.g. **Preps**) — not orange whole line |
-| **Subcopy** | Warm off-white (~`#e7dfd2`), max ~65ch, metro + markets + prep discipline |
-| **CTA row** | (1) **Filled orange** primary · (2) dark secondary · (3) outline/call tertiary |
-| **Proof line** | Small checks under CTAs (Fully Insured · Owner-Led · MN ID · COI) |
-| **Path strip** | 01–04 steps in dark cards **over** the hero bottom (Tell us · Scope/price · Reserve · Transparency) |
-| **Trust footer of hero** | Google rating · “Trusted by…” · MN specialty mark |
+Use source-owned shadcn components first.
 
-### Color roles (marketing)
+### Foundation
 
-| Role | Hex / style |
-|------|-------------|
-| Canvas / bars | Near-black `#050505` / `#0a0a0a` |
-| Primary CTA / nav accents | **Safety Orange `#FF5A00`** |
-| Body on photo | Warm cream `#e7dfd2` |
-| Chips / secondary | `bg-black/60`–`70` + `border-white/10` |
-| **Radius** | **0** on industrial edges; chips/CTAs may use **slight** radius only if matching reference pills — default still **0** for cards/blocks |
+- Button
+- Field / FieldGroup
+- Input / Textarea / Select / ToggleGroup
+- Card
+- Badge
+- Alert
+- Separator
+- Tabs
+- Table
+- Sheet
+- Dialog / AlertDialog
+- DropdownMenu
+- Command
+- Calendar
+- Skeleton
+- Empty
+- Tooltip
+- Breadcrumb
+- Progress
+- Timeline custom composition
+- DataTable custom composition
 
-### Do / don't
+### Contractor-specific compositions
 
-- **Do** use real job photography, orange as *signal*, claim-safe MN ID, three clear CTAs  
-- **Don't** soft-skip orange to white-primary CTAs; don't fake 5-star if unearned; don't light-mode hero; don't emoji  
+- ProofStamp
+- ScopeSummary
+- PreparationChecklist
+- ProjectEvidenceCard
+- PlanningRange
+- NextActionPanel
+- StatusTimeline
+- DocumentApproval
+- PropertyHeader
+- OpportunityStage
+- IntegrationHealthCard
+- AssignmentBoard
 
-### Gap vs current code (as of lock)
+## 9. Forms
 
-| Area | Current | Target |
-|------|---------|--------|
-| Primary CTA | White fill | **Orange fill** |
-| Nav CTAs | White / muted | **Orange pill + orange outline call** |
-| Trust chips | Text-only row | **Badge chips** under subhead |
-| H1 accent | All white | **Single orange word** |
-| Process steps | Below hero border strip | **Overlapping dark cards on hero** |
-| Social proof | Later on page | **Google + MN mark under path** |
+- One decision per step in long intake.
+- Show progress and what remains.
+- Preserve entered values without storing raw PII in browser persistence.
+- Display validation next to the field.
+- Required and optional fields are explicit.
+- File upload explains privacy and accepted types.
+- Submit state clearly distinguishes saved, delivering, delivered, and needs-attention.
+- Every error offers a concrete fallback action.
 
-Implement against this section + the reference PNG. Prefer one pass on `ConversionHeader` + `HomeClient` hero before deeper page restyles.
+## 10. States
 
----
+Every authenticated page and data-driven public component must define:
 
-## 10. Stitch / agent usage
+- loading
+- empty
+- populated
+- partial
+- error
+- offline where relevant
+- permission denied
+- disabled account
+- stale provider
+- success confirmation
 
-When generating screens in Google Stitch or image-to-code:
+## 11. Motion
 
-1. Paste **§1–§7** and **§9** as system design constraints  
-2. Attach `references/frontend-target-hero.png` when available  
-3. Specify surface (marketing | portal | homebase)  
-4. Prefer Safety Orange CTAs on Pitch Canvas; one orange accent in headlines  
+- Use transform and opacity for interface motion.
+- Duration: 120–220ms product; 240–500ms editorial reveal.
+- Respect reduced motion.
+- Motion communicates hierarchy or state; it is not constant decoration.
+- Remotion assets use deterministic frame-based animation and the `remotion-production` skill.
 
-Template copy for new products: `docs/templates/DESIGN.md`.
+## 12. Photography and media
+
+Use:
+
+- real owner and crew
+- real projects
+- real preparation details
+- real property context
+- process documentation
+- verified before/after pairs
+
+Do not publish:
+
+- fabricated jobsite photos
+- altered logos
+- unnamed stock presented as company work
+- AI-generated project evidence
+- fake review portraits
+
+Generated concept media may be used only when clearly decorative and not presented as proof.
+
+## 13. Copy system
+
+- Headline says what the customer gains or understands.
+- Subhead identifies project context and operating area.
+- CTA describes the action, not “Learn more.”
+- Avoid “premium,” “elite,” and “industry-leading” unless the surrounding evidence earns the implication.
+- Explain preparation in normal language.
+- Keep public-sector copy factual and documentation-led.
+- Use customer questions as section headings when useful.
+
+## 14. Accessibility
+
+- WCAG 2.2 AA
+- Visible keyboard focus
+- 44px touch targets
+- Logical heading order
+- Dialog/sheet titles
+- Labels and descriptions for fields
+- Color contrast verified
+- Status is not color-only
+- Reduced motion
+- Alternative text describes evidence, not marketing filler
+- Tables have mobile alternatives or horizontal containment
+
+## 15. Responsive behavior
+
+- Desktop wireframes define information hierarchy, not fixed pixel positions.
+- Mobile preserves the primary action and next action.
+- Dense operator tables become card/row summaries with drill-in sheets.
+- Sticky mobile bottom actions are permitted for call, estimate, approval, and payment.
+- No horizontal page scrolling.
+
+## 16. Design gate
+
+The complete design artifacts are already supplied:
+
+- route inventory
+- information architecture
+- user flows
+- 51 unique page wireframes
+- page-state matrix
+- component inventory
+- marketing application matrix
+- copy/message architecture
+
+Codex may adjust a wireframe only when current code or verified requirements prove a conflict. The change must be logged in `design/DESIGN_CHANGELOG.md` with the affected route, reason, and acceptance evidence.

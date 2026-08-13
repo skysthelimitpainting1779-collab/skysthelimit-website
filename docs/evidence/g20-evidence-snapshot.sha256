@@ -1,0 +1,5 @@
+46be4ca94ae520cf2861bc6491ed71de250915cf395b2928edda4e4d231f5de2  docs/AUTHORIZATION_MATRIX.md
+b9e8c590f05d014bbae064c83250376d3d856067db27237ca7df18df196614ee  docs/evidence/g20-live-source-inventory.json
+af0472d940ee15c18311fbb3fc667698b1b25c914a0f104aa2ebd2dcef9b235d  tests/convex-domain.test.mjs
+768896987b12db66c5809e1f214dbf469c42d76ad825caa34639b5bbd6cdaae0  .agents/goals/_eval/last.json
+768896987b12db66c5809e1f214dbf469c42d76ad825caa34639b5bbd6cdaae0  .agents/goals/ship-sky-s-the-limit-convex-production-operating/verify-last.json

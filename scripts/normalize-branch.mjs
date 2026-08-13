@@ -1,41 +1,39 @@
 #!/usr/bin/env node
 /**
- * Branch name normalization for Agent OS / Git policy.
- *
- * Maps common aliases → allowed prefixes (feat/ fix/ chore/ docs/ infra/ …).
- * In GitHub Actions on pull_request: can rename the head branch via API.
+ * Branch-name normalization for the governed repository policy.
  *
  * Usage:
- *   node scripts/normalize-branch.mjs              # dry report (local or CI)
- *   node scripts/normalize-branch.mjs --apply       # rename via gh when possible
+ *   node scripts/normalize-branch.mjs
+ *   node scripts/normalize-branch.mjs --apply
  *   node scripts/normalize-branch.mjs --json
- *
- * Env (CI):
- *   GITHUB_HEAD_REF, GITHUB_REPOSITORY, GH_TOKEN / GITHUB_TOKEN
- *   BRANCH_NORMALIZE_APPLY=1  same as --apply
  */
 
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
-const ALLOWED = [
-  'feat/',
-  'fix/',
-  'chore/',
-  'docs/',
-  'infra/',
-  'devin/',
-  'agent/',
-  'dependabot/',
+const root = resolve(import.meta.dirname, '..');
+const policy = JSON.parse(
+  readFileSync(resolve(root, 'config/platform-foundation.json'), 'utf8'),
+);
+
+const ALLOWED_PATTERNS = [
+  ...policy.branches.integrationSources,
+  ...policy.branches.releaseSources,
 ];
+const PROTECTED = new Set([
+  ...policy.branches.protected,
+  'master',
+  'production',
+  'prod',
+]);
 
-/** First matching alias wins */
 const ALIASES = [
   [/^feature(s)?[/_-]/i, 'feat/'],
   [/^feat[_-]/i, 'feat/'],
   [/^bugfix[/_-]/i, 'fix/'],
   [/^bug[/_-]/i, 'fix/'],
-  [/^hotfix[/_-]/i, 'fix/'],
+  [/^hotfix[/_-]/i, 'hotfix/'],
   [/^patch[/_-]/i, 'fix/'],
   [/^fixes?[/_-]/i, 'fix/'],
   [/^documentation[/_-]/i, 'docs/'],
@@ -49,14 +47,22 @@ const ALIASES = [
   [/^chore[_-]/i, 'chore/'],
   [/^release[/_-]/i, 'chore/'],
   [/^maint(enance)?[/_-]/i, 'chore/'],
-  [/^refactor[/_-]/i, 'chore/'],
-  [/^test(s|ing)?[/_-]/i, 'chore/'],
+  [/^refactor[/_-]/i, 'refactor/'],
+  [/^test(s|ing)?[/_-]/i, 'test/'],
   [/^wip[/_-]/i, 'chore/'],
   [/^agent[_-]/i, 'agent/'],
   [/^devin[_-]/i, 'devin/'],
+  [/^dependabot[_-]/i, 'dependabot/'],
+  [/^renovate[_-]/i, 'renovate/'],
 ];
 
-const PROTECTED = new Set(['main', 'staging', 'master', 'production', 'prod']);
+function matchesPattern(branch, pattern) {
+  if (pattern.endsWith('/*')) {
+    const prefix = pattern.slice(0, -1);
+    return branch.startsWith(prefix) && branch.length > prefix.length;
+  }
+  return branch === pattern;
+}
 
 function parseArgs(argv) {
   return {
@@ -67,6 +73,7 @@ function parseArgs(argv) {
 
 function git(args) {
   return execFileSync('git', args, {
+    cwd: root,
     encoding: 'utf8',
     stdio: ['ignore', 'pipe', 'pipe'],
     windowsHide: true,
@@ -75,7 +82,10 @@ function git(args) {
 
 function currentBranch() {
   if (process.env.GITHUB_HEAD_REF) return process.env.GITHUB_HEAD_REF;
-  if (process.env.GITHUB_REF_NAME && process.env.GITHUB_EVENT_NAME !== 'pull_request') {
+  if (
+    process.env.GITHUB_REF_NAME &&
+    process.env.GITHUB_EVENT_NAME !== 'pull_request'
+  ) {
     return process.env.GITHUB_REF_NAME;
   }
   try {
@@ -87,24 +97,23 @@ function currentBranch() {
 
 function isAllowed(name) {
   if (!name || PROTECTED.has(name)) return true;
-  if (name.startsWith('entire/')) return true; // Vercel ignoreCommand branches
-  return ALLOWED.some((p) => name.startsWith(p));
+  if (name.startsWith('entire/')) return true;
+  return ALLOWED_PATTERNS.some((pattern) => matchesPattern(name, pattern));
 }
 
 function slugTail(raw) {
-  return String(raw)
-    .replace(/^\/+/, '')
-    .toLowerCase()
-    .replace(/[^a-z0-9/_-]+/g, '-')
-    .replace(/\/+/g, '/')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '')
-    .slice(0, 80) || 'work';
+  return (
+    String(raw)
+      .replace(/^\/+/, '')
+      .toLowerCase()
+      .replace(/[^a-z0-9/_-]+/g, '-')
+      .replace(/\/+/g, '/')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '')
+      .slice(0, 80) || 'work'
+  );
 }
 
-/**
- * @returns {{ ok: boolean, original: string, normalized: string|null, action: string, reason: string }}
- */
 export function planNormalization(branch) {
   const original = String(branch || '').trim();
   if (!original) {
@@ -135,42 +144,39 @@ export function planNormalization(branch) {
     };
   }
 
-  for (const [re, prefix] of ALIASES) {
-    if (re.test(original)) {
-      const rest = original.replace(re, '');
-      const normalized = `${prefix}${slugTail(rest)}`;
+  for (const [pattern, prefix] of ALIASES) {
+    if (pattern.test(original)) {
+      const rest = original.replace(pattern, '');
       return {
         ok: false,
         original,
-        normalized,
+        normalized: `${prefix}${slugTail(rest)}`,
         action: 'rename',
-        reason: `map ${re} → ${prefix}`,
+        reason: `map ${pattern} -> ${prefix}`,
       };
     }
   }
 
-  // No slash / unknown prefix → feat/<slug>
   const cleaned = original.includes('/')
     ? original.split('/').slice(1).join('/') || original
     : original;
-  const normalized = `feat/${slugTail(cleaned)}`;
   return {
     ok: false,
     original,
-    normalized,
+    normalized: `feat/${slugTail(cleaned)}`,
     action: 'rename',
     reason: 'default to feat/',
   };
 }
 
 function renameBranchOnGitHub(oldName, newName) {
-  const repo = process.env.GITHUB_REPOSITORY;
+  const repository = process.env.GITHUB_REPOSITORY;
   const token = process.env.GH_TOKEN || process.env.GITHUB_TOKEN;
-  if (!repo || !token) {
-    throw new Error('GITHUB_REPOSITORY and GH_TOKEN/GITHUB_TOKEN required to rename');
+  if (!repository || !token) {
+    throw new Error('GITHUB_REPOSITORY and GH_TOKEN/GITHUB_TOKEN are required');
   }
-  // gh encodes path segments; pass branch as-is in API path
-  const res = execFileSync(
+
+  const response = execFileSync(
     'gh',
     [
       'api',
@@ -178,7 +184,7 @@ function renameBranchOnGitHub(oldName, newName) {
       'POST',
       '-H',
       'Accept: application/vnd.github+json',
-      `repos/${repo}/branches/${encodeURIComponent(oldName)}/rename`,
+      `repos/${repository}/branches/${encodeURIComponent(oldName)}/rename`,
       '-f',
       `new_name=${newName}`,
     ],
@@ -186,13 +192,14 @@ function renameBranchOnGitHub(oldName, newName) {
       encoding: 'utf8',
       windowsHide: true,
       env: { ...process.env, GH_TOKEN: token, GITHUB_TOKEN: token },
-    }
+    },
   );
+
   let body;
   try {
-    body = JSON.parse(res);
+    body = JSON.parse(response);
   } catch {
-    body = { raw: res };
+    body = { raw: response };
   }
   if (body.message && !body.name && !body.ref) {
     throw new Error(`GitHub rename failed: ${body.message}`);
@@ -201,11 +208,10 @@ function renameBranchOnGitHub(oldName, newName) {
 }
 
 function main() {
-  const opts = parseArgs(process.argv.slice(2));
-  const branch = currentBranch();
-  const plan = planNormalization(branch);
+  const options = parseArgs(process.argv.slice(2));
+  const plan = planNormalization(currentBranch());
 
-  if (opts.json) {
+  if (options.json) {
     console.log(JSON.stringify(plan, null, 2));
   } else {
     console.log(`[branch-normalize] current: ${plan.original}`);
@@ -215,31 +221,28 @@ function main() {
     }
   }
 
-  if (plan.action === 'rename' && opts.apply) {
+  if (plan.action === 'rename' && options.apply) {
     if (process.env.GITHUB_ACTIONS !== 'true') {
-      console.error('[branch-normalize] --apply in CI only renames via GitHub API. Locally run:');
-      console.error(`  git branch -m ${plan.normalized}`);
-      console.error(`  git push -u origin ${plan.normalized}`);
-      console.error(`  git push origin --delete ${plan.original}  # optional`);
+      console.error('[branch-normalize] --apply renames through GitHub only in CI.');
+      console.error(`Locally run: git branch -m ${plan.normalized}`);
       process.exit(2);
     }
     try {
       const result = renameBranchOnGitHub(plan.original, plan.normalized);
       console.log(
-        `[branch-normalize] renamed on GitHub: ${plan.original} → ${plan.normalized}`
+        `[branch-normalize] renamed on GitHub: ${plan.original} -> ${plan.normalized}`,
       );
-      if (!opts.json) console.log(JSON.stringify({ renamed: true, result: result.name || true }));
+      if (!options.json) {
+        console.log(JSON.stringify({ renamed: true, result: result.name || true }));
+      }
       process.exit(0);
-    } catch (err) {
-      console.error(`[branch-normalize] rename failed: ${err.message}`);
+    } catch (error) {
+      console.error(`[branch-normalize] rename failed: ${error.message}`);
       process.exit(1);
     }
   }
 
-  // Exit codes: 0 = ok/skip, 3 = needs rename (for CI gate without apply)
-  if (plan.action === 'rename' && !opts.apply) {
-    process.exit(3);
-  }
+  if (plan.action === 'rename' && !options.apply) process.exit(3);
   if (plan.action === 'error') process.exit(1);
   process.exit(0);
 }

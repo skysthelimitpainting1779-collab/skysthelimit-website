@@ -1,21 +1,33 @@
 {
-  "ok": false,
-  "at": "2026-07-10T17:18:14.996Z",
+  "ok": true,
+  "at": "2026-07-27T23:20:32.354Z",
   "results": [
+    {
+      "name": "context7",
+      "pass": true,
+      "status": 0,
+      "tail": "[context7] contract evidence valid: C:\\Users\\Johnny Cage\\DEV\\skys-limit-worktrees\\agent-skys-limit-convex-os\\.agents\\goals\\ship-sky-s-the-limit-convex-production-operating\\research.md\n"
+    },
     {
       "name": "lint",
       "pass": true,
       "status": 0,
-      "tail": "[Git Guard] Running Git standards compliance check...\n[Git Guard] Branch: \"infra/fix-ci-cd-pipeline-end-to-end\"\n\u001b[32m[Git Guard] Branch name OK.\u001b[0m\n[Git Guard] Checking: \"feat(agent-os): active prevention, learning control plane, and CI/ontology hardening\"\n\u001b[32m[Git Guard] Commit message OK.\u001b[0m\n[verify-react-versions] OK — react and react-dom are pinned to identical versions\n"
+      "tail": "replaced by CRLF the next time Git touches it\nwarning: in the working copy of '.learnings/ERRORS.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of '.learnings/ERRORS_INDEX.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of '.learnings/index.json', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'DESIGN.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'package.json', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'src/components/ConversionHeader.tsx', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'src/components/LeadForm.tsx', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'src/components/ui/badge.tsx', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'src/components/ui/button.tsx', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'src/views/Refer.tsx', LF will be replaced by CRLF the next time Git touches it\n"
     },
     {
       "name": "test",
-      "pass": false,
-      "status": 1,
-      "tail": "[#FF5A00] text-white p-4 text-sm font-bold flex items-center justify-center gap-2 hover:bg-[#ff7a33] transition-colors disabled:opacity-50 mt-2 shimmer-cta\">\n                           {status === 'submitting' ? <Loader2 className=\"animate-spin\" size={16} /> : 'Lock In Estimate'}\n                         </motion.button>\n                       </form>\n                     </motion.div>\n                   )}\n                 </AnimatePresence>\n              </div>\n    \n            </div>\n          </section>\n        </PageTransition>\n      );\n    }\n    \n  operator: 'match'\n  stack: |-\n    TestContext.<anonymous> (file:///C:/Users/Johnny%20Cage/DEV/skysthelimit-collab/tests/site-architecture.test.mjs:154:10)\n    Test.runInAsyncScope (node:async_hooks:214:14)\n    Test.run (node:internal/test_runner/test:1047:25)\n    Test.processPendingSubtests (node:internal/test_runner/test:744:18)\n    Test.postRun (node:internal/test_runner/test:1173:19)\n    Test.run (node:internal/test_runner/test:1101:12)\n    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)\n  ...\n1..101\n# tests 299\n# suites 22\n# pass 281\n# fail 18\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 18179.7881\n"
+      "pass": true,
+      "status": 0,
+      "tail": "ion cannot render protected children (1.5403ms)\n✔ public API route files remain outside presentation route groups (1.1319ms)\n✔ CSP permits only the Clerk and Convex browser endpoints needed by protected surfaces (0.6805ms)\n✔ top-level routes use the three-market architecture in Next.js filesystem routing (6.8541ms)\n✔ primary navigation leads with residential, commercial, and public sector (0.8198ms)\n✔ homepage states the approved positioning and avoids forbidden claims (1.3268ms)\n✔ remediation guardrails cover secrets, headers, App Router SEO, and accessible interactions (9.0697ms)\n✔ local SEO and service landing pages are routable and listed in the sitemap (8.3953ms)\n✔ M2 compliance and contractor registration statements are correctly set (4.8757ms)\n✔ all execution nodes resolve to installed primary and declared supporting skills (126.9648ms)\n✔ declares the approved web and integrations Vercel Services topology (6.4028ms)\n✔ binds web to integrations without exposing the integrations service publicly (4.7476ms)\n✔ integrations service exports a minimal Hono application (0.6801ms)\nℹ tests 390\nℹ suites 23\nℹ pass 390\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 12027.3379\n"
+    },
+    {
+      "name": "build",
+      "pass": true,
+      "status": 0,
+      "tail": "                            15m      1y\n├ ○ /public-sector\n├ ○ /refer\n├ ○ /residential\n├ ○ /review\n├ ○ /robots.txt\n├ ○ /service-area\n├ ◐ /service-areas/[slug]                        15m      1y\n│ ├ /service-areas/[slug]                        15m      1y\n│ ├ /service-areas/inver-grove-heights           15m      1y\n│ ├ /service-areas/south-st-paul                 15m      1y\n│ └ [+5 more paths]\n└ ƒ /sitemap.xml\n\n\nƒ Proxy (Middleware)\n\n○  (Static)             prerendered as static content\n◐  (Partial Prerender)  prerendered as static HTML with dynamic server-streamed content\nƒ  (Dynamic)            server-rendered on demand\n\n◇ injected env (0) from .env // tip: ⌘ custom filepath { path: '/custom/path/.env' }\n◇ injected env (4) from .env.local // tip: ⌘ enable debugging { debug: true }\nGenerating sitemap and robots.txt dynamically...\nSitemap written to: C:\\Users\\Johnny Cage\\DEV\\skys-limit-worktrees\\agent-skys-limit-convex-os\\public\\sitemap.xml\nRobots.txt written to: C:\\Users\\Johnny Cage\\DEV\\skys-limit-worktrees\\agent-skys-limit-convex-os\\public\\robots.txt\nSitemap and robots.txt generated successfully!\nSupabase environment variables not found. Generating sitemap using static defaults.\n"
     }
   ],
-  "goal": "guapo-upgrade-campaign",
-  "graders": "deterministic (lint, test)",
+  "goal": "ship-sky-s-the-limit-convex-production-operating",
+  "graders": "deterministic (lint, test, build)",
   "note": "Anthropic: prefer code graders over self-assessment"
 }

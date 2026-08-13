@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Star, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { trackEvent } from '../lib/analytics';
 import { createClient } from '../lib/supabase/client';
 
@@ -51,6 +51,7 @@ const FALLBACK_TESTIMONIALS: Testimonial[] = [
 ];
 
 export default function ReviewCarousel() {
+  const prefersReducedMotion = useReducedMotion();
   const [testimonials, setTestimonials] = useState<Testimonial[]>(FALLBACK_TESTIMONIALS);
   const [activeIndex, setActiveIndex] = useState(0);
   const [direction, setDirection] = useState<'left' | 'right'>('right');
@@ -103,11 +104,13 @@ export default function ReviewCarousel() {
   }, [testimonials]);
 
   useEffect(() => {
+    if (prefersReducedMotion) return;
+
     const timer = setInterval(() => {
       handleNext(true); // auto-play
     }, 8000);
     return () => clearInterval(timer);
-  }, [activeIndex, testimonials]);
+  }, [activeIndex, testimonials, prefersReducedMotion]);
 
   const handlePrev = () => {
     setDirection('left');
@@ -127,24 +130,28 @@ export default function ReviewCarousel() {
 
   const slideVariants = {
     enter: (dir: 'left' | 'right') => ({
-      x: dir === 'right' ? 80 : -80,
-      opacity: 0,
+      x: prefersReducedMotion ? 0 : dir === 'right' ? 80 : -80,
+      opacity: prefersReducedMotion ? 1 : 0,
     }),
     center: {
       x: 0,
       opacity: 1,
-      transition: {
-        x: { type: 'spring' as const, stiffness: 300, damping: 30 },
-        opacity: { duration: 0.2 },
-      },
+      transition: prefersReducedMotion
+        ? { duration: 0 }
+        : {
+            x: { type: 'spring' as const, stiffness: 300, damping: 30 },
+            opacity: { duration: 0.2 },
+          },
     },
     exit: (dir: 'left' | 'right') => ({
-      x: dir === 'right' ? -80 : 80,
-      opacity: 0,
-      transition: {
-        x: { type: 'spring' as const, stiffness: 300, damping: 30 },
-        opacity: { duration: 0.2 },
-      },
+      x: prefersReducedMotion ? 0 : dir === 'right' ? -80 : 80,
+      opacity: prefersReducedMotion ? 1 : 0,
+      transition: prefersReducedMotion
+        ? { duration: 0 }
+        : {
+            x: { type: 'spring' as const, stiffness: 300, damping: 30 },
+            opacity: { duration: 0.2 },
+          },
     }),
   };
 

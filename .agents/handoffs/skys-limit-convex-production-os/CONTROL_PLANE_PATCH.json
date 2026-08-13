@@ -1,0 +1,67 @@
+{
+  "packageScriptsToExposeWhenTargetExists": {
+    "goal": "node scripts/goal.mjs",
+    "goal:verify": "node scripts/goal.mjs verify",
+    "ship:eval": "node scripts/ship-eval.mjs",
+    "ship:improve": "node scripts/ship-improve.mjs",
+    "graph:status": "node scripts/graph-context.mjs status",
+    "graph:query": "node scripts/graph-context.mjs query",
+    "graph:path": "node scripts/graph-context.mjs path",
+    "graph:explain": "node scripts/graph-context.mjs explain",
+    "graph:update": "node scripts/graph-context.mjs update",
+    "graph:wiki": "node scripts/graph-context.mjs wiki",
+    "host:compile": "node scripts/compile-host-native.mjs"
+  },
+  "codexEconomyDefaults": {
+    "defaultModelClass": "balanced",
+    "defaultReasoning": "low",
+    "verbosity": "low",
+    "fastMode": false,
+    "maxConcurrentWriters": 1,
+    "absoluteMaxConcurrentWriters": 2,
+    "maxReadOnlySubagents": 2,
+    "projectInstructionBudgetBytes": 16384
+  },
+  "requiredArchitectureGuard": [
+    "Convex operational backend",
+    "Clerk identity",
+    "Convex authorization",
+    "Legacy systems migration-only",
+    "Private customer files",
+    "No raw PII browser persistence"
+  ],
+  "note": "Codex must inspect the current files before applying these changes and preserve any user work.",
+  "branchAndWorktree": {
+    "schemaVersion": "1.0.0",
+    "mandatory": true,
+    "auditedCommit": "c7e94605eefdace7a76ce5145808478df8503dbb",
+    "baseRef": "origin/main",
+    "integrationBranchBase": "agent/skys-limit-convex-os",
+    "integrationWorktreeDirectoryBase": "skys-limit-worktrees/skys-limit-convex-os",
+    "rules": [
+      "Fetch origin/main before selecting the base.",
+      "Create a new integration branch and separate worktree before any repository modification.",
+      "Never switch, edit, commit, merge, or push from the main worktree.",
+      "If the audited commit is an ancestor of origin/main, perform a targeted delta audit from the audited commit to origin/main.",
+      "If the audited commit is not an ancestor, stop product implementation and report that the repository map requires revalidation.",
+      "Use the first available integration branch name: agent/skys-limit-convex-os, then -2, -3, and so on.",
+      "Use at most two worker worktrees concurrently, created from the current integration branch.",
+      "Worker branches must have disjoint file/resource locks.",
+      "Integrate verified worker commits into the integration branch, then rerun the batch gate.",
+      "Open one PR from the integration branch to main after all permitted gates pass."
+    ],
+    "workerBranchExamples": [
+      "agent/stl-b10-revenue",
+      "agent/stl-b10-security",
+      "agent/stl-b20-convex",
+      "agent/stl-b20-auth"
+    ]
+  },
+  "graphEngineerRuntime": {
+    "mode": "compiled_artifacts_only",
+    "compiledGraph": "compiled/.graph/graph.json",
+    "installSkill": false,
+    "rerunSkill": false,
+    "recompileOnlyOnStructuralInvalidation": true
+  }
+}

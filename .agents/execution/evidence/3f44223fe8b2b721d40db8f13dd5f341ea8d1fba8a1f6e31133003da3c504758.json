@@ -1,0 +1,67 @@
+{
+  "baseHeadSha": "1693afff2c3e44f08baa5debf87ba81238227cc2",
+  "checkpointId": "cp-20260729-stl204-prepush-001",
+  "checkpointPurpose": "Bounded STL-204 entry checkpoint that repairs the pre-push lifecycle gate before CRM implementation begins.",
+  "completedStage": "stage:STL-204:verify_worktree",
+  "graphSha256": "4f6a7d81e9c46ecbf886703fcf03988dd317115f9577152aa7ac09bd5ec532c9",
+  "issueDecision": {
+    "action": "none",
+    "reason": "Draft PR 169 and the audited STL-204 node already track this prerequisite."
+  },
+  "nodeId": "STL-204",
+  "productionMutationAuthorized": false,
+  "programId": "stl-post-g20-sequential-tdd-v1",
+  "reviewAudit": [
+    {
+      "reviewer": "Galileo",
+      "status": "Final bounded closure review clean; exact receipt, base head, tree, ordered parents, merge base, remote history, and gate composition verified.",
+      "taskId": "019faf69-7e58-76a0-8ed5-a27cb39aef7e"
+    },
+    {
+      "reviewer": "Herschel",
+      "status": "Final independent bounded closure review clean with no remaining P1 or P2 code findings; staged evidence command wording repaired.",
+      "taskId": "019faf69-8224-7b22-91b6-89c1b05fa804"
+    }
+  ],
+  "reviews": [
+    {
+      "reviewer": "Galileo",
+      "status": "approved"
+    },
+    {
+      "reviewer": "Herschel",
+      "status": "approved"
+    }
+  ],
+  "schemaVersion": 1,
+  "tdd": {
+    "green": "The one-time reconciliation is bound to one full merge SHA, tree, receipt digest, receipt base head, ordered parents, exact merge base, remote tip, ref, and count. Per-commit path checks, exact push-old-SHA binding, and independent lifecycle/SQLite stop behavior pass.",
+    "red": "A normal push exposed the categorical merge rejection. Adversarial tests then reproduced generic receipt reuse, altered tree/base/ref/count, side history, nested merges, abbreviated policies, transient forbidden files, and independent gate failures."
+  },
+  "verification": [
+    {
+      "command": "node --test tests/development-lifecycle.test.mjs",
+      "result": "15/15",
+      "status": "passed"
+    },
+    {
+      "command": "npm test",
+      "result": "530/530",
+      "status": "passed"
+    },
+    {
+      "command": "npm run lint",
+      "result": "design, architecture, Git, React, and TypeScript checks",
+      "status": "passed"
+    },
+    {
+      "command": "npm run lifecycle:verify -- --head 1693afff2c3e44f08baa5debf87ba81238227cc2 --json",
+      "result": "11 governed commits, one exact reconciliation, 222 per-commit paths",
+      "status": "passed"
+    },
+    {
+      "command": "git diff --cached --check",
+      "status": "passed"
+    }
+  ]
+}

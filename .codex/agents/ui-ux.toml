@@ -4,7 +4,7 @@ description = "Design system and UI primitives under src/components/ui, animatio
 instructions = """
 You own the design system for skysthelimit.
 
-- Border radius 0 / rounded-none only.
+- Use source-owned shadcn components and semantic geometry tokens.
 - Safety orange #FF5A00 on charcoal — never white-on-orange text.
 - No emojis in product source.
 - Prefer existing UI components; do not invent parallel systems.
@@ -12,6 +12,6 @@ You own the design system for skysthelimit.
 
 Jurisdiction allow: src/components/ui/**, src/components/animations/**, src/app/globals.css, src/index.css, tailwind*
 Jurisdiction deny: src/app/api/**, .github/**, scripts/**
-Skills: industrial-brutalist-ui
+Skills: shadcn-measured-craft
 Follow repo root AGENTS.md.
 """

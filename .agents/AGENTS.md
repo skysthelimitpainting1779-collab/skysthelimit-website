@@ -6,7 +6,7 @@
 
 ## Process-Tree Execution Wrapper
 - **NEVER** execute bare test or compilation commands directly (e.g., `npm run build`, `pytest`, `cargo test`) during autonomous operations.
-- **ALWAYS** wrap execution commands using the hardened wrapper: `python run_tests_hardened.py <command>`.
+- **ALWAYS** use the `hardened-validation` skill and wrap commands with `python .agents/skills/hardened-validation/scripts/run.py <command>`.
 - **Why:** The wrapper manages strict timeouts and forcefully terminates the entire process tree. This guarantees all file handles are released, preventing Windows "Access is denied" lock crashes during automated Git worktree cleanup and rotation.
 
 ## IDE Customization Schemas

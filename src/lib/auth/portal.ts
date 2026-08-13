@@ -8,6 +8,26 @@ export type PortalUser = {
   email: string;
 };
 
+export type StaffRole = 'staff' | 'admin' | 'owner';
+
+export type StaffGateResult =
+  | { authorized: true; role: StaffRole }
+  | { authorized: false; reason: 'no_session' | 'disabled' | 'role_denied' };
+
+export function gateStaffAccess(
+  user:
+    | { id?: string | null; email?: string | null; role?: string | null; disabled?: boolean }
+    | null
+    | undefined,
+): StaffGateResult {
+  if (!user?.id) return { authorized: false, reason: 'no_session' };
+  if (user.disabled) return { authorized: false, reason: 'disabled' };
+  if (!['staff', 'admin', 'owner'].includes(user.role || '')) {
+    return { authorized: false, reason: 'role_denied' };
+  }
+  return { authorized: true, role: user.role as StaffRole };
+}
+
 export type AuthGateResult =
   | { authenticated: true; user: PortalUser }
   | { authenticated: false; reason: 'no_session' | 'no_email'; loginPath: string };
@@ -60,8 +80,15 @@ export function isProtectedPortalPath(pathname: string): boolean {
   return true;
 }
 
+export function isProtectedStaffPath(pathname: string): boolean {
+  const path = pathname.split('?')[0] || '';
+  return path === '/manage' || path.startsWith('/manage/');
+}
+
 export function portalLoginUrl(nextPath?: string): string {
-  if (!nextPath || !nextPath.startsWith('/portal')) return DEFAULT_LOGIN;
+  if (!nextPath || (!nextPath.startsWith('/portal') && !nextPath.startsWith('/manage'))) {
+    return DEFAULT_LOGIN;
+  }
   return `${DEFAULT_LOGIN}?next=${encodeURIComponent(nextPath)}`;
 }
 

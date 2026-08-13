@@ -1,0 +1,3172 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-07-27T12:55:28+00:00",
+  "templates": [
+    {
+      "id": "P01",
+      "name": "Homepage",
+      "surface": "public",
+      "routes": [
+        "/"
+      ],
+      "purpose": "Route visitors into the correct market or estimate path while establishing trust immediately.",
+      "audience": [
+        "homeowner",
+        "property operator",
+        "facility buyer"
+      ],
+      "primaryAction": "Check project range",
+      "secondaryActions": [
+        "Call Anthony",
+        "View real projects"
+      ],
+      "desktopRegions": [
+        "utility bar + navigation",
+        "full-bleed proof hero",
+        "trust facts",
+        "market selector",
+        "prep/process story",
+        "project evidence",
+        "objection answers",
+        "service-area proof",
+        "final CTA"
+      ],
+      "mobileOrder": [
+        "navigation",
+        "hero copy",
+        "primary CTA",
+        "trust facts",
+        "market selector",
+        "proof",
+        "process",
+        "FAQ",
+        "sticky call/estimate"
+      ],
+      "states": [
+        "default",
+        "loading-proof",
+        "no-proof",
+        "form-error",
+        "offline-fallback"
+      ],
+      "components": [
+        "ConversionHeader",
+        "Button",
+        "ProofStamp",
+        "MarketPath",
+        "ProjectEvidenceCard",
+        "Accordion",
+        "ConversionFooter"
+      ],
+      "marketingSkills": [
+        "product-marketing",
+        "cro",
+        "copywriting",
+        "marketing-psychology",
+        "offers",
+        "analytics"
+      ],
+      "analyticsEvents": [
+        "home_view",
+        "market_path_select",
+        "planning_range_click",
+        "call_click",
+        "project_proof_open"
+      ],
+      "serverClientBoundary": "Server Component page; client islands only for navigation, media controls, analytics, and interactive proof.",
+      "notes": "Do not lead with generic company history."
+    },
+    {
+      "id": "P02",
+      "name": "Market Landing",
+      "surface": "public",
+      "routes": [
+        "/residential",
+        "/commercial",
+        "/public-sector"
+      ],
+      "purpose": "Explain fit, constraints, proof, and next step for one market.",
+      "audience": [
+        "market-specific prospect"
+      ],
+      "primaryAction": "Start market-specific scope review",
+      "secondaryActions": [
+        "View projects",
+        "Call"
+      ],
+      "desktopRegions": [
+        "market hero",
+        "fit/not-fit",
+        "capability scope",
+        "preparation/process",
+        "market proof",
+        "FAQs",
+        "CTA"
+      ],
+      "mobileOrder": [
+        "hero",
+        "CTA",
+        "fit",
+        "scope",
+        "proof",
+        "process",
+        "FAQ"
+      ],
+      "states": [
+        "default",
+        "loading-proof",
+        "no-proof",
+        "form-error",
+        "offline-fallback"
+      ],
+      "components": [
+        "MarketHero",
+        "ScopeMatrix",
+        "PreparationChecklist",
+        "ProjectEvidenceCard",
+        "Accordion"
+      ],
+      "marketingSkills": [
+        "product-marketing",
+        "cro",
+        "copywriting",
+        "offers",
+        "sales-enablement",
+        "seo-audit",
+        "schema"
+      ],
+      "analyticsEvents": [
+        "market_view",
+        "market_scope_start",
+        "market_project_open"
+      ],
+      "serverClientBoundary": "Server Component with evidence and FAQ data from published Convex content.",
+      "notes": ""
+    },
+    {
+      "id": "P03",
+      "name": "Service Detail",
+      "surface": "public",
+      "routes": [
+        "/painting-services/[slug]"
+      ],
+      "purpose": "Answer service-specific questions and convert relevant visitors without thin SEO duplication.",
+      "audience": [
+        "prospect searching for a named service"
+      ],
+      "primaryAction": "Check service fit",
+      "secondaryActions": [
+        "See related work",
+        "Call"
+      ],
+      "desktopRegions": [
+        "breadcrumb + service hero",
+        "when this service fits",
+        "scope inclusions",
+        "prep details",
+        "proof",
+        "related services/areas",
+        "FAQ",
+        "CTA"
+      ],
+      "mobileOrder": [
+        "breadcrumb",
+        "hero",
+        "CTA",
+        "fit",
+        "scope",
+        "proof",
+        "FAQ",
+        "related"
+      ],
+      "states": [
+        "default",
+        "loading-proof",
+        "no-proof",
+        "form-error",
+        "offline-fallback"
+      ],
+      "components": [
+        "Breadcrumb",
+        "ServiceHero",
+        "ScopeSummary",
+        "PreparationChecklist",
+        "ProjectEvidenceCard",
+        "RelatedLinks"
+      ],
+      "marketingSkills": [
+        "copywriting",
+        "cro",
+        "programmatic-seo",
+        "ai-seo",
+        "schema",
+        "seo-audit"
+      ],
+      "analyticsEvents": [
+        "service_view",
+        "service_scope_start",
+        "related_service_click"
+      ],
+      "serverClientBoundary": "Server Component. Route registry and published content determine existence.",
+      "notes": ""
+    },
+    {
+      "id": "P04",
+      "name": "Service Area Hub",
+      "surface": "public",
+      "routes": [
+        "/service-area"
+      ],
+      "purpose": "Show credible coverage and help visitors find their location path.",
+      "audience": [
+        "Twin Cities prospect"
+      ],
+      "primaryAction": "Find local coverage",
+      "secondaryActions": [
+        "Start estimate"
+      ],
+      "desktopRegions": [
+        "coverage hero",
+        "map/list",
+        "coverage policy",
+        "featured locations",
+        "service links",
+        "CTA"
+      ],
+      "mobileOrder": [
+        "hero",
+        "search/list",
+        "coverage policy",
+        "featured",
+        "CTA"
+      ],
+      "states": [
+        "default",
+        "loading-proof",
+        "no-proof",
+        "form-error",
+        "offline-fallback"
+      ],
+      "components": [
+        "ServiceAreaMap",
+        "Command",
+        "LocationCard",
+        "Alert"
+      ],
+      "marketingSkills": [
+        "site-architecture",
+        "programmatic-seo",
+        "seo-audit",
+        "copywriting"
+      ],
+      "analyticsEvents": [
+        "service_area_view",
+        "location_select"
+      ],
+      "serverClientBoundary": "Server page with optional client search/map island.",
+      "notes": ""
+    },
+    {
+      "id": "P05",
+      "name": "Location Detail",
+      "surface": "public",
+      "routes": [
+        "/service-areas/[slug]"
+      ],
+      "purpose": "Connect local relevance to real scope and proof without doorway-page duplication.",
+      "audience": [
+        "prospect in a named location"
+      ],
+      "primaryAction": "Request local estimate",
+      "secondaryActions": [
+        "View nearby work"
+      ],
+      "desktopRegions": [
+        "breadcrumb + local hero",
+        "coverage facts",
+        "relevant services",
+        "nearby proof",
+        "process",
+        "local FAQs",
+        "CTA"
+      ],
+      "mobileOrder": [
+        "breadcrumb",
+        "hero",
+        "CTA",
+        "services",
+        "proof",
+        "process",
+        "FAQ"
+      ],
+      "states": [
+        "default",
+        "loading-proof",
+        "no-proof",
+        "form-error",
+        "offline-fallback"
+      ],
+      "components": [
+        "LocationHero",
+        "CoverageFacts",
+        "ServiceLinks",
+        "ProjectEvidenceCard",
+        "Accordion"
+      ],
+      "marketingSkills": [
+        "programmatic-seo",
+        "ai-seo",
+        "schema",
+        "seo-audit",
+        "copywriting"
+      ],
+      "analyticsEvents": [
+        "location_view",
+        "local_estimate_start",
+        "nearby_project_open"
+      ],
+      "serverClientBoundary": "Server Component; local proof appears only when a verified project/location relationship exists.",
+      "notes": ""
+    },
+    {
+      "id": "P06",
+      "name": "Projects Index",
+      "surface": "public",
+      "routes": [
+        "/projects"
+      ],
+      "purpose": "Present verified work as evidence and allow filtering by market/service/location.",
+      "audience": [
+        "all prospects"
+      ],
+      "primaryAction": "View verified work",
+      "secondaryActions": [
+        "Request similar scope"
+      ],
+      "desktopRegions": [
+        "projects hero",
+        "filter controls",
+        "featured project",
+        "project grid",
+        "proof policy",
+        "CTA"
+      ],
+      "mobileOrder": [
+        "hero",
+        "featured",
+        "filters",
+        "grid",
+        "CTA"
+      ],
+      "states": [
+        "default",
+        "loading-proof",
+        "no-proof",
+        "form-error",
+        "offline-fallback",
+        "empty-filter"
+      ],
+      "components": [
+        "ProjectFilter",
+        "ProjectEvidenceCard",
+        "Empty",
+        "Badge"
+      ],
+      "marketingSkills": [
+        "cro",
+        "copywriting",
+        "customer-research",
+        "image",
+        "video"
+      ],
+      "analyticsEvents": [
+        "projects_view",
+        "project_filter",
+        "project_open"
+      ],
+      "serverClientBoundary": "Server-render initial projects; client filter island uses published DTOs.",
+      "notes": ""
+    },
+    {
+      "id": "P07",
+      "name": "Project Detail",
+      "surface": "public",
+      "routes": [
+        "/projects/[slug]"
+      ],
+      "purpose": "Show a source-backed challenge, preparation, execution, and result.",
+      "audience": [
+        "prospect evaluating evidence"
+      ],
+      "primaryAction": "Request similar scope",
+      "secondaryActions": [
+        "View related service",
+        "View location"
+      ],
+      "desktopRegions": [
+        "breadcrumb",
+        "project title/facts",
+        "before/after media",
+        "challenge",
+        "prep",
+        "execution",
+        "result",
+        "related proof",
+        "CTA"
+      ],
+      "mobileOrder": [
+        "breadcrumb",
+        "facts",
+        "media",
+        "CTA",
+        "challenge",
+        "prep",
+        "result",
+        "related"
+      ],
+      "states": [
+        "default",
+        "loading-proof",
+        "no-proof",
+        "form-error",
+        "offline-fallback",
+        "media-unavailable"
+      ],
+      "components": [
+        "BeforeAfter",
+        "ProofStamp",
+        "PreparationChecklist",
+        "MediaGallery",
+        "JsonLd"
+      ],
+      "marketingSkills": [
+        "copywriting",
+        "copy-editing",
+        "image",
+        "video",
+        "schema",
+        "cro"
+      ],
+      "analyticsEvents": [
+        "project_detail_view",
+        "before_after_interact",
+        "similar_scope_start"
+      ],
+      "serverClientBoundary": "Server Component; interactive media only as client island. No generated image is project proof.",
+      "notes": ""
+    },
+    {
+      "id": "P08",
+      "name": "Estimate Wizard",
+      "surface": "public",
+      "routes": [
+        "/estimate"
+      ],
+      "purpose": "Collect a qualified scope with minimum friction and provide an honest planning range.",
+      "audience": [
+        "ready prospect"
+      ],
+      "primaryAction": "Submit scope",
+      "secondaryActions": [
+        "Save/resume",
+        "Call"
+      ],
+      "desktopRegions": [
+        "progress header",
+        "question region",
+        "context/help rail",
+        "range summary",
+        "contact/files",
+        "privacy/next step",
+        "confirmation"
+      ],
+      "mobileOrder": [
+        "progress",
+        "question",
+        "help",
+        "range",
+        "contact",
+        "files",
+        "submit",
+        "confirmation"
+      ],
+      "states": [
+        "start",
+        "step-valid",
+        "step-invalid",
+        "uploading",
+        "saved-draft",
+        "submitting",
+        "saved-delivery-pending",
+        "success",
+        "delivery-error",
+        "offline"
+      ],
+      "components": [
+        "Progress",
+        "FieldGroup",
+        "ToggleGroup",
+        "Input",
+        "Upload",
+        "PlanningRange",
+        "Alert",
+        "NextActionPanel"
+      ],
+      "marketingSkills": [
+        "cro",
+        "copywriting",
+        "marketing-psychology",
+        "offers",
+        "analytics",
+        "revops"
+      ],
+      "analyticsEvents": [
+        "estimate_start",
+        "estimate_step_complete",
+        "range_view",
+        "upload_complete",
+        "lead_saved",
+        "lead_delivery_state"
+      ],
+      "serverClientBoundary": "Client wizard backed by server/Convex mutations. Browser stores only opaque resume token.",
+      "notes": ""
+    },
+    {
+      "id": "P09",
+      "name": "Contact",
+      "surface": "public",
+      "routes": [
+        "/contact"
+      ],
+      "purpose": "Offer direct contact and a short qualified alternative to the estimate wizard.",
+      "audience": [
+        "prospect needing direct help"
+      ],
+      "primaryAction": "Contact Anthony",
+      "secondaryActions": [
+        "Open estimate",
+        "Call",
+        "Text"
+      ],
+      "desktopRegions": [
+        "contact hero",
+        "channel choices",
+        "short form",
+        "response expectations",
+        "service/coverage links"
+      ],
+      "mobileOrder": [
+        "hero",
+        "call/text",
+        "short form",
+        "expectations",
+        "links"
+      ],
+      "states": [
+        "default",
+        "loading-proof",
+        "no-proof",
+        "form-error",
+        "offline-fallback"
+      ],
+      "components": [
+        "ContactChannels",
+        "FieldGroup",
+        "Alert",
+        "BusinessFacts"
+      ],
+      "marketingSkills": [
+        "cro",
+        "copywriting",
+        "revops",
+        "analytics"
+      ],
+      "analyticsEvents": [
+        "contact_view",
+        "call_click",
+        "text_click",
+        "contact_submit"
+      ],
+      "serverClientBoundary": "Server page with client form island.",
+      "notes": ""
+    },
+    {
+      "id": "P10",
+      "name": "About",
+      "surface": "public",
+      "routes": [
+        "/about"
+      ],
+      "purpose": "Build confidence through owner story, operating principles, and verified facts.",
+      "audience": [
+        "prospect checking credibility"
+      ],
+      "primaryAction": "Start a conversation",
+      "secondaryActions": [
+        "View projects",
+        "Capabilities"
+      ],
+      "desktopRegions": [
+        "owner hero",
+        "verified facts",
+        "story",
+        "operating principles",
+        "work/process photography",
+        "CTA"
+      ],
+      "mobileOrder": [
+        "owner",
+        "facts",
+        "CTA",
+        "story",
+        "principles",
+        "proof"
+      ],
+      "states": [
+        "default",
+        "loading-proof",
+        "no-proof",
+        "form-error",
+        "offline-fallback"
+      ],
+      "components": [
+        "OwnerProfile",
+        "BusinessFacts",
+        "PrincipleList",
+        "MediaGallery"
+      ],
+      "marketingSkills": [
+        "product-marketing",
+        "copywriting",
+        "copy-editing",
+        "customer-research",
+        "image"
+      ],
+      "analyticsEvents": [
+        "about_view",
+        "owner_contact_click"
+      ],
+      "serverClientBoundary": "Server Component. No invented biography details.",
+      "notes": ""
+    },
+    {
+      "id": "P11",
+      "name": "Capabilities",
+      "surface": "public",
+      "routes": [
+        "/capabilities"
+      ],
+      "purpose": "Give commercial, facility, prime, and agency buyers a concise qualification view.",
+      "audience": [
+        "property manager",
+        "facility buyer",
+        "prime",
+        "agency"
+      ],
+      "primaryAction": "Request capability conversation",
+      "secondaryActions": [
+        "Download capability sheet",
+        "Contact"
+      ],
+      "desktopRegions": [
+        "capability hero",
+        "business facts",
+        "markets/scope",
+        "documentation status",
+        "process/closeout",
+        "project proof",
+        "CTA"
+      ],
+      "mobileOrder": [
+        "hero",
+        "facts",
+        "CTA",
+        "scope",
+        "documents",
+        "process",
+        "proof"
+      ],
+      "states": [
+        "default",
+        "loading-proof",
+        "no-proof",
+        "form-error",
+        "offline-fallback",
+        "document-unavailable"
+      ],
+      "components": [
+        "CapabilityFacts",
+        "ScopeMatrix",
+        "DocumentList",
+        "ProjectEvidenceCard",
+        "Button"
+      ],
+      "marketingSkills": [
+        "sales-enablement",
+        "copywriting",
+        "offers",
+        "schema",
+        "analytics"
+      ],
+      "analyticsEvents": [
+        "capabilities_view",
+        "capability_download",
+        "capability_contact"
+      ],
+      "serverClientBoundary": "Server Component; downloads use governed public documents only.",
+      "notes": ""
+    },
+    {
+      "id": "P12",
+      "name": "Referral",
+      "surface": "public",
+      "routes": [
+        "/refer"
+      ],
+      "purpose": "Create an opaque referral link and explain verified terms without exposing PII.",
+      "audience": [
+        "past customer",
+        "partner"
+      ],
+      "primaryAction": "Create referral code",
+      "secondaryActions": [
+        "Share",
+        "Review terms"
+      ],
+      "desktopRegions": [
+        "referral hero",
+        "terms",
+        "identity confirmation",
+        "code/link result",
+        "share controls",
+        "status"
+      ],
+      "mobileOrder": [
+        "hero",
+        "terms",
+        "confirm",
+        "generate",
+        "share",
+        "status"
+      ],
+      "states": [
+        "start",
+        "validating",
+        "generated",
+        "copied",
+        "invalid",
+        "revoked",
+        "credited"
+      ],
+      "components": [
+        "FieldGroup",
+        "ReferralCode",
+        "ShareActions",
+        "Alert",
+        "StatusTimeline"
+      ],
+      "marketingSkills": [
+        "referrals",
+        "cro",
+        "copywriting",
+        "analytics"
+      ],
+      "analyticsEvents": [
+        "referral_start",
+        "referral_code_created",
+        "referral_share",
+        "referral_attributed"
+      ],
+      "serverClientBoundary": "Client form backed by server-issued signed code; no email in URL or analytics.",
+      "notes": ""
+    },
+    {
+      "id": "P13",
+      "name": "Review",
+      "surface": "public",
+      "routes": [
+        "/review"
+      ],
+      "purpose": "Offer the same honest public-review path to every customer while providing an independent support route.",
+      "audience": [
+        "completed customer"
+      ],
+      "primaryAction": "Leave honest review",
+      "secondaryActions": [
+        "Request help",
+        "Contact"
+      ],
+      "desktopRegions": [
+        "review hero",
+        "public review action",
+        "private support action",
+        "expectations",
+        "confirmation"
+      ],
+      "mobileOrder": [
+        "hero",
+        "public review",
+        "support",
+        "confirmation"
+      ],
+      "states": [
+        "default",
+        "review-clicked",
+        "support-form",
+        "support-submitted",
+        "error"
+      ],
+      "components": [
+        "Button",
+        "Alert",
+        "FieldGroup",
+        "NextActionPanel"
+      ],
+      "marketingSkills": [
+        "cro",
+        "copywriting",
+        "customer-research",
+        "analytics"
+      ],
+      "analyticsEvents": [
+        "review_page_view",
+        "public_review_click",
+        "support_request_submit"
+      ],
+      "serverClientBoundary": "Public path is equal regardless of rating; support is a separate choice.",
+      "notes": ""
+    },
+    {
+      "id": "P14",
+      "name": "Resources Index",
+      "surface": "public",
+      "routes": [
+        "/resources"
+      ],
+      "purpose": "Help prospects make project decisions and create a governed SEO/content hub.",
+      "audience": [
+        "researching prospect"
+      ],
+      "primaryAction": "Choose a guide",
+      "secondaryActions": [
+        "Start scope review"
+      ],
+      "desktopRegions": [
+        "resources hero",
+        "topic clusters",
+        "featured guide",
+        "guide grid",
+        "CTA"
+      ],
+      "mobileOrder": [
+        "hero",
+        "featured",
+        "clusters",
+        "grid",
+        "CTA"
+      ],
+      "states": [
+        "default",
+        "loading-proof",
+        "no-proof",
+        "form-error",
+        "offline-fallback",
+        "empty-category"
+      ],
+      "components": [
+        "ResourceCard",
+        "Tabs",
+        "Badge",
+        "Search"
+      ],
+      "marketingSkills": [
+        "content-strategy",
+        "ai-seo",
+        "seo-audit",
+        "lead-magnets",
+        "copywriting"
+      ],
+      "analyticsEvents": [
+        "resources_view",
+        "resource_filter",
+        "resource_open"
+      ],
+      "serverClientBoundary": "Server-render published resources; optional client filters.",
+      "notes": ""
+    },
+    {
+      "id": "P15",
+      "name": "Resource Article",
+      "surface": "public",
+      "routes": [
+        "/resources/[slug]"
+      ],
+      "purpose": "Answer one practical project question with sourced guidance and a contextual next step.",
+      "audience": [
+        "researching prospect"
+      ],
+      "primaryAction": "Apply guidance to project",
+      "secondaryActions": [
+        "Related guide",
+        "Contact"
+      ],
+      "desktopRegions": [
+        "breadcrumb",
+        "article header",
+        "summary",
+        "structured article",
+        "checklist/callout",
+        "related links",
+        "context CTA"
+      ],
+      "mobileOrder": [
+        "breadcrumb",
+        "summary",
+        "CTA",
+        "article",
+        "checklist",
+        "related"
+      ],
+      "states": [
+        "default",
+        "loading-proof",
+        "no-proof",
+        "form-error",
+        "offline-fallback"
+      ],
+      "components": [
+        "Article",
+        "TableOfContents",
+        "Checklist",
+        "Alert",
+        "RelatedLinks"
+      ],
+      "marketingSkills": [
+        "content-strategy",
+        "copywriting",
+        "copy-editing",
+        "ai-seo",
+        "schema"
+      ],
+      "analyticsEvents": [
+        "resource_view",
+        "resource_cta_click"
+      ],
+      "serverClientBoundary": "Server Component, published content only.",
+      "notes": ""
+    },
+    {
+      "id": "P16",
+      "name": "Portal Sign-in / Invite",
+      "surface": "public",
+      "routes": [
+        "/portal/login"
+      ],
+      "purpose": "Authenticate customers and accept invitations without open staff registration.",
+      "audience": [
+        "customer",
+        "invited staff"
+      ],
+      "primaryAction": "Sign in or accept invite",
+      "secondaryActions": [
+        "Get help"
+      ],
+      "desktopRegions": [
+        "brand/context panel",
+        "auth panel",
+        "privacy/security note",
+        "support"
+      ],
+      "mobileOrder": [
+        "brand",
+        "auth",
+        "support"
+      ],
+      "states": [
+        "loading",
+        "sign-in",
+        "invite-valid",
+        "invite-invalid",
+        "MFA",
+        "disabled",
+        "error"
+      ],
+      "components": [
+        "ClerkAuth",
+        "Alert",
+        "Button",
+        "SupportLink"
+      ],
+      "marketingSkills": [
+        "signup",
+        "onboarding",
+        "copywriting"
+      ],
+      "analyticsEvents": [
+        "auth_view",
+        "auth_success",
+        "invite_accept",
+        "auth_error"
+      ],
+      "serverClientBoundary": "Clerk client components with server route protection and Convex identity sync.",
+      "notes": ""
+    },
+    {
+      "id": "P17",
+      "name": "Legal / Privacy",
+      "surface": "public",
+      "routes": [
+        "/privacy",
+        "/terms"
+      ],
+      "purpose": "Explain data handling and terms in plain language.",
+      "audience": [
+        "visitor",
+        "customer"
+      ],
+      "primaryAction": "Understand policy",
+      "secondaryActions": [
+        "Contact"
+      ],
+      "desktopRegions": [
+        "document header",
+        "last updated",
+        "table of contents",
+        "document sections",
+        "contact"
+      ],
+      "mobileOrder": [
+        "header",
+        "summary",
+        "contents",
+        "document",
+        "contact"
+      ],
+      "states": [
+        "default"
+      ],
+      "components": [
+        "Article",
+        "TableOfContents"
+      ],
+      "marketingSkills": [
+        "copy-editing"
+      ],
+      "analyticsEvents": [
+        "legal_view"
+      ],
+      "serverClientBoundary": "Server Component; text requires legal review before production.",
+      "notes": ""
+    },
+    {
+      "id": "P18",
+      "name": "404 / Error",
+      "surface": "public",
+      "routes": [
+        "/404",
+        "/error"
+      ],
+      "purpose": "Recover from an invalid or failed route with useful next actions.",
+      "audience": [
+        "any user"
+      ],
+      "primaryAction": "Return to valid path",
+      "secondaryActions": [
+        "Estimate",
+        "Call"
+      ],
+      "desktopRegions": [
+        "status code/title",
+        "plain explanation",
+        "recommended links",
+        "contact action"
+      ],
+      "mobileOrder": [
+        "status",
+        "explanation",
+        "links",
+        "contact"
+      ],
+      "states": [
+        "404",
+        "500",
+        "offline",
+        "maintenance"
+      ],
+      "components": [
+        "Empty",
+        "Alert",
+        "Button"
+      ],
+      "marketingSkills": [
+        "copywriting",
+        "cro"
+      ],
+      "analyticsEvents": [
+        "error_view",
+        "error_recovery_click"
+      ],
+      "serverClientBoundary": "Server error boundary where possible; no canonical/indexable metadata.",
+      "notes": ""
+    },
+    {
+      "id": "C01",
+      "name": "Customer Overview",
+      "surface": "customer",
+      "routes": [
+        "/portal"
+      ],
+      "purpose": "Show project status and one most important next action.",
+      "audience": [
+        "authenticated customer"
+      ],
+      "primaryAction": "Open next action",
+      "secondaryActions": [
+        "View project",
+        "Message"
+      ],
+      "desktopRegions": [
+        "app shell",
+        "next-action panel",
+        "project summary",
+        "appointments/documents/payments",
+        "timeline"
+      ],
+      "mobileOrder": [
+        "header",
+        "next action",
+        "project",
+        "timeline",
+        "documents/payments"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "populated",
+        "partial",
+        "error",
+        "permission-denied",
+        "disabled-account"
+      ],
+      "components": [
+        "AppShell",
+        "NextActionPanel",
+        "ProjectSummary",
+        "StatusTimeline",
+        "Card"
+      ],
+      "marketingSkills": [
+        "onboarding",
+        "cro",
+        "copywriting"
+      ],
+      "analyticsEvents": [
+        "portal_view",
+        "next_action_open"
+      ],
+      "serverClientBoundary": "Server-authorized DTO; client islands for interactions.",
+      "notes": ""
+    },
+    {
+      "id": "C02",
+      "name": "Customer Project Detail",
+      "surface": "customer",
+      "routes": [
+        "/portal/projects/[id]"
+      ],
+      "purpose": "Provide one project source of truth for status, scope, schedule, files, and approvals.",
+      "audience": [
+        "project customer"
+      ],
+      "primaryAction": "Complete project next action",
+      "secondaryActions": [
+        "Message",
+        "Open files"
+      ],
+      "desktopRegions": [
+        "project header",
+        "status/timeline",
+        "scope",
+        "schedule",
+        "approvals",
+        "files",
+        "updates"
+      ],
+      "mobileOrder": [
+        "header",
+        "next action",
+        "status",
+        "scope",
+        "approvals",
+        "files",
+        "updates"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "populated",
+        "partial",
+        "error",
+        "permission-denied",
+        "disabled-account"
+      ],
+      "components": [
+        "PropertyHeader",
+        "StatusTimeline",
+        "ScopeSummary",
+        "DocumentList",
+        "NextActionPanel"
+      ],
+      "marketingSkills": [
+        "onboarding",
+        "copywriting"
+      ],
+      "analyticsEvents": [
+        "portal_project_view",
+        "project_action_open"
+      ],
+      "serverClientBoundary": "Explicit project grant required.",
+      "notes": ""
+    },
+    {
+      "id": "C03",
+      "name": "Appointment Detail",
+      "surface": "customer",
+      "routes": [
+        "/portal/appointments/[id]"
+      ],
+      "purpose": "Show confirmed appointment facts and controlled reschedule/cancel actions.",
+      "audience": [
+        "appointment participant"
+      ],
+      "primaryAction": "Confirm or reschedule",
+      "secondaryActions": [
+        "Add to calendar",
+        "Contact"
+      ],
+      "desktopRegions": [
+        "appointment facts",
+        "property/context",
+        "preparation instructions",
+        "actions",
+        "history"
+      ],
+      "mobileOrder": [
+        "facts",
+        "action",
+        "instructions",
+        "history"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "populated",
+        "partial",
+        "error",
+        "permission-denied",
+        "disabled-account",
+        "provider-stale"
+      ],
+      "components": [
+        "AppointmentCard",
+        "CalendarActions",
+        "Alert",
+        "StatusTimeline"
+      ],
+      "marketingSkills": [
+        "onboarding",
+        "emails",
+        "sms"
+      ],
+      "analyticsEvents": [
+        "appointment_view",
+        "appointment_reschedule_start"
+      ],
+      "serverClientBoundary": "Provider state reconciled server-side.",
+      "notes": ""
+    },
+    {
+      "id": "C04",
+      "name": "Estimate Review",
+      "surface": "customer",
+      "routes": [
+        "/portal/estimates/[id]"
+      ],
+      "purpose": "Present a versioned estimate with scope, assumptions, exclusions, and next step.",
+      "audience": [
+        "project customer"
+      ],
+      "primaryAction": "Acknowledge estimate",
+      "secondaryActions": [
+        "Ask question",
+        "Download"
+      ],
+      "desktopRegions": [
+        "document header/version",
+        "scope",
+        "line groups",
+        "assumptions/exclusions",
+        "range/total",
+        "actions",
+        "history"
+      ],
+      "mobileOrder": [
+        "header",
+        "total",
+        "action",
+        "scope",
+        "assumptions",
+        "history"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "populated",
+        "partial",
+        "error",
+        "permission-denied",
+        "disabled-account",
+        "superseded"
+      ],
+      "components": [
+        "DocumentSurface",
+        "ScopeSummary",
+        "EstimateLines",
+        "Alert",
+        "ApprovalActions"
+      ],
+      "marketingSkills": [
+        "offers",
+        "pricing",
+        "copywriting"
+      ],
+      "analyticsEvents": [
+        "estimate_view",
+        "estimate_acknowledge"
+      ],
+      "serverClientBoundary": "Authorized DTO; immutable issued version.",
+      "notes": ""
+    },
+    {
+      "id": "C05",
+      "name": "Proposal Review",
+      "surface": "customer",
+      "routes": [
+        "/portal/proposals/[id]"
+      ],
+      "purpose": "Turn an approved scope into a clear decision document.",
+      "audience": [
+        "project decision-maker"
+      ],
+      "primaryAction": "Approve proposal",
+      "secondaryActions": [
+        "Ask question",
+        "Decline"
+      ],
+      "desktopRegions": [
+        "proposal header",
+        "outcome/summary",
+        "scope",
+        "schedule",
+        "investment",
+        "terms",
+        "proof",
+        "actions"
+      ],
+      "mobileOrder": [
+        "summary",
+        "investment",
+        "action",
+        "scope",
+        "schedule",
+        "terms",
+        "proof"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "populated",
+        "partial",
+        "error",
+        "permission-denied",
+        "disabled-account",
+        "expired",
+        "superseded"
+      ],
+      "components": [
+        "DocumentSurface",
+        "ProposalSummary",
+        "ApprovalActions",
+        "ProofStamp"
+      ],
+      "marketingSkills": [
+        "offers",
+        "sales-enablement",
+        "copywriting",
+        "marketing-psychology"
+      ],
+      "analyticsEvents": [
+        "proposal_view",
+        "proposal_approve",
+        "proposal_decline"
+      ],
+      "serverClientBoundary": "Approval records actor, version, timestamp, and evidence.",
+      "notes": ""
+    },
+    {
+      "id": "C06",
+      "name": "Agreement Signature",
+      "surface": "customer",
+      "routes": [
+        "/portal/agreements/[id]"
+      ],
+      "purpose": "Provide clear agreement review and evidence-backed signature.",
+      "audience": [
+        "authorized signer"
+      ],
+      "primaryAction": "Sign agreement",
+      "secondaryActions": [
+        "Download",
+        "Ask question"
+      ],
+      "desktopRegions": [
+        "agreement status",
+        "document",
+        "required acknowledgements",
+        "signature action",
+        "evidence/receipt"
+      ],
+      "mobileOrder": [
+        "status",
+        "summary",
+        "signature action",
+        "document",
+        "receipt"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "populated",
+        "partial",
+        "error",
+        "permission-denied",
+        "disabled-account",
+        "signed",
+        "void",
+        "expired"
+      ],
+      "components": [
+        "DocumentSurface",
+        "Checkbox",
+        "SignatureAction",
+        "Receipt"
+      ],
+      "marketingSkills": [
+        "copy-editing",
+        "onboarding"
+      ],
+      "analyticsEvents": [
+        "agreement_view",
+        "agreement_sign"
+      ],
+      "serverClientBoundary": "Signature implementation requires legal and evidence review.",
+      "notes": ""
+    },
+    {
+      "id": "C07",
+      "name": "Payment",
+      "surface": "customer",
+      "routes": [
+        "/portal/payments/[id]"
+      ],
+      "purpose": "Show payment state and launch a hosted Stripe Checkout session when authorized.",
+      "audience": [
+        "authorized payer"
+      ],
+      "primaryAction": "Pay securely",
+      "secondaryActions": [
+        "Download receipt",
+        "Contact"
+      ],
+      "desktopRegions": [
+        "payment status",
+        "amount/source document",
+        "hosted checkout action",
+        "history/receipt",
+        "support"
+      ],
+      "mobileOrder": [
+        "status",
+        "amount",
+        "action",
+        "receipt",
+        "support"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "populated",
+        "partial",
+        "error",
+        "permission-denied",
+        "disabled-account",
+        "checkout-created",
+        "processing",
+        "paid",
+        "failed",
+        "refunded"
+      ],
+      "components": [
+        "PaymentSummary",
+        "Button",
+        "Receipt",
+        "Alert"
+      ],
+      "marketingSkills": [
+        "offers",
+        "copywriting",
+        "analytics"
+      ],
+      "analyticsEvents": [
+        "payment_view",
+        "checkout_start",
+        "payment_posted"
+      ],
+      "serverClientBoundary": "Test mode until production approval. No card data handled by app.",
+      "notes": ""
+    },
+    {
+      "id": "C08",
+      "name": "Customer Files",
+      "surface": "customer",
+      "routes": [
+        "/portal/files"
+      ],
+      "purpose": "List only files the customer is authorized to access.",
+      "audience": [
+        "project customer"
+      ],
+      "primaryAction": "Open authorized file",
+      "secondaryActions": [
+        "Upload requested file"
+      ],
+      "desktopRegions": [
+        "file categories",
+        "file list",
+        "upload request",
+        "privacy/retention details"
+      ],
+      "mobileOrder": [
+        "categories",
+        "requested action",
+        "files",
+        "privacy"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "populated",
+        "partial",
+        "error",
+        "permission-denied",
+        "disabled-account",
+        "uploading",
+        "scan-pending",
+        "expired"
+      ],
+      "components": [
+        "FileTable",
+        "Upload",
+        "Badge",
+        "Alert",
+        "Empty"
+      ],
+      "marketingSkills": [
+        "onboarding"
+      ],
+      "analyticsEvents": [
+        "files_view",
+        "file_download",
+        "file_upload"
+      ],
+      "serverClientBoundary": "Short-lived authorized transfer after project grant.",
+      "notes": ""
+    },
+    {
+      "id": "C09",
+      "name": "Change Order",
+      "surface": "customer",
+      "routes": [
+        "/portal/change-orders/[id]"
+      ],
+      "purpose": "Explain scope, schedule, and price impact before approval.",
+      "audience": [
+        "authorized project decision-maker"
+      ],
+      "primaryAction": "Approve or decline change",
+      "secondaryActions": [
+        "Ask question"
+      ],
+      "desktopRegions": [
+        "change status",
+        "reason",
+        "scope delta",
+        "schedule impact",
+        "price impact",
+        "evidence",
+        "actions"
+      ],
+      "mobileOrder": [
+        "status",
+        "impact",
+        "action",
+        "reason",
+        "evidence"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "populated",
+        "partial",
+        "error",
+        "permission-denied",
+        "disabled-account",
+        "approved",
+        "declined",
+        "superseded"
+      ],
+      "components": [
+        "ChangeSummary",
+        "DocumentApproval",
+        "Alert",
+        "MediaGallery"
+      ],
+      "marketingSkills": [
+        "offers",
+        "copywriting",
+        "marketing-psychology"
+      ],
+      "analyticsEvents": [
+        "change_order_view",
+        "change_order_decision"
+      ],
+      "serverClientBoundary": "Immutable decision evidence.",
+      "notes": ""
+    },
+    {
+      "id": "C10",
+      "name": "Messages / Updates",
+      "surface": "customer",
+      "routes": [
+        "/portal/messages"
+      ],
+      "purpose": "Provide a controlled project update stream and customer response channel.",
+      "audience": [
+        "project customer"
+      ],
+      "primaryAction": "Read or send update",
+      "secondaryActions": [
+        "Open referenced record"
+      ],
+      "desktopRegions": [
+        "thread/project selector",
+        "message timeline",
+        "composer",
+        "attachments",
+        "notification settings"
+      ],
+      "mobileOrder": [
+        "project",
+        "messages",
+        "composer",
+        "settings"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "populated",
+        "partial",
+        "error",
+        "permission-denied",
+        "disabled-account",
+        "sending",
+        "delivery-error"
+      ],
+      "components": [
+        "MessageThread",
+        "Composer",
+        "Upload",
+        "StatusBadge"
+      ],
+      "marketingSkills": [
+        "emails",
+        "sms",
+        "onboarding"
+      ],
+      "analyticsEvents": [
+        "messages_view",
+        "message_send"
+      ],
+      "serverClientBoundary": "Messages are project-scoped and audited.",
+      "notes": ""
+    },
+    {
+      "id": "C11",
+      "name": "Customer Account",
+      "surface": "customer",
+      "routes": [
+        "/portal/settings"
+      ],
+      "purpose": "Manage identity-facing preferences without changing resource ownership implicitly.",
+      "audience": [
+        "authenticated customer"
+      ],
+      "primaryAction": "Manage account",
+      "secondaryActions": [
+        "Notification preferences",
+        "Support"
+      ],
+      "desktopRegions": [
+        "profile",
+        "identity/security",
+        "notifications",
+        "authorized relationships",
+        "support"
+      ],
+      "mobileOrder": [
+        "profile",
+        "security",
+        "notifications",
+        "relationships",
+        "support"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "populated",
+        "partial",
+        "error",
+        "permission-denied",
+        "disabled-account"
+      ],
+      "components": [
+        "Profile",
+        "SecurityPanel",
+        "NotificationSettings",
+        "Alert"
+      ],
+      "marketingSkills": [
+        "onboarding"
+      ],
+      "analyticsEvents": [
+        "account_view",
+        "notification_update"
+      ],
+      "serverClientBoundary": "Clerk identity; ownership changes require explicit reviewed process.",
+      "notes": ""
+    },
+    {
+      "id": "O01",
+      "name": "Operator Overview",
+      "surface": "operator",
+      "routes": [
+        "/app"
+      ],
+      "purpose": "Prioritize work, risk, and revenue with direct next actions.",
+      "audience": [
+        "owner",
+        "authorized staff"
+      ],
+      "primaryAction": "Open highest-priority item",
+      "secondaryActions": [
+        "Create lead",
+        "Schedule",
+        "New estimate"
+      ],
+      "desktopRegions": [
+        "command bar",
+        "priority queue",
+        "pipeline/revenue summary",
+        "today calendar",
+        "project risks",
+        "automation/integration health"
+      ],
+      "mobileOrder": [
+        "command bar",
+        "priority",
+        "today",
+        "pipeline",
+        "risks",
+        "health"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "populated",
+        "partial",
+        "error",
+        "permission-denied",
+        "disabled-account",
+        "stale-integration",
+        "reconciliation-required"
+      ],
+      "components": [
+        "OperatorShell",
+        "PriorityQueue",
+        "MetricCard",
+        "CalendarSummary",
+        "IntegrationHealthCard"
+      ],
+      "marketingSkills": [
+        "revops",
+        "analytics",
+        "marketing-psychology"
+      ],
+      "analyticsEvents": [
+        "operator_overview_view",
+        "priority_open"
+      ],
+      "serverClientBoundary": "Server-authorized staff DTOs; live islands for queue actions.",
+      "notes": ""
+    },
+    {
+      "id": "O02",
+      "name": "Lead Inbox",
+      "surface": "operator",
+      "routes": [
+        "/app/leads"
+      ],
+      "purpose": "Triage new and unresolved intake with SLA visibility.",
+      "audience": [
+        "owner",
+        "sales/office staff"
+      ],
+      "primaryAction": "Qualify lead",
+      "secondaryActions": [
+        "Assign",
+        "Archive duplicate"
+      ],
+      "desktopRegions": [
+        "filters/search",
+        "lead table",
+        "SLA/quality indicators",
+        "preview/detail drawer",
+        "bulk-safe actions"
+      ],
+      "mobileOrder": [
+        "filters",
+        "priority rows",
+        "detail sheet",
+        "actions"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "populated",
+        "partial",
+        "error",
+        "permission-denied",
+        "disabled-account",
+        "stale-integration",
+        "reconciliation-required",
+        "duplicate",
+        "delivery-failed"
+      ],
+      "components": [
+        "DataTable",
+        "Command",
+        "LeadQuality",
+        "Sheet",
+        "Badge"
+      ],
+      "marketingSkills": [
+        "revops",
+        "analytics"
+      ],
+      "analyticsEvents": [
+        "lead_inbox_view",
+        "lead_open",
+        "lead_qualify"
+      ],
+      "serverClientBoundary": "Staff grant required; bulk destructive actions separately confirmed.",
+      "notes": ""
+    },
+    {
+      "id": "O03",
+      "name": "Pipeline Board",
+      "surface": "operator",
+      "routes": [
+        "/app/pipeline"
+      ],
+      "purpose": "Visualize and advance opportunities through explicit stages.",
+      "audience": [
+        "owner",
+        "sales staff"
+      ],
+      "primaryAction": "Move opportunity",
+      "secondaryActions": [
+        "Filter",
+        "Open detail"
+      ],
+      "desktopRegions": [
+        "pipeline controls",
+        "stage columns",
+        "opportunity cards",
+        "totals",
+        "stale/SLA indicators"
+      ],
+      "mobileOrder": [
+        "stage selector",
+        "cards",
+        "totals",
+        "filters"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "populated",
+        "partial",
+        "error",
+        "permission-denied",
+        "disabled-account",
+        "stale-integration",
+        "reconciliation-required"
+      ],
+      "components": [
+        "Kanban",
+        "OpportunityCard",
+        "Badge",
+        "FilterBar"
+      ],
+      "marketingSkills": [
+        "revops",
+        "analytics"
+      ],
+      "analyticsEvents": [
+        "pipeline_view",
+        "stage_change"
+      ],
+      "serverClientBoundary": "Server validates every transition.",
+      "notes": ""
+    },
+    {
+      "id": "O04",
+      "name": "Opportunity Detail",
+      "surface": "operator",
+      "routes": [
+        "/app/opportunities/[id]"
+      ],
+      "purpose": "Combine contact, property, scope, activity, tasks, documents, and revenue next step.",
+      "audience": [
+        "owner",
+        "assigned staff"
+      ],
+      "primaryAction": "Complete next action",
+      "secondaryActions": [
+        "Assign",
+        "Create estimate",
+        "Schedule"
+      ],
+      "desktopRegions": [
+        "record header/stage",
+        "next action",
+        "contact/property",
+        "scope/intake",
+        "activity",
+        "tasks",
+        "documents",
+        "revenue records"
+      ],
+      "mobileOrder": [
+        "header",
+        "next action",
+        "contact/property",
+        "scope",
+        "tasks",
+        "activity",
+        "documents"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "populated",
+        "partial",
+        "error",
+        "permission-denied",
+        "disabled-account",
+        "stale-integration",
+        "reconciliation-required"
+      ],
+      "components": [
+        "OpportunityHeader",
+        "NextActionPanel",
+        "ActivityTimeline",
+        "TaskList",
+        "DocumentList"
+      ],
+      "marketingSkills": [
+        "revops",
+        "sales-enablement",
+        "analytics"
+      ],
+      "analyticsEvents": [
+        "opportunity_view",
+        "opportunity_action"
+      ],
+      "serverClientBoundary": "Canonical opportunity aggregate.",
+      "notes": ""
+    },
+    {
+      "id": "O05",
+      "name": "Contact / Property Detail",
+      "surface": "operator",
+      "routes": [
+        "/app/contacts/[id]",
+        "/app/properties/[id]"
+      ],
+      "purpose": "Maintain durable relationship and property facts separately from identity text.",
+      "audience": [
+        "authorized staff"
+      ],
+      "primaryAction": "Review/update governed record",
+      "secondaryActions": [
+        "Open opportunities",
+        "Open projects"
+      ],
+      "desktopRegions": [
+        "record header",
+        "contact/property facts",
+        "relationships/grants",
+        "history",
+        "opportunities/projects",
+        "files"
+      ],
+      "mobileOrder": [
+        "header",
+        "facts",
+        "relationships",
+        "active records",
+        "history",
+        "files"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "populated",
+        "partial",
+        "error",
+        "permission-denied",
+        "disabled-account",
+        "stale-integration",
+        "reconciliation-required",
+        "merge-review"
+      ],
+      "components": [
+        "RecordHeader",
+        "FactList",
+        "RelationshipTable",
+        "ActivityTimeline"
+      ],
+      "marketingSkills": [
+        "revops",
+        "analytics"
+      ],
+      "analyticsEvents": [
+        "record_view",
+        "record_update"
+      ],
+      "serverClientBoundary": "Merges require reviewed evidence; email alone is not identity.",
+      "notes": ""
+    },
+    {
+      "id": "O06",
+      "name": "Calendar",
+      "surface": "operator",
+      "routes": [
+        "/app/calendar"
+      ],
+      "purpose": "Coordinate appointments and crews with provider reconciliation.",
+      "audience": [
+        "owner",
+        "scheduler"
+      ],
+      "primaryAction": "Schedule appointment",
+      "secondaryActions": [
+        "Reschedule",
+        "Open opportunity/project"
+      ],
+      "desktopRegions": [
+        "calendar controls",
+        "day/week/month view",
+        "unassigned requests",
+        "appointment drawer",
+        "provider health"
+      ],
+      "mobileOrder": [
+        "date controls",
+        "agenda",
+        "unassigned",
+        "detail sheet",
+        "health"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "populated",
+        "partial",
+        "error",
+        "permission-denied",
+        "disabled-account",
+        "stale-integration",
+        "reconciliation-required",
+        "provider-conflict"
+      ],
+      "components": [
+        "Calendar",
+        "Agenda",
+        "AppointmentSheet",
+        "IntegrationHealthCard"
+      ],
+      "marketingSkills": [
+        "revops",
+        "analytics"
+      ],
+      "analyticsEvents": [
+        "calendar_view",
+        "appointment_create",
+        "appointment_reschedule"
+      ],
+      "serverClientBoundary": "Provider event receipts reconciled before final state.",
+      "notes": ""
+    },
+    {
+      "id": "O07",
+      "name": "Estimate Builder",
+      "surface": "operator",
+      "routes": [
+        "/app/estimates/[id]"
+      ],
+      "purpose": "Create a versioned estimate from approved scope and assumptions.",
+      "audience": [
+        "owner",
+        "estimator"
+      ],
+      "primaryAction": "Issue estimate version",
+      "secondaryActions": [
+        "Save draft",
+        "Preview"
+      ],
+      "desktopRegions": [
+        "estimate header/status",
+        "scope source",
+        "line groups",
+        "assumptions/exclusions",
+        "totals",
+        "preview",
+        "version history"
+      ],
+      "mobileOrder": [
+        "header",
+        "scope",
+        "lines",
+        "totals",
+        "preview",
+        "issue",
+        "history"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "populated",
+        "partial",
+        "error",
+        "permission-denied",
+        "disabled-account",
+        "stale-integration",
+        "reconciliation-required",
+        "draft",
+        "issued",
+        "superseded"
+      ],
+      "components": [
+        "EstimateEditor",
+        "LineItems",
+        "Assumptions",
+        "DocumentPreview",
+        "VersionHistory"
+      ],
+      "marketingSkills": [
+        "pricing",
+        "offers",
+        "sales-enablement"
+      ],
+      "analyticsEvents": [
+        "estimate_builder_view",
+        "estimate_draft_save",
+        "estimate_issue"
+      ],
+      "serverClientBoundary": "No AI-decided price or terms.",
+      "notes": ""
+    },
+    {
+      "id": "O08",
+      "name": "Proposal Builder",
+      "surface": "operator",
+      "routes": [
+        "/app/proposals/[id]"
+      ],
+      "purpose": "Assemble an approved estimate into a proof-backed decision document.",
+      "audience": [
+        "owner",
+        "sales staff"
+      ],
+      "primaryAction": "Send proposal",
+      "secondaryActions": [
+        "Preview",
+        "Save draft"
+      ],
+      "desktopRegions": [
+        "proposal header",
+        "selected estimate",
+        "summary/outcomes",
+        "scope/schedule",
+        "proof",
+        "terms",
+        "preview",
+        "send state"
+      ],
+      "mobileOrder": [
+        "header",
+        "summary",
+        "scope",
+        "investment",
+        "proof",
+        "preview",
+        "send"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "populated",
+        "partial",
+        "error",
+        "permission-denied",
+        "disabled-account",
+        "stale-integration",
+        "reconciliation-required",
+        "draft",
+        "sent",
+        "viewed",
+        "approved",
+        "expired"
+      ],
+      "components": [
+        "ProposalEditor",
+        "DocumentPreview",
+        "ProofPicker",
+        "SendPanel"
+      ],
+      "marketingSkills": [
+        "sales-enablement",
+        "offers",
+        "copywriting",
+        "emails"
+      ],
+      "analyticsEvents": [
+        "proposal_builder_view",
+        "proposal_send"
+      ],
+      "serverClientBoundary": "Every proof block points to verified content.",
+      "notes": ""
+    },
+    {
+      "id": "O09",
+      "name": "Agreement / Payment Monitor",
+      "surface": "operator",
+      "routes": [
+        "/app/revenue"
+      ],
+      "purpose": "Show proposal, agreement, checkout, payment, refund, and reconciliation status.",
+      "audience": [
+        "owner",
+        "finance-authorized staff"
+      ],
+      "primaryAction": "Resolve revenue state",
+      "secondaryActions": [
+        "Open agreement",
+        "Open Stripe record"
+      ],
+      "desktopRegions": [
+        "revenue filters",
+        "state summary",
+        "records table",
+        "exceptions",
+        "detail drawer",
+        "reconciliation"
+      ],
+      "mobileOrder": [
+        "summary",
+        "exceptions",
+        "records",
+        "detail"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "populated",
+        "partial",
+        "error",
+        "permission-denied",
+        "disabled-account",
+        "stale-integration",
+        "reconciliation-required",
+        "signature-pending",
+        "payment-pending",
+        "mismatch"
+      ],
+      "components": [
+        "MetricCard",
+        "DataTable",
+        "ReconciliationPanel",
+        "Alert"
+      ],
+      "marketingSkills": [
+        "revops",
+        "analytics"
+      ],
+      "analyticsEvents": [
+        "revenue_monitor_view",
+        "revenue_exception_open"
+      ],
+      "serverClientBoundary": "Canonical payment facts from verified webhooks.",
+      "notes": ""
+    },
+    {
+      "id": "O10",
+      "name": "Project Workspace",
+      "surface": "operator",
+      "routes": [
+        "/app/projects/[id]"
+      ],
+      "purpose": "Operate project scope, schedule, assignments, updates, files, approvals, and closeout.",
+      "audience": [
+        "owner",
+        "assigned staff"
+      ],
+      "primaryAction": "Advance project",
+      "secondaryActions": [
+        "Assign crew",
+        "Add update",
+        "Create change order"
+      ],
+      "desktopRegions": [
+        "project header/status",
+        "next action",
+        "scope/schedule",
+        "crew",
+        "timeline",
+        "files",
+        "changes",
+        "customer visibility",
+        "closeout"
+      ],
+      "mobileOrder": [
+        "header",
+        "next action",
+        "schedule",
+        "crew",
+        "timeline",
+        "files",
+        "changes"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "populated",
+        "partial",
+        "error",
+        "permission-denied",
+        "disabled-account",
+        "stale-integration",
+        "reconciliation-required"
+      ],
+      "components": [
+        "ProjectHeader",
+        "NextActionPanel",
+        "Schedule",
+        "AssignmentBoard",
+        "StatusTimeline",
+        "DocumentList"
+      ],
+      "marketingSkills": [
+        "revops",
+        "onboarding",
+        "analytics"
+      ],
+      "analyticsEvents": [
+        "project_workspace_view",
+        "project_status_change"
+      ],
+      "serverClientBoundary": "Every customer-visible fact explicitly marked.",
+      "notes": ""
+    },
+    {
+      "id": "O11",
+      "name": "Crew Assignment",
+      "surface": "operator",
+      "routes": [
+        "/app/crews"
+      ],
+      "purpose": "Assign projects and tasks without exposing unauthorized customer data.",
+      "audience": [
+        "owner",
+        "scheduler"
+      ],
+      "primaryAction": "Assign work",
+      "secondaryActions": [
+        "Review capacity",
+        "Open project"
+      ],
+      "desktopRegions": [
+        "crew/capacity summary",
+        "unassigned work",
+        "assignment board",
+        "conflicts",
+        "detail drawer"
+      ],
+      "mobileOrder": [
+        "capacity",
+        "unassigned",
+        "assignments",
+        "conflicts"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "populated",
+        "partial",
+        "error",
+        "permission-denied",
+        "disabled-account",
+        "stale-integration",
+        "reconciliation-required",
+        "conflict"
+      ],
+      "components": [
+        "AssignmentBoard",
+        "CapacityCard",
+        "Alert",
+        "Sheet"
+      ],
+      "marketingSkills": [
+        "revops"
+      ],
+      "analyticsEvents": [
+        "crew_view",
+        "assignment_create"
+      ],
+      "serverClientBoundary": "Assignment grant controls downstream visibility.",
+      "notes": ""
+    },
+    {
+      "id": "O12",
+      "name": "Files / Vault",
+      "surface": "operator",
+      "routes": [
+        "/app/files"
+      ],
+      "purpose": "Manage business, project, and public media files with privacy classes and retention.",
+      "audience": [
+        "owner",
+        "authorized staff"
+      ],
+      "primaryAction": "Manage authorized document",
+      "secondaryActions": [
+        "Upload",
+        "Publish approved media"
+      ],
+      "desktopRegions": [
+        "privacy-class filters",
+        "file table",
+        "upload",
+        "scan/retention status",
+        "linked records",
+        "publication control"
+      ],
+      "mobileOrder": [
+        "filters",
+        "upload",
+        "files",
+        "status",
+        "links"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "populated",
+        "partial",
+        "error",
+        "permission-denied",
+        "disabled-account",
+        "stale-integration",
+        "reconciliation-required",
+        "scan-pending",
+        "quarantined",
+        "retention-due"
+      ],
+      "components": [
+        "FileTable",
+        "Upload",
+        "PrivacyBadge",
+        "PublicationControl",
+        "Alert"
+      ],
+      "marketingSkills": [
+        "image",
+        "sales-enablement"
+      ],
+      "analyticsEvents": [
+        "file_vault_view",
+        "file_upload",
+        "file_publish"
+      ],
+      "serverClientBoundary": "Public publication is explicit and reviewed.",
+      "notes": ""
+    },
+    {
+      "id": "O13",
+      "name": "Change Orders",
+      "surface": "operator",
+      "routes": [
+        "/app/change-orders"
+      ],
+      "purpose": "Create, send, reconcile, and close scope changes.",
+      "audience": [
+        "owner",
+        "project manager"
+      ],
+      "primaryAction": "Resolve change",
+      "secondaryActions": [
+        "Create",
+        "Send reminder"
+      ],
+      "desktopRegions": [
+        "status summary",
+        "change table",
+        "impact preview",
+        "customer decision state",
+        "exceptions"
+      ],
+      "mobileOrder": [
+        "summary",
+        "exceptions",
+        "changes",
+        "detail"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "populated",
+        "partial",
+        "error",
+        "permission-denied",
+        "disabled-account",
+        "stale-integration",
+        "reconciliation-required"
+      ],
+      "components": [
+        "DataTable",
+        "ChangeSummary",
+        "DocumentPreview",
+        "StatusTimeline"
+      ],
+      "marketingSkills": [
+        "offers",
+        "revops",
+        "emails"
+      ],
+      "analyticsEvents": [
+        "change_orders_view",
+        "change_order_create"
+      ],
+      "serverClientBoundary": "Version and decision evidence required.",
+      "notes": ""
+    },
+    {
+      "id": "O14",
+      "name": "Tasks / SLA",
+      "surface": "operator",
+      "routes": [
+        "/app/tasks"
+      ],
+      "purpose": "Make due work visible and connect every task to a canonical record.",
+      "audience": [
+        "owner",
+        "staff"
+      ],
+      "primaryAction": "Complete due action",
+      "secondaryActions": [
+        "Assign",
+        "Snooze with reason"
+      ],
+      "desktopRegions": [
+        "task filters",
+        "priority/due groups",
+        "task list",
+        "record preview",
+        "completion history"
+      ],
+      "mobileOrder": [
+        "priority",
+        "due",
+        "tasks",
+        "detail"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "populated",
+        "partial",
+        "error",
+        "permission-denied",
+        "disabled-account",
+        "stale-integration",
+        "reconciliation-required",
+        "overdue"
+      ],
+      "components": [
+        "TaskList",
+        "FilterBar",
+        "RecordPreview",
+        "Badge"
+      ],
+      "marketingSkills": [
+        "revops",
+        "analytics"
+      ],
+      "analyticsEvents": [
+        "tasks_view",
+        "task_complete",
+        "task_snooze"
+      ],
+      "serverClientBoundary": "Snooze and completion audited.",
+      "notes": ""
+    },
+    {
+      "id": "O15",
+      "name": "Automation Center",
+      "surface": "operator",
+      "routes": [
+        "/app/automations"
+      ],
+      "purpose": "Show workflow definitions, runs, failures, retries, and manual approval hooks.",
+      "audience": [
+        "owner",
+        "authorized operator"
+      ],
+      "primaryAction": "Inspect workflow",
+      "secondaryActions": [
+        "Retry allowed step",
+        "Pause automation"
+      ],
+      "desktopRegions": [
+        "workflow health",
+        "definitions",
+        "run history",
+        "failure queue",
+        "detail trace",
+        "approval hooks"
+      ],
+      "mobileOrder": [
+        "health",
+        "failures",
+        "workflows",
+        "run detail"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "populated",
+        "partial",
+        "error",
+        "permission-denied",
+        "disabled-account",
+        "stale-integration",
+        "reconciliation-required",
+        "paused",
+        "retrying",
+        "approval-required"
+      ],
+      "components": [
+        "WorkflowTable",
+        "RunTimeline",
+        "Alert",
+        "ApprovalPanel"
+      ],
+      "marketingSkills": [
+        "marketing-loops",
+        "revops"
+      ],
+      "analyticsEvents": [
+        "automation_view",
+        "workflow_retry",
+        "workflow_pause"
+      ],
+      "serverClientBoundary": "Permissions and idempotency verified before retry.",
+      "notes": ""
+    },
+    {
+      "id": "O16",
+      "name": "Integration Health",
+      "surface": "operator",
+      "routes": [
+        "/app/integrations"
+      ],
+      "purpose": "Inventory Vercel-connected resources, provider state, webhooks, and reconciliation health.",
+      "audience": [
+        "owner",
+        "technical operator"
+      ],
+      "primaryAction": "Resolve connection health",
+      "secondaryActions": [
+        "Test preview connection",
+        "View event receipts"
+      ],
+      "desktopRegions": [
+        "environment selector",
+        "integration cards",
+        "webhook receipts",
+        "errors",
+        "environment variables metadata",
+        "runbook"
+      ],
+      "mobileOrder": [
+        "environment",
+        "errors",
+        "integrations",
+        "receipts",
+        "runbook"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "populated",
+        "partial",
+        "error",
+        "permission-denied",
+        "disabled-account",
+        "stale-integration",
+        "reconciliation-required",
+        "disconnected",
+        "degraded",
+        "credential-expiring"
+      ],
+      "components": [
+        "IntegrationHealthCard",
+        "EnvironmentBadge",
+        "WebhookReceiptTable",
+        "Runbook"
+      ],
+      "marketingSkills": [
+        "analytics",
+        "revops"
+      ],
+      "analyticsEvents": [
+        "integration_health_view",
+        "integration_test"
+      ],
+      "serverClientBoundary": "Never reveal secret values.",
+      "notes": ""
+    },
+    {
+      "id": "O17",
+      "name": "Content / CMS",
+      "surface": "operator",
+      "routes": [
+        "/app/content"
+      ],
+      "purpose": "Create, review, preview, and publish governed content versions.",
+      "audience": [
+        "owner",
+        "content editor"
+      ],
+      "primaryAction": "Publish verified content",
+      "secondaryActions": [
+        "Save draft",
+        "Preview"
+      ],
+      "desktopRegions": [
+        "content types",
+        "content table",
+        "editor",
+        "proof/provenance",
+        "preview",
+        "publication history"
+      ],
+      "mobileOrder": [
+        "types",
+        "drafts",
+        "editor",
+        "proof",
+        "preview",
+        "publish"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "populated",
+        "partial",
+        "error",
+        "permission-denied",
+        "disabled-account",
+        "stale-integration",
+        "reconciliation-required",
+        "draft",
+        "review-required",
+        "published",
+        "archived"
+      ],
+      "components": [
+        "ContentTable",
+        "Editor",
+        "ProvenancePanel",
+        "PreviewPanel",
+        "VersionHistory"
+      ],
+      "marketingSkills": [
+        "content-strategy",
+        "copywriting",
+        "copy-editing",
+        "seo-audit",
+        "ai-seo"
+      ],
+      "analyticsEvents": [
+        "content_view",
+        "content_preview",
+        "content_publish"
+      ],
+      "serverClientBoundary": "Publication authorization and provenance required.",
+      "notes": ""
+    },
+    {
+      "id": "O18",
+      "name": "SEO / GBP Workspace",
+      "surface": "operator",
+      "routes": [
+        "/app/growth"
+      ],
+      "purpose": "Manage route health, local proof, content opportunities, and approval-gated GBP actions.",
+      "audience": [
+        "owner",
+        "growth operator"
+      ],
+      "primaryAction": "Review growth action",
+      "secondaryActions": [
+        "Open route issue",
+        "Prepare GBP change"
+      ],
+      "desktopRegions": [
+        "growth summary",
+        "route/crawl health",
+        "local proof gaps",
+        "content opportunities",
+        "GBP draft queue",
+        "experiments"
+      ],
+      "mobileOrder": [
+        "summary",
+        "issues",
+        "proof gaps",
+        "opportunities",
+        "GBP drafts"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "populated",
+        "partial",
+        "error",
+        "permission-denied",
+        "disabled-account",
+        "stale-integration",
+        "reconciliation-required",
+        "approval-required"
+      ],
+      "components": [
+        "MetricCard",
+        "RouteHealthTable",
+        "ProofGap",
+        "DraftQueue",
+        "ExperimentCard"
+      ],
+      "marketingSkills": [
+        "seo-audit",
+        "ai-seo",
+        "programmatic-seo",
+        "schema",
+        "content-strategy"
+      ],
+      "analyticsEvents": [
+        "growth_workspace_view",
+        "route_issue_open",
+        "gbp_draft_prepare"
+      ],
+      "serverClientBoundary": "GBP mutation remains explicit approval.",
+      "notes": ""
+    },
+    {
+      "id": "O19",
+      "name": "Reviews / Referrals",
+      "surface": "operator",
+      "routes": [
+        "/app/reputation"
+      ],
+      "purpose": "Track honest review invitations, support cases, referral codes, and attribution.",
+      "audience": [
+        "owner",
+        "authorized staff"
+      ],
+      "primaryAction": "Resolve reputation item",
+      "secondaryActions": [
+        "Open support case",
+        "Review referral"
+      ],
+      "desktopRegions": [
+        "reputation summary",
+        "review events",
+        "support queue",
+        "referrals",
+        "exceptions",
+        "policy status"
+      ],
+      "mobileOrder": [
+        "summary",
+        "support",
+        "reviews",
+        "referrals",
+        "exceptions"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "populated",
+        "partial",
+        "error",
+        "permission-denied",
+        "disabled-account",
+        "stale-integration",
+        "reconciliation-required"
+      ],
+      "components": [
+        "MetricCard",
+        "ReviewEventTable",
+        "SupportQueue",
+        "ReferralTable",
+        "PolicyAlert"
+      ],
+      "marketingSkills": [
+        "referrals",
+        "customer-research",
+        "analytics"
+      ],
+      "analyticsEvents": [
+        "reputation_view",
+        "support_case_open"
+      ],
+      "serverClientBoundary": "No rating-based review gating.",
+      "notes": ""
+    },
+    {
+      "id": "O20",
+      "name": "Analytics / Attribution",
+      "surface": "operator",
+      "routes": [
+        "/app/analytics"
+      ],
+      "purpose": "Connect acquisition and experience events to canonical leads, opportunities, projects, and payments.",
+      "audience": [
+        "owner",
+        "growth/finance operator"
+      ],
+      "primaryAction": "Review revenue facts",
+      "secondaryActions": [
+        "Inspect funnel",
+        "Inspect experiment"
+      ],
+      "desktopRegions": [
+        "date/filter bar",
+        "revenue facts",
+        "funnel",
+        "source attribution",
+        "experiments",
+        "data quality/reconciliation"
+      ],
+      "mobileOrder": [
+        "date",
+        "revenue",
+        "funnel",
+        "sources",
+        "quality"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "populated",
+        "partial",
+        "error",
+        "permission-denied",
+        "disabled-account",
+        "stale-integration",
+        "reconciliation-required",
+        "data-lag",
+        "reconciliation-mismatch"
+      ],
+      "components": [
+        "MetricCard",
+        "FunnelChart",
+        "AttributionTable",
+        "ExperimentTable",
+        "DataQuality"
+      ],
+      "marketingSkills": [
+        "analytics",
+        "ab-testing",
+        "revops"
+      ],
+      "analyticsEvents": [
+        "analytics_view",
+        "funnel_drilldown"
+      ],
+      "serverClientBoundary": "Server facts, no PII in analytics payloads.",
+      "notes": ""
+    },
+    {
+      "id": "O21",
+      "name": "Users / Roles",
+      "surface": "operator",
+      "routes": [
+        "/app/users"
+      ],
+      "purpose": "Manage invitations, roles, MFA requirements, status, and resource grants.",
+      "audience": [
+        "owner",
+        "user administrator"
+      ],
+      "primaryAction": "Manage invitation or role",
+      "secondaryActions": [
+        "Disable user",
+        "Review grants"
+      ],
+      "desktopRegions": [
+        "user summary",
+        "user table",
+        "invitation panel",
+        "role/grant detail",
+        "MFA/status",
+        "audit"
+      ],
+      "mobileOrder": [
+        "summary",
+        "invitations",
+        "users",
+        "detail",
+        "audit"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "populated",
+        "partial",
+        "error",
+        "permission-denied",
+        "disabled-account",
+        "stale-integration",
+        "reconciliation-required",
+        "invite-pending",
+        "disabled",
+        "MFA-required"
+      ],
+      "components": [
+        "DataTable",
+        "InviteDialog",
+        "RoleEditor",
+        "GrantTable",
+        "AuditTimeline"
+      ],
+      "marketingSkills": [
+        "onboarding",
+        "signup"
+      ],
+      "analyticsEvents": [
+        "users_view",
+        "invite_send",
+        "role_change"
+      ],
+      "serverClientBoundary": "Owner-only privileged administration.",
+      "notes": ""
+    },
+    {
+      "id": "O22",
+      "name": "Settings",
+      "surface": "operator",
+      "routes": [
+        "/app/settings"
+      ],
+      "purpose": "Manage governed company, workflow, publication, and environment-safe settings.",
+      "audience": [
+        "owner",
+        "authorized administrator"
+      ],
+      "primaryAction": "Update governed setting",
+      "secondaryActions": [
+        "Export configuration"
+      ],
+      "desktopRegions": [
+        "settings navigation",
+        "company facts",
+        "communications",
+        "workflow policies",
+        "publication defaults",
+        "environment metadata",
+        "audit"
+      ],
+      "mobileOrder": [
+        "navigation",
+        "company",
+        "communications",
+        "workflow",
+        "publication",
+        "audit"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "populated",
+        "partial",
+        "error",
+        "permission-denied",
+        "disabled-account",
+        "stale-integration",
+        "reconciliation-required",
+        "validation-error"
+      ],
+      "components": [
+        "SettingsNav",
+        "FieldGroup",
+        "PolicyEditor",
+        "Alert",
+        "AuditTimeline"
+      ],
+      "marketingSkills": [
+        "product-marketing",
+        "revops"
+      ],
+      "analyticsEvents": [
+        "settings_view",
+        "setting_update"
+      ],
+      "serverClientBoundary": "Secret values are never displayed or stored in public config.",
+      "notes": ""
+    }
+  ]
+}

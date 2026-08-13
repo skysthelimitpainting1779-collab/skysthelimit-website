@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "1.0.0",
+  "capturedAt": "2026-07-27T07:26:26+00:00",
+  "source": "Connected Vercel plugin",
+  "team": {
+    "id": "team_bseTA2AuCO6A2fCOVY9ubrJo",
+    "slug": "skysthelimitpainting1779-4125s-projects",
+    "name": "skysthelimitpainting1779-4125's projects"
+  },
+  "project": {
+    "id": "prj_L3ZMoQ79YLx9G2o6Lg9OubqO9H8m",
+    "name": "website",
+    "framework": "nextjs",
+    "nodeVersion": "24.x",
+    "currentArchitecture": "single Next.js project"
+  },
+  "auditedProductionDeployment": {
+    "id": "dpl_C2F52MyDkxbfUbmDSruP2CcMpu8v",
+    "url": "website-6d3wl5y4l-skysthelimitpainting1779-4125s-projects.vercel.app",
+    "state": "READY",
+    "target": "production",
+    "githubCommitSha": "c7e94605eefdace7a76ce5145808478df8503dbb"
+  },
+  "latestObservedPreviewDeployment": {
+    "id": "dpl_8wkr8SQFexrc7yMNsNSDVYAmkHHL",
+    "state": "READY",
+    "githubCommitSha": "8ba37c5df5aeccee8ccd8c3665e822e4b006cba0",
+    "branch": "dependabot/github_actions/actions/checkout-7.0.1"
+  },
+  "runtimeErrorsLast7Days": [
+    {
+      "name": "Bail out to client-side rendering: useSearchParams()",
+      "count": 70,
+      "routes": [
+        "/painting-services/[slug]"
+      ],
+      "requiredNodes": [
+        "STL-007"
+      ]
+    },
+    {
+      "name": "cannot connect to Postgres: self-signed certificate in certificate chain",
+      "count": 1,
+      "routes": [
+        "/admin/[[...segments]]"
+      ],
+      "requiredNodes": [
+        "STL-003",
+        "STL-109"
+      ]
+    }
+  ]
+}

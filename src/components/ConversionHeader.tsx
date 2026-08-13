@@ -77,7 +77,7 @@ export default function ConversionHeader() {
 
   return (
     <>
-      <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-surface-void/85 backdrop-blur-md shadow-sm border-b border-line' : 'bg-surface-void/92 backdrop-blur-sm'}`}>
+      <header className={`fixed top-0 left-0 w-full z-50 transition-[background-color,border-color,box-shadow,backdrop-filter] duration-300 ${scrolled ? 'bg-surface-void/85 backdrop-blur-md shadow-sm border-b border-line' : 'bg-surface-void/92 backdrop-blur-sm'}`}>
         
         {/* Micro-Utility Bar */}
         <div className="h-8 bg-surface-void border-b border-line flex items-center px-4 sm:px-6 lg:px-8">

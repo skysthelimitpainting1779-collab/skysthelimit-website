@@ -1,0 +1,13 @@
+{
+  "ok": true,
+  "invocation": "Execute",
+  "mandatoryIntegrationWorktree": true,
+  "vercelProject": "prj_L3ZMoQ79YLx9G2o6Lg9OubqO9H8m",
+  "currentVercelFramework": "nextjs",
+  "targetVercelTopology": "services:web+integrations",
+  "vercelPluginRequiredNodes": 28,
+  "graphNodes": 66,
+  "nodesWithPrimaryDomainSkill": 66,
+  "packagedDomainSkills": 17,
+  "implementationNodesCoveredExactlyOnce": 52
+}

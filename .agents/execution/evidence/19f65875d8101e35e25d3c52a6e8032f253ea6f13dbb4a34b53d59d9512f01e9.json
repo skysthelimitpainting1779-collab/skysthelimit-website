@@ -1,0 +1,75 @@
+{
+  "baseHeadSha": "7f7731114d37abc77c1eace5824e68f7532cea1f",
+  "checkpointId": "cp-20260729-orch002-001",
+  "completedStage": "stage:ORCH-002:complete",
+  "controlPlaneLedgers": {
+    "approvalEvents": 2,
+    "grantedApprovals": 0,
+    "productionMutationAuthorized": false,
+    "requiredApprovals": 2,
+    "storage": "shared SQLite append-only event ledger and live lifecycle projection"
+  },
+  "graphSha256": "4f6a7d81e9c46ecbf886703fcf03988dd317115f9577152aa7ac09bd5ec532c9",
+  "issueDecision": {
+    "action": "none",
+    "reason": "The audited node is fully scoped by the execution graph and existing draft PR 169."
+  },
+  "nodeId": "ORCH-002",
+  "programId": "stl-post-g20-sequential-tdd-v1",
+  "reviewAudit": [
+    {
+      "reviewer": "Volta",
+      "status": "no remaining concrete findings after append-only, rowid replacement, stale-trigger, historical migration, supersession, authorization, schema, and projection probes",
+      "taskId": "019fae41-4570-71c0-920b-40c06f880df2"
+    }
+  ],
+  "schemaVersion": 1,
+  "tdd": {
+    "green": "Focused tests pass after a WITHOUT ROWID append-only approval ledger, transactional validated migration, live execution projection, strict schema validation, and fail-closed Production authorization controls.",
+    "red": "The focused test first failed because the control-plane ledger module was absent; each independent-review exploit was then reproduced as a failing regression before correction, including explicit rowid=-1 replacement."
+  },
+  "verification": [
+    {
+      "command": "node --test tests/control-plane-ledgers.test.mjs",
+      "result": "5/5 focused tests with adversarial SQLite and projection probes",
+      "status": "passed"
+    },
+    {
+      "command": "npm run ledgers:query",
+      "result": "ORCH-002 active at exact head; two required approvals; zero grants; Production mutation blocked",
+      "status": "passed"
+    },
+    {
+      "command": "npm ci --dry-run --ignore-scripts",
+      "result": "dependency tree resolves without override conflicts",
+      "status": "passed"
+    },
+    {
+      "command": "npm audit --audit-level=high --omit=dev",
+      "result": "0 vulnerabilities",
+      "status": "passed"
+    },
+    {
+      "command": "npm test",
+      "result": "483/483 tests",
+      "status": "passed"
+    },
+    {
+      "command": "npm run lint:ci",
+      "status": "passed"
+    },
+    {
+      "command": "npm run ci:contract",
+      "status": "passed"
+    },
+    {
+      "command": "npm run lifecycle:verify",
+      "result": "program and graph contract valid",
+      "status": "passed"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed"
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Hardened Validation"
+  short_description: "Run validation with safe process cleanup"
+  default_prompt: "Use $hardened-validation to run repository checks with a hard timeout and process-tree cleanup."

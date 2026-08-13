@@ -1,0 +1,64 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-07-27T15:55:43+00:00",
+  "sources": [
+    {
+      "id": "impeccable",
+      "repository": "pbakaus/impeccable",
+      "commit": "5e572c8b8af3e108ab52ce4180adb4d6eb1c2ebc",
+      "license": "Apache-2.0",
+      "licenseFile": "docs/design/licenses/impeccable-LICENSE.txt",
+      "noticeFile": "docs/design/licenses/impeccable-NOTICE.md",
+      "installSourceCandidates": [
+        ".agents/skills/impeccable"
+      ],
+      "requiredCapabilities": [
+        "frontend design context",
+        "shape",
+        "critique",
+        "audit",
+        "polish",
+        "harden",
+        "deterministic anti-pattern checks"
+      ]
+    },
+    {
+      "id": "ui-ux-pro-max",
+      "repository": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "commit": "3b5df7547964f0cb3424de74cff55b69039250d3",
+      "reportedVersion": "2.5.0",
+      "license": "MIT",
+      "licenseFile": "docs/design/licenses/ui-ux-pro-max-LICENSE.txt",
+      "installSourceCandidates": [
+        "src/ui-ux-pro-max",
+        ".agents/skills/ui-ux-pro-max",
+        ".claude/skills/ui-ux-pro-max",
+        "skills/ui-ux-pro-max"
+      ],
+      "requiredCapabilities": [
+        "searchable design intelligence",
+        "UX guidelines",
+        "color and typography reasoning",
+        "stack-specific guidance",
+        "accessibility review"
+      ]
+    },
+    {
+      "id": "taste-skill-full-bundle",
+      "repository": "Leonxlnx/taste-skill",
+      "commit": "e988add20dab0fa97d7a76781c48961c8184288e",
+      "license": "MIT",
+      "licenseFile": "docs/design/licenses/taste-skill-LICENSE.txt",
+      "installSourceCandidates": [
+        "skills"
+      ],
+      "requiredCapabilities": [
+        "design-taste-frontend",
+        "Codex/GPT taste variant when present",
+        "redesign audit",
+        "anti-slop preflight"
+      ]
+    }
+  ],
+  "securityRule": "Clone exact commits and copy skill files. Do not execute upstream postinstall or repository scripts during skill installation."
+}

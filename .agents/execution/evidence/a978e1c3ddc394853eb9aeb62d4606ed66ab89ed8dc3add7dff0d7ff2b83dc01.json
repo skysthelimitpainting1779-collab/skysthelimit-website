@@ -1,0 +1,35 @@
+{
+  "baseHeadSha": "17d236ec4b22bc092b74d4ee9b660f2131cba5fc",
+  "checkpointId": "cp-20260730-platform-foundation-bootstrap-green-001",
+  "checkpointPurpose": "Make dev protection usable immediately by validating the live branch edge inside Repository Quality and requiring only checks that exist before governance workflows reach default main.",
+  "graphSha256": "4f6a7d81e9c46ecbf886703fcf03988dd317115f9577152aa7ac09bd5ec532c9",
+  "nodeId": "G26-AUDIT-REMEDIATION-READY",
+  "programId": "stl-post-g20-sequential-tdd-v1",
+  "schemaVersion": 1,
+  "tdd": {
+    "redCheckpoint": "cp-20260730-platform-foundation-bootstrap-red-001",
+    "green": "The focused bootstrap contract passes with live branch validation in Repository Quality and no unavailable default-branch-only status contexts required on dev."
+  },
+  "verification": [
+    {
+      "command": "node --test --test-name-pattern=\"dev bootstrap\" tests/branch-policy.test.mjs",
+      "result": "1 test passed; 0 failed",
+      "status": "passed"
+    },
+    {
+      "command": "python in-memory YAML and JSON syntax validation",
+      "result": "CI workflow and dev ruleset parsed successfully",
+      "status": "passed"
+    },
+    {
+      "command": "python in-memory bootstrap documentation consistency validation",
+      "result": "settings, workflow troubleshooting, and branching guidance agree on immediately available dev checks and default-branch activation order",
+      "status": "passed"
+    },
+    {
+      "command": "official GitHub pull_request_target security and event documentation review",
+      "result": "trusted pull_request_target workflow code originates from the default branch; dev bootstrap no longer depends on checks that cannot yet be emitted",
+      "status": "passed"
+    }
+  ]
+}

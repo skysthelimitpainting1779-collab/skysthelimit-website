@@ -1,0 +1,713 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sky’s the Limit — Complete Wireframes</title>
+<style>
+:root {
+  color-scheme: dark;
+  --bg:#070706;--surface:#0d0d0b;--surface2:#15130f;--ink:#f7f5f0;
+  --muted:#b7b0a4;--rule:rgba(255,255,255,.14);--orange:#ff5a00;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,sans-serif}
+main{max-width:1600px;margin:auto;padding:48px 24px 100px}
+h1{font-size:clamp(38px,6vw,84px);line-height:.95;margin:0 0 18px}
+.lede{color:var(--muted);max-width:800px;font-size:18px;line-height:1.5}
+h2{margin:72px 0 24px;font-size:32px;border-left:5px solid var(--orange);padding-left:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(440px,1fr));gap:24px}
+.card{background:var(--surface);border:1px solid var(--rule);padding:20px}
+.card header{display:flex;justify-content:space-between;gap:16px;border-bottom:1px solid var(--rule);padding-bottom:14px}
+.card h3{display:inline;margin-left:10px;font-size:20px}
+.card code{color:var(--orange);font-weight:800}
+.card header p{color:var(--muted);font-size:12px;text-align:right;margin:0;max-width:45%}
+.purpose{color:var(--muted);min-height:44px}
+.frames{display:grid;grid-template-columns:minmax(0,1fr) 180px;gap:14px;align-items:start}
+.desktop-frame,.mobile-frame{border:2px solid #3d3931;background:#090908;padding:8px}
+.mobile-frame{border-radius:18px}
+.frame-label{font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:var(--orange);padding:4px}
+.region{display:flex;gap:8px;align-items:center;min-height:34px;border:1px solid var(--rule);background:var(--surface2);padding:7px;margin:5px 0;font-size:12px}
+.region span{color:var(--orange);font-family:monospace}
+.card footer{margin-top:14px;border-top:1px solid var(--rule);padding-top:12px;font-size:13px}
+@media(max-width:680px){
+  main{padding:28px 14px 70px}
+  .grid{grid-template-columns:1fr}
+  .frames{grid-template-columns:1fr}
+  .mobile-frame{max-width:220px}
+  .card header{display:block}
+  .card header p{max-width:none;text-align:left;margin-top:10px}
+}
+</style>
+</head>
+<body>
+<main>
+<h1>Complete Product Wireframes</h1>
+<p class="lede">Fifty-one unique page templates covering the public website, customer portal, and operator cockpit. Repeated SEO pages use governed templates rather than duplicating design work.</p>
+<section><h2>Public Marketing</h2><div class="grid">
+<article class="card">
+  <header>
+    <div><code>P01</code><h3>Homepage</h3></div>
+    <p>/</p>
+  </header>
+  <p class="purpose">Route visitors into the correct market or estimate path while establishing trust immediately.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>utility bar + navigation</strong></div><div class="region"><span>02</span><strong>full-bleed proof hero</strong></div><div class="region"><span>03</span><strong>trust facts</strong></div><div class="region"><span>04</span><strong>market selector</strong></div><div class="region"><span>05</span><strong>prep/process story</strong></div><div class="region"><span>06</span><strong>project evidence</strong></div><div class="region"><span>07</span><strong>objection answers</strong></div><div class="region"><span>08</span><strong>service-area proof</strong></div><div class="region"><span>09</span><strong>final CTA</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>navigation</strong></div><div class="region"><span>02</span><strong>hero copy</strong></div><div class="region"><span>03</span><strong>primary CTA</strong></div><div class="region"><span>04</span><strong>trust facts</strong></div><div class="region"><span>05</span><strong>market selector</strong></div><div class="region"><span>06</span><strong>proof</strong></div><div class="region"><span>07</span><strong>process</strong></div><div class="region"><span>08</span><strong>FAQ</strong></div><div class="region"><span>09</span><strong>sticky call/estimate</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Check project range</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>P02</code><h3>Market Landing</h3></div>
+    <p>/residential, /commercial, /public-sector</p>
+  </header>
+  <p class="purpose">Explain fit, constraints, proof, and next step for one market.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>market hero</strong></div><div class="region"><span>02</span><strong>fit/not-fit</strong></div><div class="region"><span>03</span><strong>capability scope</strong></div><div class="region"><span>04</span><strong>preparation/process</strong></div><div class="region"><span>05</span><strong>market proof</strong></div><div class="region"><span>06</span><strong>FAQs</strong></div><div class="region"><span>07</span><strong>CTA</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>hero</strong></div><div class="region"><span>02</span><strong>CTA</strong></div><div class="region"><span>03</span><strong>fit</strong></div><div class="region"><span>04</span><strong>scope</strong></div><div class="region"><span>05</span><strong>proof</strong></div><div class="region"><span>06</span><strong>process</strong></div><div class="region"><span>07</span><strong>FAQ</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Start market-specific scope review</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>P03</code><h3>Service Detail</h3></div>
+    <p>/painting-services/[slug]</p>
+  </header>
+  <p class="purpose">Answer service-specific questions and convert relevant visitors without thin SEO duplication.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>breadcrumb + service hero</strong></div><div class="region"><span>02</span><strong>when this service fits</strong></div><div class="region"><span>03</span><strong>scope inclusions</strong></div><div class="region"><span>04</span><strong>prep details</strong></div><div class="region"><span>05</span><strong>proof</strong></div><div class="region"><span>06</span><strong>related services/areas</strong></div><div class="region"><span>07</span><strong>FAQ</strong></div><div class="region"><span>08</span><strong>CTA</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>breadcrumb</strong></div><div class="region"><span>02</span><strong>hero</strong></div><div class="region"><span>03</span><strong>CTA</strong></div><div class="region"><span>04</span><strong>fit</strong></div><div class="region"><span>05</span><strong>scope</strong></div><div class="region"><span>06</span><strong>proof</strong></div><div class="region"><span>07</span><strong>FAQ</strong></div><div class="region"><span>08</span><strong>related</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Check service fit</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>P04</code><h3>Service Area Hub</h3></div>
+    <p>/service-area</p>
+  </header>
+  <p class="purpose">Show credible coverage and help visitors find their location path.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>coverage hero</strong></div><div class="region"><span>02</span><strong>map/list</strong></div><div class="region"><span>03</span><strong>coverage policy</strong></div><div class="region"><span>04</span><strong>featured locations</strong></div><div class="region"><span>05</span><strong>service links</strong></div><div class="region"><span>06</span><strong>CTA</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>hero</strong></div><div class="region"><span>02</span><strong>search/list</strong></div><div class="region"><span>03</span><strong>coverage policy</strong></div><div class="region"><span>04</span><strong>featured</strong></div><div class="region"><span>05</span><strong>CTA</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Find local coverage</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>P05</code><h3>Location Detail</h3></div>
+    <p>/service-areas/[slug]</p>
+  </header>
+  <p class="purpose">Connect local relevance to real scope and proof without doorway-page duplication.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>breadcrumb + local hero</strong></div><div class="region"><span>02</span><strong>coverage facts</strong></div><div class="region"><span>03</span><strong>relevant services</strong></div><div class="region"><span>04</span><strong>nearby proof</strong></div><div class="region"><span>05</span><strong>process</strong></div><div class="region"><span>06</span><strong>local FAQs</strong></div><div class="region"><span>07</span><strong>CTA</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>breadcrumb</strong></div><div class="region"><span>02</span><strong>hero</strong></div><div class="region"><span>03</span><strong>CTA</strong></div><div class="region"><span>04</span><strong>services</strong></div><div class="region"><span>05</span><strong>proof</strong></div><div class="region"><span>06</span><strong>process</strong></div><div class="region"><span>07</span><strong>FAQ</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Request local estimate</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>P06</code><h3>Projects Index</h3></div>
+    <p>/projects</p>
+  </header>
+  <p class="purpose">Present verified work as evidence and allow filtering by market/service/location.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>projects hero</strong></div><div class="region"><span>02</span><strong>filter controls</strong></div><div class="region"><span>03</span><strong>featured project</strong></div><div class="region"><span>04</span><strong>project grid</strong></div><div class="region"><span>05</span><strong>proof policy</strong></div><div class="region"><span>06</span><strong>CTA</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>hero</strong></div><div class="region"><span>02</span><strong>featured</strong></div><div class="region"><span>03</span><strong>filters</strong></div><div class="region"><span>04</span><strong>grid</strong></div><div class="region"><span>05</span><strong>CTA</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> View verified work</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>P07</code><h3>Project Detail</h3></div>
+    <p>/projects/[slug]</p>
+  </header>
+  <p class="purpose">Show a source-backed challenge, preparation, execution, and result.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>breadcrumb</strong></div><div class="region"><span>02</span><strong>project title/facts</strong></div><div class="region"><span>03</span><strong>before/after media</strong></div><div class="region"><span>04</span><strong>challenge</strong></div><div class="region"><span>05</span><strong>prep</strong></div><div class="region"><span>06</span><strong>execution</strong></div><div class="region"><span>07</span><strong>result</strong></div><div class="region"><span>08</span><strong>related proof</strong></div><div class="region"><span>09</span><strong>CTA</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>breadcrumb</strong></div><div class="region"><span>02</span><strong>facts</strong></div><div class="region"><span>03</span><strong>media</strong></div><div class="region"><span>04</span><strong>CTA</strong></div><div class="region"><span>05</span><strong>challenge</strong></div><div class="region"><span>06</span><strong>prep</strong></div><div class="region"><span>07</span><strong>result</strong></div><div class="region"><span>08</span><strong>related</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Request similar scope</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>P08</code><h3>Estimate Wizard</h3></div>
+    <p>/estimate</p>
+  </header>
+  <p class="purpose">Collect a qualified scope with minimum friction and provide an honest planning range.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>progress header</strong></div><div class="region"><span>02</span><strong>question region</strong></div><div class="region"><span>03</span><strong>context/help rail</strong></div><div class="region"><span>04</span><strong>range summary</strong></div><div class="region"><span>05</span><strong>contact/files</strong></div><div class="region"><span>06</span><strong>privacy/next step</strong></div><div class="region"><span>07</span><strong>confirmation</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>progress</strong></div><div class="region"><span>02</span><strong>question</strong></div><div class="region"><span>03</span><strong>help</strong></div><div class="region"><span>04</span><strong>range</strong></div><div class="region"><span>05</span><strong>contact</strong></div><div class="region"><span>06</span><strong>files</strong></div><div class="region"><span>07</span><strong>submit</strong></div><div class="region"><span>08</span><strong>confirmation</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Submit scope</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>P09</code><h3>Contact</h3></div>
+    <p>/contact</p>
+  </header>
+  <p class="purpose">Offer direct contact and a short qualified alternative to the estimate wizard.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>contact hero</strong></div><div class="region"><span>02</span><strong>channel choices</strong></div><div class="region"><span>03</span><strong>short form</strong></div><div class="region"><span>04</span><strong>response expectations</strong></div><div class="region"><span>05</span><strong>service/coverage links</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>hero</strong></div><div class="region"><span>02</span><strong>call/text</strong></div><div class="region"><span>03</span><strong>short form</strong></div><div class="region"><span>04</span><strong>expectations</strong></div><div class="region"><span>05</span><strong>links</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Contact Anthony</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>P10</code><h3>About</h3></div>
+    <p>/about</p>
+  </header>
+  <p class="purpose">Build confidence through owner story, operating principles, and verified facts.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>owner hero</strong></div><div class="region"><span>02</span><strong>verified facts</strong></div><div class="region"><span>03</span><strong>story</strong></div><div class="region"><span>04</span><strong>operating principles</strong></div><div class="region"><span>05</span><strong>work/process photography</strong></div><div class="region"><span>06</span><strong>CTA</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>owner</strong></div><div class="region"><span>02</span><strong>facts</strong></div><div class="region"><span>03</span><strong>CTA</strong></div><div class="region"><span>04</span><strong>story</strong></div><div class="region"><span>05</span><strong>principles</strong></div><div class="region"><span>06</span><strong>proof</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Start a conversation</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>P11</code><h3>Capabilities</h3></div>
+    <p>/capabilities</p>
+  </header>
+  <p class="purpose">Give commercial, facility, prime, and agency buyers a concise qualification view.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>capability hero</strong></div><div class="region"><span>02</span><strong>business facts</strong></div><div class="region"><span>03</span><strong>markets/scope</strong></div><div class="region"><span>04</span><strong>documentation status</strong></div><div class="region"><span>05</span><strong>process/closeout</strong></div><div class="region"><span>06</span><strong>project proof</strong></div><div class="region"><span>07</span><strong>CTA</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>hero</strong></div><div class="region"><span>02</span><strong>facts</strong></div><div class="region"><span>03</span><strong>CTA</strong></div><div class="region"><span>04</span><strong>scope</strong></div><div class="region"><span>05</span><strong>documents</strong></div><div class="region"><span>06</span><strong>process</strong></div><div class="region"><span>07</span><strong>proof</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Request capability conversation</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>P12</code><h3>Referral</h3></div>
+    <p>/refer</p>
+  </header>
+  <p class="purpose">Create an opaque referral link and explain verified terms without exposing PII.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>referral hero</strong></div><div class="region"><span>02</span><strong>terms</strong></div><div class="region"><span>03</span><strong>identity confirmation</strong></div><div class="region"><span>04</span><strong>code/link result</strong></div><div class="region"><span>05</span><strong>share controls</strong></div><div class="region"><span>06</span><strong>status</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>hero</strong></div><div class="region"><span>02</span><strong>terms</strong></div><div class="region"><span>03</span><strong>confirm</strong></div><div class="region"><span>04</span><strong>generate</strong></div><div class="region"><span>05</span><strong>share</strong></div><div class="region"><span>06</span><strong>status</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Create referral code</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>P13</code><h3>Review</h3></div>
+    <p>/review</p>
+  </header>
+  <p class="purpose">Offer the same honest public-review path to every customer while providing an independent support route.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>review hero</strong></div><div class="region"><span>02</span><strong>public review action</strong></div><div class="region"><span>03</span><strong>private support action</strong></div><div class="region"><span>04</span><strong>expectations</strong></div><div class="region"><span>05</span><strong>confirmation</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>hero</strong></div><div class="region"><span>02</span><strong>public review</strong></div><div class="region"><span>03</span><strong>support</strong></div><div class="region"><span>04</span><strong>confirmation</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Leave honest review</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>P14</code><h3>Resources Index</h3></div>
+    <p>/resources</p>
+  </header>
+  <p class="purpose">Help prospects make project decisions and create a governed SEO/content hub.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>resources hero</strong></div><div class="region"><span>02</span><strong>topic clusters</strong></div><div class="region"><span>03</span><strong>featured guide</strong></div><div class="region"><span>04</span><strong>guide grid</strong></div><div class="region"><span>05</span><strong>CTA</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>hero</strong></div><div class="region"><span>02</span><strong>featured</strong></div><div class="region"><span>03</span><strong>clusters</strong></div><div class="region"><span>04</span><strong>grid</strong></div><div class="region"><span>05</span><strong>CTA</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Choose a guide</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>P15</code><h3>Resource Article</h3></div>
+    <p>/resources/[slug]</p>
+  </header>
+  <p class="purpose">Answer one practical project question with sourced guidance and a contextual next step.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>breadcrumb</strong></div><div class="region"><span>02</span><strong>article header</strong></div><div class="region"><span>03</span><strong>summary</strong></div><div class="region"><span>04</span><strong>structured article</strong></div><div class="region"><span>05</span><strong>checklist/callout</strong></div><div class="region"><span>06</span><strong>related links</strong></div><div class="region"><span>07</span><strong>context CTA</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>breadcrumb</strong></div><div class="region"><span>02</span><strong>summary</strong></div><div class="region"><span>03</span><strong>CTA</strong></div><div class="region"><span>04</span><strong>article</strong></div><div class="region"><span>05</span><strong>checklist</strong></div><div class="region"><span>06</span><strong>related</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Apply guidance to project</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>P16</code><h3>Portal Sign-in / Invite</h3></div>
+    <p>/portal/login</p>
+  </header>
+  <p class="purpose">Authenticate customers and accept invitations without open staff registration.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>brand/context panel</strong></div><div class="region"><span>02</span><strong>auth panel</strong></div><div class="region"><span>03</span><strong>privacy/security note</strong></div><div class="region"><span>04</span><strong>support</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>brand</strong></div><div class="region"><span>02</span><strong>auth</strong></div><div class="region"><span>03</span><strong>support</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Sign in or accept invite</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>P17</code><h3>Legal / Privacy</h3></div>
+    <p>/privacy, /terms</p>
+  </header>
+  <p class="purpose">Explain data handling and terms in plain language.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>document header</strong></div><div class="region"><span>02</span><strong>last updated</strong></div><div class="region"><span>03</span><strong>table of contents</strong></div><div class="region"><span>04</span><strong>document sections</strong></div><div class="region"><span>05</span><strong>contact</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>header</strong></div><div class="region"><span>02</span><strong>summary</strong></div><div class="region"><span>03</span><strong>contents</strong></div><div class="region"><span>04</span><strong>document</strong></div><div class="region"><span>05</span><strong>contact</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Understand policy</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>P18</code><h3>404 / Error</h3></div>
+    <p>/404, /error</p>
+  </header>
+  <p class="purpose">Recover from an invalid or failed route with useful next actions.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>status code/title</strong></div><div class="region"><span>02</span><strong>plain explanation</strong></div><div class="region"><span>03</span><strong>recommended links</strong></div><div class="region"><span>04</span><strong>contact action</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>status</strong></div><div class="region"><span>02</span><strong>explanation</strong></div><div class="region"><span>03</span><strong>links</strong></div><div class="region"><span>04</span><strong>contact</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Return to valid path</footer>
+</article>
+</div></section><section><h2>Customer Portal</h2><div class="grid">
+<article class="card">
+  <header>
+    <div><code>C01</code><h3>Customer Overview</h3></div>
+    <p>/portal</p>
+  </header>
+  <p class="purpose">Show project status and one most important next action.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>app shell</strong></div><div class="region"><span>02</span><strong>next-action panel</strong></div><div class="region"><span>03</span><strong>project summary</strong></div><div class="region"><span>04</span><strong>appointments/documents/payments</strong></div><div class="region"><span>05</span><strong>timeline</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>header</strong></div><div class="region"><span>02</span><strong>next action</strong></div><div class="region"><span>03</span><strong>project</strong></div><div class="region"><span>04</span><strong>timeline</strong></div><div class="region"><span>05</span><strong>documents/payments</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Open next action</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>C02</code><h3>Customer Project Detail</h3></div>
+    <p>/portal/projects/[id]</p>
+  </header>
+  <p class="purpose">Provide one project source of truth for status, scope, schedule, files, and approvals.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>project header</strong></div><div class="region"><span>02</span><strong>status/timeline</strong></div><div class="region"><span>03</span><strong>scope</strong></div><div class="region"><span>04</span><strong>schedule</strong></div><div class="region"><span>05</span><strong>approvals</strong></div><div class="region"><span>06</span><strong>files</strong></div><div class="region"><span>07</span><strong>updates</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>header</strong></div><div class="region"><span>02</span><strong>next action</strong></div><div class="region"><span>03</span><strong>status</strong></div><div class="region"><span>04</span><strong>scope</strong></div><div class="region"><span>05</span><strong>approvals</strong></div><div class="region"><span>06</span><strong>files</strong></div><div class="region"><span>07</span><strong>updates</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Complete project next action</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>C03</code><h3>Appointment Detail</h3></div>
+    <p>/portal/appointments/[id]</p>
+  </header>
+  <p class="purpose">Show confirmed appointment facts and controlled reschedule/cancel actions.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>appointment facts</strong></div><div class="region"><span>02</span><strong>property/context</strong></div><div class="region"><span>03</span><strong>preparation instructions</strong></div><div class="region"><span>04</span><strong>actions</strong></div><div class="region"><span>05</span><strong>history</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>facts</strong></div><div class="region"><span>02</span><strong>action</strong></div><div class="region"><span>03</span><strong>instructions</strong></div><div class="region"><span>04</span><strong>history</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Confirm or reschedule</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>C04</code><h3>Estimate Review</h3></div>
+    <p>/portal/estimates/[id]</p>
+  </header>
+  <p class="purpose">Present a versioned estimate with scope, assumptions, exclusions, and next step.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>document header/version</strong></div><div class="region"><span>02</span><strong>scope</strong></div><div class="region"><span>03</span><strong>line groups</strong></div><div class="region"><span>04</span><strong>assumptions/exclusions</strong></div><div class="region"><span>05</span><strong>range/total</strong></div><div class="region"><span>06</span><strong>actions</strong></div><div class="region"><span>07</span><strong>history</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>header</strong></div><div class="region"><span>02</span><strong>total</strong></div><div class="region"><span>03</span><strong>action</strong></div><div class="region"><span>04</span><strong>scope</strong></div><div class="region"><span>05</span><strong>assumptions</strong></div><div class="region"><span>06</span><strong>history</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Acknowledge estimate</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>C05</code><h3>Proposal Review</h3></div>
+    <p>/portal/proposals/[id]</p>
+  </header>
+  <p class="purpose">Turn an approved scope into a clear decision document.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>proposal header</strong></div><div class="region"><span>02</span><strong>outcome/summary</strong></div><div class="region"><span>03</span><strong>scope</strong></div><div class="region"><span>04</span><strong>schedule</strong></div><div class="region"><span>05</span><strong>investment</strong></div><div class="region"><span>06</span><strong>terms</strong></div><div class="region"><span>07</span><strong>proof</strong></div><div class="region"><span>08</span><strong>actions</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>summary</strong></div><div class="region"><span>02</span><strong>investment</strong></div><div class="region"><span>03</span><strong>action</strong></div><div class="region"><span>04</span><strong>scope</strong></div><div class="region"><span>05</span><strong>schedule</strong></div><div class="region"><span>06</span><strong>terms</strong></div><div class="region"><span>07</span><strong>proof</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Approve proposal</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>C06</code><h3>Agreement Signature</h3></div>
+    <p>/portal/agreements/[id]</p>
+  </header>
+  <p class="purpose">Provide clear agreement review and evidence-backed signature.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>agreement status</strong></div><div class="region"><span>02</span><strong>document</strong></div><div class="region"><span>03</span><strong>required acknowledgements</strong></div><div class="region"><span>04</span><strong>signature action</strong></div><div class="region"><span>05</span><strong>evidence/receipt</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>status</strong></div><div class="region"><span>02</span><strong>summary</strong></div><div class="region"><span>03</span><strong>signature action</strong></div><div class="region"><span>04</span><strong>document</strong></div><div class="region"><span>05</span><strong>receipt</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Sign agreement</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>C07</code><h3>Payment</h3></div>
+    <p>/portal/payments/[id]</p>
+  </header>
+  <p class="purpose">Show payment state and launch a hosted Stripe Checkout session when authorized.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>payment status</strong></div><div class="region"><span>02</span><strong>amount/source document</strong></div><div class="region"><span>03</span><strong>hosted checkout action</strong></div><div class="region"><span>04</span><strong>history/receipt</strong></div><div class="region"><span>05</span><strong>support</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>status</strong></div><div class="region"><span>02</span><strong>amount</strong></div><div class="region"><span>03</span><strong>action</strong></div><div class="region"><span>04</span><strong>receipt</strong></div><div class="region"><span>05</span><strong>support</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Pay securely</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>C08</code><h3>Customer Files</h3></div>
+    <p>/portal/files</p>
+  </header>
+  <p class="purpose">List only files the customer is authorized to access.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>file categories</strong></div><div class="region"><span>02</span><strong>file list</strong></div><div class="region"><span>03</span><strong>upload request</strong></div><div class="region"><span>04</span><strong>privacy/retention details</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>categories</strong></div><div class="region"><span>02</span><strong>requested action</strong></div><div class="region"><span>03</span><strong>files</strong></div><div class="region"><span>04</span><strong>privacy</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Open authorized file</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>C09</code><h3>Change Order</h3></div>
+    <p>/portal/change-orders/[id]</p>
+  </header>
+  <p class="purpose">Explain scope, schedule, and price impact before approval.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>change status</strong></div><div class="region"><span>02</span><strong>reason</strong></div><div class="region"><span>03</span><strong>scope delta</strong></div><div class="region"><span>04</span><strong>schedule impact</strong></div><div class="region"><span>05</span><strong>price impact</strong></div><div class="region"><span>06</span><strong>evidence</strong></div><div class="region"><span>07</span><strong>actions</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>status</strong></div><div class="region"><span>02</span><strong>impact</strong></div><div class="region"><span>03</span><strong>action</strong></div><div class="region"><span>04</span><strong>reason</strong></div><div class="region"><span>05</span><strong>evidence</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Approve or decline change</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>C10</code><h3>Messages / Updates</h3></div>
+    <p>/portal/messages</p>
+  </header>
+  <p class="purpose">Provide a controlled project update stream and customer response channel.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>thread/project selector</strong></div><div class="region"><span>02</span><strong>message timeline</strong></div><div class="region"><span>03</span><strong>composer</strong></div><div class="region"><span>04</span><strong>attachments</strong></div><div class="region"><span>05</span><strong>notification settings</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>project</strong></div><div class="region"><span>02</span><strong>messages</strong></div><div class="region"><span>03</span><strong>composer</strong></div><div class="region"><span>04</span><strong>settings</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Read or send update</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>C11</code><h3>Customer Account</h3></div>
+    <p>/portal/settings</p>
+  </header>
+  <p class="purpose">Manage identity-facing preferences without changing resource ownership implicitly.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>profile</strong></div><div class="region"><span>02</span><strong>identity/security</strong></div><div class="region"><span>03</span><strong>notifications</strong></div><div class="region"><span>04</span><strong>authorized relationships</strong></div><div class="region"><span>05</span><strong>support</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>profile</strong></div><div class="region"><span>02</span><strong>security</strong></div><div class="region"><span>03</span><strong>notifications</strong></div><div class="region"><span>04</span><strong>relationships</strong></div><div class="region"><span>05</span><strong>support</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Manage account</footer>
+</article>
+</div></section><section><h2>Operator Cockpit</h2><div class="grid">
+<article class="card">
+  <header>
+    <div><code>O01</code><h3>Operator Overview</h3></div>
+    <p>/app</p>
+  </header>
+  <p class="purpose">Prioritize work, risk, and revenue with direct next actions.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>command bar</strong></div><div class="region"><span>02</span><strong>priority queue</strong></div><div class="region"><span>03</span><strong>pipeline/revenue summary</strong></div><div class="region"><span>04</span><strong>today calendar</strong></div><div class="region"><span>05</span><strong>project risks</strong></div><div class="region"><span>06</span><strong>automation/integration health</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>command bar</strong></div><div class="region"><span>02</span><strong>priority</strong></div><div class="region"><span>03</span><strong>today</strong></div><div class="region"><span>04</span><strong>pipeline</strong></div><div class="region"><span>05</span><strong>risks</strong></div><div class="region"><span>06</span><strong>health</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Open highest-priority item</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>O02</code><h3>Lead Inbox</h3></div>
+    <p>/app/leads</p>
+  </header>
+  <p class="purpose">Triage new and unresolved intake with SLA visibility.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>filters/search</strong></div><div class="region"><span>02</span><strong>lead table</strong></div><div class="region"><span>03</span><strong>SLA/quality indicators</strong></div><div class="region"><span>04</span><strong>preview/detail drawer</strong></div><div class="region"><span>05</span><strong>bulk-safe actions</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>filters</strong></div><div class="region"><span>02</span><strong>priority rows</strong></div><div class="region"><span>03</span><strong>detail sheet</strong></div><div class="region"><span>04</span><strong>actions</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Qualify lead</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>O03</code><h3>Pipeline Board</h3></div>
+    <p>/app/pipeline</p>
+  </header>
+  <p class="purpose">Visualize and advance opportunities through explicit stages.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>pipeline controls</strong></div><div class="region"><span>02</span><strong>stage columns</strong></div><div class="region"><span>03</span><strong>opportunity cards</strong></div><div class="region"><span>04</span><strong>totals</strong></div><div class="region"><span>05</span><strong>stale/SLA indicators</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>stage selector</strong></div><div class="region"><span>02</span><strong>cards</strong></div><div class="region"><span>03</span><strong>totals</strong></div><div class="region"><span>04</span><strong>filters</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Move opportunity</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>O04</code><h3>Opportunity Detail</h3></div>
+    <p>/app/opportunities/[id]</p>
+  </header>
+  <p class="purpose">Combine contact, property, scope, activity, tasks, documents, and revenue next step.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>record header/stage</strong></div><div class="region"><span>02</span><strong>next action</strong></div><div class="region"><span>03</span><strong>contact/property</strong></div><div class="region"><span>04</span><strong>scope/intake</strong></div><div class="region"><span>05</span><strong>activity</strong></div><div class="region"><span>06</span><strong>tasks</strong></div><div class="region"><span>07</span><strong>documents</strong></div><div class="region"><span>08</span><strong>revenue records</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>header</strong></div><div class="region"><span>02</span><strong>next action</strong></div><div class="region"><span>03</span><strong>contact/property</strong></div><div class="region"><span>04</span><strong>scope</strong></div><div class="region"><span>05</span><strong>tasks</strong></div><div class="region"><span>06</span><strong>activity</strong></div><div class="region"><span>07</span><strong>documents</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Complete next action</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>O05</code><h3>Contact / Property Detail</h3></div>
+    <p>/app/contacts/[id], /app/properties/[id]</p>
+  </header>
+  <p class="purpose">Maintain durable relationship and property facts separately from identity text.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>record header</strong></div><div class="region"><span>02</span><strong>contact/property facts</strong></div><div class="region"><span>03</span><strong>relationships/grants</strong></div><div class="region"><span>04</span><strong>history</strong></div><div class="region"><span>05</span><strong>opportunities/projects</strong></div><div class="region"><span>06</span><strong>files</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>header</strong></div><div class="region"><span>02</span><strong>facts</strong></div><div class="region"><span>03</span><strong>relationships</strong></div><div class="region"><span>04</span><strong>active records</strong></div><div class="region"><span>05</span><strong>history</strong></div><div class="region"><span>06</span><strong>files</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Review/update governed record</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>O06</code><h3>Calendar</h3></div>
+    <p>/app/calendar</p>
+  </header>
+  <p class="purpose">Coordinate appointments and crews with provider reconciliation.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>calendar controls</strong></div><div class="region"><span>02</span><strong>day/week/month view</strong></div><div class="region"><span>03</span><strong>unassigned requests</strong></div><div class="region"><span>04</span><strong>appointment drawer</strong></div><div class="region"><span>05</span><strong>provider health</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>date controls</strong></div><div class="region"><span>02</span><strong>agenda</strong></div><div class="region"><span>03</span><strong>unassigned</strong></div><div class="region"><span>04</span><strong>detail sheet</strong></div><div class="region"><span>05</span><strong>health</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Schedule appointment</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>O07</code><h3>Estimate Builder</h3></div>
+    <p>/app/estimates/[id]</p>
+  </header>
+  <p class="purpose">Create a versioned estimate from approved scope and assumptions.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>estimate header/status</strong></div><div class="region"><span>02</span><strong>scope source</strong></div><div class="region"><span>03</span><strong>line groups</strong></div><div class="region"><span>04</span><strong>assumptions/exclusions</strong></div><div class="region"><span>05</span><strong>totals</strong></div><div class="region"><span>06</span><strong>preview</strong></div><div class="region"><span>07</span><strong>version history</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>header</strong></div><div class="region"><span>02</span><strong>scope</strong></div><div class="region"><span>03</span><strong>lines</strong></div><div class="region"><span>04</span><strong>totals</strong></div><div class="region"><span>05</span><strong>preview</strong></div><div class="region"><span>06</span><strong>issue</strong></div><div class="region"><span>07</span><strong>history</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Issue estimate version</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>O08</code><h3>Proposal Builder</h3></div>
+    <p>/app/proposals/[id]</p>
+  </header>
+  <p class="purpose">Assemble an approved estimate into a proof-backed decision document.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>proposal header</strong></div><div class="region"><span>02</span><strong>selected estimate</strong></div><div class="region"><span>03</span><strong>summary/outcomes</strong></div><div class="region"><span>04</span><strong>scope/schedule</strong></div><div class="region"><span>05</span><strong>proof</strong></div><div class="region"><span>06</span><strong>terms</strong></div><div class="region"><span>07</span><strong>preview</strong></div><div class="region"><span>08</span><strong>send state</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>header</strong></div><div class="region"><span>02</span><strong>summary</strong></div><div class="region"><span>03</span><strong>scope</strong></div><div class="region"><span>04</span><strong>investment</strong></div><div class="region"><span>05</span><strong>proof</strong></div><div class="region"><span>06</span><strong>preview</strong></div><div class="region"><span>07</span><strong>send</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Send proposal</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>O09</code><h3>Agreement / Payment Monitor</h3></div>
+    <p>/app/revenue</p>
+  </header>
+  <p class="purpose">Show proposal, agreement, checkout, payment, refund, and reconciliation status.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>revenue filters</strong></div><div class="region"><span>02</span><strong>state summary</strong></div><div class="region"><span>03</span><strong>records table</strong></div><div class="region"><span>04</span><strong>exceptions</strong></div><div class="region"><span>05</span><strong>detail drawer</strong></div><div class="region"><span>06</span><strong>reconciliation</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>summary</strong></div><div class="region"><span>02</span><strong>exceptions</strong></div><div class="region"><span>03</span><strong>records</strong></div><div class="region"><span>04</span><strong>detail</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Resolve revenue state</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>O10</code><h3>Project Workspace</h3></div>
+    <p>/app/projects/[id]</p>
+  </header>
+  <p class="purpose">Operate project scope, schedule, assignments, updates, files, approvals, and closeout.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>project header/status</strong></div><div class="region"><span>02</span><strong>next action</strong></div><div class="region"><span>03</span><strong>scope/schedule</strong></div><div class="region"><span>04</span><strong>crew</strong></div><div class="region"><span>05</span><strong>timeline</strong></div><div class="region"><span>06</span><strong>files</strong></div><div class="region"><span>07</span><strong>changes</strong></div><div class="region"><span>08</span><strong>customer visibility</strong></div><div class="region"><span>09</span><strong>closeout</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>header</strong></div><div class="region"><span>02</span><strong>next action</strong></div><div class="region"><span>03</span><strong>schedule</strong></div><div class="region"><span>04</span><strong>crew</strong></div><div class="region"><span>05</span><strong>timeline</strong></div><div class="region"><span>06</span><strong>files</strong></div><div class="region"><span>07</span><strong>changes</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Advance project</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>O11</code><h3>Crew Assignment</h3></div>
+    <p>/app/crews</p>
+  </header>
+  <p class="purpose">Assign projects and tasks without exposing unauthorized customer data.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>crew/capacity summary</strong></div><div class="region"><span>02</span><strong>unassigned work</strong></div><div class="region"><span>03</span><strong>assignment board</strong></div><div class="region"><span>04</span><strong>conflicts</strong></div><div class="region"><span>05</span><strong>detail drawer</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>capacity</strong></div><div class="region"><span>02</span><strong>unassigned</strong></div><div class="region"><span>03</span><strong>assignments</strong></div><div class="region"><span>04</span><strong>conflicts</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Assign work</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>O12</code><h3>Files / Vault</h3></div>
+    <p>/app/files</p>
+  </header>
+  <p class="purpose">Manage business, project, and public media files with privacy classes and retention.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>privacy-class filters</strong></div><div class="region"><span>02</span><strong>file table</strong></div><div class="region"><span>03</span><strong>upload</strong></div><div class="region"><span>04</span><strong>scan/retention status</strong></div><div class="region"><span>05</span><strong>linked records</strong></div><div class="region"><span>06</span><strong>publication control</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>filters</strong></div><div class="region"><span>02</span><strong>upload</strong></div><div class="region"><span>03</span><strong>files</strong></div><div class="region"><span>04</span><strong>status</strong></div><div class="region"><span>05</span><strong>links</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Manage authorized document</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>O13</code><h3>Change Orders</h3></div>
+    <p>/app/change-orders</p>
+  </header>
+  <p class="purpose">Create, send, reconcile, and close scope changes.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>status summary</strong></div><div class="region"><span>02</span><strong>change table</strong></div><div class="region"><span>03</span><strong>impact preview</strong></div><div class="region"><span>04</span><strong>customer decision state</strong></div><div class="region"><span>05</span><strong>exceptions</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>summary</strong></div><div class="region"><span>02</span><strong>exceptions</strong></div><div class="region"><span>03</span><strong>changes</strong></div><div class="region"><span>04</span><strong>detail</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Resolve change</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>O14</code><h3>Tasks / SLA</h3></div>
+    <p>/app/tasks</p>
+  </header>
+  <p class="purpose">Make due work visible and connect every task to a canonical record.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>task filters</strong></div><div class="region"><span>02</span><strong>priority/due groups</strong></div><div class="region"><span>03</span><strong>task list</strong></div><div class="region"><span>04</span><strong>record preview</strong></div><div class="region"><span>05</span><strong>completion history</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>priority</strong></div><div class="region"><span>02</span><strong>due</strong></div><div class="region"><span>03</span><strong>tasks</strong></div><div class="region"><span>04</span><strong>detail</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Complete due action</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>O15</code><h3>Automation Center</h3></div>
+    <p>/app/automations</p>
+  </header>
+  <p class="purpose">Show workflow definitions, runs, failures, retries, and manual approval hooks.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>workflow health</strong></div><div class="region"><span>02</span><strong>definitions</strong></div><div class="region"><span>03</span><strong>run history</strong></div><div class="region"><span>04</span><strong>failure queue</strong></div><div class="region"><span>05</span><strong>detail trace</strong></div><div class="region"><span>06</span><strong>approval hooks</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>health</strong></div><div class="region"><span>02</span><strong>failures</strong></div><div class="region"><span>03</span><strong>workflows</strong></div><div class="region"><span>04</span><strong>run detail</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Inspect workflow</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>O16</code><h3>Integration Health</h3></div>
+    <p>/app/integrations</p>
+  </header>
+  <p class="purpose">Inventory Vercel-connected resources, provider state, webhooks, and reconciliation health.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>environment selector</strong></div><div class="region"><span>02</span><strong>integration cards</strong></div><div class="region"><span>03</span><strong>webhook receipts</strong></div><div class="region"><span>04</span><strong>errors</strong></div><div class="region"><span>05</span><strong>environment variables metadata</strong></div><div class="region"><span>06</span><strong>runbook</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>environment</strong></div><div class="region"><span>02</span><strong>errors</strong></div><div class="region"><span>03</span><strong>integrations</strong></div><div class="region"><span>04</span><strong>receipts</strong></div><div class="region"><span>05</span><strong>runbook</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Resolve connection health</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>O17</code><h3>Content / CMS</h3></div>
+    <p>/app/content</p>
+  </header>
+  <p class="purpose">Create, review, preview, and publish governed content versions.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>content types</strong></div><div class="region"><span>02</span><strong>content table</strong></div><div class="region"><span>03</span><strong>editor</strong></div><div class="region"><span>04</span><strong>proof/provenance</strong></div><div class="region"><span>05</span><strong>preview</strong></div><div class="region"><span>06</span><strong>publication history</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>types</strong></div><div class="region"><span>02</span><strong>drafts</strong></div><div class="region"><span>03</span><strong>editor</strong></div><div class="region"><span>04</span><strong>proof</strong></div><div class="region"><span>05</span><strong>preview</strong></div><div class="region"><span>06</span><strong>publish</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Publish verified content</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>O18</code><h3>SEO / GBP Workspace</h3></div>
+    <p>/app/growth</p>
+  </header>
+  <p class="purpose">Manage route health, local proof, content opportunities, and approval-gated GBP actions.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>growth summary</strong></div><div class="region"><span>02</span><strong>route/crawl health</strong></div><div class="region"><span>03</span><strong>local proof gaps</strong></div><div class="region"><span>04</span><strong>content opportunities</strong></div><div class="region"><span>05</span><strong>GBP draft queue</strong></div><div class="region"><span>06</span><strong>experiments</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>summary</strong></div><div class="region"><span>02</span><strong>issues</strong></div><div class="region"><span>03</span><strong>proof gaps</strong></div><div class="region"><span>04</span><strong>opportunities</strong></div><div class="region"><span>05</span><strong>GBP drafts</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Review growth action</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>O19</code><h3>Reviews / Referrals</h3></div>
+    <p>/app/reputation</p>
+  </header>
+  <p class="purpose">Track honest review invitations, support cases, referral codes, and attribution.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>reputation summary</strong></div><div class="region"><span>02</span><strong>review events</strong></div><div class="region"><span>03</span><strong>support queue</strong></div><div class="region"><span>04</span><strong>referrals</strong></div><div class="region"><span>05</span><strong>exceptions</strong></div><div class="region"><span>06</span><strong>policy status</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>summary</strong></div><div class="region"><span>02</span><strong>support</strong></div><div class="region"><span>03</span><strong>reviews</strong></div><div class="region"><span>04</span><strong>referrals</strong></div><div class="region"><span>05</span><strong>exceptions</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Resolve reputation item</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>O20</code><h3>Analytics / Attribution</h3></div>
+    <p>/app/analytics</p>
+  </header>
+  <p class="purpose">Connect acquisition and experience events to canonical leads, opportunities, projects, and payments.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>date/filter bar</strong></div><div class="region"><span>02</span><strong>revenue facts</strong></div><div class="region"><span>03</span><strong>funnel</strong></div><div class="region"><span>04</span><strong>source attribution</strong></div><div class="region"><span>05</span><strong>experiments</strong></div><div class="region"><span>06</span><strong>data quality/reconciliation</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>date</strong></div><div class="region"><span>02</span><strong>revenue</strong></div><div class="region"><span>03</span><strong>funnel</strong></div><div class="region"><span>04</span><strong>sources</strong></div><div class="region"><span>05</span><strong>quality</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Review revenue facts</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>O21</code><h3>Users / Roles</h3></div>
+    <p>/app/users</p>
+  </header>
+  <p class="purpose">Manage invitations, roles, MFA requirements, status, and resource grants.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>user summary</strong></div><div class="region"><span>02</span><strong>user table</strong></div><div class="region"><span>03</span><strong>invitation panel</strong></div><div class="region"><span>04</span><strong>role/grant detail</strong></div><div class="region"><span>05</span><strong>MFA/status</strong></div><div class="region"><span>06</span><strong>audit</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>summary</strong></div><div class="region"><span>02</span><strong>invitations</strong></div><div class="region"><span>03</span><strong>users</strong></div><div class="region"><span>04</span><strong>detail</strong></div><div class="region"><span>05</span><strong>audit</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Manage invitation or role</footer>
+</article>
+
+<article class="card">
+  <header>
+    <div><code>O22</code><h3>Settings</h3></div>
+    <p>/app/settings</p>
+  </header>
+  <p class="purpose">Manage governed company, workflow, publication, and environment-safe settings.</p>
+  <div class="frames">
+    <div class="desktop-frame"><div class="frame-label">Desktop</div><div class="region"><span>01</span><strong>settings navigation</strong></div><div class="region"><span>02</span><strong>company facts</strong></div><div class="region"><span>03</span><strong>communications</strong></div><div class="region"><span>04</span><strong>workflow policies</strong></div><div class="region"><span>05</span><strong>publication defaults</strong></div><div class="region"><span>06</span><strong>environment metadata</strong></div><div class="region"><span>07</span><strong>audit</strong></div></div>
+    <div class="mobile-frame"><div class="frame-label">Mobile</div><div class="region"><span>01</span><strong>navigation</strong></div><div class="region"><span>02</span><strong>company</strong></div><div class="region"><span>03</span><strong>communications</strong></div><div class="region"><span>04</span><strong>workflow</strong></div><div class="region"><span>05</span><strong>publication</strong></div><div class="region"><span>06</span><strong>audit</strong></div></div>
+  </div>
+  <footer><strong>Primary:</strong> Update governed setting</footer>
+</article>
+</div></section>
+</main>
+</body>
+</html>

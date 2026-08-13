@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "1.0.0",
+  "nodes": [
+    {
+      "id": "B25-DESIGN-GOVERNANCE",
+      "status": "verification",
+      "surface": "public-marketing",
+      "routes": [
+        "/",
+        "/estimate",
+        "/refer"
+      ],
+      "templateIds": [
+        "P01",
+        "P08",
+        "P12"
+      ],
+      "requiredSkills": [
+        "design-md-governance",
+        "ui-ux-pro-max",
+        "impeccable",
+        "design-taste-frontend",
+        "redesign-existing-projects",
+        "anti-slop-ui-review"
+      ]
+    }
+  ]
+}

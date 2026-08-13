@@ -1,0 +1,72 @@
+{
+  "baseHeadSha": "03d62fa0de6673ee607715784184fa21ad86c5f2",
+  "checkpointId": "cp-20260729-stl204-implementation-001",
+  "checkpointPurpose": "Implement and verify the staff CRM pipeline, deterministic next action, complete opportunity timeline, governed transitions, and accessible operator drawer.",
+  "completedStage": "stage:STL-204:complete",
+  "graphSha256": "4f6a7d81e9c46ecbf886703fcf03988dd317115f9577152aa7ac09bd5ec532c9",
+  "issueDecision": {
+    "action": "update_existing_draft_pr",
+    "reason": "The audited node requires updating an existing draft pull request after the exact commit is pushed; no duplicate pull request is authorized."
+  },
+  "nodeId": "STL-204",
+  "productionMutationAuthorized": false,
+  "programId": "stl-post-g20-sequential-tdd-v1",
+  "reviewAudit": [
+    {
+      "reviewer": "Lovelace",
+      "status": "Bounded executor completed the red-first implementation inside the four authorized paths and reported the focused test green.",
+      "taskId": "019faf4f-0f2f-7210-b119-eca109a29b5f"
+    },
+    {
+      "reviewer": "Copernicus",
+      "status": "Independent verifier completed three bounded closure passes; all production findings were repaired and the final verdict was CLEAN.",
+      "taskId": "019faf69-7a8f-7de3-819b-45a57f6cc905"
+    }
+  ],
+  "reviews": [
+    {
+      "reviewer": "Lovelace",
+      "status": "implemented"
+    },
+    {
+      "reviewer": "Copernicus",
+      "status": "approved"
+    }
+  ],
+  "schemaVersion": 1,
+  "tdd": {
+    "green": "Five focused behavioral tests pass for the exhaustive transition table, authorized and idempotent mutation behavior, stale and invalid transition rejection, tenant denial, actor-bound audit/event records, legacy timeline reconstruction, stable ordering, and deterministic next action.",
+    "red": "The initial focused contract test failed 0/1 because the governed opportunity transition contract, pipeline query, complete timeline, and operator drawer did not exist."
+  },
+  "verification": [
+    {
+      "command": "npx tsx --test tests/crm-pipeline.test.mjs",
+      "result": "5/5",
+      "status": "passed"
+    },
+    {
+      "command": "npm test",
+      "result": "535/535",
+      "status": "passed"
+    },
+    {
+      "command": "npm run lint",
+      "result": "design, architecture, Git, React, and TypeScript checks",
+      "status": "passed"
+    },
+    {
+      "command": "npm run build",
+      "result": "44/44 routes compiled and generated",
+      "status": "passed"
+    },
+    {
+      "command": "browser desktop 1440x900 and mobile 390x844 /manage checks",
+      "result": "protected route failed closed without local identity configuration and had no horizontal overflow",
+      "status": "passed"
+    },
+    {
+      "command": "git diff --cached --check",
+      "status": "passed"
+    }
+  ]
+}

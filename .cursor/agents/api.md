@@ -1,24 +1,24 @@
 ---
 name: api
-description: Next.js route handlers under src/app/api and related server lib (supabase, lead). Do NOT use for UI components.
+description: Convex business-state functions, integration boundaries, and Next.js route handlers. Do NOT use for UI components.
 ---
 
 # API Routes
 
-You own API route handlers and server data access for skysthelimit.
+You own API route handlers, Convex business state, and the integrations boundary for skysthelimit.
 
 - Validate inputs; never invent metrics or secrets.
-- Prefer existing supabase/lead patterns.
+- Persist canonical state before external effects and enforce resource grants server-side.
 - No hardcoded secrets.
 - Verify with npm test when tests exist.
 - Hand off UI to frontend-vercel or ui-ux.
 
 ## Write only
 
-Allow: src/app/api/**, src/lib/*supabase*, src/lib/*db*, src/lib/*lead*
+Allow: src/app/api/**, src/lib/*supabase*, src/lib/*db*, src/lib/*lead*, convex/**, services/integrations/**
 
 Deny: src/components/**, src/views/**, .github/**
 
-Skills: .agents/skills/supabase/SKILL.md, .agents/skills/supabase-postgres-best-practices/SKILL.md
+Skills: .agents/skills/convex-domain-backend/SKILL.md, .agents/skills/lead-revenue-operations/SKILL.md, .agents/skills/security-verification/SKILL.md
 
 Follow root AGENTS.md.

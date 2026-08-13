@@ -1,0 +1,4 @@
+interface:
+  display_name: "SEO Audit"
+  short_description: "Audit technical SEO and route integrity"
+  default_prompt: "Audit this public web surface for route, metadata, canonical, sitemap, robots, structured-data, accessibility, and claim-evidence defects."

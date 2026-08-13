@@ -1,0 +1,236 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://skysthelimitpaintingllc.com/schemas/provider-access-ledger.schema.json",
+  "title": "Provider Access Ledger",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "programId",
+    "capturedAt",
+    "productionMutationAuthorized",
+    "providers"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "./provider-access-ledger.schema.json"
+    },
+    "schemaVersion": {
+      "const": "1.0.0"
+    },
+    "programId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "capturedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "productionMutationAuthorized": {
+      "const": false
+    },
+    "providers": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/provider"
+      }
+    }
+  },
+  "$defs": {
+    "verificationStatus": {
+      "enum": [
+        "verified",
+        "partial",
+        "unverified",
+        "not-selected",
+        "blocked"
+      ]
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "label",
+        "verificationStatus"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "verificationStatus": {
+          "$ref": "#/$defs/verificationStatus"
+        }
+      }
+    },
+    "resource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "resourceType",
+        "id",
+        "name",
+        "environment",
+        "verificationStatus"
+      ],
+      "properties": {
+        "resourceType": {
+          "type": "string",
+          "minLength": 1
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "environment": {
+          "type": "string",
+          "minLength": 1
+        },
+        "verificationStatus": {
+          "$ref": "#/$defs/verificationStatus"
+        }
+      }
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "verificationStatus",
+        "resourceIds"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "verificationStatus": {
+          "$ref": "#/$defs/verificationStatus"
+        },
+        "resourceIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "reference",
+        "verificationStatus"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reference": {
+          "type": "string",
+          "minLength": 1
+        },
+        "verificationStatus": {
+          "$ref": "#/$defs/verificationStatus"
+        }
+      }
+    },
+    "provider": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "providerId",
+        "displayName",
+        "accessStatus",
+        "account",
+        "teams",
+        "resources",
+        "environments",
+        "permissions",
+        "requiredForNodes",
+        "evidence",
+        "secretMaterialStored"
+      ],
+      "properties": {
+        "providerId": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "accessStatus": {
+          "$ref": "#/$defs/verificationStatus"
+        },
+        "account": {
+          "$ref": "#/$defs/identity"
+        },
+        "teams": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/identity"
+          }
+        },
+        "resources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/resource"
+          }
+        },
+        "environments": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/environment"
+          }
+        },
+        "permissions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "requiredForNodes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/evidence"
+          }
+        },
+        "secretMaterialStored": {
+          "const": false
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

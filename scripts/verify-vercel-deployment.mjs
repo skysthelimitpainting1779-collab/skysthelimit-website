@@ -17,11 +17,13 @@ import { execFileSync } from 'node:child_process';
 
 const DEFAULT_PROJECT = 'prj_L3ZMoQ79YLx9G2o6Lg9OubqO9H8m';
 const DEFAULT_TEAM = 'team_bseTA2AuCO6A2fCOVY9ubrJo';
+const GIT_SHA = /^[a-f0-9]{40}$/i;
 
 function parseArgs(argv) {
-  const out = { timeout: 720, sha: '', interval: 15 };
+  const out = { timeout: 720, sha: '', url: '', interval: 15 };
   for (let i = 0; i < argv.length; i++) {
     if (argv[i] === '--sha') out.sha = argv[++i] || '';
+    else if (argv[i] === '--url') out.url = argv[++i] || '';
     else if (argv[i] === '--timeout') out.timeout = Number(argv[++i]) || 720;
     else if (argv[i] === '--interval') out.interval = Number(argv[++i]) || 15;
   }
@@ -67,8 +69,53 @@ function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
 }
 
+export function deploymentMatchesCommit(deployment, sha) {
+  const expected = String(sha || '').trim().toLowerCase();
+  if (!GIT_SHA.test(expected)) return false;
+  const meta = deployment?.meta || {};
+  const commits = [
+    deployment?.gitSource?.sha,
+    meta.githubCommitSha,
+    meta.gitlabCommitSha,
+    meta.bitbucketCommitSha,
+  ]
+    .filter((value) => typeof value === 'string' && value.trim())
+    .map((value) => value.trim().toLowerCase());
+  return commits.length > 0
+    && commits.every((commit) => GIT_SHA.test(commit) && commit === expected);
+}
+
+export function deploymentMatchesProject(deployment, projectId) {
+  const expected = String(projectId || '').trim();
+  if (!expected) return false;
+  const candidates = [
+    deployment?.projectId,
+    deployment?.project?.id,
+    typeof deployment?.project === 'string' ? deployment.project : null,
+  ].filter((value) => typeof value === 'string' && value.trim());
+  return candidates.some((value) => value.trim() === expected);
+}
+
+export function normalizeDeploymentUrl(value) {
+  try {
+    const parsed = new URL(String(value || ''));
+    if (
+      parsed.protocol !== 'https:' ||
+      parsed.username ||
+      parsed.password ||
+      parsed.search ||
+      parsed.hash ||
+      (parsed.pathname && parsed.pathname !== '/')
+    ) {
+      return null;
+    }
+    return parsed.origin;
+  } catch {
+    return null;
+  }
+}
+
 async function findDeployment(token, projectId, teamId, sha) {
-  // Prefer meta githubCommitSha match
   const qs = new URLSearchParams({
     projectId,
     limit: '20',
@@ -76,30 +123,22 @@ async function findDeployment(token, projectId, teamId, sha) {
   if (teamId) qs.set('teamId', teamId);
   const data = await vercelFetch(`/v6/deployments?${qs}`, token, null);
   const list = data.deployments || data || [];
-  const short = sha.slice(0, 7);
-  const match = list.find((d) => {
-    const meta = d.meta || {};
-    const commit =
-      meta.githubCommitSha ||
-      meta.gitlabCommitSha ||
-      meta.bitbucketCommitSha ||
-      '';
-    return (
-      commit === sha ||
-      commit.startsWith(short) ||
-      (d.url && String(d.name || '').includes(short))
-    );
-  });
+  const match = list.find((deployment) => deploymentMatchesCommit(deployment, sha));
   return match || null;
 }
 
 async function getDeployment(token, idOrUrl, teamId) {
   const id = String(idOrUrl).replace(/^https?:\/\//, '').split('/')[0];
+  const query = new URLSearchParams({ withGitRepoInfo: 'true' });
   // If it's a deployment id (dpl_...) use v13
   if (String(idOrUrl).startsWith('dpl_') || String(idOrUrl).match(/^[A-Za-z0-9]{8,}$/)) {
-    return vercelFetch(`/v13/deployments/${encodeURIComponent(idOrUrl)}`, token, teamId);
+    return vercelFetch(
+      `/v13/deployments/${encodeURIComponent(idOrUrl)}?${query}`,
+      token,
+      teamId,
+    );
   }
-  return vercelFetch(`/v13/deployments/${encodeURIComponent(id)}`, token, teamId);
+  return vercelFetch(`/v13/deployments/${encodeURIComponent(id)}?${query}`, token, teamId);
 }
 
 async function healthCheck(url) {
@@ -137,8 +176,12 @@ export async function verifyVercelDeployment(options = {}) {
   const projectId = process.env.VERCEL_PROJECT_ID || DEFAULT_PROJECT;
   const teamId = process.env.VERCEL_ORG_ID || process.env.VERCEL_TEAM_ID || DEFAULT_TEAM;
   const sha = options.sha || gitSha();
-  if (!sha) {
-    return { ok: false, error: 'No commit SHA (GITHUB_SHA / git)' };
+  if (!GIT_SHA.test(String(sha || ''))) {
+    return { ok: false, error: 'A full 40-character commit SHA is required' };
+  }
+  const requestedUrl = options.url ? normalizeDeploymentUrl(options.url) : '';
+  if (options.url && !requestedUrl) {
+    return { ok: false, error: 'Deployment URL must use HTTPS' };
   }
 
   const timeoutMs = (options.timeout || 720) * 1000;
@@ -152,10 +195,30 @@ export async function verifyVercelDeployment(options = {}) {
 
   while (Date.now() - start < timeoutMs) {
     try {
-      deployment = await findDeployment(token, projectId, teamId, sha);
+      deployment = requestedUrl
+        ? await getDeployment(token, requestedUrl, teamId)
+        : await findDeployment(token, projectId, teamId, sha);
       if (deployment) {
         const id = deployment.uid || deployment.id;
-        const detail = id ? await getDeployment(token, id, teamId) : deployment;
+        const detail = requestedUrl
+          ? deployment
+          : id ? await getDeployment(token, id, teamId) : deployment;
+        if (!deploymentMatchesProject(detail, projectId)) {
+          return {
+            ok: false,
+            error: 'Deployment does not belong to the configured Vercel project',
+            sha,
+            deploymentId: id,
+          };
+        }
+        if (!deploymentMatchesCommit(detail, sha)) {
+          return {
+            ok: false,
+            error: 'Deployment commit metadata does not exactly match requested SHA',
+            sha,
+            deploymentId: id,
+          };
+        }
         const state =
           detail.readyState ||
           detail.status ||
@@ -164,6 +227,7 @@ export async function verifyVercelDeployment(options = {}) {
           'UNKNOWN';
         lastState = state;
         const url =
+          requestedUrl ||
           (detail.url && `https://${detail.url}`) ||
           (deployment.url && `https://${deployment.url}`) ||
           detail.alias?.[0] ||

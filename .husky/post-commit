@@ -1,9 +1,32 @@
 #!/bin/sh
-# Entire CLI hooks
-# Post-commit hook: condense session data if commit has Entire-Checkpoint trailer
-if command -v entire >/dev/null 2>&1; then entire hooks git post-commit 2>/dev/null || true; else :; fi
-# Chain: run pre-existing hook
-_entire_hook_dir="$(dirname "$0")"
-if [ -x "$_entire_hook_dir/post-commit.pre-entire" ]; then
-    "$_entire_hook_dir/post-commit.pre-entire" "$@"
+
+if command -v entire >/dev/null 2>&1; then
+  entire hooks git post-commit 2>/dev/null || true
 fi
+
+[ "${GRAPHIFY_SKIP_HOOK:-0}" = "1" ] && exit 0
+
+if command -v python >/dev/null 2>&1; then
+  _PYTHON=python
+elif command -v python3 >/dev/null 2>&1; then
+  _PYTHON=python3
+else
+  printf '%s\n' '[graphify] Python is required to refresh the code graph.' >&2
+  exit 0
+fi
+
+_GRAPHIFY_LOG="${GRAPHIFY_REBUILD_LOG:-${HOME}/.cache/graphify-rebuild.log}"
+"$_PYTHON" -c "import os, subprocess, sys
+from pathlib import Path
+log = Path(os.environ.get('GRAPHIFY_REBUILD_LOG') or (Path.home() / '.cache' / 'graphify-rebuild.log'))
+log.parent.mkdir(parents=True, exist_ok=True)
+out = log.open('a', buffering=1, encoding='utf-8', errors='replace')
+cmd = [sys.executable, 'scripts/execution/refresh_graphify.py']
+kwargs = dict(cwd=os.getcwd(), stdin=subprocess.DEVNULL, stdout=out, stderr=subprocess.STDOUT, close_fds=True)
+if os.name == 'nt':
+    kwargs['creationflags'] = 0x00000008 | 0x00000200
+else:
+    kwargs['start_new_session'] = True
+subprocess.Popen(cmd, **kwargs)
+"
+printf '%s\n' "[graphify] commit refresh queued: $_GRAPHIFY_LOG"

@@ -1,0 +1,25 @@
+{
+  "baseHeadSha": "e59c57621c8bfb7abdc72ecd7217140bc1685ca4",
+  "checkpointId": "cp-20260730-platform-foundation-telemetry-cli-green-001",
+  "checkpointPurpose": "Document an executable telemetry-gate invocation with its required absolute input path and fail-closed lifecycle behavior.",
+  "graphSha256": "4f6a7d81e9c46ecbf886703fcf03988dd317115f9577152aa7ac09bd5ec532c9",
+  "nodeId": "G26-AUDIT-REMEDIATION-READY",
+  "programId": "stl-post-g20-sequential-tdd-v1",
+  "schemaVersion": 1,
+  "tdd": {
+    "redCheckpoint": "cp-20260730-platform-foundation-telemetry-cli-red-001",
+    "green": "AGENTS.md now names the mandatory --input request path, persistence operation, and nonzero-exit stop condition without presenting an unusable bare delivery command."
+  },
+  "verification": [
+    {
+      "command": "python in-memory agents telemetry command contract validation",
+      "result": "exact executable invocation, lifecycle persistence operation, and fail-closed nonzero exit language are present; bare delivery invocation is absent",
+      "status": "passed"
+    },
+    {
+      "command": "source review of tests/agents-telemetry-command.test.mjs at e59c57621c8bfb7abdc72ecd7217140bc1685ca4",
+      "result": "planned AGENTS.md content satisfies all focused red-test assertions",
+      "status": "passed"
+    }
+  ]
+}

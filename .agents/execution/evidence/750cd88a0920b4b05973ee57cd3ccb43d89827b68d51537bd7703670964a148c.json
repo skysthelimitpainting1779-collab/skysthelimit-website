@@ -1,0 +1,25 @@
+{
+  "baseHeadSha": "e3a3492ad5e2407a9759b644eb290883ca525b7d",
+  "checkpointId": "cp-20260730-platform-foundation-bootstrap-red-001",
+  "checkpointPurpose": "Prove that the dev ruleset would require default-branch pull_request_target checks before those workflows are available on main.",
+  "graphSha256": "4f6a7d81e9c46ecbf886703fcf03988dd317115f9577152aa7ac09bd5ec532c9",
+  "nodeId": "G26-AUDIT-REMEDIATION-READY",
+  "programId": "stl-post-g20-sequential-tdd-v1",
+  "schemaVersion": 1,
+  "tdd": {
+    "red": "The focused contract fails because dev requires Validate Branch Flow and Independent PR Approval before their pull_request_target workflow definitions exist on the default branch.",
+    "expectedFailure": "dev required status contexts contain Independent PR Approval and Validate Branch Flow"
+  },
+  "verification": [
+    {
+      "command": "node --test --test-name-pattern=\"dev bootstrap\" tests/branch-policy.test.mjs",
+      "result": "expected red failure observed: actual dev contexts included Independent PR Approval and Validate Branch Flow",
+      "status": "passed"
+    },
+    {
+      "command": "official GitHub pull_request_target security and event documentation review",
+      "result": "pull_request_target runs trusted workflow code from the default branch, so new checks cannot be assumed available from dev alone",
+      "status": "passed"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+name: PR Approval
+
+on:
+  pull_request_target:
+    branches: [main, dev]
+    types: [opened, synchronize, reopened, ready_for_review, converted_to_draft]
+  pull_request_review:
+    types: [submitted, edited, dismissed]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: pr-approval-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  approval:
+    name: Independent PR Approval
+    if: github.event.pull_request.base.ref == 'main' || github.event.pull_request.base.ref == 'dev'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Keep draft pull requests blocked
+        if: github.event.pull_request.draft
+        run: |
+          echo "::error::Independent approval is unavailable while the pull request is draft."
+          exit 1
+
+      - name: Checkout trusted base revision
+        if: github.event.pull_request.draft == false
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          ref: ${{ github.event.pull_request.base.sha }}
+
+      - name: Verify independent approval at exact head
+        if: github.event.pull_request.draft == false
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          PR_REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+        run: node scripts/verify-pr-review.mjs

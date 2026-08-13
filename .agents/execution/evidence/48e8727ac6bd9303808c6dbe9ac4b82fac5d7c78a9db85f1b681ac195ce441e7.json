@@ -1,0 +1,25 @@
+{
+  "baseHeadSha": "9c1451312a5a4b30ef70041f5e27d965ef66f22e",
+  "checkpointId": "cp-20260730-platform-foundation-red-001",
+  "checkpointPurpose": "Add the focused branch and deployment governance contract before implementing the missing policy.",
+  "graphSha256": "4f6a7d81e9c46ecbf886703fcf03988dd317115f9577152aa7ac09bd5ec532c9",
+  "nodeId": "G26-AUDIT-REMEDIATION-READY",
+  "programId": "stl-post-g20-sequential-tdd-v1",
+  "schemaVersion": 1,
+  "tdd": {
+    "red": "The focused test fails because CI and Security still target staging instead of dev.",
+    "expectedFailure": ".github/workflows/ci.yml must target exactly main and dev"
+  },
+  "verification": [
+    {
+      "command": "node --test --test-name-pattern=\"CI and Security\" tests/branch-policy.test.mjs",
+      "result": "expected red failure observed: .github/workflows/ci.yml must target exactly main and dev",
+      "status": "passed"
+    },
+    {
+      "command": "python in-memory test-source validation",
+      "result": "test parses, uses only Node built-ins, and asserts the approved main/dev contract",
+      "status": "passed"
+    }
+  ]
+}

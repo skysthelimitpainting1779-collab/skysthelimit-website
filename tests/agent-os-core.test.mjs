@@ -5,6 +5,8 @@ import {
   MAX_TASK_ATTEMPTS,
   assertPhaseEntry,
   bumpMetric,
+  getAgentCheckpointDir,
+  getRepositoryStateNamespace,
   hasCheckpointForTask,
   idempotencyKey,
   isTaskRunnable,
@@ -12,8 +14,11 @@ import {
   pickNextTask,
   safePhaseResumeIndex,
   shouldQuarantineTask,
+  writePhaseCheckpoint,
 } from '../scripts/agent-os-core.mjs';
-import { readFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 
 test('exports a versioned bulletproof core', () => {
   assert.match(AGENT_OS_VERSION, /^\d+\.\d+\.\d+$/);
@@ -70,12 +75,88 @@ test('shouldQuarantineTask at max attempts', () => {
 });
 
 test('assertPhaseEntry auto-seeds when checkpoint missing', () => {
+  const repoRoot = mkdtempSync(join(tmpdir(), 'agent-os-repo-'));
+  const executableDataRoot = mkdtempSync(join(tmpdir(), 'agent-os-state-'));
   const db = { checkpoints: [] };
   const task = { id: `TEST-PHASE-${Date.now()}`, title: 't' };
-  const entry = assertPhaseEntry(db, task, 'RESEARCH', 'SESS-1', { autoSeed: true });
-  assert.equal(entry.ok, true);
-  assert.equal(entry.seeded, true);
-  assert.equal(hasCheckpointForTask(db, task.id), true);
+  try {
+    const dataDir = getAgentCheckpointDir(
+      { ANTIGRAVITY_EXECUTABLE_DATA_DIR: executableDataRoot },
+      repoRoot
+    );
+    const entry = assertPhaseEntry(db, task, 'RESEARCH', 'SESS-1', {
+      autoSeed: true,
+      root: repoRoot,
+      dataDir,
+    });
+    assert.equal(entry.ok, true);
+    assert.equal(entry.seeded, true);
+    assert.equal(hasCheckpointForTask(db, task.id, repoRoot, dataDir), true);
+  } finally {
+    rmSync(repoRoot, { recursive: true, force: true });
+    rmSync(executableDataRoot, { recursive: true, force: true });
+  }
+});
+
+test('phase checkpoints are isolated by repository and exact task identity', () => {
+  const repoRoot = mkdtempSync(join(tmpdir(), 'agent-os-repo-a-'));
+  const secondRepoRoot = mkdtempSync(join(tmpdir(), 'agent-os-repo-b-'));
+  const executableDataRoot = mkdtempSync(join(tmpdir(), 'agent-os-state-'));
+  const dataDir = getAgentCheckpointDir({
+    ANTIGRAVITY_EXECUTABLE_DATA_DIR: executableDataRoot,
+  }, repoRoot);
+  const secondDataDir = getAgentCheckpointDir({
+    ANTIGRAVITY_EXECUTABLE_DATA_DIR: executableDataRoot,
+  }, secondRepoRoot);
+
+  try {
+    assert.equal(getRepositoryStateNamespace(repoRoot), getRepositoryStateNamespace(join(repoRoot, '.')));
+    assert.notEqual(getRepositoryStateNamespace(repoRoot), getRepositoryStateNamespace(secondRepoRoot));
+    assert.notEqual(dataDir, secondDataDir);
+
+    const db = { checkpoints: [] };
+    const record = writePhaseCheckpoint(db, {
+      taskId: 'TASK-1',
+      sessionId: 'SESS-1',
+      phase: 'PLAN',
+      root: repoRoot,
+      dataDir,
+    });
+
+    assert.equal(existsSync(join(repoRoot, '.agents', 'goals', '_harness')), false);
+    assert.equal(hasCheckpointForTask({ checkpoints: [] }, record.task_id, repoRoot, dataDir), true);
+    assert.equal(hasCheckpointForTask({ checkpoints: [] }, 'TASK-10', repoRoot, dataDir), false);
+    assert.equal(hasCheckpointForTask({ checkpoints: [] }, record.task_id, secondRepoRoot, secondDataDir), false);
+    assert.match(db.checkpoints[0].evidence, /agent-os[\\/].+[\\/]checkpoints[\\/].+[\\/].+\.json$/);
+  } finally {
+    rmSync(repoRoot, { recursive: true, force: true });
+    rmSync(secondRepoRoot, { recursive: true, force: true });
+    rmSync(executableDataRoot, { recursive: true, force: true });
+  }
+});
+
+test('in-memory checkpoint lookup never treats task prefixes or checkpoint ids as identity', () => {
+  const dataDir = mkdtempSync(join(tmpdir(), 'agent-os-empty-state-'));
+  const db = {
+    checkpoints: [
+      {
+        id: 'CHK-TASK-10-123-PLAN',
+        task_id: 'TASK-10',
+      },
+      {
+        id: 'CHK-TASK-1-456-PLAN',
+        task_id: 'DIFFERENT-TASK',
+      },
+    ],
+  };
+
+  try {
+    assert.equal(hasCheckpointForTask(db, 'TASK-1', process.cwd(), dataDir), false);
+    assert.equal(hasCheckpointForTask(db, 'TASK-10', process.cwd(), dataDir), true);
+    assert.equal(hasCheckpointForTask(db, 'DIFFERENT-TASK', process.cwd(), dataDir), true);
+  } finally {
+    rmSync(dataDir, { recursive: true, force: true });
+  }
 });
 
 test('idempotencyKey is stable', () => {

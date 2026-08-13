@@ -1,0 +1,490 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/skys-limit-sequential-tdd-execution-graph-audited.schema.json",
+  "title": "Sky's the Limit Audited Sequential TDD JSONL Record",
+  "type": "object",
+  "required": [
+    "recordId",
+    "recordType",
+    "schemaVersion",
+    "programId"
+  ],
+  "properties": {
+    "recordId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "recordType": {
+      "type": "string",
+      "enum": [
+        "acceptance_criterion",
+        "agent",
+        "batch",
+        "cost_test",
+        "edge",
+        "execution_cursor",
+        "loop",
+        "node",
+        "policy",
+        "program",
+        "rule",
+        "source",
+        "source_edge",
+        "stage",
+        "state_snapshot",
+        "stop_condition",
+        "telemetry_baseline",
+        "test_contract"
+      ]
+    },
+    "schemaVersion": {
+      "const": "1.1.0"
+    },
+    "programId": {
+      "const": "stl-post-g20-sequential-tdd-v1"
+    },
+    "nodeId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "stageId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string"
+    },
+    "dependsOn": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "sequentialRank": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "ordinal": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "from": {
+      "type": "string"
+    },
+    "to": {
+      "type": "string"
+    },
+    "required": {
+      "type": "boolean"
+    },
+    "mandatory": {
+      "type": "boolean"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "recordType": {
+            "const": "program"
+          }
+        },
+        "required": [
+          "recordType"
+        ]
+      },
+      "then": {
+        "required": [
+          "title",
+          "generatedAt",
+          "repository",
+          "branch",
+          "currentHead",
+          "resumeGate",
+          "executionMode",
+          "globalWriterLimit",
+          "draftPrPolicy",
+          "stopBefore"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "recordType": {
+            "const": "source"
+          }
+        },
+        "required": [
+          "recordType"
+        ]
+      },
+      "then": {
+        "required": [
+          "path",
+          "sha256",
+          "trust"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "recordType": {
+            "const": "state_snapshot"
+          }
+        },
+        "required": [
+          "recordType"
+        ]
+      },
+      "then": {
+        "required": [
+          "branch",
+          "currentHead",
+          "remoteMain",
+          "currentGate",
+          "currentGateStatus",
+          "vercelLatestIntegrationDeployment",
+          "productionMutationAuthorized"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "recordType": {
+            "const": "telemetry_baseline"
+          }
+        },
+        "required": [
+          "recordType"
+        ]
+      },
+      "then": {
+        "required": [
+          "source",
+          "jsonlRecords",
+          "totalTokens",
+          "purpose"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "recordType": {
+            "const": "agent"
+          }
+        },
+        "required": [
+          "recordType"
+        ]
+      },
+      "then": {
+        "required": [
+          "role",
+          "mayMutate",
+          "purpose",
+          "concurrency"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "recordType": {
+            "const": "rule"
+          }
+        },
+        "required": [
+          "recordType"
+        ]
+      },
+      "then": {
+        "required": [
+          "ruleId",
+          "name",
+          "mandatory",
+          "text"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "recordType": {
+            "const": "policy"
+          }
+        },
+        "required": [
+          "recordType"
+        ]
+      },
+      "then": {
+        "required": [
+          "policyType"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "recordType": {
+            "const": "loop"
+          }
+        },
+        "required": [
+          "recordType"
+        ]
+      },
+      "then": {
+        "required": [
+          "name",
+          "entry",
+          "steps",
+          "maxIterations",
+          "exit"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "recordType": {
+            "const": "batch"
+          }
+        },
+        "required": [
+          "recordType"
+        ]
+      },
+      "then": {
+        "required": [
+          "id",
+          "title",
+          "order",
+          "status",
+          "productionSideEffects",
+          "writerLimit",
+          "readOnlyAgentLimit",
+          "sequential"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "recordType": {
+            "const": "node"
+          }
+        },
+        "required": [
+          "recordType"
+        ]
+      },
+      "then": {
+        "required": [
+          "nodeId",
+          "title",
+          "nodeType",
+          "batch",
+          "status",
+          "sequentialRank",
+          "risk",
+          "objective",
+          "dependsOn",
+          "tddRequired",
+          "redTestRequired",
+          "independentReviewRequired",
+          "productionSideEffectsAllowed"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "recordType": {
+            "const": "stage"
+          }
+        },
+        "required": [
+          "recordType"
+        ]
+      },
+      "then": {
+        "required": [
+          "stageId",
+          "nodeId",
+          "stage",
+          "ordinal",
+          "status",
+          "ownerAgent",
+          "mutationClass",
+          "writerMutexRequired",
+          "costWeightPercent",
+          "stageBudget",
+          "evidencePath"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "recordType": {
+            "const": "edge"
+          }
+        },
+        "required": [
+          "recordType"
+        ]
+      },
+      "then": {
+        "required": [
+          "edgeType",
+          "from",
+          "to",
+          "required",
+          "condition"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "recordType": {
+            "const": "test_contract"
+          }
+        },
+        "required": [
+          "recordType"
+        ]
+      },
+      "then": {
+        "required": [
+          "nodeId",
+          "testFirst",
+          "redStage",
+          "implementationStage",
+          "greenStage",
+          "redMustFail",
+          "greenMustUseSameTest",
+          "testWeakeningForbidden"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "recordType": {
+            "const": "cost_test"
+          }
+        },
+        "required": [
+          "recordType"
+        ]
+      },
+      "then": {
+        "required": [
+          "nodeId",
+          "runsAfter",
+          "blocksBefore",
+          "assertions",
+          "onFailure"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "recordType": {
+            "const": "source_edge"
+          }
+        },
+        "required": [
+          "recordType"
+        ]
+      },
+      "then": {
+        "required": [
+          "sourceEdgeId",
+          "fromNode",
+          "toNode",
+          "kind",
+          "condition",
+          "required",
+          "preserved"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "recordType": {
+            "const": "acceptance_criterion"
+          }
+        },
+        "required": [
+          "recordType"
+        ]
+      },
+      "then": {
+        "required": [
+          "criterionId",
+          "criterion",
+          "evidenceRequired"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "recordType": {
+            "const": "execution_cursor"
+          }
+        },
+        "required": [
+          "recordType"
+        ]
+      },
+      "then": {
+        "required": [
+          "currentNode",
+          "currentStage",
+          "nextOnSuccess",
+          "blockedReason",
+          "automaticExecutionAllowedAfterApproval",
+          "productionExecutionAllowed"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "recordType": {
+            "const": "stop_condition"
+          }
+        },
+        "required": [
+          "recordType"
+        ]
+      },
+      "then": {
+        "required": [
+          "nodeId",
+          "mandatory",
+          "triggers",
+          "resumeRequires"
+        ]
+      }
+    }
+  ],
+  "additionalProperties": true
+}

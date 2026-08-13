@@ -1,0 +1,97 @@
+{
+  "baseHeadSha": "cbdfb4fd07a6017eb7b60503012fc9831dcf806b",
+  "browserEvidence": [
+    {
+      "result": "zero horizontal overflow; 72px hero heading; preparation control interaction passed; no browser errors",
+      "viewport": "1265x720"
+    },
+    {
+      "result": "zero horizontal overflow; 36px hero heading; no mid-word heading splits; coarse pointer targets preserved",
+      "viewport": "390x844"
+    }
+  ],
+  "checkpointId": "cp-20260729-stl301-001",
+  "completedStage": "stage:STL-301:complete",
+  "designSystem": {
+    "controls": "Semantic shadcn button, badge, and input primitives with opaque accessible hover states, focus rings, and 44px coarse-pointer targets.",
+    "motion": "motion/react primitives and homepage interactions honor prefers-reduced-motion.",
+    "registry": "Official shadcn registry contains modular token, control, motion, and agent-rule items with an explicit token dependency.",
+    "tokens": "Measured Craft semantic light/dark tokens, accessible focus colors, semantic radii, and display typography with zero negative letter spacing."
+  },
+  "graphSha256": "4f6a7d81e9c46ecbf886703fcf03988dd317115f9577152aa7ac09bd5ec532c9",
+  "issueDecision": {
+    "action": "none",
+    "reason": "The audited execution node and draft PR 169 already track this bounded design-system baseline."
+  },
+  "nodeId": "STL-301",
+  "officialSources": [
+    {
+      "subject": "shadcn MCP and registry schema",
+      "url": "https://ui.shadcn.com/docs/mcp"
+    },
+    {
+      "subject": "Motion reduced-motion API",
+      "url": "https://motion.dev/docs/react-use-reduced-motion"
+    }
+  ],
+  "productionMutationAuthorized": false,
+  "programId": "stl-post-g20-sequential-tdd-v1",
+  "reviewAudit": [
+    {
+      "reviewer": "Maxwell",
+      "status": "four accessibility, reduced-motion, coarse-target, and MCP portability findings remediated",
+      "taskId": "019faf1c-9d85-7722-bb7f-55a159685a7c"
+    },
+    {
+      "reviewer": "Lovelace",
+      "status": "registry token dependency and static badge-hover findings remediated; final independent review clean",
+      "taskId": "019faf4f-0f2f-7210-b119-eca109a29b5f"
+    }
+  ],
+  "schemaVersion": 1,
+  "tdd": {
+    "green": "Measured Craft tokens, controls, motion primitives, portable pinned shadcn MCP configuration, modular registry items, and agent skill routing satisfy focused, full-suite, static, and browser verification.",
+    "red": "Focused tests reproduced inaccessible hover contrast, incomplete reduced-motion behavior, undersized linked badges, machine-specific MCP configuration, missing registry token linkage, and unconditional decorative badge hover."
+  },
+  "verification": [
+    {
+      "command": "npx tsx --test tests/design-system-baseline.test.mjs tests/ui-orchestration-registry.test.mjs",
+      "result": "11/11",
+      "status": "passed"
+    },
+    {
+      "command": "npm test",
+      "result": "515/515",
+      "status": "passed"
+    },
+    {
+      "command": "npm run lint",
+      "result": "design, slop, architecture, Git, React, and TypeScript checks",
+      "status": "passed"
+    },
+    {
+      "command": "npm run build",
+      "result": "Next.js 16.2.12 production build; 44/44 static pages",
+      "status": "passed"
+    },
+    {
+      "command": "npm run skills:validate",
+      "result": "66 routes and 14 primary skills",
+      "status": "passed"
+    },
+    {
+      "command": "npx --yes shadcn@4.16.0 registry validate registry.json",
+      "result": "1 registry file and 4 modular items",
+      "status": "passed"
+    },
+    {
+      "command": "browser QA at 1265x720 and 390x844",
+      "result": "responsive interaction and accessibility checks passed",
+      "status": "passed"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed"
+    }
+  ]
+}

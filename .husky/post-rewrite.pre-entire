@@ -1,3 +1,0 @@
-#!/bin/sh
-# Entire CLI
-if [ -f 'C:\Users\Johnny Cage\.local\bin\entire.exe' ]; then 'C:\Users\Johnny Cage\.local\bin\entire.exe' hooks git post-rewrite "$1" 2>/dev/null || true; else :; fi

@@ -1,0 +1,161 @@
+{
+  "auditDate": "2026-07-28",
+  "repository": "skysthelimitpainting1779-collab/skys-the-limit-painting-llc-website",
+  "branch": "agent/skys-limit-convex-os",
+  "head": "5eb385d33976503cdac81e982ed74fbbc7f6839c",
+  "pullRequest": 169,
+  "pullRequestDraft": true,
+  "desktopCommander": "attempted_no_connected_device",
+  "retainedSourceBundle": {
+    "path": ".agents/execution/sources/e7b60e5105e91858b2fa31d172c3e7347a3350802c666a904aeac1e85becba0e.zip",
+    "sha256": "e7b60e5105e91858b2fa31d172c3e7347a3350802c666a904aeac1e85becba0e",
+    "contents": [
+      "skys-limit-sequential-tdd-execution-graph-audited.jsonl",
+      "skys-limit-sequential-tdd-execution-graph-audit-report.md",
+      "skys-limit-sequential-tdd-execution-graph-audited.schema.json",
+      "skys-limit-sequential-tdd-execution-graph-audited-validation.json"
+    ]
+  },
+  "original": {
+    "path": "skys-limit-sequential-tdd-execution-graph(1).jsonl",
+    "sha256": "2101e7a36b9883b2780caad3ee1d16fffccf4eefd1b136bfe159fa7156e6f8cf",
+    "semanticValidationOk": false,
+    "semanticErrors": 36,
+    "stageCycleComponents": [
+      {
+        "stageCount": 124,
+        "nodes": [
+          "G60-MEASUREMENT-READY",
+          "G70-CUTOVER-READY",
+          "G80-CUTOVER-COMPLETE",
+          "G85-ROLLBACK-WINDOW-CLEARED",
+          "STL-502",
+          "STL-503",
+          "STL-504",
+          "STL-505",
+          "STL-506"
+        ]
+      },
+      {
+        "stageCount": 212,
+        "nodes": [
+          "G31-VISITOR-TO-BOOKING",
+          "G40-PROPOSAL-TO-DEPOSIT",
+          "STL-201",
+          "STL-202",
+          "STL-203",
+          "STL-204",
+          "STL-205",
+          "STL-206",
+          "STL-207",
+          "STL-208",
+          "STL-209",
+          "STL-301"
+        ]
+      }
+    ]
+  },
+  "audited": {
+    "path": "skys-limit-sequential-tdd-execution-graph-audited.jsonl",
+    "sha256": "4f6a7d81e9c46ecbf886703fcf03988dd317115f9577152aa7ac09bd5ec532c9",
+    "validationOk": true,
+    "parseErrors": 0,
+    "schemaErrors": 0,
+    "semanticErrors": 0,
+    "counts": {
+      "acceptance_criterion": 15,
+      "agent": 9,
+      "batch": 11,
+      "cost_test": 70,
+      "edge": 1669,
+      "execution_cursor": 1,
+      "loop": 7,
+      "node": 86,
+      "policy": 5,
+      "program": 1,
+      "rule": 32,
+      "source": 2,
+      "source_edge": 204,
+      "stage": 1496,
+      "state_snapshot": 1,
+      "stop_condition": 1,
+      "telemetry_baseline": 1,
+      "test_contract": 70
+    },
+    "runnableNodes": [
+      "AUDIT-SECURITY-REMEDIATION",
+      "AUDIT-REPOSITORY-HYGIENE",
+      "G26-AUDIT-REMEDIATION-READY",
+      "ORCH-001",
+      "ORCH-002",
+      "ORCH-003",
+      "ORCH-004",
+      "STL-301",
+      "STL-201",
+      "STL-204",
+      "STL-202",
+      "STL-205",
+      "STL-203",
+      "STL-206",
+      "STL-207",
+      "STL-208",
+      "STL-209",
+      "G31-VISITOR-TO-BOOKING",
+      "G40-PROPOSAL-TO-DEPOSIT",
+      "STL-306",
+      "STL-302",
+      "STL-303",
+      "STL-304",
+      "STL-307",
+      "STL-305",
+      "STL-308",
+      "STL-309",
+      "G30-PUBLIC-CMS-READY",
+      "STL-401",
+      "STL-407",
+      "STL-402",
+      "STL-403",
+      "STL-408",
+      "STL-404",
+      "STL-406",
+      "STL-405",
+      "G50-PORTAL-OPS-READY",
+      "STL-501",
+      "STL-502",
+      "STL-503",
+      "G60-MEASUREMENT-READY",
+      "STL-506",
+      "G70-PACKET-ASSEMBLE"
+    ]
+  },
+  "vercel": {
+    "projectId": "prj_L3ZMoQ79YLx9G2o6Lg9OubqO9H8m",
+    "deploymentId": "dpl_DPZH2TV321b8nJj4UAUNE6GEtw1W",
+    "state": "READY",
+    "framework": "nextjs",
+    "convexPreviewDeployment": "hidden-roadrunner-577"
+  },
+  "repositoryCommits": [
+    {
+      "sha": "afb61f5485386514132bf4d27e39105a1afd2bb6",
+      "message": "test(vercel): reproduce Services packaging boundary"
+    },
+    {
+      "sha": "95e171fe00c05fe723a75713a83b2595e1877ac5",
+      "message": "fix(vercel): keep production-linked project single-service"
+    },
+    {
+      "sha": "7c616336f70befcd68699f1d7e2705cfd0b0e551",
+      "message": "docs(architecture): gate Services activation behind isolated preview"
+    },
+    {
+      "sha": "3b46b4ae0c503fc539ef43bb5b98f9bdbf72b04e",
+      "message": "test(cicd): assert single-service Vercel build contract"
+    },
+    {
+      "sha": "5eb385d33976503cdac81e982ed74fbbc7f6839c",
+      "message": "fix(test): escape deployment secret safely"
+    }
+  ],
+  "productionMutationAuthorized": false
+}

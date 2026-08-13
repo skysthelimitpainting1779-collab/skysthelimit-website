@@ -82,7 +82,7 @@ export default function ReferPage() {
 
               <button
                 type="submit"
-                className="w-full inline-flex items-center justify-center gap-2 bg-white px-7 py-4 text-sm font-semibold text-[#15110a] hover:bg-white transition-all"
+                className="w-full inline-flex items-center justify-center gap-2 bg-white px-7 py-4 text-sm font-semibold text-[#15110a] hover:bg-white transition-colors"
               >
                 Generate Link <ArrowRight size={18} />
               </button>
@@ -115,14 +115,14 @@ export default function ReferPage() {
                   <a
                     href={smsHref}
                     onClick={() => trackEvent('referral_share_sms', { email })}
-                    className="inline-flex items-center justify-center gap-2 border border-white/10 bg-[#070706] py-3 text-xs font-black text-white hover:border-white hover:text-white transition-all"
+                    className="inline-flex items-center justify-center gap-2 border border-white/10 bg-[#070706] py-3 text-xs font-black text-white hover:border-white hover:text-white transition-colors"
                   >
                     <MessageSquare size={14} /> Send Text
                   </a>
                   <a
                     href={mailHref}
                     onClick={() => trackEvent('referral_share_email', { email })}
-                    className="inline-flex items-center justify-center gap-2 border border-white/10 bg-[#070706] py-3 text-xs font-black text-white hover:border-white hover:text-white transition-all"
+                    className="inline-flex items-center justify-center gap-2 border border-white/10 bg-[#070706] py-3 text-xs font-black text-white hover:border-white hover:text-white transition-colors"
                   >
                     <Mail size={14} /> Send Email
                   </a>

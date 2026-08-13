@@ -1,0 +1,70 @@
+{
+  "baseHeadSha": "41d378a816688d8d614b6995abc70cfd9f7f12e1",
+  "checkpointId": "cp-20260728-hygiene-001",
+  "completedStage": "stage:AUDIT-REPOSITORY-HYGIENE:complete",
+  "graphSha256": "4f6a7d81e9c46ecbf886703fcf03988dd317115f9577152aa7ac09bd5ec532c9",
+  "nodeId": "AUDIT-REPOSITORY-HYGIENE",
+  "programId": "stl-post-g20-sequential-tdd-v1",
+  "reviewAudit": [
+    {
+      "reviewer": "Kierkegaard",
+      "status": "no remaining P0/P1/P2 findings",
+      "taskId": "019faab9-3b09-7190-969f-ad4134a5d63d"
+    },
+    {
+      "reviewer": "Galileo",
+      "status": "no remaining P0/P1/P2 findings",
+      "taskId": "019faab9-56e0-7102-9f38-4c7676057db7"
+    }
+  ],
+  "schemaVersion": 1,
+  "verification": [
+    {
+      "command": "npx tsx --test tests/development-lifecycle.test.mjs tests/convex-deployment-command.test.mjs tests/node-dependency-restore.test.mjs",
+      "result": "31/31 focused cross-platform tests",
+      "status": "passed"
+    },
+    {
+      "command": "npm test",
+      "result": "460/460 tests",
+      "status": "passed"
+    },
+    {
+      "command": "npm run ci:contract",
+      "status": "passed"
+    },
+    {
+      "command": "npm run lint:ci",
+      "status": "passed"
+    },
+    {
+      "command": "npm run skills:validate",
+      "result": "66 routes and 14 primary skills",
+      "status": "passed"
+    },
+    {
+      "command": "npm audit --audit-level=high --omit=dev",
+      "result": "0 vulnerabilities",
+      "status": "passed"
+    },
+    {
+      "command": "npm run build",
+      "result": "Next.js 16.2.12 production build, 44 routes",
+      "status": "passed"
+    },
+    {
+      "command": "gitleaks git . --staged --redact=100",
+      "result": "0 findings in the staged diff",
+      "status": "passed"
+    },
+    {
+      "command": "git diff --cached --check",
+      "status": "passed"
+    },
+    {
+      "command": "git ls-files bytecode and gitlink checks",
+      "result": "0 tracked bytecode files and 0 gitlinks",
+      "status": "passed"
+    }
+  ]
+}

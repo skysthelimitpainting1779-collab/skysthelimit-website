@@ -1,0 +1,5106 @@
+{
+  "$schema": "./skys-limit-execution-graph.schema.json",
+  "graphId": "skys-limit-convex-migration-v1",
+  "version": 1,
+  "generatedAt": "2026-07-26T00:51:04.530606+00:00",
+  "source": {
+    "auditFile": "skys-the-limit-convex-migration-master-audit.md",
+    "repository": "skysthelimitpainting1779-collab/skys-the-limit-painting-llc-website",
+    "branch": "main",
+    "commit": "c7e94605eefdace7a76ce5145808478df8503dbb",
+    "auditDate": "2026-07-25"
+  },
+  "objective": "Maximize qualified visitor-to-signed-agreement-and-paid-deposit conversion while safely replacing fragmented Supabase, Payload, and Directus responsibilities with a Convex-centered operating system.",
+  "invariants": [
+    "persist authoritative state before acknowledging success",
+    "authentication establishes identity; Convex authorization controls access",
+    "no protected read or write relies on frontend-only checks",
+    "external side effects require idempotency, provider receipts, retry classification, and visible failure state",
+    "no destructive migration before snapshots, reconciliation, rollback, and approval gates",
+    "no production promotion when lead, authz, proposal, deposit, private-file, or canonical-route checks fail",
+    "customer data is isolated by resource ownership and organization/property/project scope",
+    "AI output is advisory only for pricing, legal, identity, permission, refund, completion, and financial truth"
+  ],
+  "loop": {
+    "name": "SYNC-SELECT-PLAN-EXECUTE-VERIFY-PROMOTE-OBSERVE-LEARN",
+    "purpose": "Execute one review-sized node at a time while preserving parallelism across independent resource locks.",
+    "states": [
+      {
+        "id": "sync",
+        "name": "SYNC",
+        "exit": "repository, deployment, graph state, incidents, and provider status match external truth"
+      },
+      {
+        "id": "select",
+        "name": "SELECT",
+        "exit": "highest-value ready node or conflict-free batch selected"
+      },
+      {
+        "id": "plan",
+        "name": "PLAN",
+        "exit": "entry criteria, files, interfaces, failing tests, rollback, and evidence contract are explicit"
+      },
+      {
+        "id": "execute",
+        "name": "EXECUTE",
+        "exit": "minimal implementation completes the node contract"
+      },
+      {
+        "id": "verify",
+        "name": "VERIFY",
+        "exit": "local, integration, preview, domain-specific, and independent review checks pass"
+      },
+      {
+        "id": "promote",
+        "name": "PROMOTE",
+        "exit": "change is merged/deployed behind the correct gate or flag"
+      },
+      {
+        "id": "observe",
+        "name": "OBSERVE",
+        "exit": "production or shadow metrics satisfy primary and guardrail thresholds"
+      },
+      {
+        "id": "learn",
+        "name": "LEARN",
+        "exit": "graph state, artifacts, deviations, and next-node scores are updated"
+      }
+    ],
+    "failureTransitions": [
+      {
+        "from": "plan",
+        "to": "select",
+        "condition": "node is too large, ambiguous, or conflicts with another active node",
+        "action": "split or re-scope"
+      },
+      {
+        "from": "execute",
+        "to": "plan",
+        "condition": "new constraint or interface mismatch discovered",
+        "action": "update node contract before continuing"
+      },
+      {
+        "from": "verify",
+        "to": "execute",
+        "condition": "verification failure is within node scope",
+        "action": "diagnose, add failing regression test, patch"
+      },
+      {
+        "from": "verify",
+        "to": "select",
+        "condition": "failure exposes missing prerequisite",
+        "action": "block node and create/unblock prerequisite node"
+      },
+      {
+        "from": "promote",
+        "to": "observe",
+        "condition": "deployment healthy",
+        "action": "start observation window"
+      },
+      {
+        "from": "promote",
+        "to": "learn",
+        "condition": "deployment or migration fails",
+        "action": "rollback, preserve evidence, create incident record"
+      },
+      {
+        "from": "observe",
+        "to": "execute",
+        "condition": "guardrail regression within rollback window",
+        "action": "rollback or corrective patch"
+      },
+      {
+        "from": "observe",
+        "to": "learn",
+        "condition": "metrics pass",
+        "action": "close node and recalculate ready set"
+      }
+    ],
+    "nodeLifecycle": [
+      "pending",
+      "ready",
+      "claimed",
+      "planning",
+      "executing",
+      "verifying",
+      "review",
+      "promoting",
+      "observing",
+      "done",
+      "failed",
+      "rolled_back",
+      "blocked",
+      "superseded"
+    ],
+    "wipPolicy": {
+      "maxActiveNodes": 4,
+      "maxActiveProductionCutoverNodes": 1,
+      "maxNodesPerResourceLock": 1,
+      "oneExecutorPerNode": true,
+      "independentVerifierRequiredFor": [
+        "critical",
+        "auth",
+        "authorization",
+        "payments",
+        "private-files",
+        "migration",
+        "cutover"
+      ],
+      "mergePolicy": "merge only one node per PR unless the nodes share one inseparable acceptance test"
+    },
+    "selectionFormula": "priority*10 + businessValue*30 + risk*20 + downstreamUnblocks*12 - sizeCost*18 - blastRadius*10",
+    "selectionRules": [
+      "only select nodes whose start dependencies are done or gates passed",
+      "never select two nodes sharing a resource lock",
+      "prefer a conflict-free batch spanning different workstreams",
+      "a large or extra-large node must first emit a bite-sized implementation plan",
+      "do not allow a node to close until completionRequires are done",
+      "human-assisted nodes may be prepared by agents but cannot pass without owner evidence"
+    ]
+  },
+  "phases": [
+    {
+      "id": "P0",
+      "name": "Stabilize revenue and security",
+      "order": 0,
+      "priority": 100,
+      "mode": "stabilization"
+    },
+    {
+      "id": "P1",
+      "name": "Unify identity, data, and shells",
+      "order": 1,
+      "priority": 90,
+      "mode": "foundation"
+    },
+    {
+      "id": "P2",
+      "name": "Build conversion and sales",
+      "order": 2,
+      "priority": 80,
+      "mode": "feature"
+    },
+    {
+      "id": "P3",
+      "name": "Build CMS, public design, and local growth",
+      "order": 3,
+      "priority": 75,
+      "mode": "feature"
+    },
+    {
+      "id": "P4",
+      "name": "Build portal and operations",
+      "order": 4,
+      "priority": 70,
+      "mode": "feature"
+    },
+    {
+      "id": "P5",
+      "name": "Measure, cut over, and decommission",
+      "order": 5,
+      "priority": 60,
+      "mode": "migration"
+    }
+  ],
+  "workstreams": [
+    {
+      "id": "revenue-continuity",
+      "name": "Revenue continuity",
+      "objective": "Never acknowledge a lead unless it is durably stored and recoverable."
+    },
+    {
+      "id": "conversion-sales",
+      "name": "Conversion and sales",
+      "objective": "Move a visitor through booking, proposal, signature, and deposit with minimal friction."
+    },
+    {
+      "id": "identity-security",
+      "name": "Identity and security",
+      "objective": "Establish one identity plane and enforce least privilege in Convex."
+    },
+    {
+      "id": "experience-quality",
+      "name": "Experience and quality",
+      "objective": "Eliminate broken routes, rendering regressions, accessibility failures, and inconsistent UI."
+    },
+    {
+      "id": "platform-foundation",
+      "name": "Platform foundation",
+      "objective": "Create isolated Convex environments, domain models, events, and application shells."
+    },
+    {
+      "id": "migration-cutover",
+      "name": "Migration and cutover",
+      "objective": "Migrate deterministically, reconcile continuously, and retain a tested rollback path."
+    },
+    {
+      "id": "content-local-growth",
+      "name": "Content and local growth",
+      "objective": "Unify CMS, technical SEO, GBP operations, reviews, and locally valuable content."
+    },
+    {
+      "id": "portal-project-ops",
+      "name": "Portal and project operations",
+      "objective": "Give customers and staff a secure task-first operating system."
+    },
+    {
+      "id": "automation-reliability",
+      "name": "Automation reliability",
+      "objective": "Make workflows visible, idempotent, replay-safe, and recoverable."
+    },
+    {
+      "id": "measurement-optimization",
+      "name": "Measurement and optimization",
+      "objective": "Create first-party revenue attribution and safe experimentation."
+    }
+  ],
+  "gates": [
+    {
+      "id": "G00-AUDIT-LOCKED",
+      "name": "Audit and architecture baseline locked",
+      "requires": [],
+      "approval": "owner + technical lead",
+      "defaultState": "passed",
+      "evidence": [
+        "master audit exists",
+        "canonical commit recorded",
+        "no destructive migration started"
+      ],
+      "onFail": "return to discovery and update the audit"
+    },
+    {
+      "id": "G10-STABILIZED",
+      "name": "Revenue and security stabilization passed",
+      "requires": [
+        "STL-001",
+        "STL-002",
+        "STL-003",
+        "STL-004",
+        "STL-005",
+        "STL-006",
+        "STL-007",
+        "STL-008",
+        "STL-009",
+        "STL-010"
+      ],
+      "approval": "technical lead + security reviewer",
+      "defaultState": "pending",
+      "evidence": [
+        "durable lead success guarantee",
+        "valid estimate submission",
+        "protected manage surface",
+        "private uploads",
+        "critical route smoke"
+      ],
+      "onFail": "block foundation work that assumes current-path integrity"
+    },
+    {
+      "id": "G20-FOUNDATION-READY",
+      "name": "Identity, authorization, Convex, and migration foundation passed",
+      "requires": [
+        "STL-101",
+        "STL-102",
+        "STL-103",
+        "STL-104",
+        "STL-105",
+        "STL-106",
+        "STL-107",
+        "STL-108",
+        "STL-109",
+        "STL-110"
+      ],
+      "approval": "architecture + security + migration reviewers",
+      "defaultState": "pending",
+      "evidence": [
+        "environment isolation",
+        "authz matrix",
+        "domain event uniqueness",
+        "live source inventory",
+        "reconciliation framework"
+      ],
+      "onFail": "do not expand protected product surfaces"
+    },
+    {
+      "id": "G30-PUBLIC-CMS-READY",
+      "name": "Design, public site, CMS, SEO, and local growth passed",
+      "requires": [
+        "STL-301",
+        "STL-302",
+        "STL-303",
+        "STL-304",
+        "STL-305",
+        "STL-306",
+        "STL-307",
+        "STL-308",
+        "STL-309"
+      ],
+      "approval": "design + accessibility + SEO + owner",
+      "defaultState": "pending",
+      "evidence": [
+        "WCAG baseline",
+        "published content rollback",
+        "SEO crawl pass",
+        "GBP integrity checklist",
+        "no thin city pages"
+      ],
+      "onFail": "keep legacy/public adapter active"
+    },
+    {
+      "id": "G31-VISITOR-TO-BOOKING",
+      "name": "Visitor to durable lead to booked estimate passed",
+      "requires": [
+        "STL-201",
+        "STL-202",
+        "STL-203"
+      ],
+      "approval": "revenue owner + QA",
+      "defaultState": "pending",
+      "evidence": [
+        "mobile save/resume",
+        "durable lead",
+        "verified appointment webhook",
+        "SLA escalation"
+      ],
+      "onFail": "route conversion traffic to last known good funnel"
+    },
+    {
+      "id": "G40-PROPOSAL-TO-DEPOSIT",
+      "name": "Estimate to proposal to agreement to posted deposit passed",
+      "requires": [
+        "STL-204",
+        "STL-205",
+        "STL-206",
+        "STL-207",
+        "STL-208",
+        "STL-209"
+      ],
+      "approval": "owner + finance boundary reviewer + QA",
+      "defaultState": "pending",
+      "evidence": [
+        "immutable versions",
+        "signature evidence",
+        "provider-confirmed payment",
+        "idempotent reminders"
+      ],
+      "onFail": "disable payment/proposal promotion and retain manual fallback"
+    },
+    {
+      "id": "G50-PORTAL-OPS-READY",
+      "name": "Customer portal, project operations, and automation cockpit passed",
+      "requires": [
+        "STL-401",
+        "STL-402",
+        "STL-403",
+        "STL-404",
+        "STL-405",
+        "STL-406",
+        "STL-407",
+        "STL-408"
+      ],
+      "approval": "operations + security + QA",
+      "defaultState": "pending",
+      "evidence": [
+        "customer isolation",
+        "private files",
+        "change-order evidence",
+        "field least privilege",
+        "replay-safe workflow UI"
+      ],
+      "onFail": "keep affected portal/ops module behind feature flag"
+    },
+    {
+      "id": "G60-MEASUREMENT-READY",
+      "name": "Revenue attribution, dashboards, and experiments reconcile",
+      "requires": [
+        "STL-501",
+        "STL-502",
+        "STL-503"
+      ],
+      "approval": "revenue owner + analytics reviewer",
+      "defaultState": "pending",
+      "evidence": [
+        "visit-to-revenue trace",
+        "dashboard totals reconcile",
+        "experiment guardrails"
+      ],
+      "onFail": "no cutover decision may rely on untrusted dashboards"
+    },
+    {
+      "id": "G70-CUTOVER-READY",
+      "name": "All product, data, security, SEO, and restore gates ready for cutover",
+      "requires": [
+        "G20-FOUNDATION-READY",
+        "G30-PUBLIC-CMS-READY",
+        "G31-VISITOR-TO-BOOKING",
+        "G40-PROPOSAL-TO-DEPOSIT",
+        "G50-PORTAL-OPS-READY",
+        "G60-MEASUREMENT-READY",
+        "STL-506"
+      ],
+      "approval": "owner + architecture + security + migration + operations",
+      "defaultState": "pending",
+      "evidence": [
+        "final snapshot plan",
+        "write-freeze plan",
+        "provider switch plan",
+        "rollback drill passed"
+      ],
+      "onFail": "remain in shadow/dual-read mode"
+    },
+    {
+      "id": "G80-CUTOVER-COMPLETE",
+      "name": "Production cutover completed and reconciled",
+      "requires": [
+        "STL-504"
+      ],
+      "approval": "incident commander + owner",
+      "defaultState": "pending",
+      "evidence": [
+        "critical-path production checks",
+        "data reconciliation in threshold",
+        "no auth/payment/SEO regression"
+      ],
+      "onFail": "execute rollback procedure immediately"
+    },
+    {
+      "id": "G85-ROLLBACK-WINDOW-CLEARED",
+      "name": "Monitored rollback window cleared",
+      "requires": [
+        "G80-CUTOVER-COMPLETE"
+      ],
+      "approval": "owner + operations + finance + technical lead",
+      "defaultState": "pending",
+      "evidence": [
+        "soak metrics stable",
+        "legacy fallback tested",
+        "no unresolved reconciliation exceptions"
+      ],
+      "onFail": "extend rollback window and block decommission"
+    },
+    {
+      "id": "G90-DECOMMISSIONED",
+      "name": "Legacy services decommissioned with restore evidence retained",
+      "requires": [
+        "STL-505"
+      ],
+      "approval": "owner + technical lead",
+      "defaultState": "pending",
+      "evidence": [
+        "zero runtime dependency",
+        "archives verified",
+        "service cancellation approved",
+        "runbooks current"
+      ],
+      "onFail": "restore required legacy service or dependency"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "STL-001",
+      "phase": "P0",
+      "phaseName": "Stabilize revenue and security",
+      "workstream": "revenue-continuity",
+      "title": "Make lead creation durable/fail-closed",
+      "severity": "Critical",
+      "priorityScore": 1418,
+      "businessValue": 5,
+      "risk": 5,
+      "blastRadius": 2,
+      "size": "M",
+      "planRequired": false,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "G00-AUDIT-LOCKED"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "lead-command"
+      ],
+      "primaryFiles": [
+        "src/app/api/leads/route.ts",
+        "src/lib/api/utils.ts"
+      ],
+      "acceptance": "failed persistence never returns success; lead retained on notification failure",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "unit",
+        "integration",
+        "failure-injection",
+        "preview-smoke"
+      ],
+      "rollbackClass": "mandatory",
+      "evidenceRefs": [
+        "master-audit#26-stl-001",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "failed persistence never returns success; lead retained on notification failure",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-002",
+      "phase": "P0",
+      "phaseName": "Stabilize revenue and security",
+      "workstream": "conversion-sales",
+      "title": "Fix estimate payload and corrupted copy",
+      "severity": "Critical",
+      "priorityScore": 1404,
+      "businessValue": 5,
+      "risk": 4,
+      "blastRadius": 2,
+      "size": "S",
+      "planRequired": false,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "G00-AUDIT-LOCKED"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "estimate-contract"
+      ],
+      "primaryFiles": [
+        "src/views/Estimate.tsx"
+      ],
+      "acceptance": "every path produces valid shared command; no broken text",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "unit",
+        "integration",
+        "playwright",
+        "revenue-event-reconciliation",
+        "preview-smoke"
+      ],
+      "rollbackClass": "standard",
+      "evidenceRefs": [
+        "master-audit#26-stl-002",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "every path produces valid shared command; no broken text",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-003",
+      "phase": "P0",
+      "phaseName": "Stabilize revenue and security",
+      "workstream": "identity-security",
+      "title": "Disable public manage sign-up and enforce staff authorization",
+      "severity": "Critical",
+      "priorityScore": 1376,
+      "businessValue": 5,
+      "risk": 5,
+      "blastRadius": 5,
+      "size": "M",
+      "planRequired": false,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "G00-AUDIT-LOCKED"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "legacy-auth-boundary"
+      ],
+      "primaryFiles": [
+        "src/app/manage/*",
+        "src/proxy.ts",
+        "Supabase policies"
+      ],
+      "acceptance": "anonymous/customer cannot access or write",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "unit",
+        "authz-matrix",
+        "negative-access",
+        "security-review",
+        "preview-smoke"
+      ],
+      "rollbackClass": "mandatory",
+      "evidenceRefs": [
+        "master-audit#26-stl-003",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "anonymous/customer cannot access or write",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-004",
+      "phase": "P0",
+      "phaseName": "Stabilize revenue and security",
+      "workstream": "identity-security",
+      "title": "Make lead/project uploads private",
+      "severity": "Critical",
+      "priorityScore": 1400,
+      "businessValue": 5,
+      "risk": 5,
+      "blastRadius": 5,
+      "size": "M",
+      "planRequired": false,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "G00-AUDIT-LOCKED"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "file-trust-boundary"
+      ],
+      "primaryFiles": [
+        "upload route/storage policies"
+      ],
+      "acceptance": "unauthenticated URL denied; ownership tests pass",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "unit",
+        "authz-matrix",
+        "negative-access",
+        "security-review",
+        "preview-smoke"
+      ],
+      "rollbackClass": "mandatory",
+      "evidenceRefs": [
+        "master-audit#26-stl-004",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "unauthenticated URL denied; ownership tests pass",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-005",
+      "phase": "P0",
+      "phaseName": "Stabilize revenue and security",
+      "workstream": "experience-quality",
+      "title": "Repair cabinet/commercial service pages or redirects",
+      "severity": "High",
+      "priorityScore": 1286,
+      "businessValue": 4,
+      "risk": 4,
+      "blastRadius": 2,
+      "size": "S",
+      "planRequired": false,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "G00-AUDIT-LOCKED"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "routing-seo"
+      ],
+      "primaryFiles": [
+        "layout",
+        "landing data",
+        "routes"
+      ],
+      "acceptance": "all global links return intended 2xx",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "typecheck",
+        "playwright",
+        "axe",
+        "seo-crawl",
+        "visual-regression"
+      ],
+      "rollbackClass": "standard",
+      "evidenceRefs": [
+        "master-audit#26-stl-005",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "all global links return intended 2xx",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-006",
+      "phase": "P0",
+      "phaseName": "Stabilize revenue and security",
+      "workstream": "experience-quality",
+      "title": "Correct 404 canonical/robots metadata",
+      "severity": "High",
+      "priorityScore": 1286,
+      "businessValue": 4,
+      "risk": 4,
+      "blastRadius": 2,
+      "size": "S",
+      "planRequired": false,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "G00-AUDIT-LOCKED"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "routing-seo"
+      ],
+      "primaryFiles": [
+        "root metadata",
+        "not-found"
+      ],
+      "acceptance": "no contradictory index/canonical",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "typecheck",
+        "playwright",
+        "axe",
+        "seo-crawl",
+        "visual-regression"
+      ],
+      "rollbackClass": "standard",
+      "evidenceRefs": [
+        "master-audit#26-stl-006",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "no contradictory index/canonical",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-007",
+      "phase": "P0",
+      "phaseName": "Stabilize revenue and security",
+      "workstream": "experience-quality",
+      "title": "Resolve SSR search-param bailout",
+      "severity": "High",
+      "priorityScore": 1286,
+      "businessValue": 4,
+      "risk": 4,
+      "blastRadius": 2,
+      "size": "S",
+      "planRequired": false,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "G00-AUDIT-LOCKED"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "rendering-boundary"
+      ],
+      "primaryFiles": [
+        "landing/client boundaries"
+      ],
+      "acceptance": "no production bailout logs",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "typecheck",
+        "playwright",
+        "axe",
+        "seo-crawl",
+        "visual-regression"
+      ],
+      "rollbackClass": "standard",
+      "evidenceRefs": [
+        "master-audit#26-stl-007",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "no production bailout logs",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-008",
+      "phase": "P0",
+      "phaseName": "Stabilize revenue and security",
+      "workstream": "identity-security",
+      "title": "Replace optional webhook authentication",
+      "severity": "High",
+      "priorityScore": 1324,
+      "businessValue": 5,
+      "risk": 5,
+      "blastRadius": 2,
+      "size": "S",
+      "planRequired": false,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "G00-AUDIT-LOCKED"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "webhook-boundary"
+      ],
+      "primaryFiles": [
+        "ManyChat/webhook routes"
+      ],
+      "acceptance": "unsigned requests denied",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "unit",
+        "authz-matrix",
+        "negative-access",
+        "security-review",
+        "preview-smoke"
+      ],
+      "rollbackClass": "mandatory",
+      "evidenceRefs": [
+        "master-audit#26-stl-008",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "unsigned requests denied",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-009",
+      "phase": "P0",
+      "phaseName": "Stabilize revenue and security",
+      "workstream": "experience-quality",
+      "title": "Expand smoke/E2E critical journeys",
+      "severity": "High",
+      "priorityScore": 1230,
+      "businessValue": 4,
+      "risk": 4,
+      "blastRadius": 4,
+      "size": "L",
+      "planRequired": true,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "G00-AUDIT-LOCKED"
+      ],
+      "completionRequires": [
+        "STL-001",
+        "STL-002",
+        "STL-003",
+        "STL-004",
+        "STL-005",
+        "STL-006",
+        "STL-007",
+        "STL-008",
+        "STL-010"
+      ],
+      "resourceLocks": [
+        "quality-gates"
+      ],
+      "primaryFiles": [
+        "scripts/tests/workflows"
+      ],
+      "acceptance": "deployment fails on route/form/auth regressions",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "typecheck",
+        "playwright",
+        "axe",
+        "seo-crawl",
+        "visual-regression"
+      ],
+      "rollbackClass": "standard",
+      "evidenceRefs": [
+        "master-audit#26-stl-009",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "deployment fails on route/form/auth regressions",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-010",
+      "phase": "P0",
+      "phaseName": "Stabilize revenue and security",
+      "workstream": "revenue-continuity",
+      "title": "Add lead-delivery reconciliation queue",
+      "severity": "High",
+      "priorityScore": 1286,
+      "businessValue": 5,
+      "risk": 4,
+      "blastRadius": 2,
+      "size": "M",
+      "planRequired": false,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "STL-001"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "lead-command",
+        "delivery-ledger"
+      ],
+      "primaryFiles": [
+        "current adapter or initial Convex event store"
+      ],
+      "acceptance": "failed delivery visible/retryable",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "unit",
+        "integration",
+        "failure-injection",
+        "preview-smoke"
+      ],
+      "rollbackClass": "standard",
+      "evidenceRefs": [
+        "master-audit#26-stl-010",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "failed delivery visible/retryable",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-101",
+      "phase": "P1",
+      "phaseName": "Unify identity, data, and shells",
+      "workstream": "platform-foundation",
+      "title": "Add Convex environments/provider",
+      "severity": "High",
+      "priorityScore": 1184,
+      "businessValue": 5,
+      "risk": 4,
+      "blastRadius": 4,
+      "size": "L",
+      "planRequired": true,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "G10-STABILIZED"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "convex-environments"
+      ],
+      "primaryFiles": [
+        "package.json",
+        "convex/",
+        "src/components/providers/ConvexAuthProvider.tsx"
+      ],
+      "acceptance": "dev/preview/prod isolated",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "typecheck",
+        "convex-codegen",
+        "unit",
+        "integration",
+        "preview-smoke"
+      ],
+      "rollbackClass": "standard",
+      "evidenceRefs": [
+        "master-audit#26-stl-101",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "dev/preview/prod isolated",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-102",
+      "phase": "P1",
+      "phaseName": "Unify identity, data, and shells",
+      "workstream": "identity-security",
+      "title": "Integrate WorkOS AuthKit",
+      "severity": "High",
+      "priorityScore": 1194,
+      "businessValue": 5,
+      "risk": 5,
+      "blastRadius": 5,
+      "size": "L",
+      "planRequired": true,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "STL-101",
+        "STL-105"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "workos-integration"
+      ],
+      "primaryFiles": [
+        "convex/auth.config.ts",
+        "src/lib/auth/*",
+        "src/proxy.ts"
+      ],
+      "acceptance": "staff/customer session works",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "unit",
+        "authz-matrix",
+        "negative-access",
+        "security-review",
+        "preview-smoke"
+      ],
+      "rollbackClass": "mandatory",
+      "evidenceRefs": [
+        "master-audit#26-stl-102",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "staff/customer session works",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-103",
+      "phase": "P1",
+      "phaseName": "Unify identity, data, and shells",
+      "workstream": "identity-security",
+      "title": "Implement Convex authz/audit",
+      "severity": "High",
+      "priorityScore": 1290,
+      "businessValue": 5,
+      "risk": 5,
+      "blastRadius": 5,
+      "size": "L",
+      "planRequired": true,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "STL-102"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "authorization-model"
+      ],
+      "primaryFiles": [
+        "convex/lib/authz.ts",
+        "convex/lib/audit.ts",
+        "tests/convex/authz.test.ts"
+      ],
+      "acceptance": "table-driven permission tests",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "unit",
+        "authz-matrix",
+        "negative-access",
+        "security-review",
+        "preview-smoke"
+      ],
+      "rollbackClass": "mandatory",
+      "evidenceRefs": [
+        "master-audit#26-stl-103",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "table-driven permission tests",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-104",
+      "phase": "P1",
+      "phaseName": "Unify identity, data, and shells",
+      "workstream": "platform-foundation",
+      "title": "Split marketing/portal/ops route groups",
+      "severity": "High",
+      "priorityScore": 1198,
+      "businessValue": 5,
+      "risk": 4,
+      "blastRadius": 2,
+      "size": "M",
+      "planRequired": false,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "STL-102",
+        "STL-105"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "route-shells"
+      ],
+      "primaryFiles": [
+        "src/app/(marketing)",
+        "src/app/(portal)",
+        "src/app/(ops)"
+      ],
+      "acceptance": "no marketing shell in apps",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "typecheck",
+        "convex-codegen",
+        "unit",
+        "integration",
+        "preview-smoke"
+      ],
+      "rollbackClass": "standard",
+      "evidenceRefs": [
+        "master-audit#26-stl-104",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "no marketing shell in apps",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-105",
+      "phase": "P1",
+      "phaseName": "Unify identity, data, and shells",
+      "workstream": "platform-foundation",
+      "title": "Strict server/client env schema",
+      "severity": "High",
+      "priorityScore": 1252,
+      "businessValue": 5,
+      "risk": 4,
+      "blastRadius": 2,
+      "size": "S",
+      "planRequired": false,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "G10-STABILIZED"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "environment-contract"
+      ],
+      "primaryFiles": [
+        "src/lib/env/server.ts",
+        "src/lib/env/client.ts",
+        ".env.example"
+      ],
+      "acceptance": "missing secret fails fast",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "typecheck",
+        "convex-codegen",
+        "unit",
+        "integration",
+        "preview-smoke"
+      ],
+      "rollbackClass": "standard",
+      "evidenceRefs": [
+        "master-audit#26-stl-105",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "missing secret fails fast",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-106",
+      "phase": "P1",
+      "phaseName": "Unify identity, data, and shells",
+      "workstream": "platform-foundation",
+      "title": "CRM foundational schema",
+      "severity": "High",
+      "priorityScore": 1220,
+      "businessValue": 5,
+      "risk": 4,
+      "blastRadius": 4,
+      "size": "L",
+      "planRequired": true,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "STL-101",
+        "STL-103",
+        "STL-107"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "convex-schema"
+      ],
+      "primaryFiles": [
+        "convex/schema.ts",
+        "convex/contacts.ts",
+        "convex/properties.ts",
+        "convex/leads.ts",
+        "convex/opportunities.ts"
+      ],
+      "acceptance": "contacts/properties/leads/opportunities",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "typecheck",
+        "convex-codegen",
+        "unit",
+        "integration",
+        "preview-smoke"
+      ],
+      "rollbackClass": "standard",
+      "evidenceRefs": [
+        "master-audit#26-stl-106",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "contacts/properties/leads/opportunities",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-107",
+      "phase": "P1",
+      "phaseName": "Unify identity, data, and shells",
+      "workstream": "platform-foundation",
+      "title": "Domain events/idempotency/webhook receipts",
+      "severity": "High",
+      "priorityScore": 1302,
+      "businessValue": 5,
+      "risk": 5,
+      "blastRadius": 5,
+      "size": "L",
+      "planRequired": true,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "STL-101",
+        "STL-105"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "domain-events"
+      ],
+      "primaryFiles": [
+        "convex/lib/events.ts",
+        "convex/lib/idempotency.ts",
+        "convex/webhooks.ts"
+      ],
+      "acceptance": "unique/replay-safe events",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "typecheck",
+        "convex-codegen",
+        "unit",
+        "integration",
+        "preview-smoke"
+      ],
+      "rollbackClass": "mandatory",
+      "evidenceRefs": [
+        "master-audit#26-stl-107",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "unique/replay-safe events",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-108",
+      "phase": "P1",
+      "phaseName": "Unify identity, data, and shells",
+      "workstream": "migration-cutover",
+      "title": "Supabase live inventory/export",
+      "severity": "High",
+      "priorityScore": 1198,
+      "businessValue": 5,
+      "risk": 4,
+      "blastRadius": 2,
+      "size": "M",
+      "planRequired": false,
+      "executionMode": "human-assisted",
+      "dependsOn": [
+        "G10-STABILIZED"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "supabase-export"
+      ],
+      "primaryFiles": [
+        "scripts/migrations/export-supabase.ts",
+        "inventory artifacts"
+      ],
+      "acceptance": "complete schema/data report",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "fixture-import",
+        "count-hash-reconciliation",
+        "authorization-verification",
+        "rollback-drill"
+      ],
+      "rollbackClass": "standard",
+      "evidenceRefs": [
+        "master-audit#26-stl-108",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "complete schema/data report",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-109",
+      "phase": "P1",
+      "phaseName": "Unify identity, data, and shells",
+      "workstream": "migration-cutover",
+      "title": "Payload/Directus inventory/export",
+      "severity": "High",
+      "priorityScore": 1198,
+      "businessValue": 5,
+      "risk": 4,
+      "blastRadius": 2,
+      "size": "M",
+      "planRequired": false,
+      "executionMode": "human-assisted",
+      "dependsOn": [
+        "G10-STABILIZED"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "cms-export"
+      ],
+      "primaryFiles": [
+        "scripts/migrations/export-payload.ts",
+        "export-directus.ts",
+        "inventory artifacts"
+      ],
+      "acceptance": "drafts/media/redirect report",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "fixture-import",
+        "count-hash-reconciliation",
+        "authorization-verification",
+        "rollback-drill"
+      ],
+      "rollbackClass": "standard",
+      "evidenceRefs": [
+        "master-audit#26-stl-109",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "drafts/media/redirect report",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-110",
+      "phase": "P1",
+      "phaseName": "Unify identity, data, and shells",
+      "workstream": "migration-cutover",
+      "title": "Migration mapping/reconciliation framework",
+      "severity": "High",
+      "priorityScore": 1172,
+      "businessValue": 5,
+      "risk": 4,
+      "blastRadius": 4,
+      "size": "L",
+      "planRequired": true,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "STL-106",
+        "STL-107",
+        "STL-108",
+        "STL-109"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "migration-framework"
+      ],
+      "primaryFiles": [
+        "scripts/migrations/*",
+        "convex/migrations.ts",
+        "tests/convex/migrations.test.ts"
+      ],
+      "acceptance": "idempotent import + report",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "fixture-import",
+        "count-hash-reconciliation",
+        "authorization-verification",
+        "rollback-drill"
+      ],
+      "rollbackClass": "standard",
+      "evidenceRefs": [
+        "master-audit#26-stl-110",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "idempotent import + report",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-201",
+      "phase": "P2",
+      "phaseName": "Build conversion and sales",
+      "workstream": "conversion-sales",
+      "title": "Dynamic estimate funnel",
+      "severity": "High",
+      "priorityScore": 1066,
+      "businessValue": 5,
+      "risk": 4,
+      "blastRadius": 4,
+      "size": "XL",
+      "planRequired": true,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "STL-004",
+        "STL-103",
+        "STL-106",
+        "STL-107",
+        "STL-301"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "estimate-funnel",
+        "lead-command"
+      ],
+      "primaryFiles": [
+        "src/features/estimate-funnel/*",
+        "convex/leads.ts",
+        "upload session routes"
+      ],
+      "acceptance": "mobile save/resume/attribution/private files",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "unit",
+        "integration",
+        "playwright",
+        "revenue-event-reconciliation",
+        "preview-smoke"
+      ],
+      "rollbackClass": "standard",
+      "evidenceRefs": [
+        "master-audit#26-stl-201",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "mobile save/resume/attribution/private files",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-202",
+      "phase": "P2",
+      "phaseName": "Build conversion and sales",
+      "workstream": "conversion-sales",
+      "title": "Cal synchronization",
+      "severity": "High",
+      "priorityScore": 1122,
+      "businessValue": 5,
+      "risk": 4,
+      "blastRadius": 2,
+      "size": "M",
+      "planRequired": false,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "STL-107",
+        "STL-201"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "scheduling-provider"
+      ],
+      "primaryFiles": [
+        "src/app/api/webhooks/cal/route.ts",
+        "convex/appointments.ts"
+      ],
+      "acceptance": "verified webhook and appointment reconciliation",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "unit",
+        "integration",
+        "playwright",
+        "revenue-event-reconciliation",
+        "preview-smoke"
+      ],
+      "rollbackClass": "standard",
+      "evidenceRefs": [
+        "master-audit#26-stl-202",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "verified webhook and appointment reconciliation",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-203",
+      "phase": "P2",
+      "phaseName": "Build conversion and sales",
+      "workstream": "conversion-sales",
+      "title": "Lead assignment/SLA workflows",
+      "severity": "High",
+      "priorityScore": 1086,
+      "businessValue": 5,
+      "risk": 4,
+      "blastRadius": 2,
+      "size": "M",
+      "planRequired": false,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "STL-107",
+        "STL-201",
+        "STL-202"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "lead-automation"
+      ],
+      "primaryFiles": [
+        "workflows/lead-created.ts",
+        "workflows/lead-response-sla.ts",
+        "convex/tasks.ts"
+      ],
+      "acceptance": "deterministic routing and visible escalation",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "unit",
+        "integration",
+        "playwright",
+        "revenue-event-reconciliation",
+        "preview-smoke"
+      ],
+      "rollbackClass": "standard",
+      "evidenceRefs": [
+        "master-audit#26-stl-203",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "deterministic routing and visible escalation",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-204",
+      "phase": "P2",
+      "phaseName": "Build conversion and sales",
+      "workstream": "conversion-sales",
+      "title": "CRM pipeline/operator drawer",
+      "severity": "High",
+      "priorityScore": 1096,
+      "businessValue": 5,
+      "risk": 4,
+      "blastRadius": 4,
+      "size": "L",
+      "planRequired": true,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "STL-103",
+        "STL-106",
+        "STL-301"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "crm-ops-ui"
+      ],
+      "primaryFiles": [
+        "src/app/(ops)/ops/leads/*",
+        "src/features/crm/*",
+        "convex/opportunities.ts"
+      ],
+      "acceptance": "full timeline/next action",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "unit",
+        "integration",
+        "playwright",
+        "revenue-event-reconciliation",
+        "preview-smoke"
+      ],
+      "rollbackClass": "standard",
+      "evidenceRefs": [
+        "master-audit#26-stl-204",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "full timeline/next action",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-205",
+      "phase": "P2",
+      "phaseName": "Build conversion and sales",
+      "workstream": "conversion-sales",
+      "title": "Estimate builder/versioning",
+      "severity": "High",
+      "priorityScore": 1060,
+      "businessValue": 5,
+      "risk": 4,
+      "blastRadius": 4,
+      "size": "L",
+      "planRequired": true,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "STL-106",
+        "STL-204",
+        "STL-301"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "estimate-domain"
+      ],
+      "primaryFiles": [
+        "src/features/estimates/*",
+        "convex/estimates.ts"
+      ],
+      "acceptance": "approved immutable version",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "unit",
+        "integration",
+        "playwright",
+        "revenue-event-reconciliation",
+        "preview-smoke"
+      ],
+      "rollbackClass": "standard",
+      "evidenceRefs": [
+        "master-audit#26-stl-205",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "approved immutable version",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-206",
+      "phase": "P2",
+      "phaseName": "Build conversion and sales",
+      "workstream": "conversion-sales",
+      "title": "Proposal builder/viewer",
+      "severity": "High",
+      "priorityScore": 1078,
+      "businessValue": 5,
+      "risk": 4,
+      "blastRadius": 4,
+      "size": "XL",
+      "planRequired": true,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "STL-103",
+        "STL-107",
+        "STL-205",
+        "STL-301"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "proposal-domain"
+      ],
+      "primaryFiles": [
+        "src/features/proposals/*",
+        "convex/proposals.ts"
+      ],
+      "acceptance": "secure versioned delivery/view tracking",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "unit",
+        "integration",
+        "playwright",
+        "revenue-event-reconciliation",
+        "preview-smoke"
+      ],
+      "rollbackClass": "standard",
+      "evidenceRefs": [
+        "master-audit#26-stl-206",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "secure versioned delivery/view tracking",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-207",
+      "phase": "P2",
+      "phaseName": "Build conversion and sales",
+      "workstream": "conversion-sales",
+      "title": "Agreement signing evidence",
+      "severity": "High",
+      "priorityScore": 1104,
+      "businessValue": 5,
+      "risk": 5,
+      "blastRadius": 4,
+      "size": "L",
+      "planRequired": true,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "STL-103",
+        "STL-206"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "agreement-domain"
+      ],
+      "primaryFiles": [
+        "src/features/agreements/*",
+        "convex/agreements.ts"
+      ],
+      "acceptance": "immutable legal/version audit",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "unit",
+        "integration",
+        "playwright",
+        "revenue-event-reconciliation",
+        "preview-smoke"
+      ],
+      "rollbackClass": "mandatory",
+      "evidenceRefs": [
+        "master-audit#26-stl-207",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "immutable legal/version audit",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-208",
+      "phase": "P2",
+      "phaseName": "Build conversion and sales",
+      "workstream": "conversion-sales",
+      "title": "Stripe deposit/invoice",
+      "severity": "High",
+      "priorityScore": 1106,
+      "businessValue": 5,
+      "risk": 5,
+      "blastRadius": 5,
+      "size": "L",
+      "planRequired": true,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "STL-103",
+        "STL-107",
+        "STL-207"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "payment-boundary"
+      ],
+      "primaryFiles": [
+        "src/app/api/webhooks/stripe/route.ts",
+        "convex/payments.ts"
+      ],
+      "acceptance": "provider-confirmed posted payment",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "unit",
+        "integration",
+        "playwright",
+        "revenue-event-reconciliation",
+        "preview-smoke"
+      ],
+      "rollbackClass": "mandatory",
+      "evidenceRefs": [
+        "master-audit#26-stl-208",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "provider-confirmed posted payment",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-209",
+      "phase": "P2",
+      "phaseName": "Build conversion and sales",
+      "workstream": "conversion-sales",
+      "title": "Proposal/deposit workflows",
+      "severity": "High",
+      "priorityScore": 1074,
+      "businessValue": 5,
+      "risk": 5,
+      "blastRadius": 4,
+      "size": "XL",
+      "planRequired": true,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "STL-107",
+        "STL-206",
+        "STL-207",
+        "STL-208"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "proposal-payment-automation"
+      ],
+      "primaryFiles": [
+        "workflows/proposal-conversion.ts",
+        "workflows/deposit-collection.ts"
+      ],
+      "acceptance": "retries/stop conditions/dead letters",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "unit",
+        "integration",
+        "playwright",
+        "revenue-event-reconciliation",
+        "preview-smoke"
+      ],
+      "rollbackClass": "mandatory",
+      "evidenceRefs": [
+        "master-audit#26-stl-209",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "retries/stop conditions/dead letters",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-301",
+      "phase": "P3",
+      "phaseName": "Build CMS, public design, and local growth",
+      "workstream": "experience-quality",
+      "title": "Design tokens/shadcn baseline",
+      "severity": "High",
+      "priorityScore": 1076,
+      "businessValue": 4,
+      "risk": 4,
+      "blastRadius": 4,
+      "size": "L",
+      "planRequired": true,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "STL-104",
+        "STL-105"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "design-tokens"
+      ],
+      "primaryFiles": [
+        "components.json",
+        "src/index.css",
+        "src/components/ui/*",
+        "src/components/brand/*"
+      ],
+      "acceptance": "WCAG/visual-regression baseline",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "typecheck",
+        "playwright",
+        "axe",
+        "seo-crawl",
+        "visual-regression"
+      ],
+      "rollbackClass": "standard",
+      "evidenceRefs": [
+        "master-audit#26-stl-301",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "WCAG/visual-regression baseline",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-302",
+      "phase": "P3",
+      "phaseName": "Build CMS, public design, and local growth",
+      "workstream": "experience-quality",
+      "title": "Public templates/home/service/location",
+      "severity": "High",
+      "priorityScore": 986,
+      "businessValue": 4,
+      "risk": 4,
+      "blastRadius": 4,
+      "size": "XL",
+      "planRequired": true,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "STL-005",
+        "STL-006",
+        "STL-007",
+        "STL-301"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "public-templates"
+      ],
+      "primaryFiles": [
+        "src/app/(marketing)/*",
+        "src/features/marketing/*"
+      ],
+      "acceptance": "differentiated mobile-first pages",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "typecheck",
+        "playwright",
+        "axe",
+        "seo-crawl",
+        "visual-regression"
+      ],
+      "rollbackClass": "standard",
+      "evidenceRefs": [
+        "master-audit#26-stl-302",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "differentiated mobile-first pages",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-303",
+      "phase": "P3",
+      "phaseName": "Build CMS, public design, and local growth",
+      "workstream": "content-local-growth",
+      "title": "Convex CMS/versioning/preview",
+      "severity": "High",
+      "priorityScore": 974,
+      "businessValue": 4,
+      "risk": 4,
+      "blastRadius": 4,
+      "size": "XL",
+      "planRequired": true,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "STL-103",
+        "STL-106",
+        "STL-107",
+        "STL-301"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "convex-cms"
+      ],
+      "primaryFiles": [
+        "convex/content.ts",
+        "src/app/(ops)/ops/content/*"
+      ],
+      "acceptance": "publish/rollback",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "content-diff",
+        "seo-crawl",
+        "structured-data",
+        "policy-review",
+        "visual-regression"
+      ],
+      "rollbackClass": "standard",
+      "evidenceRefs": [
+        "master-audit#26-stl-303",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "publish/rollback",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-304",
+      "phase": "P3",
+      "phaseName": "Build CMS, public design, and local growth",
+      "workstream": "migration-cutover",
+      "title": "Content/media migration",
+      "severity": "High",
+      "priorityScore": 1014,
+      "businessValue": 5,
+      "risk": 5,
+      "blastRadius": 5,
+      "size": "XL",
+      "planRequired": true,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "STL-110",
+        "STL-303"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "content-migration"
+      ],
+      "primaryFiles": [
+        "scripts/migrations/import-content.ts",
+        "import-media.ts",
+        "URL manifest"
+      ],
+      "acceptance": "checksum/URL/visual diff",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "fixture-import",
+        "count-hash-reconciliation",
+        "authorization-verification",
+        "rollback-drill"
+      ],
+      "rollbackClass": "mandatory",
+      "evidenceRefs": [
+        "master-audit#26-stl-304",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "checksum/URL/visual diff",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-305",
+      "phase": "P3",
+      "phaseName": "Build CMS, public design, and local growth",
+      "workstream": "content-local-growth",
+      "title": "Technical SEO fixes",
+      "severity": "High",
+      "priorityScore": 992,
+      "businessValue": 4,
+      "risk": 4,
+      "blastRadius": 4,
+      "size": "L",
+      "planRequired": true,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "STL-009",
+        "STL-302",
+        "STL-304"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "technical-seo"
+      ],
+      "primaryFiles": [
+        "src/app/sitemap.ts",
+        "src/app/robots.ts",
+        "metadata/schema utilities",
+        "tests/e2e/seo-routes.spec.ts"
+      ],
+      "acceptance": "crawl/schema/sitemap/canonical pass",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "content-diff",
+        "seo-crawl",
+        "structured-data",
+        "policy-review",
+        "visual-regression"
+      ],
+      "rollbackClass": "standard",
+      "evidenceRefs": [
+        "master-audit#26-stl-305",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "crawl/schema/sitemap/canonical pass",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-306",
+      "phase": "P3",
+      "phaseName": "Build CMS, public design, and local growth",
+      "workstream": "content-local-growth",
+      "title": "GBP integrity audit with owner access",
+      "severity": "High",
+      "priorityScore": 1030,
+      "businessValue": 4,
+      "risk": 4,
+      "blastRadius": 2,
+      "size": "M",
+      "planRequired": false,
+      "executionMode": "human-assisted",
+      "dependsOn": [
+        "G10-STABILIZED"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "gbp-owner-access"
+      ],
+      "primaryFiles": [
+        "GBP owner-access checklist and verified export"
+      ],
+      "acceptance": "completed verified profile checklist",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "content-diff",
+        "seo-crawl",
+        "structured-data",
+        "policy-review",
+        "visual-regression"
+      ],
+      "rollbackClass": "standard",
+      "evidenceRefs": [
+        "master-audit#26-stl-306",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "completed verified profile checklist",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-307",
+      "phase": "P3",
+      "phaseName": "Build CMS, public design, and local growth",
+      "workstream": "content-local-growth",
+      "title": "GBP workspace",
+      "severity": "High",
+      "priorityScore": 980,
+      "businessValue": 4,
+      "risk": 4,
+      "blastRadius": 4,
+      "size": "L",
+      "planRequired": true,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "STL-301",
+        "STL-303",
+        "STL-306"
+      ],
+      "completionRequires": [
+        "STL-501"
+      ],
+      "resourceLocks": [
+        "gbp-workspace"
+      ],
+      "primaryFiles": [
+        "convex/gbp.ts",
+        "src/app/(ops)/ops/google-business/*"
+      ],
+      "acceptance": "tasks/reviews/posts/photos/UTMs",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "content-diff",
+        "seo-crawl",
+        "structured-data",
+        "policy-review",
+        "visual-regression"
+      ],
+      "rollbackClass": "standard",
+      "evidenceRefs": [
+        "master-audit#26-stl-307",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "tasks/reviews/posts/photos/UTMs",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-308",
+      "phase": "P3",
+      "phaseName": "Build CMS, public design, and local growth",
+      "workstream": "content-local-growth",
+      "title": "Review policy/system",
+      "severity": "High",
+      "priorityScore": 1018,
+      "businessValue": 4,
+      "risk": 4,
+      "blastRadius": 2,
+      "size": "M",
+      "planRequired": false,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "STL-103",
+        "STL-307"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "review-system"
+      ],
+      "primaryFiles": [
+        "convex/reviews.ts",
+        "workflows/review-referral.ts",
+        "review UI"
+      ],
+      "acceptance": "no gating; human-approved responses",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "content-diff",
+        "seo-crawl",
+        "structured-data",
+        "policy-review",
+        "visual-regression"
+      ],
+      "rollbackClass": "standard",
+      "evidenceRefs": [
+        "master-audit#26-stl-308",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "no gating; human-approved responses",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-309",
+      "phase": "P3",
+      "phaseName": "Build CMS, public design, and local growth",
+      "workstream": "content-local-growth",
+      "title": "Local content proof gates",
+      "severity": "High",
+      "priorityScore": 1006,
+      "businessValue": 4,
+      "risk": 4,
+      "blastRadius": 2,
+      "size": "M",
+      "planRequired": false,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "STL-302",
+        "STL-304",
+        "STL-305",
+        "STL-306"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "local-content"
+      ],
+      "primaryFiles": [
+        "content proof rules",
+        "city/service templates",
+        "editorial gates"
+      ],
+      "acceptance": "no thin city pages",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "content-diff",
+        "seo-crawl",
+        "structured-data",
+        "policy-review",
+        "visual-regression"
+      ],
+      "rollbackClass": "standard",
+      "evidenceRefs": [
+        "master-audit#26-stl-309",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "no thin city pages",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-401",
+      "phase": "P4",
+      "phaseName": "Build portal and operations",
+      "workstream": "portal-project-ops",
+      "title": "Customer portal shell/next action",
+      "severity": "High",
+      "priorityScore": 972,
+      "businessValue": 5,
+      "risk": 4,
+      "blastRadius": 4,
+      "size": "L",
+      "planRequired": true,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "STL-102",
+        "STL-103",
+        "STL-204",
+        "STL-301"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "portal-shell"
+      ],
+      "primaryFiles": [
+        "src/app/(portal)/portal/*",
+        "portal shell"
+      ],
+      "acceptance": "authorized task-first dashboard",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "authz-matrix",
+        "customer-isolation",
+        "playwright",
+        "private-file-access",
+        "preview-smoke"
+      ],
+      "rollbackClass": "standard",
+      "evidenceRefs": [
+        "master-audit#26-stl-401",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "authorized task-first dashboard",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-402",
+      "phase": "P4",
+      "phaseName": "Build portal and operations",
+      "workstream": "portal-project-ops",
+      "title": "Property/appointment/proposal/payment views",
+      "severity": "High",
+      "priorityScore": 950,
+      "businessValue": 5,
+      "risk": 5,
+      "blastRadius": 4,
+      "size": "XL",
+      "planRequired": true,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "STL-202",
+        "STL-206",
+        "STL-208",
+        "STL-401"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "portal-commercial-objects"
+      ],
+      "primaryFiles": [
+        "portal property/appointment/proposal/payment routes"
+      ],
+      "acceptance": "customer isolation",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "authz-matrix",
+        "customer-isolation",
+        "playwright",
+        "private-file-access",
+        "preview-smoke"
+      ],
+      "rollbackClass": "mandatory",
+      "evidenceRefs": [
+        "master-audit#26-stl-402",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "customer isolation",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-403",
+      "phase": "P4",
+      "phaseName": "Build portal and operations",
+      "workstream": "portal-project-ops",
+      "title": "Projects/files/updates",
+      "severity": "High",
+      "priorityScore": 986,
+      "businessValue": 5,
+      "risk": 5,
+      "blastRadius": 4,
+      "size": "XL",
+      "planRequired": true,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "STL-004",
+        "STL-103",
+        "STL-106",
+        "STL-401"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "project-files"
+      ],
+      "primaryFiles": [
+        "convex/projects.ts",
+        "convex/files.ts",
+        "portal project routes"
+      ],
+      "acceptance": "private secure lifecycle",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "authz-matrix",
+        "customer-isolation",
+        "playwright",
+        "private-file-access",
+        "preview-smoke"
+      ],
+      "rollbackClass": "mandatory",
+      "evidenceRefs": [
+        "master-audit#26-stl-403",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "private secure lifecycle",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-404",
+      "phase": "P4",
+      "phaseName": "Build portal and operations",
+      "workstream": "portal-project-ops",
+      "title": "Change orders",
+      "severity": "High",
+      "priorityScore": 980,
+      "businessValue": 5,
+      "risk": 5,
+      "blastRadius": 4,
+      "size": "L",
+      "planRequired": true,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "STL-206",
+        "STL-207",
+        "STL-403"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "change-orders"
+      ],
+      "primaryFiles": [
+        "convex/changeOrders.ts",
+        "proposal/agreement integration"
+      ],
+      "acceptance": "immutable version + approval",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "authz-matrix",
+        "customer-isolation",
+        "playwright",
+        "private-file-access",
+        "preview-smoke"
+      ],
+      "rollbackClass": "mandatory",
+      "evidenceRefs": [
+        "master-audit#26-stl-404",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "immutable version + approval",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-405",
+      "phase": "P4",
+      "phaseName": "Build portal and operations",
+      "workstream": "portal-project-ops",
+      "title": "Project closeout/review/referral",
+      "severity": "High",
+      "priorityScore": 960,
+      "businessValue": 5,
+      "risk": 4,
+      "blastRadius": 4,
+      "size": "L",
+      "planRequired": true,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "STL-209",
+        "STL-308",
+        "STL-403",
+        "STL-404",
+        "STL-406"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "closeout-retention"
+      ],
+      "primaryFiles": [
+        "workflows/project-closeout.ts",
+        "workflows/review-referral.ts"
+      ],
+      "acceptance": "full retention loop",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "authz-matrix",
+        "customer-isolation",
+        "playwright",
+        "private-file-access",
+        "preview-smoke"
+      ],
+      "rollbackClass": "standard",
+      "evidenceRefs": [
+        "master-audit#26-stl-405",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "full retention loop",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-406",
+      "phase": "P4",
+      "phaseName": "Build portal and operations",
+      "workstream": "portal-project-ops",
+      "title": "Crew/project assignments",
+      "severity": "High",
+      "priorityScore": 998,
+      "businessValue": 5,
+      "risk": 4,
+      "blastRadius": 2,
+      "size": "M",
+      "planRequired": false,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "STL-103",
+        "STL-403"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "field-access"
+      ],
+      "primaryFiles": [
+        "convex/projectAssignments.ts",
+        "field access UI"
+      ],
+      "acceptance": "scoped field access",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "authz-matrix",
+        "customer-isolation",
+        "playwright",
+        "private-file-access",
+        "preview-smoke"
+      ],
+      "rollbackClass": "standard",
+      "evidenceRefs": [
+        "master-audit#26-stl-406",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "scoped field access",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-407",
+      "phase": "P4",
+      "phaseName": "Build portal and operations",
+      "workstream": "automation-reliability",
+      "title": "Automation Center UI",
+      "severity": "High",
+      "priorityScore": 942,
+      "businessValue": 5,
+      "risk": 4,
+      "blastRadius": 4,
+      "size": "XL",
+      "planRequired": true,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "STL-107",
+        "STL-209",
+        "STL-301"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "automation-center"
+      ],
+      "primaryFiles": [
+        "convex/automations.ts",
+        "workflows/*",
+        "src/app/(ops)/ops/automations/*"
+      ],
+      "acceptance": "version/run/replay/approval",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "idempotency",
+        "retry-replay",
+        "dead-letter",
+        "provider-webhook",
+        "run-inspection"
+      ],
+      "rollbackClass": "standard",
+      "evidenceRefs": [
+        "master-audit#26-stl-407",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "version/run/replay/approval",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-408",
+      "phase": "P4",
+      "phaseName": "Build portal and operations",
+      "workstream": "automation-reliability",
+      "title": "System health/integration dashboard",
+      "severity": "High",
+      "priorityScore": 948,
+      "businessValue": 5,
+      "risk": 4,
+      "blastRadius": 4,
+      "size": "L",
+      "planRequired": true,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "STL-107",
+        "STL-407"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "system-health"
+      ],
+      "primaryFiles": [
+        "convex/systemHealth.ts",
+        "ops integration health UI"
+      ],
+      "acceptance": "actionable failures",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "idempotency",
+        "retry-replay",
+        "dead-letter",
+        "provider-webhook",
+        "run-inspection"
+      ],
+      "rollbackClass": "standard",
+      "evidenceRefs": [
+        "master-audit#26-stl-408",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "actionable failures",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-501",
+      "phase": "P5",
+      "phaseName": "Measure, cut over, and decommission",
+      "workstream": "measurement-optimization",
+      "title": "First-party attribution ledger",
+      "severity": "Medium",
+      "priorityScore": 722,
+      "businessValue": 4,
+      "risk": 3,
+      "blastRadius": 4,
+      "size": "L",
+      "planRequired": true,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "STL-107",
+        "STL-201",
+        "STL-202",
+        "STL-204",
+        "STL-208"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "attribution-ledger"
+      ],
+      "primaryFiles": [
+        "convex/analytics.ts",
+        "src/lib/tracking/*"
+      ],
+      "acceptance": "tagged visit → revenue trace",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "event-contract",
+        "attribution-reconciliation",
+        "dashboard-reconciliation",
+        "experiment-guardrails"
+      ],
+      "rollbackClass": "standard",
+      "evidenceRefs": [
+        "master-audit#26-stl-501",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "tagged visit → revenue trace",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-502",
+      "phase": "P5",
+      "phaseName": "Measure, cut over, and decommission",
+      "workstream": "measurement-optimization",
+      "title": "Revenue dashboards",
+      "severity": "Medium",
+      "priorityScore": 698,
+      "businessValue": 4,
+      "risk": 3,
+      "blastRadius": 4,
+      "size": "L",
+      "planRequired": true,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "STL-204",
+        "STL-208",
+        "STL-405",
+        "STL-501"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "revenue-dashboards"
+      ],
+      "primaryFiles": [
+        "ops revenue dashboard",
+        "reconciliation queries"
+      ],
+      "acceptance": "drill-down totals reconcile",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "event-contract",
+        "attribution-reconciliation",
+        "dashboard-reconciliation",
+        "experiment-guardrails"
+      ],
+      "rollbackClass": "standard",
+      "evidenceRefs": [
+        "master-audit#26-stl-502",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "drill-down totals reconcile",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-503",
+      "phase": "P5",
+      "phaseName": "Measure, cut over, and decommission",
+      "workstream": "measurement-optimization",
+      "title": "Experiment framework",
+      "severity": "Medium",
+      "priorityScore": 736,
+      "businessValue": 4,
+      "risk": 3,
+      "blastRadius": 2,
+      "size": "M",
+      "planRequired": false,
+      "executionMode": "agent-executable",
+      "dependsOn": [
+        "STL-302",
+        "STL-305",
+        "STL-501"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "experiment-framework"
+      ],
+      "primaryFiles": [
+        "experiment definitions",
+        "exposure/outcome events",
+        "guardrails"
+      ],
+      "acceptance": "exposure/outcome/guardrails",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "event-contract",
+        "attribution-reconciliation",
+        "dashboard-reconciliation",
+        "experiment-guardrails"
+      ],
+      "rollbackClass": "standard",
+      "evidenceRefs": [
+        "master-audit#26-stl-503",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "exposure/outcome/guardrails",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-504",
+      "phase": "P5",
+      "phaseName": "Measure, cut over, and decommission",
+      "workstream": "migration-cutover",
+      "title": "Final dual-read/write cutover",
+      "severity": "Medium",
+      "priorityScore": 740,
+      "businessValue": 5,
+      "risk": 5,
+      "blastRadius": 5,
+      "size": "XL",
+      "planRequired": true,
+      "executionMode": "human-assisted",
+      "dependsOn": [
+        "G70-CUTOVER-READY"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "production-cutover"
+      ],
+      "primaryFiles": [
+        "feature flags",
+        "cutover scripts",
+        "provider endpoint switches",
+        "production runbook"
+      ],
+      "acceptance": "reconciliation threshold met",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "fixture-import",
+        "count-hash-reconciliation",
+        "authorization-verification",
+        "rollback-drill"
+      ],
+      "rollbackClass": "mandatory",
+      "evidenceRefs": [
+        "master-audit#26-stl-504",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "reconciliation threshold met",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-505",
+      "phase": "P5",
+      "phaseName": "Measure, cut over, and decommission",
+      "workstream": "migration-cutover",
+      "title": "Supabase/Payload/Directus removal",
+      "severity": "Medium",
+      "priorityScore": 740,
+      "businessValue": 5,
+      "risk": 5,
+      "blastRadius": 5,
+      "size": "XL",
+      "planRequired": true,
+      "executionMode": "human-assisted",
+      "dependsOn": [
+        "G85-ROLLBACK-WINDOW-CLEARED",
+        "STL-506"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "legacy-decommission"
+      ],
+      "primaryFiles": [
+        "legacy dependency removal",
+        "archive manifests",
+        "service cancellation checklist"
+      ],
+      "acceptance": "zero runtime dependency",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "fixture-import",
+        "count-hash-reconciliation",
+        "authorization-verification",
+        "rollback-drill"
+      ],
+      "rollbackClass": "mandatory",
+      "evidenceRefs": [
+        "master-audit#26-stl-505",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "zero runtime dependency",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    },
+    {
+      "id": "STL-506",
+      "phase": "P5",
+      "phaseName": "Measure, cut over, and decommission",
+      "workstream": "migration-cutover",
+      "title": "Restore/decommission runbooks",
+      "severity": "Medium",
+      "priorityScore": 780,
+      "businessValue": 5,
+      "risk": 5,
+      "blastRadius": 4,
+      "size": "L",
+      "planRequired": true,
+      "executionMode": "human-assisted",
+      "dependsOn": [
+        "STL-110",
+        "G30-PUBLIC-CMS-READY",
+        "G31-VISITOR-TO-BOOKING",
+        "G40-PROPOSAL-TO-DEPOSIT",
+        "G50-PORTAL-OPS-READY",
+        "G60-MEASUREMENT-READY"
+      ],
+      "completionRequires": [],
+      "resourceLocks": [
+        "restore-runbooks"
+      ],
+      "primaryFiles": [
+        "restore/decommission runbooks",
+        "drill evidence"
+      ],
+      "acceptance": "approved restore drill",
+      "definitionOfReady": [
+        "all start dependencies passed",
+        "resource locks available",
+        "baseline evidence captured",
+        "node implementation plan exists when planRequired is true",
+        "rollback path identified before modifying production-critical state"
+      ],
+      "definitionOfDone": [
+        "acceptance criterion demonstrated with evidence",
+        "required verification profile passed",
+        "independent review passed for high-risk or user-facing work",
+        "preview or isolated environment validated",
+        "graph state, artifacts, decisions, and lessons updated",
+        "production observation completed when the node changes a live critical path"
+      ],
+      "verificationProfile": [
+        "fixture-import",
+        "count-hash-reconciliation",
+        "authorization-verification",
+        "rollback-drill"
+      ],
+      "rollbackClass": "mandatory",
+      "evidenceRefs": [
+        "master-audit#26-stl-506",
+        "master-audit#27-exact-recommended-code-changes"
+      ],
+      "metrics": {
+        "primary": "approved restore drill",
+        "guardrails": [
+          "error rate",
+          "authorization failures",
+          "data reconciliation",
+          "conversion regression"
+        ]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "G00-AUDIT-LOCKED",
+      "to": "STL-001",
+      "type": "requires"
+    },
+    {
+      "from": "G00-AUDIT-LOCKED",
+      "to": "STL-002",
+      "type": "requires"
+    },
+    {
+      "from": "G00-AUDIT-LOCKED",
+      "to": "STL-003",
+      "type": "requires"
+    },
+    {
+      "from": "G00-AUDIT-LOCKED",
+      "to": "STL-004",
+      "type": "requires"
+    },
+    {
+      "from": "G00-AUDIT-LOCKED",
+      "to": "STL-005",
+      "type": "requires"
+    },
+    {
+      "from": "G00-AUDIT-LOCKED",
+      "to": "STL-006",
+      "type": "requires"
+    },
+    {
+      "from": "G00-AUDIT-LOCKED",
+      "to": "STL-007",
+      "type": "requires"
+    },
+    {
+      "from": "G00-AUDIT-LOCKED",
+      "to": "STL-008",
+      "type": "requires"
+    },
+    {
+      "from": "G00-AUDIT-LOCKED",
+      "to": "STL-009",
+      "type": "requires"
+    },
+    {
+      "from": "STL-001",
+      "to": "STL-010",
+      "type": "requires"
+    },
+    {
+      "from": "G10-STABILIZED",
+      "to": "STL-101",
+      "type": "requires"
+    },
+    {
+      "from": "STL-101",
+      "to": "STL-102",
+      "type": "requires"
+    },
+    {
+      "from": "STL-105",
+      "to": "STL-102",
+      "type": "requires"
+    },
+    {
+      "from": "STL-102",
+      "to": "STL-103",
+      "type": "requires"
+    },
+    {
+      "from": "STL-102",
+      "to": "STL-104",
+      "type": "requires"
+    },
+    {
+      "from": "STL-105",
+      "to": "STL-104",
+      "type": "requires"
+    },
+    {
+      "from": "G10-STABILIZED",
+      "to": "STL-105",
+      "type": "requires"
+    },
+    {
+      "from": "STL-101",
+      "to": "STL-106",
+      "type": "requires"
+    },
+    {
+      "from": "STL-103",
+      "to": "STL-106",
+      "type": "requires"
+    },
+    {
+      "from": "STL-107",
+      "to": "STL-106",
+      "type": "requires"
+    },
+    {
+      "from": "STL-101",
+      "to": "STL-107",
+      "type": "requires"
+    },
+    {
+      "from": "STL-105",
+      "to": "STL-107",
+      "type": "requires"
+    },
+    {
+      "from": "G10-STABILIZED",
+      "to": "STL-108",
+      "type": "requires"
+    },
+    {
+      "from": "G10-STABILIZED",
+      "to": "STL-109",
+      "type": "requires"
+    },
+    {
+      "from": "STL-106",
+      "to": "STL-110",
+      "type": "requires"
+    },
+    {
+      "from": "STL-107",
+      "to": "STL-110",
+      "type": "requires"
+    },
+    {
+      "from": "STL-108",
+      "to": "STL-110",
+      "type": "requires"
+    },
+    {
+      "from": "STL-109",
+      "to": "STL-110",
+      "type": "requires"
+    },
+    {
+      "from": "STL-004",
+      "to": "STL-201",
+      "type": "requires"
+    },
+    {
+      "from": "STL-103",
+      "to": "STL-201",
+      "type": "requires"
+    },
+    {
+      "from": "STL-106",
+      "to": "STL-201",
+      "type": "requires"
+    },
+    {
+      "from": "STL-107",
+      "to": "STL-201",
+      "type": "requires"
+    },
+    {
+      "from": "STL-301",
+      "to": "STL-201",
+      "type": "requires"
+    },
+    {
+      "from": "STL-107",
+      "to": "STL-202",
+      "type": "requires"
+    },
+    {
+      "from": "STL-201",
+      "to": "STL-202",
+      "type": "requires"
+    },
+    {
+      "from": "STL-107",
+      "to": "STL-203",
+      "type": "requires"
+    },
+    {
+      "from": "STL-201",
+      "to": "STL-203",
+      "type": "requires"
+    },
+    {
+      "from": "STL-202",
+      "to": "STL-203",
+      "type": "requires"
+    },
+    {
+      "from": "STL-103",
+      "to": "STL-204",
+      "type": "requires"
+    },
+    {
+      "from": "STL-106",
+      "to": "STL-204",
+      "type": "requires"
+    },
+    {
+      "from": "STL-301",
+      "to": "STL-204",
+      "type": "requires"
+    },
+    {
+      "from": "STL-106",
+      "to": "STL-205",
+      "type": "requires"
+    },
+    {
+      "from": "STL-204",
+      "to": "STL-205",
+      "type": "requires"
+    },
+    {
+      "from": "STL-301",
+      "to": "STL-205",
+      "type": "requires"
+    },
+    {
+      "from": "STL-103",
+      "to": "STL-206",
+      "type": "requires"
+    },
+    {
+      "from": "STL-107",
+      "to": "STL-206",
+      "type": "requires"
+    },
+    {
+      "from": "STL-205",
+      "to": "STL-206",
+      "type": "requires"
+    },
+    {
+      "from": "STL-301",
+      "to": "STL-206",
+      "type": "requires"
+    },
+    {
+      "from": "STL-103",
+      "to": "STL-207",
+      "type": "requires"
+    },
+    {
+      "from": "STL-206",
+      "to": "STL-207",
+      "type": "requires"
+    },
+    {
+      "from": "STL-103",
+      "to": "STL-208",
+      "type": "requires"
+    },
+    {
+      "from": "STL-107",
+      "to": "STL-208",
+      "type": "requires"
+    },
+    {
+      "from": "STL-207",
+      "to": "STL-208",
+      "type": "requires"
+    },
+    {
+      "from": "STL-107",
+      "to": "STL-209",
+      "type": "requires"
+    },
+    {
+      "from": "STL-206",
+      "to": "STL-209",
+      "type": "requires"
+    },
+    {
+      "from": "STL-207",
+      "to": "STL-209",
+      "type": "requires"
+    },
+    {
+      "from": "STL-208",
+      "to": "STL-209",
+      "type": "requires"
+    },
+    {
+      "from": "STL-104",
+      "to": "STL-301",
+      "type": "requires"
+    },
+    {
+      "from": "STL-105",
+      "to": "STL-301",
+      "type": "requires"
+    },
+    {
+      "from": "STL-005",
+      "to": "STL-302",
+      "type": "requires"
+    },
+    {
+      "from": "STL-006",
+      "to": "STL-302",
+      "type": "requires"
+    },
+    {
+      "from": "STL-007",
+      "to": "STL-302",
+      "type": "requires"
+    },
+    {
+      "from": "STL-301",
+      "to": "STL-302",
+      "type": "requires"
+    },
+    {
+      "from": "STL-103",
+      "to": "STL-303",
+      "type": "requires"
+    },
+    {
+      "from": "STL-106",
+      "to": "STL-303",
+      "type": "requires"
+    },
+    {
+      "from": "STL-107",
+      "to": "STL-303",
+      "type": "requires"
+    },
+    {
+      "from": "STL-301",
+      "to": "STL-303",
+      "type": "requires"
+    },
+    {
+      "from": "STL-110",
+      "to": "STL-304",
+      "type": "requires"
+    },
+    {
+      "from": "STL-303",
+      "to": "STL-304",
+      "type": "requires"
+    },
+    {
+      "from": "STL-009",
+      "to": "STL-305",
+      "type": "requires"
+    },
+    {
+      "from": "STL-302",
+      "to": "STL-305",
+      "type": "requires"
+    },
+    {
+      "from": "STL-304",
+      "to": "STL-305",
+      "type": "requires"
+    },
+    {
+      "from": "G10-STABILIZED",
+      "to": "STL-306",
+      "type": "requires"
+    },
+    {
+      "from": "STL-301",
+      "to": "STL-307",
+      "type": "requires"
+    },
+    {
+      "from": "STL-303",
+      "to": "STL-307",
+      "type": "requires"
+    },
+    {
+      "from": "STL-306",
+      "to": "STL-307",
+      "type": "requires"
+    },
+    {
+      "from": "STL-103",
+      "to": "STL-308",
+      "type": "requires"
+    },
+    {
+      "from": "STL-307",
+      "to": "STL-308",
+      "type": "requires"
+    },
+    {
+      "from": "STL-302",
+      "to": "STL-309",
+      "type": "requires"
+    },
+    {
+      "from": "STL-304",
+      "to": "STL-309",
+      "type": "requires"
+    },
+    {
+      "from": "STL-305",
+      "to": "STL-309",
+      "type": "requires"
+    },
+    {
+      "from": "STL-306",
+      "to": "STL-309",
+      "type": "requires"
+    },
+    {
+      "from": "STL-102",
+      "to": "STL-401",
+      "type": "requires"
+    },
+    {
+      "from": "STL-103",
+      "to": "STL-401",
+      "type": "requires"
+    },
+    {
+      "from": "STL-204",
+      "to": "STL-401",
+      "type": "requires"
+    },
+    {
+      "from": "STL-301",
+      "to": "STL-401",
+      "type": "requires"
+    },
+    {
+      "from": "STL-202",
+      "to": "STL-402",
+      "type": "requires"
+    },
+    {
+      "from": "STL-206",
+      "to": "STL-402",
+      "type": "requires"
+    },
+    {
+      "from": "STL-208",
+      "to": "STL-402",
+      "type": "requires"
+    },
+    {
+      "from": "STL-401",
+      "to": "STL-402",
+      "type": "requires"
+    },
+    {
+      "from": "STL-004",
+      "to": "STL-403",
+      "type": "requires"
+    },
+    {
+      "from": "STL-103",
+      "to": "STL-403",
+      "type": "requires"
+    },
+    {
+      "from": "STL-106",
+      "to": "STL-403",
+      "type": "requires"
+    },
+    {
+      "from": "STL-401",
+      "to": "STL-403",
+      "type": "requires"
+    },
+    {
+      "from": "STL-206",
+      "to": "STL-404",
+      "type": "requires"
+    },
+    {
+      "from": "STL-207",
+      "to": "STL-404",
+      "type": "requires"
+    },
+    {
+      "from": "STL-403",
+      "to": "STL-404",
+      "type": "requires"
+    },
+    {
+      "from": "STL-209",
+      "to": "STL-405",
+      "type": "requires"
+    },
+    {
+      "from": "STL-308",
+      "to": "STL-405",
+      "type": "requires"
+    },
+    {
+      "from": "STL-403",
+      "to": "STL-405",
+      "type": "requires"
+    },
+    {
+      "from": "STL-404",
+      "to": "STL-405",
+      "type": "requires"
+    },
+    {
+      "from": "STL-406",
+      "to": "STL-405",
+      "type": "requires"
+    },
+    {
+      "from": "STL-103",
+      "to": "STL-406",
+      "type": "requires"
+    },
+    {
+      "from": "STL-403",
+      "to": "STL-406",
+      "type": "requires"
+    },
+    {
+      "from": "STL-107",
+      "to": "STL-407",
+      "type": "requires"
+    },
+    {
+      "from": "STL-209",
+      "to": "STL-407",
+      "type": "requires"
+    },
+    {
+      "from": "STL-301",
+      "to": "STL-407",
+      "type": "requires"
+    },
+    {
+      "from": "STL-107",
+      "to": "STL-408",
+      "type": "requires"
+    },
+    {
+      "from": "STL-407",
+      "to": "STL-408",
+      "type": "requires"
+    },
+    {
+      "from": "STL-107",
+      "to": "STL-501",
+      "type": "requires"
+    },
+    {
+      "from": "STL-201",
+      "to": "STL-501",
+      "type": "requires"
+    },
+    {
+      "from": "STL-202",
+      "to": "STL-501",
+      "type": "requires"
+    },
+    {
+      "from": "STL-204",
+      "to": "STL-501",
+      "type": "requires"
+    },
+    {
+      "from": "STL-208",
+      "to": "STL-501",
+      "type": "requires"
+    },
+    {
+      "from": "STL-204",
+      "to": "STL-502",
+      "type": "requires"
+    },
+    {
+      "from": "STL-208",
+      "to": "STL-502",
+      "type": "requires"
+    },
+    {
+      "from": "STL-405",
+      "to": "STL-502",
+      "type": "requires"
+    },
+    {
+      "from": "STL-501",
+      "to": "STL-502",
+      "type": "requires"
+    },
+    {
+      "from": "STL-302",
+      "to": "STL-503",
+      "type": "requires"
+    },
+    {
+      "from": "STL-305",
+      "to": "STL-503",
+      "type": "requires"
+    },
+    {
+      "from": "STL-501",
+      "to": "STL-503",
+      "type": "requires"
+    },
+    {
+      "from": "G70-CUTOVER-READY",
+      "to": "STL-504",
+      "type": "requires"
+    },
+    {
+      "from": "G85-ROLLBACK-WINDOW-CLEARED",
+      "to": "STL-505",
+      "type": "requires"
+    },
+    {
+      "from": "STL-506",
+      "to": "STL-505",
+      "type": "requires"
+    },
+    {
+      "from": "STL-110",
+      "to": "STL-506",
+      "type": "requires"
+    },
+    {
+      "from": "G30-PUBLIC-CMS-READY",
+      "to": "STL-506",
+      "type": "requires"
+    },
+    {
+      "from": "G31-VISITOR-TO-BOOKING",
+      "to": "STL-506",
+      "type": "requires"
+    },
+    {
+      "from": "G40-PROPOSAL-TO-DEPOSIT",
+      "to": "STL-506",
+      "type": "requires"
+    },
+    {
+      "from": "G50-PORTAL-OPS-READY",
+      "to": "STL-506",
+      "type": "requires"
+    },
+    {
+      "from": "G60-MEASUREMENT-READY",
+      "to": "STL-506",
+      "type": "requires"
+    },
+    {
+      "from": "STL-001",
+      "to": "STL-009",
+      "type": "completion-requires"
+    },
+    {
+      "from": "STL-002",
+      "to": "STL-009",
+      "type": "completion-requires"
+    },
+    {
+      "from": "STL-003",
+      "to": "STL-009",
+      "type": "completion-requires"
+    },
+    {
+      "from": "STL-004",
+      "to": "STL-009",
+      "type": "completion-requires"
+    },
+    {
+      "from": "STL-005",
+      "to": "STL-009",
+      "type": "completion-requires"
+    },
+    {
+      "from": "STL-006",
+      "to": "STL-009",
+      "type": "completion-requires"
+    },
+    {
+      "from": "STL-007",
+      "to": "STL-009",
+      "type": "completion-requires"
+    },
+    {
+      "from": "STL-008",
+      "to": "STL-009",
+      "type": "completion-requires"
+    },
+    {
+      "from": "STL-010",
+      "to": "STL-009",
+      "type": "completion-requires"
+    },
+    {
+      "from": "STL-501",
+      "to": "STL-307",
+      "type": "completion-requires"
+    },
+    {
+      "from": "STL-001",
+      "to": "G10-STABILIZED",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-002",
+      "to": "G10-STABILIZED",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-003",
+      "to": "G10-STABILIZED",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-004",
+      "to": "G10-STABILIZED",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-005",
+      "to": "G10-STABILIZED",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-006",
+      "to": "G10-STABILIZED",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-007",
+      "to": "G10-STABILIZED",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-008",
+      "to": "G10-STABILIZED",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-009",
+      "to": "G10-STABILIZED",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-010",
+      "to": "G10-STABILIZED",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-101",
+      "to": "G20-FOUNDATION-READY",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-102",
+      "to": "G20-FOUNDATION-READY",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-103",
+      "to": "G20-FOUNDATION-READY",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-104",
+      "to": "G20-FOUNDATION-READY",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-105",
+      "to": "G20-FOUNDATION-READY",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-106",
+      "to": "G20-FOUNDATION-READY",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-107",
+      "to": "G20-FOUNDATION-READY",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-108",
+      "to": "G20-FOUNDATION-READY",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-109",
+      "to": "G20-FOUNDATION-READY",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-110",
+      "to": "G20-FOUNDATION-READY",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-301",
+      "to": "G30-PUBLIC-CMS-READY",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-302",
+      "to": "G30-PUBLIC-CMS-READY",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-303",
+      "to": "G30-PUBLIC-CMS-READY",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-304",
+      "to": "G30-PUBLIC-CMS-READY",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-305",
+      "to": "G30-PUBLIC-CMS-READY",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-306",
+      "to": "G30-PUBLIC-CMS-READY",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-307",
+      "to": "G30-PUBLIC-CMS-READY",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-308",
+      "to": "G30-PUBLIC-CMS-READY",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-309",
+      "to": "G30-PUBLIC-CMS-READY",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-201",
+      "to": "G31-VISITOR-TO-BOOKING",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-202",
+      "to": "G31-VISITOR-TO-BOOKING",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-203",
+      "to": "G31-VISITOR-TO-BOOKING",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-204",
+      "to": "G40-PROPOSAL-TO-DEPOSIT",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-205",
+      "to": "G40-PROPOSAL-TO-DEPOSIT",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-206",
+      "to": "G40-PROPOSAL-TO-DEPOSIT",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-207",
+      "to": "G40-PROPOSAL-TO-DEPOSIT",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-208",
+      "to": "G40-PROPOSAL-TO-DEPOSIT",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-209",
+      "to": "G40-PROPOSAL-TO-DEPOSIT",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-401",
+      "to": "G50-PORTAL-OPS-READY",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-402",
+      "to": "G50-PORTAL-OPS-READY",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-403",
+      "to": "G50-PORTAL-OPS-READY",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-404",
+      "to": "G50-PORTAL-OPS-READY",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-405",
+      "to": "G50-PORTAL-OPS-READY",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-406",
+      "to": "G50-PORTAL-OPS-READY",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-407",
+      "to": "G50-PORTAL-OPS-READY",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-408",
+      "to": "G50-PORTAL-OPS-READY",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-501",
+      "to": "G60-MEASUREMENT-READY",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-502",
+      "to": "G60-MEASUREMENT-READY",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-503",
+      "to": "G60-MEASUREMENT-READY",
+      "type": "gate-requires"
+    },
+    {
+      "from": "G20-FOUNDATION-READY",
+      "to": "G70-CUTOVER-READY",
+      "type": "gate-requires"
+    },
+    {
+      "from": "G30-PUBLIC-CMS-READY",
+      "to": "G70-CUTOVER-READY",
+      "type": "gate-requires"
+    },
+    {
+      "from": "G31-VISITOR-TO-BOOKING",
+      "to": "G70-CUTOVER-READY",
+      "type": "gate-requires"
+    },
+    {
+      "from": "G40-PROPOSAL-TO-DEPOSIT",
+      "to": "G70-CUTOVER-READY",
+      "type": "gate-requires"
+    },
+    {
+      "from": "G50-PORTAL-OPS-READY",
+      "to": "G70-CUTOVER-READY",
+      "type": "gate-requires"
+    },
+    {
+      "from": "G60-MEASUREMENT-READY",
+      "to": "G70-CUTOVER-READY",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-506",
+      "to": "G70-CUTOVER-READY",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-504",
+      "to": "G80-CUTOVER-COMPLETE",
+      "type": "gate-requires"
+    },
+    {
+      "from": "G80-CUTOVER-COMPLETE",
+      "to": "G85-ROLLBACK-WINDOW-CLEARED",
+      "type": "gate-requires"
+    },
+    {
+      "from": "STL-505",
+      "to": "G90-DECOMMISSIONED",
+      "type": "gate-requires"
+    },
+    {
+      "from": "G80-CUTOVER-COMPLETE",
+      "to": "G70-CUTOVER-READY",
+      "type": "rollback-to",
+      "condition": "cutover gate fails"
+    },
+    {
+      "from": "G85-ROLLBACK-WINDOW-CLEARED",
+      "to": "STL-504",
+      "type": "rollback-to",
+      "condition": "soak guardrail regresses"
+    },
+    {
+      "from": "G90-DECOMMISSIONED",
+      "to": "loop:sync",
+      "type": "feedback",
+      "condition": "new business requirement or incident"
+    }
+  ],
+  "executionPackets": [
+    {
+      "id": "PACKET-00",
+      "name": "Four-lane stabilization",
+      "parallelLanes": [
+        [
+          "STL-001",
+          "STL-010"
+        ],
+        [
+          "STL-002"
+        ],
+        [
+          "STL-003",
+          "STL-004",
+          "STL-008"
+        ],
+        [
+          "STL-005",
+          "STL-006",
+          "STL-007",
+          "STL-009"
+        ]
+      ],
+      "exitGate": "G10-STABILIZED"
+    },
+    {
+      "id": "PACKET-10",
+      "name": "Platform and source inventory foundation",
+      "parallelLanes": [
+        [
+          "STL-101",
+          "STL-105",
+          "STL-107"
+        ],
+        [
+          "STL-102",
+          "STL-103",
+          "STL-104"
+        ],
+        [
+          "STL-108"
+        ],
+        [
+          "STL-109"
+        ],
+        [
+          "STL-106",
+          "STL-110"
+        ]
+      ],
+      "exitGate": "G20-FOUNDATION-READY"
+    },
+    {
+      "id": "PACKET-20",
+      "name": "Parallel growth and revenue build",
+      "parallelLanes": [
+        [
+          "STL-301",
+          "STL-302",
+          "STL-305"
+        ],
+        [
+          "STL-303",
+          "STL-304"
+        ],
+        [
+          "STL-306",
+          "STL-307",
+          "STL-308",
+          "STL-309"
+        ],
+        [
+          "STL-201",
+          "STL-202",
+          "STL-203"
+        ],
+        [
+          "STL-204",
+          "STL-205",
+          "STL-206",
+          "STL-207",
+          "STL-208",
+          "STL-209"
+        ]
+      ],
+      "exitGates": [
+        "G30-PUBLIC-CMS-READY",
+        "G31-VISITOR-TO-BOOKING",
+        "G40-PROPOSAL-TO-DEPOSIT"
+      ]
+    },
+    {
+      "id": "PACKET-30",
+      "name": "Portal, project operations, and automation",
+      "parallelLanes": [
+        [
+          "STL-401",
+          "STL-402"
+        ],
+        [
+          "STL-403",
+          "STL-404",
+          "STL-406",
+          "STL-405"
+        ],
+        [
+          "STL-407",
+          "STL-408"
+        ],
+        [
+          "STL-501",
+          "STL-502",
+          "STL-503"
+        ]
+      ],
+      "exitGates": [
+        "G50-PORTAL-OPS-READY",
+        "G60-MEASUREMENT-READY"
+      ]
+    },
+    {
+      "id": "PACKET-40",
+      "name": "Restore drill, cutover, soak, and decommission",
+      "parallelLanes": [
+        [
+          "STL-506"
+        ],
+        [
+          "STL-504"
+        ],
+        [
+          "STL-505"
+        ]
+      ],
+      "exitGates": [
+        "G70-CUTOVER-READY",
+        "G80-CUTOVER-COMPLETE",
+        "G85-ROLLBACK-WINDOW-CLEARED",
+        "G90-DECOMMISSIONED"
+      ]
+    }
+  ],
+  "criticalPath": [
+    "G00-AUDIT-LOCKED",
+    "STL-001",
+    "STL-010",
+    "G10-STABILIZED",
+    "STL-101",
+    "STL-102",
+    "STL-103",
+    "STL-107",
+    "STL-106",
+    "STL-110",
+    "STL-301",
+    "STL-201",
+    "STL-202",
+    "STL-203",
+    "G31-VISITOR-TO-BOOKING",
+    "STL-204",
+    "STL-205",
+    "STL-206",
+    "STL-207",
+    "STL-208",
+    "STL-209",
+    "G40-PROPOSAL-TO-DEPOSIT",
+    "STL-401",
+    "STL-402",
+    "STL-403",
+    "STL-407",
+    "STL-408",
+    "G50-PORTAL-OPS-READY",
+    "STL-501",
+    "STL-502",
+    "STL-503",
+    "G60-MEASUREMENT-READY",
+    "STL-506",
+    "G70-CUTOVER-READY",
+    "STL-504",
+    "G80-CUTOVER-COMPLETE",
+    "G85-ROLLBACK-WINDOW-CLEARED",
+    "STL-505",
+    "G90-DECOMMISSIONED"
+  ],
+  "rollbackTriggers": [
+    "lead loss or duplication",
+    "authorization or customer-isolation failure",
+    "payment mismatch",
+    "critical workflow failure",
+    "data reconciliation outside approved threshold",
+    "material SEO route/canonical regression",
+    "identity lockout"
+  ],
+  "globalVerificationOrder": [
+    "targeted unit tests",
+    "typecheck and lint",
+    "domain integration tests",
+    "authorization/security negative tests",
+    "production build",
+    "Playwright critical journey",
+    "axe accessibility where UI changed",
+    "SEO/internal-link crawl where public routes changed",
+    "visual regression where presentation changed",
+    "preview deployment smoke",
+    "independent review",
+    "production or shadow observation"
+  ],
+  "graphLayout": {
+    "family": "layered DAG with explicit feedback edges",
+    "direction": "left-to-right",
+    "routing": "orthogonal",
+    "clusters": "phase and workstream",
+    "stability": "fixed node IDs and source order; no force-directed layout",
+    "interactiveRecommendation": "React Flow + ELK Layered for an operator UI; Graphviz dot for documentation exports"
+  }
+}

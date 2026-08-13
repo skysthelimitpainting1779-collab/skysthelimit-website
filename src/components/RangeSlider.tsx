@@ -25,9 +25,13 @@ export default function RangeSlider({
 
   return (
     <div className="space-y-2">
-      <div className="flex justify-between text-xs font-black">
-        <span className="text-[#c9c1b4]">{label}</span>
-        <span className="text-white font-mono">{displayValue}</span>
+      <div className="flex items-center justify-between gap-4 text-xs font-bold">
+        <label htmlFor={id} className="text-[var(--muted-foreground)]">
+          {label}
+        </label>
+        <output htmlFor={id} className="font-mono text-[var(--foreground)]">
+          {displayValue}
+        </output>
       </div>
       <input
         id={id}
@@ -36,10 +40,15 @@ export default function RangeSlider({
         max={max}
         step={step}
         value={value}
+        aria-valuetext={displayValue}
+        aria-describedby={`${id}-bounds`}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="w-full accent-white bg-white/10 h-1 cursor-ew-resize focus-visible:outline-none"
+        className="h-2 w-full cursor-ew-resize accent-[var(--primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-4 focus-visible:ring-offset-[var(--background)]"
       />
-      <div className="flex justify-between text-xs text-gray-400 font-mono">
+      <div
+        id={`${id}-bounds`}
+        className="flex justify-between font-mono text-xs text-[var(--muted-foreground)]"
+      >
         <span>{minLabel}</span>
         <span>{maxLabel}</span>
       </div>

@@ -1,0 +1,4143 @@
+{
+  "schemaVersion": "1.0.0",
+  "repository": "skysthelimitpainting1779-collab/skys-the-limit-painting-llc-website",
+  "baselineCommit": "c7e94605eefdace7a76ce5145808478df8503dbb",
+  "bindings": {
+    "INSPECT-REPOSITORY": {
+      "title": "Inspect repository and environment",
+      "nodeType": "tool",
+      "risk": "low",
+      "graphStatus": "succeeded",
+      "batch": null,
+      "modules": [
+        "control-plane"
+      ],
+      "initialFiles": [
+        ".agents/STACK.md",
+        ".agents/mcp_config.json",
+        ".agents/specialists.json",
+        ".codex/config.toml",
+        "AGENTS.md",
+        "package.json",
+        "scripts/goal.mjs",
+        "scripts/graph-context.mjs",
+        "scripts/ship-eval.mjs"
+      ],
+      "verificationHints": [
+        "Graphify status/query fixtures",
+        "goal command smoke",
+        "graph schema validation",
+        "host-native compilation"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "INSPECT-REPOSITORY",
+        "title": "Inspect repository and environment",
+        "primarySkill": "vercel-platform-operations",
+        "supportingSkills": [
+          "using-git-worktrees",
+          "ship-loop",
+          "verification-before-completion",
+          "vercel-services-architecture"
+        ],
+        "requiredTools": [
+          "Graphifyy",
+          "Vercel plugin",
+          "GitHub connector",
+          "Vercel Services",
+          "Vercel official documentation search"
+        ],
+        "requiredContext7LibrariesOrDocs": [],
+        "vercelPluginRequired": true,
+        "independentVerifierSkill": null,
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": true,
+        "useContext7BeforeExternalLibraryCode": false
+      }
+    },
+    "G00-AUDIT-LOCKED": {
+      "title": "Audit and architecture baseline locked",
+      "nodeType": "human",
+      "risk": "medium",
+      "graphStatus": "succeeded",
+      "batch": null,
+      "modules": [
+        "control-plane"
+      ],
+      "initialFiles": [
+        ".agents/STACK.md",
+        ".agents/mcp_config.json",
+        ".agents/specialists.json",
+        ".codex/config.toml",
+        "AGENTS.md",
+        "package.json",
+        "scripts/goal.mjs",
+        "scripts/graph-context.mjs",
+        "scripts/ship-eval.mjs"
+      ],
+      "verificationHints": [
+        "Graphify status/query fixtures",
+        "goal command smoke",
+        "graph schema validation",
+        "host-native compilation"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "G00-AUDIT-LOCKED",
+        "title": "Audit and architecture baseline locked",
+        "primarySkill": "vercel-platform-operations",
+        "supportingSkills": [
+          "requesting-code-review",
+          "verification-before-completion",
+          "vercel-services-architecture"
+        ],
+        "requiredTools": [
+          "Graphifyy",
+          "Vercel plugin",
+          "Context7",
+          "Vercel Services",
+          "Vercel official documentation search"
+        ],
+        "requiredContext7LibrariesOrDocs": [],
+        "vercelPluginRequired": true,
+        "independentVerifierSkill": "security-verification",
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": true,
+        "useContext7BeforeExternalLibraryCode": false
+      }
+    },
+    "G10-STABILIZED": {
+      "title": "Revenue and security stabilization passed",
+      "nodeType": "human",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": null,
+      "modules": [
+        "cutover-and-decommission"
+      ],
+      "initialFiles": [
+        ".graph/**",
+        "convex/migrations/**",
+        "docs/runbooks/**",
+        "scripts/migrations/**"
+      ],
+      "verificationHints": [
+        "canary reads and writes",
+        "migration counts and checksums",
+        "restore evidence",
+        "rollback rehearsal"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "G10-STABILIZED",
+        "title": "Revenue and security stabilization passed",
+        "primarySkill": "security-verification",
+        "supportingSkills": [
+          "requesting-code-review",
+          "verification-before-completion"
+        ],
+        "requiredTools": [
+          "Graphifyy",
+          "Vercel plugin",
+          "GitHub connector",
+          "Vercel official documentation search"
+        ],
+        "requiredContext7LibrariesOrDocs": [],
+        "vercelPluginRequired": true,
+        "independentVerifierSkill": "security-verification",
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": true,
+        "useContext7BeforeExternalLibraryCode": false
+      }
+    },
+    "ADR-AUTH-PROVIDER": {
+      "title": "Approve canonical identity provider ADR",
+      "nodeType": "human",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": null,
+      "modules": [
+        "control-plane",
+        "clerk-identity"
+      ],
+      "initialFiles": [
+        ".agents/STACK.md",
+        ".agents/mcp_config.json",
+        ".agents/specialists.json",
+        ".codex/config.toml",
+        "AGENTS.md",
+        "convex/auth.config.ts",
+        "package.json",
+        "scripts/goal.mjs",
+        "scripts/graph-context.mjs",
+        "scripts/ship-eval.mjs",
+        "src/app/api/webhooks/clerk/route.ts",
+        "src/app/layout.tsx",
+        "src/proxy.ts"
+      ],
+      "verificationHints": [
+        "Graphify status/query fixtures",
+        "MFA-required roles",
+        "create/update/delete lifecycle",
+        "disabled user",
+        "goal command smoke",
+        "graph schema validation",
+        "host-native compilation",
+        "invitation-only staff"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "ADR-AUTH-PROVIDER",
+        "title": "Approve canonical identity provider ADR",
+        "primarySkill": "vercel-platform-operations",
+        "supportingSkills": [
+          "requesting-code-review",
+          "verification-before-completion"
+        ],
+        "requiredTools": [
+          "Graphifyy",
+          "Vercel plugin",
+          "Context7",
+          "Vercel official documentation search"
+        ],
+        "requiredContext7LibrariesOrDocs": [],
+        "vercelPluginRequired": true,
+        "independentVerifierSkill": "security-verification",
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": true,
+        "useContext7BeforeExternalLibraryCode": false
+      }
+    },
+    "G20-FOUNDATION-READY": {
+      "title": "Identity, authorization, Convex, and migration foundation passed",
+      "nodeType": "human",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": null,
+      "modules": [
+        "cutover-and-decommission"
+      ],
+      "initialFiles": [
+        ".graph/**",
+        "convex/migrations/**",
+        "docs/runbooks/**",
+        "scripts/migrations/**"
+      ],
+      "verificationHints": [
+        "canary reads and writes",
+        "migration counts and checksums",
+        "restore evidence",
+        "rollback rehearsal"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "G20-FOUNDATION-READY",
+        "title": "Identity, authorization, Convex, and migration foundation passed",
+        "primarySkill": "security-verification",
+        "supportingSkills": [
+          "requesting-code-review",
+          "verification-before-completion"
+        ],
+        "requiredTools": [
+          "Graphifyy",
+          "Vercel plugin",
+          "GitHub connector",
+          "Vercel official documentation search"
+        ],
+        "requiredContext7LibrariesOrDocs": [],
+        "vercelPluginRequired": true,
+        "independentVerifierSkill": "security-verification",
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": true,
+        "useContext7BeforeExternalLibraryCode": false
+      }
+    },
+    "G30-PUBLIC-CMS-READY": {
+      "title": "Design, public site, CMS, SEO, and local growth passed",
+      "nodeType": "human",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": null,
+      "modules": [
+        "cutover-and-decommission"
+      ],
+      "initialFiles": [
+        ".graph/**",
+        "convex/migrations/**",
+        "docs/runbooks/**",
+        "scripts/migrations/**"
+      ],
+      "verificationHints": [
+        "canary reads and writes",
+        "migration counts and checksums",
+        "restore evidence",
+        "rollback rehearsal"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "G30-PUBLIC-CMS-READY",
+        "title": "Design, public site, CMS, SEO, and local growth passed",
+        "primarySkill": "security-verification",
+        "supportingSkills": [
+          "requesting-code-review",
+          "verification-before-completion"
+        ],
+        "requiredTools": [
+          "Graphifyy",
+          "Vercel plugin",
+          "GitHub connector",
+          "Vercel official documentation search"
+        ],
+        "requiredContext7LibrariesOrDocs": [],
+        "vercelPluginRequired": true,
+        "independentVerifierSkill": "security-verification",
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": true,
+        "useContext7BeforeExternalLibraryCode": false
+      }
+    },
+    "G31-VISITOR-TO-BOOKING": {
+      "title": "Visitor to durable lead to booked estimate passed",
+      "nodeType": "human",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": null,
+      "modules": [
+        "cutover-and-decommission"
+      ],
+      "initialFiles": [
+        ".graph/**",
+        "convex/migrations/**",
+        "docs/runbooks/**",
+        "scripts/migrations/**"
+      ],
+      "verificationHints": [
+        "canary reads and writes",
+        "migration counts and checksums",
+        "restore evidence",
+        "rollback rehearsal"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "G31-VISITOR-TO-BOOKING",
+        "title": "Visitor to durable lead to booked estimate passed",
+        "primarySkill": "security-verification",
+        "supportingSkills": [
+          "requesting-code-review",
+          "verification-before-completion"
+        ],
+        "requiredTools": [
+          "Graphifyy",
+          "Vercel plugin",
+          "GitHub connector",
+          "Vercel official documentation search"
+        ],
+        "requiredContext7LibrariesOrDocs": [],
+        "vercelPluginRequired": true,
+        "independentVerifierSkill": "security-verification",
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": true,
+        "useContext7BeforeExternalLibraryCode": false
+      }
+    },
+    "G40-PROPOSAL-TO-DEPOSIT": {
+      "title": "Estimate to proposal to agreement to posted deposit passed",
+      "nodeType": "human",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": null,
+      "modules": [
+        "cutover-and-decommission"
+      ],
+      "initialFiles": [
+        ".graph/**",
+        "convex/migrations/**",
+        "docs/runbooks/**",
+        "scripts/migrations/**"
+      ],
+      "verificationHints": [
+        "canary reads and writes",
+        "migration counts and checksums",
+        "restore evidence",
+        "rollback rehearsal"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "G40-PROPOSAL-TO-DEPOSIT",
+        "title": "Estimate to proposal to agreement to posted deposit passed",
+        "primarySkill": "security-verification",
+        "supportingSkills": [
+          "requesting-code-review",
+          "verification-before-completion"
+        ],
+        "requiredTools": [
+          "Graphifyy",
+          "Vercel plugin",
+          "GitHub connector",
+          "Vercel official documentation search"
+        ],
+        "requiredContext7LibrariesOrDocs": [],
+        "vercelPluginRequired": true,
+        "independentVerifierSkill": "security-verification",
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": true,
+        "useContext7BeforeExternalLibraryCode": false
+      }
+    },
+    "G50-PORTAL-OPS-READY": {
+      "title": "Customer portal, project operations, and automation cockpit passed",
+      "nodeType": "human",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": null,
+      "modules": [
+        "cutover-and-decommission"
+      ],
+      "initialFiles": [
+        ".graph/**",
+        "convex/migrations/**",
+        "docs/runbooks/**",
+        "scripts/migrations/**"
+      ],
+      "verificationHints": [
+        "canary reads and writes",
+        "migration counts and checksums",
+        "restore evidence",
+        "rollback rehearsal"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "G50-PORTAL-OPS-READY",
+        "title": "Customer portal, project operations, and automation cockpit passed",
+        "primarySkill": "security-verification",
+        "supportingSkills": [
+          "requesting-code-review",
+          "verification-before-completion"
+        ],
+        "requiredTools": [
+          "Graphifyy",
+          "Vercel plugin",
+          "GitHub connector",
+          "Vercel official documentation search"
+        ],
+        "requiredContext7LibrariesOrDocs": [],
+        "vercelPluginRequired": true,
+        "independentVerifierSkill": "security-verification",
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": true,
+        "useContext7BeforeExternalLibraryCode": false
+      }
+    },
+    "G60-MEASUREMENT-READY": {
+      "title": "Revenue attribution, dashboards, and experiments reconcile",
+      "nodeType": "human",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": null,
+      "modules": [
+        "cutover-and-decommission"
+      ],
+      "initialFiles": [
+        ".graph/**",
+        "convex/migrations/**",
+        "docs/runbooks/**",
+        "scripts/migrations/**"
+      ],
+      "verificationHints": [
+        "canary reads and writes",
+        "migration counts and checksums",
+        "restore evidence",
+        "rollback rehearsal"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "G60-MEASUREMENT-READY",
+        "title": "Revenue attribution, dashboards, and experiments reconcile",
+        "primarySkill": "security-verification",
+        "supportingSkills": [
+          "requesting-code-review",
+          "verification-before-completion"
+        ],
+        "requiredTools": [
+          "Graphifyy",
+          "Vercel plugin",
+          "GitHub connector",
+          "Vercel official documentation search"
+        ],
+        "requiredContext7LibrariesOrDocs": [],
+        "vercelPluginRequired": true,
+        "independentVerifierSkill": "security-verification",
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": true,
+        "useContext7BeforeExternalLibraryCode": false
+      }
+    },
+    "G70-CUTOVER-READY": {
+      "title": "All product, data, security, SEO, and restore gates ready for cutover",
+      "nodeType": "human",
+      "risk": "high",
+      "graphStatus": "pending",
+      "batch": null,
+      "modules": [
+        "cutover-and-decommission"
+      ],
+      "initialFiles": [
+        ".graph/**",
+        "convex/migrations/**",
+        "docs/runbooks/**",
+        "scripts/migrations/**"
+      ],
+      "verificationHints": [
+        "canary reads and writes",
+        "migration counts and checksums",
+        "restore evidence",
+        "rollback rehearsal"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "G70-CUTOVER-READY",
+        "title": "All product, data, security, SEO, and restore gates ready for cutover",
+        "primarySkill": "security-verification",
+        "supportingSkills": [
+          "requesting-code-review",
+          "verification-before-completion"
+        ],
+        "requiredTools": [
+          "Graphifyy",
+          "Vercel plugin",
+          "GitHub connector",
+          "Vercel official documentation search"
+        ],
+        "requiredContext7LibrariesOrDocs": [],
+        "vercelPluginRequired": true,
+        "independentVerifierSkill": "security-verification",
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": true,
+        "useContext7BeforeExternalLibraryCode": false
+      }
+    },
+    "G80-CUTOVER-COMPLETE": {
+      "title": "Production cutover completed and reconciled",
+      "nodeType": "human",
+      "risk": "high",
+      "graphStatus": "pending",
+      "batch": null,
+      "modules": [
+        "cutover-and-decommission"
+      ],
+      "initialFiles": [
+        ".graph/**",
+        "convex/migrations/**",
+        "docs/runbooks/**",
+        "scripts/migrations/**"
+      ],
+      "verificationHints": [
+        "canary reads and writes",
+        "migration counts and checksums",
+        "restore evidence",
+        "rollback rehearsal"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "G80-CUTOVER-COMPLETE",
+        "title": "Production cutover completed and reconciled",
+        "primarySkill": "security-verification",
+        "supportingSkills": [
+          "requesting-code-review",
+          "verification-before-completion"
+        ],
+        "requiredTools": [
+          "Graphifyy",
+          "Vercel plugin",
+          "GitHub connector",
+          "Vercel official documentation search"
+        ],
+        "requiredContext7LibrariesOrDocs": [],
+        "vercelPluginRequired": true,
+        "independentVerifierSkill": "security-verification",
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": true,
+        "useContext7BeforeExternalLibraryCode": false
+      }
+    },
+    "G85-ROLLBACK-WINDOW-CLEARED": {
+      "title": "Monitored rollback window cleared",
+      "nodeType": "human",
+      "risk": "high",
+      "graphStatus": "pending",
+      "batch": null,
+      "modules": [
+        "cutover-and-decommission"
+      ],
+      "initialFiles": [
+        ".graph/**",
+        "convex/migrations/**",
+        "docs/runbooks/**",
+        "scripts/migrations/**"
+      ],
+      "verificationHints": [
+        "canary reads and writes",
+        "migration counts and checksums",
+        "restore evidence",
+        "rollback rehearsal"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "G85-ROLLBACK-WINDOW-CLEARED",
+        "title": "Monitored rollback window cleared",
+        "primarySkill": "security-verification",
+        "supportingSkills": [
+          "requesting-code-review",
+          "verification-before-completion"
+        ],
+        "requiredTools": [
+          "Graphifyy",
+          "Vercel plugin",
+          "GitHub connector",
+          "Vercel official documentation search"
+        ],
+        "requiredContext7LibrariesOrDocs": [],
+        "vercelPluginRequired": true,
+        "independentVerifierSkill": "security-verification",
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": true,
+        "useContext7BeforeExternalLibraryCode": false
+      }
+    },
+    "G90-DECOMMISSIONED": {
+      "title": "Legacy services decommissioned with restore evidence retained",
+      "nodeType": "human",
+      "risk": "high",
+      "graphStatus": "pending",
+      "batch": null,
+      "modules": [
+        "cutover-and-decommission"
+      ],
+      "initialFiles": [
+        ".graph/**",
+        "convex/migrations/**",
+        "docs/runbooks/**",
+        "scripts/migrations/**"
+      ],
+      "verificationHints": [
+        "canary reads and writes",
+        "migration counts and checksums",
+        "restore evidence",
+        "rollback rehearsal"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "G90-DECOMMISSIONED",
+        "title": "Legacy services decommissioned with restore evidence retained",
+        "primarySkill": "security-verification",
+        "supportingSkills": [
+          "requesting-code-review",
+          "verification-before-completion"
+        ],
+        "requiredTools": [
+          "Graphifyy",
+          "Vercel plugin",
+          "GitHub connector",
+          "Vercel official documentation search"
+        ],
+        "requiredContext7LibrariesOrDocs": [],
+        "vercelPluginRequired": true,
+        "independentVerifierSkill": "security-verification",
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": true,
+        "useContext7BeforeExternalLibraryCode": false
+      }
+    },
+    "STL-001": {
+      "title": "Make lead creation durable/fail-closed",
+      "nodeType": "agent",
+      "risk": "high",
+      "graphStatus": "pending",
+      "batch": "B10",
+      "modules": [
+        "lead-intake",
+        "manychat-intake"
+      ],
+      "initialFiles": [
+        "src/app/api/leads/route.ts",
+        "src/app/api/manychat/route.ts",
+        "src/components/LeadForm.tsx",
+        "src/lib/api/utils.ts",
+        "tests/api-units.test.mjs",
+        "tests/leads-api-handler.test.mjs"
+      ],
+      "verificationHints": [
+        "canonical persistence first",
+        "duplicate idempotency",
+        "idempotent retry",
+        "operator reconciliation",
+        "outbox replay",
+        "persistence failure",
+        "phone/email policy",
+        "provider failure",
+        "webhook authentication"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-001",
+        "title": "Make lead creation durable/fail-closed",
+        "primarySkill": "lead-revenue-operations",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "durable-vercel-workflows",
+          "requesting-code-review"
+        ],
+        "requiredTools": [
+          "Graphifyy",
+          "Vercel plugin",
+          "Vercel official documentation search"
+        ],
+        "requiredContext7LibrariesOrDocs": [
+          "/vercel/workflow"
+        ],
+        "vercelPluginRequired": true,
+        "independentVerifierSkill": "security-verification",
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": true,
+        "useContext7BeforeExternalLibraryCode": true
+      }
+    },
+    "STL-002": {
+      "title": "Fix estimate payload and corrupted copy",
+      "nodeType": "agent",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": "B10",
+      "modules": [
+        "estimate-funnel"
+      ],
+      "initialFiles": [
+        "src/app/api/leads/route.ts",
+        "src/lib/api/utils.ts",
+        "src/views/Estimate.tsx"
+      ],
+      "verificationHints": [
+        "cabinet journey",
+        "exterior journey",
+        "interior journey",
+        "shared payload contract"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-002",
+        "title": "Fix estimate payload and corrupted copy",
+        "primarySkill": "lead-revenue-operations",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": null,
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": false
+      }
+    },
+    "STL-003": {
+      "title": "Disable public manage sign-up and enforce staff authorization",
+      "nodeType": "agent",
+      "risk": "high",
+      "graphStatus": "pending",
+      "batch": "B10",
+      "modules": [
+        "legacy-manage-admin",
+        "legacy-payload"
+      ],
+      "initialFiles": [
+        "next.config.ts",
+        "src/app/(payload)/**",
+        "src/app/manage/layout.tsx",
+        "src/app/manage/page.tsx",
+        "src/collections/payload/**",
+        "src/globals/payload/**",
+        "src/lib/supabase/client.ts",
+        "src/payload.config.ts",
+        "src/proxy.ts"
+      ],
+      "verificationHints": [
+        "admin lifecycle",
+        "anonymous denied",
+        "customer denied",
+        "disabled user denied",
+        "export counts and checksums",
+        "missing secret fails safely",
+        "owner-only user administration",
+        "staff role matrix"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-003",
+        "title": "Disable public manage sign-up and enforce staff authorization",
+        "primarySkill": "clerk-convex-authorization",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "security-verification",
+          "requesting-code-review"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [
+          "/websites/convex_dev",
+          "/clerk/clerk-docs"
+        ],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": "security-verification",
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": true
+      }
+    },
+    "STL-004": {
+      "title": "Make lead/project uploads private",
+      "nodeType": "agent",
+      "risk": "high",
+      "graphStatus": "pending",
+      "batch": "B10",
+      "modules": [
+        "private-files"
+      ],
+      "initialFiles": [
+        "next.config.ts",
+        "src/app/api/storage/upload-url/route.ts",
+        "src/components/LeadForm.tsx"
+      ],
+      "verificationHints": [
+        "MIME and size validation",
+        "cross-project isolation",
+        "retention metadata",
+        "unauthorized retrieval"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-004",
+        "title": "Make lead/project uploads private",
+        "primarySkill": "private-file-boundaries",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "security-verification",
+          "requesting-code-review"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": "security-verification",
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": false
+      }
+    },
+    "STL-005": {
+      "title": "Repair cabinet/commercial service pages or redirects",
+      "nodeType": "agent",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": "B10",
+      "modules": [
+        "route-registry"
+      ],
+      "initialFiles": [
+        "public/sitemap.xml",
+        "src/app/painting-services/[slug]/page.tsx",
+        "src/app/service-areas/[slug]/page.tsx",
+        "src/app/sitemap.ts",
+        "src/data/landingPages.ts",
+        "vercel.json"
+      ],
+      "verificationHints": [
+        "SSR build",
+        "canonical self-reference",
+        "linked-route crawler",
+        "robots consistency",
+        "sitemap parity"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-005",
+        "title": "Repair cabinet/commercial service pages or redirects",
+        "primarySkill": "nextjs-public-platform",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "react-best-practices"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [
+          "Current Next.js/React docs"
+        ],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": null,
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": true
+      }
+    },
+    "STL-006": {
+      "title": "Correct 404 canonical/robots metadata",
+      "nodeType": "agent",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": "B10",
+      "modules": [
+        "route-registry"
+      ],
+      "initialFiles": [
+        "public/sitemap.xml",
+        "src/app/painting-services/[slug]/page.tsx",
+        "src/app/service-areas/[slug]/page.tsx",
+        "src/app/sitemap.ts",
+        "src/data/landingPages.ts",
+        "vercel.json"
+      ],
+      "verificationHints": [
+        "SSR build",
+        "canonical self-reference",
+        "linked-route crawler",
+        "robots consistency",
+        "sitemap parity"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-006",
+        "title": "Correct 404 canonical/robots metadata",
+        "primarySkill": "nextjs-public-platform",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "react-best-practices"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [
+          "Current Next.js/React docs"
+        ],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": null,
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": true
+      }
+    },
+    "STL-007": {
+      "title": "Resolve SSR search-param bailout",
+      "nodeType": "agent",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": "B10",
+      "modules": [
+        "route-registry"
+      ],
+      "initialFiles": [
+        "public/sitemap.xml",
+        "src/app/painting-services/[slug]/page.tsx",
+        "src/app/service-areas/[slug]/page.tsx",
+        "src/app/sitemap.ts",
+        "src/data/landingPages.ts",
+        "vercel.json"
+      ],
+      "verificationHints": [
+        "SSR build",
+        "canonical self-reference",
+        "linked-route crawler",
+        "robots consistency",
+        "sitemap parity"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-007",
+        "title": "Resolve SSR search-param bailout",
+        "primarySkill": "nextjs-public-platform",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "react-best-practices"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [
+          "Current Next.js/React docs"
+        ],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": null,
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": true
+      }
+    },
+    "STL-008": {
+      "title": "Replace optional webhook authentication",
+      "nodeType": "agent",
+      "risk": "high",
+      "graphStatus": "pending",
+      "batch": "B10",
+      "modules": [
+        "manychat-intake"
+      ],
+      "initialFiles": [
+        "src/app/api/manychat/route.ts",
+        "src/lib/api/utils.ts"
+      ],
+      "verificationHints": [
+        "canonical persistence first",
+        "idempotent retry",
+        "phone/email policy",
+        "webhook authentication"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-008",
+        "title": "Replace optional webhook authentication",
+        "primarySkill": "security-verification",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "security-verification",
+          "durable-vercel-workflows",
+          "requesting-code-review"
+        ],
+        "requiredTools": [
+          "Graphifyy",
+          "Vercel plugin",
+          "Vercel official documentation search"
+        ],
+        "requiredContext7LibrariesOrDocs": [
+          "/vercel/workflow"
+        ],
+        "vercelPluginRequired": true,
+        "independentVerifierSkill": "security-verification",
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": true,
+        "useContext7BeforeExternalLibraryCode": true
+      }
+    },
+    "STL-009": {
+      "title": "Expand smoke/E2E critical journeys",
+      "nodeType": "agent",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": "B10",
+      "modules": [
+        "route-registry"
+      ],
+      "initialFiles": [
+        "public/sitemap.xml",
+        "src/app/painting-services/[slug]/page.tsx",
+        "src/app/service-areas/[slug]/page.tsx",
+        "src/app/sitemap.ts",
+        "src/data/landingPages.ts",
+        "vercel.json"
+      ],
+      "verificationHints": [
+        "SSR build",
+        "canonical self-reference",
+        "linked-route crawler",
+        "robots consistency",
+        "sitemap parity"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-009",
+        "title": "Expand smoke/E2E critical journeys",
+        "primarySkill": "nextjs-public-platform",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "react-best-practices"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [
+          "Current Next.js/React docs"
+        ],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": null,
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": true
+      }
+    },
+    "STL-010": {
+      "title": "Add lead-delivery reconciliation queue",
+      "nodeType": "agent",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": "B10",
+      "modules": [
+        "lead-intake",
+        "manychat-intake"
+      ],
+      "initialFiles": [
+        "src/app/api/leads/route.ts",
+        "src/app/api/manychat/route.ts",
+        "src/components/LeadForm.tsx",
+        "src/lib/api/utils.ts",
+        "tests/api-units.test.mjs",
+        "tests/leads-api-handler.test.mjs"
+      ],
+      "verificationHints": [
+        "canonical persistence first",
+        "duplicate idempotency",
+        "idempotent retry",
+        "operator reconciliation",
+        "outbox replay",
+        "persistence failure",
+        "phone/email policy",
+        "provider failure",
+        "webhook authentication"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-010",
+        "title": "Add lead-delivery reconciliation queue",
+        "primarySkill": "lead-revenue-operations",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "durable-vercel-workflows"
+        ],
+        "requiredTools": [
+          "Graphifyy",
+          "Vercel plugin",
+          "Vercel official documentation search"
+        ],
+        "requiredContext7LibrariesOrDocs": [
+          "/vercel/workflow"
+        ],
+        "vercelPluginRequired": true,
+        "independentVerifierSkill": null,
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": true,
+        "useContext7BeforeExternalLibraryCode": true
+      }
+    },
+    "STL-101": {
+      "title": "Add Convex environments/provider",
+      "nodeType": "agent",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": "B20",
+      "modules": [
+        "convex-foundation"
+      ],
+      "initialFiles": [
+        "convex/**",
+        "package.json",
+        "src/components/providers/**"
+      ],
+      "verificationHints": [
+        "audit immutability",
+        "authz matrix",
+        "idempotency",
+        "migration runner",
+        "schema/index access patterns"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-101",
+        "title": "Add Convex environments/provider",
+        "primarySkill": "vercel-integrations-connect",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "convex-domain-backend",
+          "durable-vercel-workflows",
+          "vercel-services-architecture"
+        ],
+        "requiredTools": [
+          "Graphifyy",
+          "Vercel plugin",
+          "Vercel Services",
+          "Vercel official documentation search"
+        ],
+        "requiredContext7LibrariesOrDocs": [
+          "/websites/convex_dev",
+          "/vercel/workflow"
+        ],
+        "vercelPluginRequired": true,
+        "independentVerifierSkill": null,
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": true,
+        "useContext7BeforeExternalLibraryCode": true
+      }
+    },
+    "STL-102": {
+      "title": "Integrate approved identity provider",
+      "nodeType": "agent",
+      "risk": "high",
+      "graphStatus": "pending",
+      "batch": "B20",
+      "modules": [
+        "legacy-manage-admin",
+        "portal-auth-and-ownership",
+        "clerk-identity"
+      ],
+      "initialFiles": [
+        "convex/auth.config.ts",
+        "package.json",
+        "src/app/api/webhooks/clerk/route.ts",
+        "src/app/layout.tsx",
+        "src/app/manage/layout.tsx",
+        "src/app/manage/page.tsx",
+        "src/app/portal/page.tsx",
+        "src/lib/auth/portal-data.ts",
+        "src/lib/supabase/client.ts",
+        "src/proxy.ts",
+        "tests/portal-auth.test.mjs"
+      ],
+      "verificationHints": [
+        "MFA-required roles",
+        "anonymous denied",
+        "create/update/delete lifecycle",
+        "cross-customer isolation",
+        "customer denied",
+        "disabled user",
+        "disabled user denied",
+        "identity lifecycle",
+        "invitation-only staff",
+        "owner-only user administration",
+        "resource grants",
+        "server route protection",
+        "staff role matrix"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-102",
+        "title": "Integrate approved identity provider",
+        "primarySkill": "clerk-convex-authorization",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "security-verification",
+          "requesting-code-review"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [
+          "/websites/convex_dev",
+          "/clerk/clerk-docs"
+        ],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": "security-verification",
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": true
+      }
+    },
+    "STL-103": {
+      "title": "Implement Convex authz/audit",
+      "nodeType": "validator",
+      "risk": "high",
+      "graphStatus": "pending",
+      "batch": "B20",
+      "modules": [
+        "legacy-manage-admin",
+        "portal-auth-and-ownership",
+        "convex-foundation",
+        "clerk-identity"
+      ],
+      "initialFiles": [
+        "convex/**",
+        "convex/auth.config.ts",
+        "package.json",
+        "src/app/api/webhooks/clerk/route.ts",
+        "src/app/layout.tsx",
+        "src/app/manage/layout.tsx",
+        "src/app/manage/page.tsx",
+        "src/app/portal/page.tsx",
+        "src/components/providers/**",
+        "src/lib/auth/portal-data.ts",
+        "src/lib/supabase/client.ts",
+        "src/proxy.ts",
+        "tests/portal-auth.test.mjs"
+      ],
+      "verificationHints": [
+        "MFA-required roles",
+        "anonymous denied",
+        "audit immutability",
+        "authz matrix",
+        "create/update/delete lifecycle",
+        "cross-customer isolation",
+        "customer denied",
+        "disabled user",
+        "disabled user denied",
+        "idempotency",
+        "identity lifecycle",
+        "invitation-only staff",
+        "migration runner",
+        "owner-only user administration",
+        "resource grants",
+        "schema/index access patterns",
+        "server route protection",
+        "staff role matrix"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-103",
+        "title": "Implement Convex authz/audit",
+        "primarySkill": "clerk-convex-authorization",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "security-verification",
+          "requesting-code-review"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [
+          "/websites/convex_dev",
+          "/clerk/clerk-docs"
+        ],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": "security-verification",
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": true
+      }
+    },
+    "STL-104": {
+      "title": "Split marketing/portal/ops route groups",
+      "nodeType": "agent",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": "B20",
+      "modules": [
+        "legacy-manage-admin",
+        "portal-auth-and-ownership"
+      ],
+      "initialFiles": [
+        "src/app/manage/layout.tsx",
+        "src/app/manage/page.tsx",
+        "src/app/portal/page.tsx",
+        "src/lib/auth/portal-data.ts",
+        "src/lib/supabase/client.ts",
+        "src/proxy.ts",
+        "tests/portal-auth.test.mjs"
+      ],
+      "verificationHints": [
+        "anonymous denied",
+        "cross-customer isolation",
+        "customer denied",
+        "disabled user denied",
+        "identity lifecycle",
+        "owner-only user administration",
+        "resource grants",
+        "server route protection",
+        "staff role matrix"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-104",
+        "title": "Split marketing/portal/ops route groups",
+        "primarySkill": "nextjs-public-platform",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "react-best-practices",
+          "durable-vercel-workflows",
+          "vercel-services-architecture"
+        ],
+        "requiredTools": [
+          "Graphifyy",
+          "Vercel plugin",
+          "Vercel Services",
+          "Vercel official documentation search"
+        ],
+        "requiredContext7LibrariesOrDocs": [
+          "/vercel/workflow",
+          "Current Next.js/React docs"
+        ],
+        "vercelPluginRequired": true,
+        "independentVerifierSkill": null,
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": true,
+        "useContext7BeforeExternalLibraryCode": true
+      }
+    },
+    "STL-105": {
+      "title": "Strict server/client env schema",
+      "nodeType": "agent",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": "B20",
+      "modules": [
+        "convex-foundation"
+      ],
+      "initialFiles": [
+        "convex/**",
+        "package.json",
+        "src/components/providers/**"
+      ],
+      "verificationHints": [
+        "audit immutability",
+        "authz matrix",
+        "idempotency",
+        "migration runner",
+        "schema/index access patterns"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-105",
+        "title": "Strict server/client env schema",
+        "primarySkill": "vercel-platform-operations",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "convex-domain-backend",
+          "durable-vercel-workflows",
+          "vercel-services-architecture"
+        ],
+        "requiredTools": [
+          "Graphifyy",
+          "Vercel plugin",
+          "Vercel Services",
+          "Vercel official documentation search"
+        ],
+        "requiredContext7LibrariesOrDocs": [
+          "/websites/convex_dev",
+          "/vercel/workflow"
+        ],
+        "vercelPluginRequired": true,
+        "independentVerifierSkill": null,
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": true,
+        "useContext7BeforeExternalLibraryCode": true
+      }
+    },
+    "STL-106": {
+      "title": "CRM foundational schema",
+      "nodeType": "agent",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": "B20",
+      "modules": [
+        "convex-foundation"
+      ],
+      "initialFiles": [
+        "convex/**",
+        "package.json",
+        "src/components/providers/**"
+      ],
+      "verificationHints": [
+        "audit immutability",
+        "authz matrix",
+        "idempotency",
+        "migration runner",
+        "schema/index access patterns"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-106",
+        "title": "CRM foundational schema",
+        "primarySkill": "lead-revenue-operations",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": null,
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": false
+      }
+    },
+    "STL-107": {
+      "title": "Domain events/idempotency/webhook receipts",
+      "nodeType": "agent",
+      "risk": "high",
+      "graphStatus": "pending",
+      "batch": "B20",
+      "modules": [
+        "lead-intake",
+        "manychat-intake",
+        "convex-foundation"
+      ],
+      "initialFiles": [
+        "convex/**",
+        "package.json",
+        "src/app/api/leads/route.ts",
+        "src/app/api/manychat/route.ts",
+        "src/components/LeadForm.tsx",
+        "src/components/providers/**",
+        "src/lib/api/utils.ts",
+        "tests/api-units.test.mjs",
+        "tests/leads-api-handler.test.mjs"
+      ],
+      "verificationHints": [
+        "audit immutability",
+        "authz matrix",
+        "canonical persistence first",
+        "duplicate idempotency",
+        "idempotency",
+        "idempotent retry",
+        "migration runner",
+        "operator reconciliation",
+        "outbox replay",
+        "persistence failure",
+        "phone/email policy",
+        "provider failure",
+        "schema/index access patterns",
+        "webhook authentication"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-107",
+        "title": "Domain events/idempotency/webhook receipts",
+        "primarySkill": "security-verification",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "security-verification",
+          "durable-vercel-workflows",
+          "vercel-services-architecture",
+          "requesting-code-review"
+        ],
+        "requiredTools": [
+          "Graphifyy",
+          "Vercel plugin",
+          "Vercel Services",
+          "Vercel official documentation search"
+        ],
+        "requiredContext7LibrariesOrDocs": [
+          "/vercel/workflow"
+        ],
+        "vercelPluginRequired": true,
+        "independentVerifierSkill": "security-verification",
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": true,
+        "useContext7BeforeExternalLibraryCode": true
+      }
+    },
+    "STL-108": {
+      "title": "Supabase live inventory/export",
+      "nodeType": "agent",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": "B20",
+      "modules": [
+        "legacy-supabase"
+      ],
+      "initialFiles": [
+        "src/app/manage/page.tsx",
+        "src/lib/auth/portal-data.ts",
+        "src/lib/supabase/**",
+        "src/proxy.ts",
+        "supabase/migrations/**"
+      ],
+      "verificationHints": [
+        "checksums",
+        "dual-write reconciliation",
+        "restore drill",
+        "row/file counts"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-108",
+        "title": "Supabase live inventory/export",
+        "primarySkill": "legacy-data-reconciliation",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "supabase-postgres-best-practices",
+          "security-verification"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [
+          "Current Supabase/Postgres docs"
+        ],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": null,
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": true
+      }
+    },
+    "STL-109": {
+      "title": "Payload/Directus inventory/export",
+      "nodeType": "agent",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": "B20",
+      "modules": [
+        "content-authority",
+        "legacy-payload"
+      ],
+      "initialFiles": [
+        "next.config.ts",
+        "src/app/(payload)/**",
+        "src/collections/payload/**",
+        "src/data/**",
+        "src/globals/payload/**",
+        "src/lib/directus/client.ts",
+        "src/payload.config.ts",
+        "src/views/Projects.tsx"
+      ],
+      "verificationHints": [
+        "admin lifecycle",
+        "export counts and checksums",
+        "fallback removal",
+        "missing secret fails safely",
+        "preview authorization",
+        "publication states",
+        "source counts and checksums"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-109",
+        "title": "Payload/Directus inventory/export",
+        "primarySkill": "legacy-data-reconciliation",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "supabase-postgres-best-practices",
+          "security-verification"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [
+          "Current Supabase/Postgres docs"
+        ],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": null,
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": true
+      }
+    },
+    "STL-110": {
+      "title": "Migration mapping/reconciliation framework",
+      "nodeType": "agent",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": "B20",
+      "modules": [
+        "content-authority",
+        "legacy-supabase",
+        "convex-foundation"
+      ],
+      "initialFiles": [
+        "convex/**",
+        "package.json",
+        "src/app/manage/page.tsx",
+        "src/collections/payload/**",
+        "src/components/providers/**",
+        "src/data/**",
+        "src/lib/auth/portal-data.ts",
+        "src/lib/directus/client.ts",
+        "src/lib/supabase/**",
+        "src/payload.config.ts",
+        "src/proxy.ts",
+        "src/views/Projects.tsx",
+        "supabase/migrations/**"
+      ],
+      "verificationHints": [
+        "audit immutability",
+        "authz matrix",
+        "checksums",
+        "dual-write reconciliation",
+        "fallback removal",
+        "idempotency",
+        "migration runner",
+        "preview authorization",
+        "publication states",
+        "restore drill",
+        "row/file counts",
+        "schema/index access patterns",
+        "source counts and checksums"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-110",
+        "title": "Migration mapping/reconciliation framework",
+        "primarySkill": "legacy-data-reconciliation",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "supabase-postgres-best-practices",
+          "security-verification"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [
+          "Current Supabase/Postgres docs"
+        ],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": null,
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": true
+      }
+    },
+    "STL-201": {
+      "title": "Dynamic estimate funnel",
+      "nodeType": "agent",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": "B31",
+      "modules": [
+        "estimate-funnel",
+        "crm-and-revenue"
+      ],
+      "initialFiles": [
+        "convex/**",
+        "src/app/api/leads/route.ts",
+        "src/app/manage/page.tsx",
+        "src/lib/api/utils.ts",
+        "src/views/Estimate.tsx",
+        "src/workflows/**"
+      ],
+      "verificationHints": [
+        "Stripe webhook",
+        "cabinet journey",
+        "estimate to proposal",
+        "exterior journey",
+        "interior journey",
+        "posted test deposit",
+        "shared payload contract",
+        "signature evidence",
+        "visitor to booking"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-201",
+        "title": "Dynamic estimate funnel",
+        "primarySkill": "lead-revenue-operations",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": null,
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": false
+      }
+    },
+    "STL-202": {
+      "title": "Cal synchronization",
+      "nodeType": "agent",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": "B31",
+      "modules": [
+        "crm-and-revenue"
+      ],
+      "initialFiles": [
+        "convex/**",
+        "src/app/api/leads/route.ts",
+        "src/app/manage/page.tsx",
+        "src/views/Estimate.tsx",
+        "src/workflows/**"
+      ],
+      "verificationHints": [
+        "Stripe webhook",
+        "estimate to proposal",
+        "posted test deposit",
+        "signature evidence",
+        "visitor to booking"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-202",
+        "title": "Cal synchronization",
+        "primarySkill": "calendar-webhook-sync",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "durable-vercel-workflows"
+        ],
+        "requiredTools": [
+          "Graphifyy",
+          "Vercel plugin",
+          "Vercel official documentation search"
+        ],
+        "requiredContext7LibrariesOrDocs": [
+          "/vercel/workflow",
+          "Current Cal.com/provider docs"
+        ],
+        "vercelPluginRequired": true,
+        "independentVerifierSkill": null,
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": true,
+        "useContext7BeforeExternalLibraryCode": true
+      }
+    },
+    "STL-203": {
+      "title": "Lead assignment/SLA workflows",
+      "nodeType": "agent",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": "B31",
+      "modules": [
+        "lead-intake",
+        "crm-and-revenue"
+      ],
+      "initialFiles": [
+        "convex/**",
+        "src/app/api/leads/route.ts",
+        "src/app/manage/page.tsx",
+        "src/components/LeadForm.tsx",
+        "src/lib/api/utils.ts",
+        "src/views/Estimate.tsx",
+        "src/workflows/**",
+        "tests/api-units.test.mjs",
+        "tests/leads-api-handler.test.mjs"
+      ],
+      "verificationHints": [
+        "Stripe webhook",
+        "duplicate idempotency",
+        "estimate to proposal",
+        "operator reconciliation",
+        "outbox replay",
+        "persistence failure",
+        "posted test deposit",
+        "provider failure",
+        "signature evidence",
+        "visitor to booking"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-203",
+        "title": "Lead assignment/SLA workflows",
+        "primarySkill": "lead-revenue-operations",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "durable-vercel-workflows"
+        ],
+        "requiredTools": [
+          "Graphifyy",
+          "Vercel plugin",
+          "Vercel official documentation search"
+        ],
+        "requiredContext7LibrariesOrDocs": [
+          "/vercel/workflow"
+        ],
+        "vercelPluginRequired": true,
+        "independentVerifierSkill": null,
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": true,
+        "useContext7BeforeExternalLibraryCode": true
+      }
+    },
+    "STL-204": {
+      "title": "CRM pipeline/operator drawer",
+      "nodeType": "agent",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": "B31",
+      "modules": [
+        "legacy-manage-admin",
+        "crm-and-revenue"
+      ],
+      "initialFiles": [
+        "convex/**",
+        "src/app/api/leads/route.ts",
+        "src/app/manage/layout.tsx",
+        "src/app/manage/page.tsx",
+        "src/lib/supabase/client.ts",
+        "src/proxy.ts",
+        "src/views/Estimate.tsx",
+        "src/workflows/**"
+      ],
+      "verificationHints": [
+        "Stripe webhook",
+        "anonymous denied",
+        "customer denied",
+        "disabled user denied",
+        "estimate to proposal",
+        "owner-only user administration",
+        "posted test deposit",
+        "signature evidence",
+        "staff role matrix",
+        "visitor to booking"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-204",
+        "title": "CRM pipeline/operator drawer",
+        "primarySkill": "lead-revenue-operations",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": null,
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": false
+      }
+    },
+    "STL-205": {
+      "title": "Estimate builder/versioning",
+      "nodeType": "agent",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": "B31",
+      "modules": [
+        "estimate-funnel",
+        "crm-and-revenue"
+      ],
+      "initialFiles": [
+        "convex/**",
+        "src/app/api/leads/route.ts",
+        "src/app/manage/page.tsx",
+        "src/lib/api/utils.ts",
+        "src/views/Estimate.tsx",
+        "src/workflows/**"
+      ],
+      "verificationHints": [
+        "Stripe webhook",
+        "cabinet journey",
+        "estimate to proposal",
+        "exterior journey",
+        "interior journey",
+        "posted test deposit",
+        "shared payload contract",
+        "signature evidence",
+        "visitor to booking"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-205",
+        "title": "Estimate builder/versioning",
+        "primarySkill": "lead-revenue-operations",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": null,
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": false
+      }
+    },
+    "STL-206": {
+      "title": "Proposal builder/viewer",
+      "nodeType": "agent",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": "B31",
+      "modules": [
+        "crm-and-revenue"
+      ],
+      "initialFiles": [
+        "convex/**",
+        "src/app/api/leads/route.ts",
+        "src/app/manage/page.tsx",
+        "src/views/Estimate.tsx",
+        "src/workflows/**"
+      ],
+      "verificationHints": [
+        "Stripe webhook",
+        "estimate to proposal",
+        "posted test deposit",
+        "signature evidence",
+        "visitor to booking"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-206",
+        "title": "Proposal builder/viewer",
+        "primarySkill": "lead-revenue-operations",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": null,
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": false
+      }
+    },
+    "STL-207": {
+      "title": "Agreement signing evidence",
+      "nodeType": "agent",
+      "risk": "high",
+      "graphStatus": "pending",
+      "batch": "B31",
+      "modules": [
+        "crm-and-revenue"
+      ],
+      "initialFiles": [
+        "convex/**",
+        "src/app/api/leads/route.ts",
+        "src/app/manage/page.tsx",
+        "src/views/Estimate.tsx",
+        "src/workflows/**"
+      ],
+      "verificationHints": [
+        "Stripe webhook",
+        "estimate to proposal",
+        "posted test deposit",
+        "signature evidence",
+        "visitor to booking"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-207",
+        "title": "Agreement signing evidence",
+        "primarySkill": "lead-revenue-operations",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "security-verification",
+          "requesting-code-review"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": "security-verification",
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": false
+      }
+    },
+    "STL-208": {
+      "title": "Stripe deposit/invoice",
+      "nodeType": "agent",
+      "risk": "high",
+      "graphStatus": "pending",
+      "batch": "B31",
+      "modules": [
+        "crm-and-revenue"
+      ],
+      "initialFiles": [
+        "convex/**",
+        "src/app/api/leads/route.ts",
+        "src/app/manage/page.tsx",
+        "src/views/Estimate.tsx",
+        "src/workflows/**"
+      ],
+      "verificationHints": [
+        "Stripe webhook",
+        "estimate to proposal",
+        "posted test deposit",
+        "signature evidence",
+        "visitor to booking"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-208",
+        "title": "Stripe deposit/invoice",
+        "primarySkill": "stripe-checkout-boundaries",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "stripe-best-practices",
+          "security-verification",
+          "durable-vercel-workflows",
+          "requesting-code-review"
+        ],
+        "requiredTools": [
+          "Graphifyy",
+          "Vercel plugin",
+          "Vercel official documentation search"
+        ],
+        "requiredContext7LibrariesOrDocs": [
+          "/vercel/workflow",
+          "Stripe official docs through stripe-best-practices"
+        ],
+        "vercelPluginRequired": true,
+        "independentVerifierSkill": "security-verification",
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": true,
+        "useContext7BeforeExternalLibraryCode": true
+      }
+    },
+    "STL-209": {
+      "title": "Proposal/deposit workflows",
+      "nodeType": "agent",
+      "risk": "high",
+      "graphStatus": "pending",
+      "batch": "B31",
+      "modules": [
+        "crm-and-revenue"
+      ],
+      "initialFiles": [
+        "convex/**",
+        "src/app/api/leads/route.ts",
+        "src/app/manage/page.tsx",
+        "src/views/Estimate.tsx",
+        "src/workflows/**"
+      ],
+      "verificationHints": [
+        "Stripe webhook",
+        "estimate to proposal",
+        "posted test deposit",
+        "signature evidence",
+        "visitor to booking"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-209",
+        "title": "Proposal/deposit workflows",
+        "primarySkill": "lead-revenue-operations",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "durable-vercel-workflows",
+          "requesting-code-review"
+        ],
+        "requiredTools": [
+          "Graphifyy",
+          "Vercel plugin",
+          "Vercel official documentation search"
+        ],
+        "requiredContext7LibrariesOrDocs": [
+          "/vercel/workflow"
+        ],
+        "vercelPluginRequired": true,
+        "independentVerifierSkill": "security-verification",
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": true,
+        "useContext7BeforeExternalLibraryCode": true
+      }
+    },
+    "STL-301": {
+      "title": "Design tokens/shadcn baseline",
+      "nodeType": "agent",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": "B30",
+      "modules": [
+        "public-design-system"
+      ],
+      "initialFiles": [
+        "DESIGN.md",
+        "src/app/**",
+        "src/app/globals.css",
+        "src/components/ui/**",
+        "src/views/LandingPage.tsx"
+      ],
+      "verificationHints": [
+        "axe",
+        "client-boundary review",
+        "keyboard and focus",
+        "responsive routes",
+        "visual regression"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-301",
+        "title": "Design tokens/shadcn baseline",
+        "primarySkill": "nextjs-public-platform",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "react-best-practices",
+          "shadcn-measured-craft",
+          "shadcn"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [
+          "Current Next.js/React docs"
+        ],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": null,
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": true
+      }
+    },
+    "STL-302": {
+      "title": "Public templates/home/service/location",
+      "nodeType": "agent",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": "B30",
+      "modules": [
+        "route-registry",
+        "public-design-system"
+      ],
+      "initialFiles": [
+        "DESIGN.md",
+        "public/sitemap.xml",
+        "src/app/**",
+        "src/app/globals.css",
+        "src/app/painting-services/[slug]/page.tsx",
+        "src/app/service-areas/[slug]/page.tsx",
+        "src/app/sitemap.ts",
+        "src/components/ui/**",
+        "src/data/landingPages.ts",
+        "src/views/LandingPage.tsx",
+        "vercel.json"
+      ],
+      "verificationHints": [
+        "SSR build",
+        "axe",
+        "canonical self-reference",
+        "client-boundary review",
+        "keyboard and focus",
+        "linked-route crawler",
+        "responsive routes",
+        "robots consistency",
+        "sitemap parity",
+        "visual regression"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-302",
+        "title": "Public templates/home/service/location",
+        "primarySkill": "nextjs-public-platform",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "react-best-practices",
+          "shadcn-measured-craft",
+          "shadcn"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [
+          "Current Next.js/React docs"
+        ],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": null,
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": true
+      }
+    },
+    "STL-303": {
+      "title": "Convex CMS/versioning/preview",
+      "nodeType": "agent",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": "B30",
+      "modules": [
+        "content-authority"
+      ],
+      "initialFiles": [
+        "src/collections/payload/**",
+        "src/data/**",
+        "src/lib/directus/client.ts",
+        "src/payload.config.ts",
+        "src/views/Projects.tsx"
+      ],
+      "verificationHints": [
+        "fallback removal",
+        "preview authorization",
+        "publication states",
+        "source counts and checksums"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-303",
+        "title": "Convex CMS/versioning/preview",
+        "primarySkill": "convex-domain-backend",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "nextjs-public-platform"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [
+          "/websites/convex_dev",
+          "Current Next.js/React docs"
+        ],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": null,
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": true
+      }
+    },
+    "STL-304": {
+      "title": "Content/media migration",
+      "nodeType": "agent",
+      "risk": "high",
+      "graphStatus": "pending",
+      "batch": "B30",
+      "modules": [
+        "content-authority",
+        "legacy-payload"
+      ],
+      "initialFiles": [
+        "next.config.ts",
+        "src/app/(payload)/**",
+        "src/collections/payload/**",
+        "src/data/**",
+        "src/globals/payload/**",
+        "src/lib/directus/client.ts",
+        "src/payload.config.ts",
+        "src/views/Projects.tsx"
+      ],
+      "verificationHints": [
+        "admin lifecycle",
+        "export counts and checksums",
+        "fallback removal",
+        "missing secret fails safely",
+        "preview authorization",
+        "publication states",
+        "source counts and checksums"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-304",
+        "title": "Content/media migration",
+        "primarySkill": "legacy-data-reconciliation",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "supabase-postgres-best-practices",
+          "security-verification",
+          "requesting-code-review"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [
+          "Current Supabase/Postgres docs"
+        ],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": "security-verification",
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": true
+      }
+    },
+    "STL-305": {
+      "title": "Technical SEO fixes",
+      "nodeType": "agent",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": "B30",
+      "modules": [
+        "route-registry",
+        "analytics-seo-gbp"
+      ],
+      "initialFiles": [
+        "public/sitemap.xml",
+        "src/app/api/cron/**",
+        "src/app/painting-services/[slug]/page.tsx",
+        "src/app/robots.ts",
+        "src/app/service-areas/[slug]/page.tsx",
+        "src/app/sitemap.ts",
+        "src/data/landingPages.ts",
+        "src/lib/analytics.ts",
+        "vercel.json"
+      ],
+      "verificationHints": [
+        "SSR build",
+        "canonical self-reference",
+        "claim provenance",
+        "event-to-revenue reconciliation",
+        "experiment assignment",
+        "linked-route crawler",
+        "robots consistency",
+        "sitemap crawler",
+        "sitemap parity"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-305",
+        "title": "Technical SEO fixes",
+        "primarySkill": "local-seo-proof",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "seo-audit",
+          "ai-seo"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": null,
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": false
+      }
+    },
+    "STL-306": {
+      "title": "GBP integrity audit with owner access",
+      "nodeType": "validator",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": "B30",
+      "modules": [
+        "analytics-seo-gbp"
+      ],
+      "initialFiles": [
+        "public/sitemap.xml",
+        "src/app/api/cron/**",
+        "src/app/robots.ts",
+        "src/app/sitemap.ts",
+        "src/lib/analytics.ts",
+        "vercel.json"
+      ],
+      "verificationHints": [
+        "claim provenance",
+        "event-to-revenue reconciliation",
+        "experiment assignment",
+        "sitemap crawler"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-306",
+        "title": "GBP integrity audit with owner access",
+        "primarySkill": "local-seo-proof",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "seo-audit",
+          "ai-seo",
+          "requesting-code-review"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": "security-verification",
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": false
+      }
+    },
+    "STL-307": {
+      "title": "GBP workspace",
+      "nodeType": "agent",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": "B30",
+      "modules": [
+        "analytics-seo-gbp"
+      ],
+      "initialFiles": [
+        "public/sitemap.xml",
+        "src/app/api/cron/**",
+        "src/app/robots.ts",
+        "src/app/sitemap.ts",
+        "src/lib/analytics.ts",
+        "vercel.json"
+      ],
+      "verificationHints": [
+        "claim provenance",
+        "event-to-revenue reconciliation",
+        "experiment assignment",
+        "sitemap crawler"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-307",
+        "title": "GBP workspace",
+        "primarySkill": "local-seo-proof",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "seo-audit",
+          "ai-seo"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": null,
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": false
+      }
+    },
+    "STL-308": {
+      "title": "Review policy/system",
+      "nodeType": "agent",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": "B30",
+      "modules": [
+        "review-system"
+      ],
+      "initialFiles": [
+        "src/views/Review.tsx",
+        "tests/e2e.test.mjs"
+      ],
+      "verificationHints": [
+        "equal public review path",
+        "independent support path",
+        "review provenance"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-308",
+        "title": "Review policy/system",
+        "primarySkill": "local-seo-proof",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "seo-audit",
+          "ai-seo"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": null,
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": false
+      }
+    },
+    "STL-309": {
+      "title": "Local content proof gates",
+      "nodeType": "agent",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": "B30",
+      "modules": [
+        "analytics-seo-gbp"
+      ],
+      "initialFiles": [
+        "public/sitemap.xml",
+        "src/app/api/cron/**",
+        "src/app/robots.ts",
+        "src/app/sitemap.ts",
+        "src/lib/analytics.ts",
+        "vercel.json"
+      ],
+      "verificationHints": [
+        "claim provenance",
+        "event-to-revenue reconciliation",
+        "experiment assignment",
+        "sitemap crawler"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-309",
+        "title": "Local content proof gates",
+        "primarySkill": "local-seo-proof",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "seo-audit",
+          "ai-seo"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": null,
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": false
+      }
+    },
+    "STL-401": {
+      "title": "Customer portal shell/next action",
+      "nodeType": "agent",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": "B50",
+      "modules": [
+        "portal-auth-and-ownership",
+        "portal-and-operations"
+      ],
+      "initialFiles": [
+        "convex/**",
+        "src/app/(app)/**",
+        "src/app/manage/page.tsx",
+        "src/app/portal/**",
+        "src/app/portal/page.tsx",
+        "src/lib/auth/portal*.ts",
+        "src/lib/auth/portal-data.ts",
+        "src/proxy.ts",
+        "tests/portal-auth.test.mjs"
+      ],
+      "verificationHints": [
+        "automation permissions",
+        "change-order approval",
+        "closeout",
+        "cross-customer isolation",
+        "file grants",
+        "identity lifecycle",
+        "portal isolation",
+        "project timeline",
+        "resource grants",
+        "server route protection"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-401",
+        "title": "Customer portal shell/next action",
+        "primarySkill": "nextjs-public-platform",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "react-best-practices",
+          "shadcn-measured-craft",
+          "shadcn"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [
+          "Current Next.js/React docs"
+        ],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": null,
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": true
+      }
+    },
+    "STL-402": {
+      "title": "Property/appointment/proposal/payment views",
+      "nodeType": "agent",
+      "risk": "high",
+      "graphStatus": "pending",
+      "batch": "B50",
+      "modules": [
+        "portal-auth-and-ownership",
+        "portal-and-operations"
+      ],
+      "initialFiles": [
+        "convex/**",
+        "src/app/(app)/**",
+        "src/app/manage/page.tsx",
+        "src/app/portal/**",
+        "src/app/portal/page.tsx",
+        "src/lib/auth/portal*.ts",
+        "src/lib/auth/portal-data.ts",
+        "src/proxy.ts",
+        "tests/portal-auth.test.mjs"
+      ],
+      "verificationHints": [
+        "automation permissions",
+        "change-order approval",
+        "closeout",
+        "cross-customer isolation",
+        "file grants",
+        "identity lifecycle",
+        "portal isolation",
+        "project timeline",
+        "resource grants",
+        "server route protection"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-402",
+        "title": "Property/appointment/proposal/payment views",
+        "primarySkill": "nextjs-public-platform",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "react-best-practices",
+          "shadcn-measured-craft",
+          "shadcn",
+          "requesting-code-review"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [
+          "Current Next.js/React docs"
+        ],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": "security-verification",
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": true
+      }
+    },
+    "STL-403": {
+      "title": "Projects/files/updates",
+      "nodeType": "agent",
+      "risk": "high",
+      "graphStatus": "pending",
+      "batch": "B50",
+      "modules": [
+        "portal-auth-and-ownership",
+        "private-files",
+        "portal-and-operations"
+      ],
+      "initialFiles": [
+        "convex/**",
+        "next.config.ts",
+        "src/app/(app)/**",
+        "src/app/api/storage/upload-url/route.ts",
+        "src/app/manage/page.tsx",
+        "src/app/portal/**",
+        "src/app/portal/page.tsx",
+        "src/components/LeadForm.tsx",
+        "src/lib/auth/portal*.ts",
+        "src/lib/auth/portal-data.ts",
+        "src/proxy.ts",
+        "tests/portal-auth.test.mjs"
+      ],
+      "verificationHints": [
+        "MIME and size validation",
+        "automation permissions",
+        "change-order approval",
+        "closeout",
+        "cross-customer isolation",
+        "cross-project isolation",
+        "file grants",
+        "identity lifecycle",
+        "portal isolation",
+        "project timeline",
+        "resource grants",
+        "retention metadata",
+        "server route protection",
+        "unauthorized retrieval"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-403",
+        "title": "Projects/files/updates",
+        "primarySkill": "private-file-boundaries",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "security-verification",
+          "requesting-code-review"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": "security-verification",
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": false
+      }
+    },
+    "STL-404": {
+      "title": "Change orders",
+      "nodeType": "agent",
+      "risk": "high",
+      "graphStatus": "pending",
+      "batch": "B50",
+      "modules": [
+        "portal-and-operations"
+      ],
+      "initialFiles": [
+        "convex/**",
+        "src/app/(app)/**",
+        "src/app/manage/page.tsx",
+        "src/app/portal/**",
+        "src/lib/auth/portal*.ts"
+      ],
+      "verificationHints": [
+        "automation permissions",
+        "change-order approval",
+        "closeout",
+        "file grants",
+        "portal isolation",
+        "project timeline"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-404",
+        "title": "Change orders",
+        "primarySkill": "customer-portal-isolation",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "lead-revenue-operations",
+          "security-verification",
+          "requesting-code-review"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": "security-verification",
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": false
+      }
+    },
+    "STL-405": {
+      "title": "Project closeout/review/referral",
+      "nodeType": "agent",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": "B50",
+      "modules": [
+        "review-system",
+        "referral-system",
+        "portal-and-operations"
+      ],
+      "initialFiles": [
+        "convex/**",
+        "src/app/(app)/**",
+        "src/app/manage/page.tsx",
+        "src/app/portal/**",
+        "src/components/ConversionHeader.tsx",
+        "src/components/LeadForm.tsx",
+        "src/lib/auth/portal*.ts",
+        "src/views/Refer.tsx",
+        "src/views/Review.tsx",
+        "tests/e2e.test.mjs"
+      ],
+      "verificationHints": [
+        "attribution preserved",
+        "automation permissions",
+        "change-order approval",
+        "closeout",
+        "equal public review path",
+        "file grants",
+        "independent support path",
+        "invalid and revoked code denied",
+        "no email in URL/storage/analytics",
+        "portal isolation",
+        "project timeline",
+        "review provenance"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-405",
+        "title": "Project closeout/review/referral",
+        "primarySkill": "local-seo-proof",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "seo-audit",
+          "ai-seo"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": null,
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": false
+      }
+    },
+    "STL-406": {
+      "title": "Crew/project assignments",
+      "nodeType": "agent",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": "B50",
+      "modules": [
+        "portal-and-operations"
+      ],
+      "initialFiles": [
+        "convex/**",
+        "src/app/(app)/**",
+        "src/app/manage/page.tsx",
+        "src/app/portal/**",
+        "src/lib/auth/portal*.ts"
+      ],
+      "verificationHints": [
+        "automation permissions",
+        "change-order approval",
+        "closeout",
+        "file grants",
+        "portal isolation",
+        "project timeline"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-406",
+        "title": "Crew/project assignments",
+        "primarySkill": "customer-portal-isolation",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "lead-revenue-operations",
+          "security-verification"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": null,
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": false
+      }
+    },
+    "STL-407": {
+      "title": "Automation Center UI",
+      "nodeType": "agent",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": "B50",
+      "modules": [
+        "portal-and-operations"
+      ],
+      "initialFiles": [
+        "convex/**",
+        "src/app/(app)/**",
+        "src/app/manage/page.tsx",
+        "src/app/portal/**",
+        "src/lib/auth/portal*.ts"
+      ],
+      "verificationHints": [
+        "automation permissions",
+        "change-order approval",
+        "closeout",
+        "file grants",
+        "portal isolation",
+        "project timeline"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-407",
+        "title": "Automation Center UI",
+        "primarySkill": "nextjs-public-platform",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "react-best-practices",
+          "shadcn-measured-craft",
+          "shadcn"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [
+          "Current Next.js/React docs"
+        ],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": null,
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": true
+      }
+    },
+    "STL-408": {
+      "title": "System health/integration dashboard",
+      "nodeType": "agent",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": "B50",
+      "modules": [
+        "portal-and-operations"
+      ],
+      "initialFiles": [
+        "convex/**",
+        "src/app/(app)/**",
+        "src/app/manage/page.tsx",
+        "src/app/portal/**",
+        "src/lib/auth/portal*.ts"
+      ],
+      "verificationHints": [
+        "automation permissions",
+        "change-order approval",
+        "closeout",
+        "file grants",
+        "portal isolation",
+        "project timeline"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-408",
+        "title": "System health/integration dashboard",
+        "primarySkill": "vercel-platform-operations",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "first-party-attribution",
+          "durable-vercel-workflows",
+          "vercel-services-architecture"
+        ],
+        "requiredTools": [
+          "Graphifyy",
+          "Vercel plugin",
+          "Vercel Services",
+          "Vercel official documentation search"
+        ],
+        "requiredContext7LibrariesOrDocs": [
+          "/vercel/workflow"
+        ],
+        "vercelPluginRequired": true,
+        "independentVerifierSkill": null,
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": true,
+        "useContext7BeforeExternalLibraryCode": true
+      }
+    },
+    "STL-501": {
+      "title": "First-party attribution ledger",
+      "nodeType": "agent",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": "B60",
+      "modules": [
+        "referral-system",
+        "analytics-seo-gbp"
+      ],
+      "initialFiles": [
+        "public/sitemap.xml",
+        "src/app/api/cron/**",
+        "src/app/robots.ts",
+        "src/app/sitemap.ts",
+        "src/components/ConversionHeader.tsx",
+        "src/components/LeadForm.tsx",
+        "src/lib/analytics.ts",
+        "src/views/Refer.tsx",
+        "tests/e2e.test.mjs",
+        "vercel.json"
+      ],
+      "verificationHints": [
+        "attribution preserved",
+        "claim provenance",
+        "event-to-revenue reconciliation",
+        "experiment assignment",
+        "invalid and revoked code denied",
+        "no email in URL/storage/analytics",
+        "sitemap crawler"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-501",
+        "title": "First-party attribution ledger",
+        "primarySkill": "first-party-attribution",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": null,
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": false
+      }
+    },
+    "STL-502": {
+      "title": "Revenue dashboards",
+      "nodeType": "agent",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": "B60",
+      "modules": [
+        "analytics-seo-gbp"
+      ],
+      "initialFiles": [
+        "public/sitemap.xml",
+        "src/app/api/cron/**",
+        "src/app/robots.ts",
+        "src/app/sitemap.ts",
+        "src/lib/analytics.ts",
+        "vercel.json"
+      ],
+      "verificationHints": [
+        "claim provenance",
+        "event-to-revenue reconciliation",
+        "experiment assignment",
+        "sitemap crawler"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-502",
+        "title": "Revenue dashboards",
+        "primarySkill": "first-party-attribution",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": null,
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": false
+      }
+    },
+    "STL-503": {
+      "title": "Experiment framework",
+      "nodeType": "agent",
+      "risk": "medium",
+      "graphStatus": "pending",
+      "batch": "B60",
+      "modules": [
+        "analytics-seo-gbp"
+      ],
+      "initialFiles": [
+        "public/sitemap.xml",
+        "src/app/api/cron/**",
+        "src/app/robots.ts",
+        "src/app/sitemap.ts",
+        "src/lib/analytics.ts",
+        "vercel.json"
+      ],
+      "verificationHints": [
+        "claim provenance",
+        "event-to-revenue reconciliation",
+        "experiment assignment",
+        "sitemap crawler"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-503",
+        "title": "Experiment framework",
+        "primarySkill": "first-party-attribution",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": null,
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": false
+      }
+    },
+    "STL-504": {
+      "title": "Final dual-read/write cutover",
+      "nodeType": "subgraph",
+      "risk": "high",
+      "graphStatus": "pending",
+      "batch": "B60",
+      "modules": [
+        "legacy-supabase",
+        "cutover-and-decommission"
+      ],
+      "initialFiles": [
+        ".graph/**",
+        "convex/migrations/**",
+        "docs/runbooks/**",
+        "scripts/migrations/**",
+        "src/app/manage/page.tsx",
+        "src/lib/auth/portal-data.ts",
+        "src/lib/supabase/**",
+        "src/proxy.ts",
+        "supabase/migrations/**"
+      ],
+      "verificationHints": [
+        "canary reads and writes",
+        "checksums",
+        "dual-write reconciliation",
+        "migration counts and checksums",
+        "restore drill",
+        "restore evidence",
+        "rollback rehearsal",
+        "row/file counts"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-504",
+        "title": "Final dual-read/write cutover",
+        "primarySkill": "legacy-data-reconciliation",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "supabase-postgres-best-practices",
+          "security-verification",
+          "durable-vercel-workflows",
+          "vercel-services-architecture",
+          "requesting-code-review"
+        ],
+        "requiredTools": [
+          "Graphifyy",
+          "Vercel plugin",
+          "Vercel Services",
+          "Vercel official documentation search"
+        ],
+        "requiredContext7LibrariesOrDocs": [
+          "/vercel/workflow",
+          "Current Supabase/Postgres docs"
+        ],
+        "vercelPluginRequired": true,
+        "independentVerifierSkill": "security-verification",
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": true,
+        "useContext7BeforeExternalLibraryCode": true
+      }
+    },
+    "STL-505": {
+      "title": "Supabase/Payload/Directus removal",
+      "nodeType": "agent",
+      "risk": "high",
+      "graphStatus": "pending",
+      "batch": "B60",
+      "modules": [
+        "content-authority",
+        "legacy-payload",
+        "legacy-supabase",
+        "cutover-and-decommission"
+      ],
+      "initialFiles": [
+        ".graph/**",
+        "convex/migrations/**",
+        "docs/runbooks/**",
+        "next.config.ts",
+        "scripts/migrations/**",
+        "src/app/(payload)/**",
+        "src/app/manage/page.tsx",
+        "src/collections/payload/**",
+        "src/data/**",
+        "src/globals/payload/**",
+        "src/lib/auth/portal-data.ts",
+        "src/lib/directus/client.ts",
+        "src/lib/supabase/**",
+        "src/payload.config.ts",
+        "src/proxy.ts",
+        "src/views/Projects.tsx",
+        "supabase/migrations/**"
+      ],
+      "verificationHints": [
+        "admin lifecycle",
+        "canary reads and writes",
+        "checksums",
+        "dual-write reconciliation",
+        "export counts and checksums",
+        "fallback removal",
+        "migration counts and checksums",
+        "missing secret fails safely",
+        "preview authorization",
+        "publication states",
+        "restore drill",
+        "restore evidence",
+        "rollback rehearsal",
+        "row/file counts",
+        "source counts and checksums"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-505",
+        "title": "Supabase/Payload/Directus removal",
+        "primarySkill": "legacy-data-reconciliation",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "supabase-postgres-best-practices",
+          "security-verification",
+          "requesting-code-review"
+        ],
+        "requiredTools": [
+          "Graphifyy"
+        ],
+        "requiredContext7LibrariesOrDocs": [
+          "Current Supabase/Postgres docs"
+        ],
+        "vercelPluginRequired": false,
+        "independentVerifierSkill": "security-verification",
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": false,
+        "useContext7BeforeExternalLibraryCode": true
+      }
+    },
+    "STL-506": {
+      "title": "Restore/decommission runbooks",
+      "nodeType": "subgraph",
+      "risk": "high",
+      "graphStatus": "pending",
+      "batch": "B60",
+      "modules": [
+        "legacy-supabase",
+        "cutover-and-decommission"
+      ],
+      "initialFiles": [
+        ".graph/**",
+        "convex/migrations/**",
+        "docs/runbooks/**",
+        "scripts/migrations/**",
+        "src/app/manage/page.tsx",
+        "src/lib/auth/portal-data.ts",
+        "src/lib/supabase/**",
+        "src/proxy.ts",
+        "supabase/migrations/**"
+      ],
+      "verificationHints": [
+        "canary reads and writes",
+        "checksums",
+        "dual-write reconciliation",
+        "migration counts and checksums",
+        "restore drill",
+        "restore evidence",
+        "rollback rehearsal",
+        "row/file counts"
+      ],
+      "graphify": {
+        "queryFirst": true,
+        "defaultBudgetTokens": 1500,
+        "initialSourceFileLimit": 3,
+        "neverBulkLoad": [
+          "graphify-out/GRAPH_REPORT.md",
+          "graphify-out/wiki/**",
+          ".agents/wiki/**"
+        ]
+      },
+      "instruction": "Use this as the pre-audited starting scope. Current Graphify output and executable code determine exact symbols and any justified expansion.",
+      "skillRoute": {
+        "nodeId": "STL-506",
+        "title": "Restore/decommission runbooks",
+        "primarySkill": "legacy-data-reconciliation",
+        "supportingSkills": [
+          "test-driven-development",
+          "verification-before-completion",
+          "supabase-postgres-best-practices",
+          "security-verification",
+          "durable-vercel-workflows",
+          "vercel-services-architecture",
+          "requesting-code-review"
+        ],
+        "requiredTools": [
+          "Graphifyy",
+          "Vercel plugin",
+          "Vercel Services",
+          "Vercel official documentation search"
+        ],
+        "requiredContext7LibrariesOrDocs": [
+          "/vercel/workflow",
+          "Current Supabase/Postgres docs"
+        ],
+        "vercelPluginRequired": true,
+        "independentVerifierSkill": "security-verification",
+        "readyRule": "Do not claim or execute this node until the primary skill has been loaded and its documentation/tool evidence is recorded."
+      },
+      "platformRequirements": {
+        "useVercelProjectBaseline": true,
+        "useContext7BeforeExternalLibraryCode": true
+      }
+    }
+  }
+}

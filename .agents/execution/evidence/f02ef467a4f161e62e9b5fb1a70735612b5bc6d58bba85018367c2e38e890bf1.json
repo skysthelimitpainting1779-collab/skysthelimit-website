@@ -1,0 +1,81 @@
+{
+  "baseHeadSha": "82b182d9d4bc2f75b213ff4eee6c9cbb3f4ac08a",
+  "browserEvidence": [
+    {
+      "result": "Desktop estimate flow preserved deterministic planning range, idempotency header, exact lead budget/model provenance, and mocked success without external effects.",
+      "viewport": "desktop"
+    },
+    {
+      "result": "Mobile 390x844 had no horizontal overflow; site CTA was hidden while the estimate planner was active.",
+      "viewport": "390x844"
+    },
+    {
+      "result": "Keyboard focus moved from active Interior Rooms to active Bedroom after the conditional step transition. Local-only favicon and Vercel analytics endpoints returned expected 404s; no application exception occurred.",
+      "viewport": "desktop production build"
+    }
+  ],
+  "checkpointId": "cp-20260729-stl201-001",
+  "completedStage": "stage:STL-201:complete",
+  "graphSha256": "4f6a7d81e9c46ecbf886703fcf03988dd317115f9577152aa7ac09bd5ec532c9",
+  "issueDecision": {
+    "action": "none",
+    "reason": "Draft PR 169 and the audited STL-201 node already track this bounded estimate-funnel delivery."
+  },
+  "nodeId": "STL-201",
+  "productionMutationAuthorized": false,
+  "programId": "stl-post-g20-sequential-tdd-v1",
+  "remoteStartReconciliation": {
+    "commitSha": "9c10da6e5d15151a6fb4367f004d268c6245d71d",
+    "fromGovernedHead": "fb4a8f154b32a3337be444159c80c9183eeb4f9c",
+    "pushedRef": "refs/heads/agent/skys-limit-convex-os",
+    "ungovernedCommitCount": 1
+  },
+  "reviewAudit": [
+    {
+      "reviewer": "Lovelace",
+      "status": "Three categorical-validation, payload-sensitive idempotency, and focus-transfer findings remediated; bounded closure review reported no remaining findings.",
+      "taskId": "019faf4f-0f2f-7210-b119-eca109a29b5f"
+    },
+    {
+      "reviewer": "Copernicus",
+      "status": "Five reconciliation authority findings and one staging finding remediated; final receipt-binding and staged-index closure review reported no remaining findings.",
+      "taskId": "019faf69-7a8f-7de3-819b-45a57f6cc905"
+    }
+  ],
+  "schemaVersion": 1,
+  "tdd": {
+    "green": "Deterministic estimate ranges, fail-closed runtime inputs, payload-sensitive idempotency, accessible step focus, mobile CTA isolation, and capability-bound remote reconciliation pass focused, full-suite, build, lint, and browser verification.",
+    "red": "Focused regressions reproduced stale preparation state, invalid numeric and categorical estimate inputs, mutable-payload idempotency reuse, missing focus transfer, mobile CTA overlap, forged/unbounded remote reconciliation, and insufficient handoff authority."
+  },
+  "verification": [
+    {
+      "command": "node --test tests/estimate-funnel.test.mjs tests/control-plane-remote-reconciliation.test.mjs tests/provider-access-preflight.test.mjs",
+      "result": "21/21",
+      "status": "passed"
+    },
+    {
+      "command": "npm test",
+      "result": "527/527",
+      "status": "passed"
+    },
+    {
+      "command": "npm run lint",
+      "result": "design, slop, architecture, Git, React, and TypeScript checks",
+      "status": "passed"
+    },
+    {
+      "command": "npm run build",
+      "result": "Next.js 16.2.12 production build; 44/44 static pages",
+      "status": "passed"
+    },
+    {
+      "command": "browser QA",
+      "result": "Desktop/mobile estimate flow, lead payload, sticky CTA isolation, and actual keyboard focus transfer passed.",
+      "status": "passed"
+    },
+    {
+      "command": "git diff --cached --check",
+      "status": "passed"
+    }
+  ]
+}

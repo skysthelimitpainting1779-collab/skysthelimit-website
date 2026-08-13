@@ -1,9 +1,15 @@
 'use client';
 
-import { motion } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
 import { ReactNode } from 'react';
 
 export function StaggerContainer({ children, className = '', delay = 0 }: { children: ReactNode, className?: string, delay?: number }) {
+  const prefersReducedMotion = useReducedMotion();
+
+  if (prefersReducedMotion) {
+    return <div className={className}>{children}</div>;
+  }
+
   return (
     <motion.div
       initial="hidden"
@@ -26,6 +32,12 @@ export function StaggerContainer({ children, className = '', delay = 0 }: { chil
 }
 
 export function StaggerItem({ children, className = '' }: { children: ReactNode, className?: string }) {
+  const prefersReducedMotion = useReducedMotion();
+
+  if (prefersReducedMotion) {
+    return <div className={className}>{children}</div>;
+  }
+
   return (
     <motion.div
       variants={{

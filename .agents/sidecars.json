@@ -4,8 +4,9 @@
       "name": "graphify-maintainer",
       "command": "python",
       "args": [
-        "c:/Users/Johnny Cage/DEV/skysthelimit-collab/.agents/plugins/dev-healer/sidecars/graphify-maintainer.py"
+        ".agents/plugins/dev-healer/sidecars/graphify-maintainer.py"
       ],
       "auto_start": true
+    }
   ]
 }

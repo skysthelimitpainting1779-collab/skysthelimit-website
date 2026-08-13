@@ -1,0 +1,4 @@
+interface:
+  display_name: "Node Dependency Restore"
+  short_description: "Safely restore a repository Node dependency tree"
+  default_prompt: "Use $node-dependency-restore to restore and verify this repository dependency tree."

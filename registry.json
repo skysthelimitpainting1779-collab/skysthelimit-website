@@ -1,0 +1,143 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "skys-limit-measured-craft",
+  "homepage": "https://github.com/skysthelimitpainting1779-collab/skys-the-limit-painting-llc-website",
+  "items": [
+    {
+      "name": "measured-craft-tokens",
+      "type": "registry:style",
+      "title": "Measured Craft Tokens",
+      "description": "Accessible light and dark semantic tokens for the Measured Craft visual system.",
+      "cssVars": {
+        "light": {
+          "background": "#EEE8DD",
+          "foreground": "#191713",
+          "card": "#FFFFFF",
+          "card-foreground": "#191713",
+          "popover": "#FFFFFF",
+          "popover-foreground": "#191713",
+          "primary": "#FF5A00",
+          "primary-hover": "#E94F00",
+          "primary-foreground": "#070706",
+          "secondary": "#DED6C8",
+          "secondary-foreground": "#191713",
+          "muted": "#DED6C8",
+          "muted-foreground": "#5F5A52",
+          "accent": "#DED6C8",
+          "accent-foreground": "#191713",
+          "destructive": "#C64232",
+          "destructive-hover": "#A73528",
+          "destructive-foreground": "#FFFFFF",
+          "border": "#D8C7AA",
+          "input": "#7D776E",
+          "ring": "#D94D00",
+          "radius": "8px"
+        },
+        "dark": {
+          "background": "#070706",
+          "foreground": "#F7F5F0",
+          "card": "#0D0D0B",
+          "card-foreground": "#F7F5F0",
+          "popover": "#0D0D0B",
+          "popover-foreground": "#F7F5F0",
+          "primary": "#FF5A00",
+          "primary-hover": "#E94F00",
+          "primary-foreground": "#070706",
+          "secondary": "#15130F",
+          "secondary-foreground": "#F7F5F0",
+          "muted": "#15130F",
+          "muted-foreground": "#B7B0A4",
+          "accent": "#15130F",
+          "accent-foreground": "#F7F5F0",
+          "destructive": "#C64232",
+          "destructive-hover": "#A73528",
+          "destructive-foreground": "#FFFFFF",
+          "border": "rgba(255, 255, 255, 0.12)",
+          "input": "#625C54",
+          "ring": "#FF5A00"
+        }
+      }
+    },
+    {
+      "name": "measured-craft-controls",
+      "type": "registry:item",
+      "title": "Measured Craft Controls",
+      "description": "Source-owned shadcn button, badge, and input controls with accessible focus and destructive states.",
+      "dependencies": [
+        "@base-ui/react",
+        "class-variance-authority",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": [
+        "skysthelimitpainting1779-collab/skys-the-limit-painting-llc-website/measured-craft-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/button.tsx",
+          "type": "registry:ui",
+          "target": "@ui/button.tsx"
+        },
+        {
+          "path": "src/components/ui/badge.tsx",
+          "type": "registry:ui",
+          "target": "@ui/badge.tsx"
+        },
+        {
+          "path": "src/components/ui/input.tsx",
+          "type": "registry:ui",
+          "target": "@ui/input.tsx"
+        },
+        {
+          "path": "src/lib/utils.ts",
+          "type": "registry:lib",
+          "target": "@lib/utils.ts"
+        }
+      ]
+    },
+    {
+      "name": "measured-craft-motion",
+      "type": "registry:item",
+      "title": "Measured Craft Motion",
+      "description": "Composable Motion primitives with local reduced-motion fallbacks.",
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "src/components/animations/FadeIn.tsx",
+          "type": "registry:component",
+          "target": "@components/animations/FadeIn.tsx"
+        },
+        {
+          "path": "src/components/animations/HoverLift.tsx",
+          "type": "registry:component",
+          "target": "@components/animations/HoverLift.tsx"
+        },
+        {
+          "path": "src/components/animations/Stagger.tsx",
+          "type": "registry:component",
+          "target": "@components/animations/Stagger.tsx"
+        }
+      ]
+    },
+    {
+      "name": "measured-craft-agent-rules",
+      "type": "registry:item",
+      "title": "Measured Craft Agent Rules",
+      "description": "Cross-agent shadcn, Motion, accessibility, Convex-boundary, and independent-review workflow.",
+      "files": [
+        {
+          "path": ".agents/skills/award-winning-ui-orchestration/SKILL.md",
+          "type": "registry:file",
+          "target": "~/.agents/skills/award-winning-ui-orchestration/SKILL.md"
+        },
+        {
+          "path": ".github/skills/award-winning-ui-orchestration/SKILL.md",
+          "type": "registry:file",
+          "target": "~/.github/skills/award-winning-ui-orchestration/SKILL.md"
+        }
+      ]
+    }
+  ]
+}

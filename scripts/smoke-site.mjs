@@ -9,6 +9,10 @@ export const DEFAULT_ROUTES = [
   { path: '/estimate' },
   { path: '/contact' },
   { path: '/projects', contains: 'Real Surfaces.' },
+  { path: '/painting-services/cabinet-painting' },
+  { path: '/painting-services/commercial-painting' },
+  { path: '/service-areas/inver-grove-heights' },
+  { path: '/__smoke_missing_route__', expectedStatus: 404 },
   { path: '/robots.txt', contains: 'Sitemap:' },
   { path: '/sitemap.xml', contains: '<urlset' },
 ];
@@ -60,8 +64,11 @@ export async function checkSite({
       const prohibitedContent = (route.notContains || []).filter((text) =>
         body.includes(text),
       );
-      const ok =
-        response.ok && hasExpectedContent && prohibitedContent.length === 0;
+      const statusMatches =
+        route.expectedStatus === undefined
+          ? response.ok
+          : response.status === route.expectedStatus;
+      const ok = statusMatches && hasExpectedContent && prohibitedContent.length === 0;
 
       results.push({
         path: route.path,
@@ -69,8 +76,10 @@ export async function checkSite({
         ok,
       });
 
-      if (!response.ok) {
-        failures.push(`${route.path} returned HTTP ${response.status}`);
+      if (!statusMatches) {
+        const expected =
+          route.expectedStatus === undefined ? 'a successful status' : `HTTP ${route.expectedStatus}`;
+        failures.push(`${route.path} returned HTTP ${response.status}; expected ${expected}`);
       } else if (!hasExpectedContent) {
         failures.push(`${route.path} did not contain ${JSON.stringify(route.contains)}`);
       } else if (prohibitedContent.length > 0) {

@@ -1,0 +1,3015 @@
+{
+  "schemaVersion": "1.0.0",
+  "states": [
+    {
+      "templateId": "P01",
+      "page": "Homepage",
+      "surface": "public",
+      "state": "default",
+      "required": true
+    },
+    {
+      "templateId": "P01",
+      "page": "Homepage",
+      "surface": "public",
+      "state": "loading-proof",
+      "required": true
+    },
+    {
+      "templateId": "P01",
+      "page": "Homepage",
+      "surface": "public",
+      "state": "no-proof",
+      "required": true
+    },
+    {
+      "templateId": "P01",
+      "page": "Homepage",
+      "surface": "public",
+      "state": "form-error",
+      "required": true
+    },
+    {
+      "templateId": "P01",
+      "page": "Homepage",
+      "surface": "public",
+      "state": "offline-fallback",
+      "required": true
+    },
+    {
+      "templateId": "P02",
+      "page": "Market Landing",
+      "surface": "public",
+      "state": "default",
+      "required": true
+    },
+    {
+      "templateId": "P02",
+      "page": "Market Landing",
+      "surface": "public",
+      "state": "loading-proof",
+      "required": true
+    },
+    {
+      "templateId": "P02",
+      "page": "Market Landing",
+      "surface": "public",
+      "state": "no-proof",
+      "required": true
+    },
+    {
+      "templateId": "P02",
+      "page": "Market Landing",
+      "surface": "public",
+      "state": "form-error",
+      "required": true
+    },
+    {
+      "templateId": "P02",
+      "page": "Market Landing",
+      "surface": "public",
+      "state": "offline-fallback",
+      "required": true
+    },
+    {
+      "templateId": "P03",
+      "page": "Service Detail",
+      "surface": "public",
+      "state": "default",
+      "required": true
+    },
+    {
+      "templateId": "P03",
+      "page": "Service Detail",
+      "surface": "public",
+      "state": "loading-proof",
+      "required": true
+    },
+    {
+      "templateId": "P03",
+      "page": "Service Detail",
+      "surface": "public",
+      "state": "no-proof",
+      "required": true
+    },
+    {
+      "templateId": "P03",
+      "page": "Service Detail",
+      "surface": "public",
+      "state": "form-error",
+      "required": true
+    },
+    {
+      "templateId": "P03",
+      "page": "Service Detail",
+      "surface": "public",
+      "state": "offline-fallback",
+      "required": true
+    },
+    {
+      "templateId": "P04",
+      "page": "Service Area Hub",
+      "surface": "public",
+      "state": "default",
+      "required": true
+    },
+    {
+      "templateId": "P04",
+      "page": "Service Area Hub",
+      "surface": "public",
+      "state": "loading-proof",
+      "required": true
+    },
+    {
+      "templateId": "P04",
+      "page": "Service Area Hub",
+      "surface": "public",
+      "state": "no-proof",
+      "required": true
+    },
+    {
+      "templateId": "P04",
+      "page": "Service Area Hub",
+      "surface": "public",
+      "state": "form-error",
+      "required": true
+    },
+    {
+      "templateId": "P04",
+      "page": "Service Area Hub",
+      "surface": "public",
+      "state": "offline-fallback",
+      "required": true
+    },
+    {
+      "templateId": "P05",
+      "page": "Location Detail",
+      "surface": "public",
+      "state": "default",
+      "required": true
+    },
+    {
+      "templateId": "P05",
+      "page": "Location Detail",
+      "surface": "public",
+      "state": "loading-proof",
+      "required": true
+    },
+    {
+      "templateId": "P05",
+      "page": "Location Detail",
+      "surface": "public",
+      "state": "no-proof",
+      "required": true
+    },
+    {
+      "templateId": "P05",
+      "page": "Location Detail",
+      "surface": "public",
+      "state": "form-error",
+      "required": true
+    },
+    {
+      "templateId": "P05",
+      "page": "Location Detail",
+      "surface": "public",
+      "state": "offline-fallback",
+      "required": true
+    },
+    {
+      "templateId": "P06",
+      "page": "Projects Index",
+      "surface": "public",
+      "state": "default",
+      "required": true
+    },
+    {
+      "templateId": "P06",
+      "page": "Projects Index",
+      "surface": "public",
+      "state": "loading-proof",
+      "required": true
+    },
+    {
+      "templateId": "P06",
+      "page": "Projects Index",
+      "surface": "public",
+      "state": "no-proof",
+      "required": true
+    },
+    {
+      "templateId": "P06",
+      "page": "Projects Index",
+      "surface": "public",
+      "state": "form-error",
+      "required": true
+    },
+    {
+      "templateId": "P06",
+      "page": "Projects Index",
+      "surface": "public",
+      "state": "offline-fallback",
+      "required": true
+    },
+    {
+      "templateId": "P06",
+      "page": "Projects Index",
+      "surface": "public",
+      "state": "empty-filter",
+      "required": true
+    },
+    {
+      "templateId": "P07",
+      "page": "Project Detail",
+      "surface": "public",
+      "state": "default",
+      "required": true
+    },
+    {
+      "templateId": "P07",
+      "page": "Project Detail",
+      "surface": "public",
+      "state": "loading-proof",
+      "required": true
+    },
+    {
+      "templateId": "P07",
+      "page": "Project Detail",
+      "surface": "public",
+      "state": "no-proof",
+      "required": true
+    },
+    {
+      "templateId": "P07",
+      "page": "Project Detail",
+      "surface": "public",
+      "state": "form-error",
+      "required": true
+    },
+    {
+      "templateId": "P07",
+      "page": "Project Detail",
+      "surface": "public",
+      "state": "offline-fallback",
+      "required": true
+    },
+    {
+      "templateId": "P07",
+      "page": "Project Detail",
+      "surface": "public",
+      "state": "media-unavailable",
+      "required": true
+    },
+    {
+      "templateId": "P08",
+      "page": "Estimate Wizard",
+      "surface": "public",
+      "state": "start",
+      "required": true
+    },
+    {
+      "templateId": "P08",
+      "page": "Estimate Wizard",
+      "surface": "public",
+      "state": "step-valid",
+      "required": true
+    },
+    {
+      "templateId": "P08",
+      "page": "Estimate Wizard",
+      "surface": "public",
+      "state": "step-invalid",
+      "required": true
+    },
+    {
+      "templateId": "P08",
+      "page": "Estimate Wizard",
+      "surface": "public",
+      "state": "uploading",
+      "required": true
+    },
+    {
+      "templateId": "P08",
+      "page": "Estimate Wizard",
+      "surface": "public",
+      "state": "saved-draft",
+      "required": true
+    },
+    {
+      "templateId": "P08",
+      "page": "Estimate Wizard",
+      "surface": "public",
+      "state": "submitting",
+      "required": true
+    },
+    {
+      "templateId": "P08",
+      "page": "Estimate Wizard",
+      "surface": "public",
+      "state": "saved-delivery-pending",
+      "required": true
+    },
+    {
+      "templateId": "P08",
+      "page": "Estimate Wizard",
+      "surface": "public",
+      "state": "success",
+      "required": true
+    },
+    {
+      "templateId": "P08",
+      "page": "Estimate Wizard",
+      "surface": "public",
+      "state": "delivery-error",
+      "required": true
+    },
+    {
+      "templateId": "P08",
+      "page": "Estimate Wizard",
+      "surface": "public",
+      "state": "offline",
+      "required": true
+    },
+    {
+      "templateId": "P09",
+      "page": "Contact",
+      "surface": "public",
+      "state": "default",
+      "required": true
+    },
+    {
+      "templateId": "P09",
+      "page": "Contact",
+      "surface": "public",
+      "state": "loading-proof",
+      "required": true
+    },
+    {
+      "templateId": "P09",
+      "page": "Contact",
+      "surface": "public",
+      "state": "no-proof",
+      "required": true
+    },
+    {
+      "templateId": "P09",
+      "page": "Contact",
+      "surface": "public",
+      "state": "form-error",
+      "required": true
+    },
+    {
+      "templateId": "P09",
+      "page": "Contact",
+      "surface": "public",
+      "state": "offline-fallback",
+      "required": true
+    },
+    {
+      "templateId": "P10",
+      "page": "About",
+      "surface": "public",
+      "state": "default",
+      "required": true
+    },
+    {
+      "templateId": "P10",
+      "page": "About",
+      "surface": "public",
+      "state": "loading-proof",
+      "required": true
+    },
+    {
+      "templateId": "P10",
+      "page": "About",
+      "surface": "public",
+      "state": "no-proof",
+      "required": true
+    },
+    {
+      "templateId": "P10",
+      "page": "About",
+      "surface": "public",
+      "state": "form-error",
+      "required": true
+    },
+    {
+      "templateId": "P10",
+      "page": "About",
+      "surface": "public",
+      "state": "offline-fallback",
+      "required": true
+    },
+    {
+      "templateId": "P11",
+      "page": "Capabilities",
+      "surface": "public",
+      "state": "default",
+      "required": true
+    },
+    {
+      "templateId": "P11",
+      "page": "Capabilities",
+      "surface": "public",
+      "state": "loading-proof",
+      "required": true
+    },
+    {
+      "templateId": "P11",
+      "page": "Capabilities",
+      "surface": "public",
+      "state": "no-proof",
+      "required": true
+    },
+    {
+      "templateId": "P11",
+      "page": "Capabilities",
+      "surface": "public",
+      "state": "form-error",
+      "required": true
+    },
+    {
+      "templateId": "P11",
+      "page": "Capabilities",
+      "surface": "public",
+      "state": "offline-fallback",
+      "required": true
+    },
+    {
+      "templateId": "P11",
+      "page": "Capabilities",
+      "surface": "public",
+      "state": "document-unavailable",
+      "required": true
+    },
+    {
+      "templateId": "P12",
+      "page": "Referral",
+      "surface": "public",
+      "state": "start",
+      "required": true
+    },
+    {
+      "templateId": "P12",
+      "page": "Referral",
+      "surface": "public",
+      "state": "validating",
+      "required": true
+    },
+    {
+      "templateId": "P12",
+      "page": "Referral",
+      "surface": "public",
+      "state": "generated",
+      "required": true
+    },
+    {
+      "templateId": "P12",
+      "page": "Referral",
+      "surface": "public",
+      "state": "copied",
+      "required": true
+    },
+    {
+      "templateId": "P12",
+      "page": "Referral",
+      "surface": "public",
+      "state": "invalid",
+      "required": true
+    },
+    {
+      "templateId": "P12",
+      "page": "Referral",
+      "surface": "public",
+      "state": "revoked",
+      "required": true
+    },
+    {
+      "templateId": "P12",
+      "page": "Referral",
+      "surface": "public",
+      "state": "credited",
+      "required": true
+    },
+    {
+      "templateId": "P13",
+      "page": "Review",
+      "surface": "public",
+      "state": "default",
+      "required": true
+    },
+    {
+      "templateId": "P13",
+      "page": "Review",
+      "surface": "public",
+      "state": "review-clicked",
+      "required": true
+    },
+    {
+      "templateId": "P13",
+      "page": "Review",
+      "surface": "public",
+      "state": "support-form",
+      "required": true
+    },
+    {
+      "templateId": "P13",
+      "page": "Review",
+      "surface": "public",
+      "state": "support-submitted",
+      "required": true
+    },
+    {
+      "templateId": "P13",
+      "page": "Review",
+      "surface": "public",
+      "state": "error",
+      "required": true
+    },
+    {
+      "templateId": "P14",
+      "page": "Resources Index",
+      "surface": "public",
+      "state": "default",
+      "required": true
+    },
+    {
+      "templateId": "P14",
+      "page": "Resources Index",
+      "surface": "public",
+      "state": "loading-proof",
+      "required": true
+    },
+    {
+      "templateId": "P14",
+      "page": "Resources Index",
+      "surface": "public",
+      "state": "no-proof",
+      "required": true
+    },
+    {
+      "templateId": "P14",
+      "page": "Resources Index",
+      "surface": "public",
+      "state": "form-error",
+      "required": true
+    },
+    {
+      "templateId": "P14",
+      "page": "Resources Index",
+      "surface": "public",
+      "state": "offline-fallback",
+      "required": true
+    },
+    {
+      "templateId": "P14",
+      "page": "Resources Index",
+      "surface": "public",
+      "state": "empty-category",
+      "required": true
+    },
+    {
+      "templateId": "P15",
+      "page": "Resource Article",
+      "surface": "public",
+      "state": "default",
+      "required": true
+    },
+    {
+      "templateId": "P15",
+      "page": "Resource Article",
+      "surface": "public",
+      "state": "loading-proof",
+      "required": true
+    },
+    {
+      "templateId": "P15",
+      "page": "Resource Article",
+      "surface": "public",
+      "state": "no-proof",
+      "required": true
+    },
+    {
+      "templateId": "P15",
+      "page": "Resource Article",
+      "surface": "public",
+      "state": "form-error",
+      "required": true
+    },
+    {
+      "templateId": "P15",
+      "page": "Resource Article",
+      "surface": "public",
+      "state": "offline-fallback",
+      "required": true
+    },
+    {
+      "templateId": "P16",
+      "page": "Portal Sign-in / Invite",
+      "surface": "public",
+      "state": "loading",
+      "required": true
+    },
+    {
+      "templateId": "P16",
+      "page": "Portal Sign-in / Invite",
+      "surface": "public",
+      "state": "sign-in",
+      "required": true
+    },
+    {
+      "templateId": "P16",
+      "page": "Portal Sign-in / Invite",
+      "surface": "public",
+      "state": "invite-valid",
+      "required": true
+    },
+    {
+      "templateId": "P16",
+      "page": "Portal Sign-in / Invite",
+      "surface": "public",
+      "state": "invite-invalid",
+      "required": true
+    },
+    {
+      "templateId": "P16",
+      "page": "Portal Sign-in / Invite",
+      "surface": "public",
+      "state": "MFA",
+      "required": true
+    },
+    {
+      "templateId": "P16",
+      "page": "Portal Sign-in / Invite",
+      "surface": "public",
+      "state": "disabled",
+      "required": true
+    },
+    {
+      "templateId": "P16",
+      "page": "Portal Sign-in / Invite",
+      "surface": "public",
+      "state": "error",
+      "required": true
+    },
+    {
+      "templateId": "P17",
+      "page": "Legal / Privacy",
+      "surface": "public",
+      "state": "default",
+      "required": true
+    },
+    {
+      "templateId": "P18",
+      "page": "404 / Error",
+      "surface": "public",
+      "state": "404",
+      "required": true
+    },
+    {
+      "templateId": "P18",
+      "page": "404 / Error",
+      "surface": "public",
+      "state": "500",
+      "required": true
+    },
+    {
+      "templateId": "P18",
+      "page": "404 / Error",
+      "surface": "public",
+      "state": "offline",
+      "required": true
+    },
+    {
+      "templateId": "P18",
+      "page": "404 / Error",
+      "surface": "public",
+      "state": "maintenance",
+      "required": true
+    },
+    {
+      "templateId": "C01",
+      "page": "Customer Overview",
+      "surface": "customer",
+      "state": "loading",
+      "required": true
+    },
+    {
+      "templateId": "C01",
+      "page": "Customer Overview",
+      "surface": "customer",
+      "state": "empty",
+      "required": true
+    },
+    {
+      "templateId": "C01",
+      "page": "Customer Overview",
+      "surface": "customer",
+      "state": "populated",
+      "required": true
+    },
+    {
+      "templateId": "C01",
+      "page": "Customer Overview",
+      "surface": "customer",
+      "state": "partial",
+      "required": true
+    },
+    {
+      "templateId": "C01",
+      "page": "Customer Overview",
+      "surface": "customer",
+      "state": "error",
+      "required": true
+    },
+    {
+      "templateId": "C01",
+      "page": "Customer Overview",
+      "surface": "customer",
+      "state": "permission-denied",
+      "required": true
+    },
+    {
+      "templateId": "C01",
+      "page": "Customer Overview",
+      "surface": "customer",
+      "state": "disabled-account",
+      "required": true
+    },
+    {
+      "templateId": "C02",
+      "page": "Customer Project Detail",
+      "surface": "customer",
+      "state": "loading",
+      "required": true
+    },
+    {
+      "templateId": "C02",
+      "page": "Customer Project Detail",
+      "surface": "customer",
+      "state": "empty",
+      "required": true
+    },
+    {
+      "templateId": "C02",
+      "page": "Customer Project Detail",
+      "surface": "customer",
+      "state": "populated",
+      "required": true
+    },
+    {
+      "templateId": "C02",
+      "page": "Customer Project Detail",
+      "surface": "customer",
+      "state": "partial",
+      "required": true
+    },
+    {
+      "templateId": "C02",
+      "page": "Customer Project Detail",
+      "surface": "customer",
+      "state": "error",
+      "required": true
+    },
+    {
+      "templateId": "C02",
+      "page": "Customer Project Detail",
+      "surface": "customer",
+      "state": "permission-denied",
+      "required": true
+    },
+    {
+      "templateId": "C02",
+      "page": "Customer Project Detail",
+      "surface": "customer",
+      "state": "disabled-account",
+      "required": true
+    },
+    {
+      "templateId": "C03",
+      "page": "Appointment Detail",
+      "surface": "customer",
+      "state": "loading",
+      "required": true
+    },
+    {
+      "templateId": "C03",
+      "page": "Appointment Detail",
+      "surface": "customer",
+      "state": "empty",
+      "required": true
+    },
+    {
+      "templateId": "C03",
+      "page": "Appointment Detail",
+      "surface": "customer",
+      "state": "populated",
+      "required": true
+    },
+    {
+      "templateId": "C03",
+      "page": "Appointment Detail",
+      "surface": "customer",
+      "state": "partial",
+      "required": true
+    },
+    {
+      "templateId": "C03",
+      "page": "Appointment Detail",
+      "surface": "customer",
+      "state": "error",
+      "required": true
+    },
+    {
+      "templateId": "C03",
+      "page": "Appointment Detail",
+      "surface": "customer",
+      "state": "permission-denied",
+      "required": true
+    },
+    {
+      "templateId": "C03",
+      "page": "Appointment Detail",
+      "surface": "customer",
+      "state": "disabled-account",
+      "required": true
+    },
+    {
+      "templateId": "C03",
+      "page": "Appointment Detail",
+      "surface": "customer",
+      "state": "provider-stale",
+      "required": true
+    },
+    {
+      "templateId": "C04",
+      "page": "Estimate Review",
+      "surface": "customer",
+      "state": "loading",
+      "required": true
+    },
+    {
+      "templateId": "C04",
+      "page": "Estimate Review",
+      "surface": "customer",
+      "state": "empty",
+      "required": true
+    },
+    {
+      "templateId": "C04",
+      "page": "Estimate Review",
+      "surface": "customer",
+      "state": "populated",
+      "required": true
+    },
+    {
+      "templateId": "C04",
+      "page": "Estimate Review",
+      "surface": "customer",
+      "state": "partial",
+      "required": true
+    },
+    {
+      "templateId": "C04",
+      "page": "Estimate Review",
+      "surface": "customer",
+      "state": "error",
+      "required": true
+    },
+    {
+      "templateId": "C04",
+      "page": "Estimate Review",
+      "surface": "customer",
+      "state": "permission-denied",
+      "required": true
+    },
+    {
+      "templateId": "C04",
+      "page": "Estimate Review",
+      "surface": "customer",
+      "state": "disabled-account",
+      "required": true
+    },
+    {
+      "templateId": "C04",
+      "page": "Estimate Review",
+      "surface": "customer",
+      "state": "superseded",
+      "required": true
+    },
+    {
+      "templateId": "C05",
+      "page": "Proposal Review",
+      "surface": "customer",
+      "state": "loading",
+      "required": true
+    },
+    {
+      "templateId": "C05",
+      "page": "Proposal Review",
+      "surface": "customer",
+      "state": "empty",
+      "required": true
+    },
+    {
+      "templateId": "C05",
+      "page": "Proposal Review",
+      "surface": "customer",
+      "state": "populated",
+      "required": true
+    },
+    {
+      "templateId": "C05",
+      "page": "Proposal Review",
+      "surface": "customer",
+      "state": "partial",
+      "required": true
+    },
+    {
+      "templateId": "C05",
+      "page": "Proposal Review",
+      "surface": "customer",
+      "state": "error",
+      "required": true
+    },
+    {
+      "templateId": "C05",
+      "page": "Proposal Review",
+      "surface": "customer",
+      "state": "permission-denied",
+      "required": true
+    },
+    {
+      "templateId": "C05",
+      "page": "Proposal Review",
+      "surface": "customer",
+      "state": "disabled-account",
+      "required": true
+    },
+    {
+      "templateId": "C05",
+      "page": "Proposal Review",
+      "surface": "customer",
+      "state": "expired",
+      "required": true
+    },
+    {
+      "templateId": "C05",
+      "page": "Proposal Review",
+      "surface": "customer",
+      "state": "superseded",
+      "required": true
+    },
+    {
+      "templateId": "C06",
+      "page": "Agreement Signature",
+      "surface": "customer",
+      "state": "loading",
+      "required": true
+    },
+    {
+      "templateId": "C06",
+      "page": "Agreement Signature",
+      "surface": "customer",
+      "state": "empty",
+      "required": true
+    },
+    {
+      "templateId": "C06",
+      "page": "Agreement Signature",
+      "surface": "customer",
+      "state": "populated",
+      "required": true
+    },
+    {
+      "templateId": "C06",
+      "page": "Agreement Signature",
+      "surface": "customer",
+      "state": "partial",
+      "required": true
+    },
+    {
+      "templateId": "C06",
+      "page": "Agreement Signature",
+      "surface": "customer",
+      "state": "error",
+      "required": true
+    },
+    {
+      "templateId": "C06",
+      "page": "Agreement Signature",
+      "surface": "customer",
+      "state": "permission-denied",
+      "required": true
+    },
+    {
+      "templateId": "C06",
+      "page": "Agreement Signature",
+      "surface": "customer",
+      "state": "disabled-account",
+      "required": true
+    },
+    {
+      "templateId": "C06",
+      "page": "Agreement Signature",
+      "surface": "customer",
+      "state": "signed",
+      "required": true
+    },
+    {
+      "templateId": "C06",
+      "page": "Agreement Signature",
+      "surface": "customer",
+      "state": "void",
+      "required": true
+    },
+    {
+      "templateId": "C06",
+      "page": "Agreement Signature",
+      "surface": "customer",
+      "state": "expired",
+      "required": true
+    },
+    {
+      "templateId": "C07",
+      "page": "Payment",
+      "surface": "customer",
+      "state": "loading",
+      "required": true
+    },
+    {
+      "templateId": "C07",
+      "page": "Payment",
+      "surface": "customer",
+      "state": "empty",
+      "required": true
+    },
+    {
+      "templateId": "C07",
+      "page": "Payment",
+      "surface": "customer",
+      "state": "populated",
+      "required": true
+    },
+    {
+      "templateId": "C07",
+      "page": "Payment",
+      "surface": "customer",
+      "state": "partial",
+      "required": true
+    },
+    {
+      "templateId": "C07",
+      "page": "Payment",
+      "surface": "customer",
+      "state": "error",
+      "required": true
+    },
+    {
+      "templateId": "C07",
+      "page": "Payment",
+      "surface": "customer",
+      "state": "permission-denied",
+      "required": true
+    },
+    {
+      "templateId": "C07",
+      "page": "Payment",
+      "surface": "customer",
+      "state": "disabled-account",
+      "required": true
+    },
+    {
+      "templateId": "C07",
+      "page": "Payment",
+      "surface": "customer",
+      "state": "checkout-created",
+      "required": true
+    },
+    {
+      "templateId": "C07",
+      "page": "Payment",
+      "surface": "customer",
+      "state": "processing",
+      "required": true
+    },
+    {
+      "templateId": "C07",
+      "page": "Payment",
+      "surface": "customer",
+      "state": "paid",
+      "required": true
+    },
+    {
+      "templateId": "C07",
+      "page": "Payment",
+      "surface": "customer",
+      "state": "failed",
+      "required": true
+    },
+    {
+      "templateId": "C07",
+      "page": "Payment",
+      "surface": "customer",
+      "state": "refunded",
+      "required": true
+    },
+    {
+      "templateId": "C08",
+      "page": "Customer Files",
+      "surface": "customer",
+      "state": "loading",
+      "required": true
+    },
+    {
+      "templateId": "C08",
+      "page": "Customer Files",
+      "surface": "customer",
+      "state": "empty",
+      "required": true
+    },
+    {
+      "templateId": "C08",
+      "page": "Customer Files",
+      "surface": "customer",
+      "state": "populated",
+      "required": true
+    },
+    {
+      "templateId": "C08",
+      "page": "Customer Files",
+      "surface": "customer",
+      "state": "partial",
+      "required": true
+    },
+    {
+      "templateId": "C08",
+      "page": "Customer Files",
+      "surface": "customer",
+      "state": "error",
+      "required": true
+    },
+    {
+      "templateId": "C08",
+      "page": "Customer Files",
+      "surface": "customer",
+      "state": "permission-denied",
+      "required": true
+    },
+    {
+      "templateId": "C08",
+      "page": "Customer Files",
+      "surface": "customer",
+      "state": "disabled-account",
+      "required": true
+    },
+    {
+      "templateId": "C08",
+      "page": "Customer Files",
+      "surface": "customer",
+      "state": "uploading",
+      "required": true
+    },
+    {
+      "templateId": "C08",
+      "page": "Customer Files",
+      "surface": "customer",
+      "state": "scan-pending",
+      "required": true
+    },
+    {
+      "templateId": "C08",
+      "page": "Customer Files",
+      "surface": "customer",
+      "state": "expired",
+      "required": true
+    },
+    {
+      "templateId": "C09",
+      "page": "Change Order",
+      "surface": "customer",
+      "state": "loading",
+      "required": true
+    },
+    {
+      "templateId": "C09",
+      "page": "Change Order",
+      "surface": "customer",
+      "state": "empty",
+      "required": true
+    },
+    {
+      "templateId": "C09",
+      "page": "Change Order",
+      "surface": "customer",
+      "state": "populated",
+      "required": true
+    },
+    {
+      "templateId": "C09",
+      "page": "Change Order",
+      "surface": "customer",
+      "state": "partial",
+      "required": true
+    },
+    {
+      "templateId": "C09",
+      "page": "Change Order",
+      "surface": "customer",
+      "state": "error",
+      "required": true
+    },
+    {
+      "templateId": "C09",
+      "page": "Change Order",
+      "surface": "customer",
+      "state": "permission-denied",
+      "required": true
+    },
+    {
+      "templateId": "C09",
+      "page": "Change Order",
+      "surface": "customer",
+      "state": "disabled-account",
+      "required": true
+    },
+    {
+      "templateId": "C09",
+      "page": "Change Order",
+      "surface": "customer",
+      "state": "approved",
+      "required": true
+    },
+    {
+      "templateId": "C09",
+      "page": "Change Order",
+      "surface": "customer",
+      "state": "declined",
+      "required": true
+    },
+    {
+      "templateId": "C09",
+      "page": "Change Order",
+      "surface": "customer",
+      "state": "superseded",
+      "required": true
+    },
+    {
+      "templateId": "C10",
+      "page": "Messages / Updates",
+      "surface": "customer",
+      "state": "loading",
+      "required": true
+    },
+    {
+      "templateId": "C10",
+      "page": "Messages / Updates",
+      "surface": "customer",
+      "state": "empty",
+      "required": true
+    },
+    {
+      "templateId": "C10",
+      "page": "Messages / Updates",
+      "surface": "customer",
+      "state": "populated",
+      "required": true
+    },
+    {
+      "templateId": "C10",
+      "page": "Messages / Updates",
+      "surface": "customer",
+      "state": "partial",
+      "required": true
+    },
+    {
+      "templateId": "C10",
+      "page": "Messages / Updates",
+      "surface": "customer",
+      "state": "error",
+      "required": true
+    },
+    {
+      "templateId": "C10",
+      "page": "Messages / Updates",
+      "surface": "customer",
+      "state": "permission-denied",
+      "required": true
+    },
+    {
+      "templateId": "C10",
+      "page": "Messages / Updates",
+      "surface": "customer",
+      "state": "disabled-account",
+      "required": true
+    },
+    {
+      "templateId": "C10",
+      "page": "Messages / Updates",
+      "surface": "customer",
+      "state": "sending",
+      "required": true
+    },
+    {
+      "templateId": "C10",
+      "page": "Messages / Updates",
+      "surface": "customer",
+      "state": "delivery-error",
+      "required": true
+    },
+    {
+      "templateId": "C11",
+      "page": "Customer Account",
+      "surface": "customer",
+      "state": "loading",
+      "required": true
+    },
+    {
+      "templateId": "C11",
+      "page": "Customer Account",
+      "surface": "customer",
+      "state": "empty",
+      "required": true
+    },
+    {
+      "templateId": "C11",
+      "page": "Customer Account",
+      "surface": "customer",
+      "state": "populated",
+      "required": true
+    },
+    {
+      "templateId": "C11",
+      "page": "Customer Account",
+      "surface": "customer",
+      "state": "partial",
+      "required": true
+    },
+    {
+      "templateId": "C11",
+      "page": "Customer Account",
+      "surface": "customer",
+      "state": "error",
+      "required": true
+    },
+    {
+      "templateId": "C11",
+      "page": "Customer Account",
+      "surface": "customer",
+      "state": "permission-denied",
+      "required": true
+    },
+    {
+      "templateId": "C11",
+      "page": "Customer Account",
+      "surface": "customer",
+      "state": "disabled-account",
+      "required": true
+    },
+    {
+      "templateId": "O01",
+      "page": "Operator Overview",
+      "surface": "operator",
+      "state": "loading",
+      "required": true
+    },
+    {
+      "templateId": "O01",
+      "page": "Operator Overview",
+      "surface": "operator",
+      "state": "empty",
+      "required": true
+    },
+    {
+      "templateId": "O01",
+      "page": "Operator Overview",
+      "surface": "operator",
+      "state": "populated",
+      "required": true
+    },
+    {
+      "templateId": "O01",
+      "page": "Operator Overview",
+      "surface": "operator",
+      "state": "partial",
+      "required": true
+    },
+    {
+      "templateId": "O01",
+      "page": "Operator Overview",
+      "surface": "operator",
+      "state": "error",
+      "required": true
+    },
+    {
+      "templateId": "O01",
+      "page": "Operator Overview",
+      "surface": "operator",
+      "state": "permission-denied",
+      "required": true
+    },
+    {
+      "templateId": "O01",
+      "page": "Operator Overview",
+      "surface": "operator",
+      "state": "disabled-account",
+      "required": true
+    },
+    {
+      "templateId": "O01",
+      "page": "Operator Overview",
+      "surface": "operator",
+      "state": "stale-integration",
+      "required": true
+    },
+    {
+      "templateId": "O01",
+      "page": "Operator Overview",
+      "surface": "operator",
+      "state": "reconciliation-required",
+      "required": true
+    },
+    {
+      "templateId": "O02",
+      "page": "Lead Inbox",
+      "surface": "operator",
+      "state": "loading",
+      "required": true
+    },
+    {
+      "templateId": "O02",
+      "page": "Lead Inbox",
+      "surface": "operator",
+      "state": "empty",
+      "required": true
+    },
+    {
+      "templateId": "O02",
+      "page": "Lead Inbox",
+      "surface": "operator",
+      "state": "populated",
+      "required": true
+    },
+    {
+      "templateId": "O02",
+      "page": "Lead Inbox",
+      "surface": "operator",
+      "state": "partial",
+      "required": true
+    },
+    {
+      "templateId": "O02",
+      "page": "Lead Inbox",
+      "surface": "operator",
+      "state": "error",
+      "required": true
+    },
+    {
+      "templateId": "O02",
+      "page": "Lead Inbox",
+      "surface": "operator",
+      "state": "permission-denied",
+      "required": true
+    },
+    {
+      "templateId": "O02",
+      "page": "Lead Inbox",
+      "surface": "operator",
+      "state": "disabled-account",
+      "required": true
+    },
+    {
+      "templateId": "O02",
+      "page": "Lead Inbox",
+      "surface": "operator",
+      "state": "stale-integration",
+      "required": true
+    },
+    {
+      "templateId": "O02",
+      "page": "Lead Inbox",
+      "surface": "operator",
+      "state": "reconciliation-required",
+      "required": true
+    },
+    {
+      "templateId": "O02",
+      "page": "Lead Inbox",
+      "surface": "operator",
+      "state": "duplicate",
+      "required": true
+    },
+    {
+      "templateId": "O02",
+      "page": "Lead Inbox",
+      "surface": "operator",
+      "state": "delivery-failed",
+      "required": true
+    },
+    {
+      "templateId": "O03",
+      "page": "Pipeline Board",
+      "surface": "operator",
+      "state": "loading",
+      "required": true
+    },
+    {
+      "templateId": "O03",
+      "page": "Pipeline Board",
+      "surface": "operator",
+      "state": "empty",
+      "required": true
+    },
+    {
+      "templateId": "O03",
+      "page": "Pipeline Board",
+      "surface": "operator",
+      "state": "populated",
+      "required": true
+    },
+    {
+      "templateId": "O03",
+      "page": "Pipeline Board",
+      "surface": "operator",
+      "state": "partial",
+      "required": true
+    },
+    {
+      "templateId": "O03",
+      "page": "Pipeline Board",
+      "surface": "operator",
+      "state": "error",
+      "required": true
+    },
+    {
+      "templateId": "O03",
+      "page": "Pipeline Board",
+      "surface": "operator",
+      "state": "permission-denied",
+      "required": true
+    },
+    {
+      "templateId": "O03",
+      "page": "Pipeline Board",
+      "surface": "operator",
+      "state": "disabled-account",
+      "required": true
+    },
+    {
+      "templateId": "O03",
+      "page": "Pipeline Board",
+      "surface": "operator",
+      "state": "stale-integration",
+      "required": true
+    },
+    {
+      "templateId": "O03",
+      "page": "Pipeline Board",
+      "surface": "operator",
+      "state": "reconciliation-required",
+      "required": true
+    },
+    {
+      "templateId": "O04",
+      "page": "Opportunity Detail",
+      "surface": "operator",
+      "state": "loading",
+      "required": true
+    },
+    {
+      "templateId": "O04",
+      "page": "Opportunity Detail",
+      "surface": "operator",
+      "state": "empty",
+      "required": true
+    },
+    {
+      "templateId": "O04",
+      "page": "Opportunity Detail",
+      "surface": "operator",
+      "state": "populated",
+      "required": true
+    },
+    {
+      "templateId": "O04",
+      "page": "Opportunity Detail",
+      "surface": "operator",
+      "state": "partial",
+      "required": true
+    },
+    {
+      "templateId": "O04",
+      "page": "Opportunity Detail",
+      "surface": "operator",
+      "state": "error",
+      "required": true
+    },
+    {
+      "templateId": "O04",
+      "page": "Opportunity Detail",
+      "surface": "operator",
+      "state": "permission-denied",
+      "required": true
+    },
+    {
+      "templateId": "O04",
+      "page": "Opportunity Detail",
+      "surface": "operator",
+      "state": "disabled-account",
+      "required": true
+    },
+    {
+      "templateId": "O04",
+      "page": "Opportunity Detail",
+      "surface": "operator",
+      "state": "stale-integration",
+      "required": true
+    },
+    {
+      "templateId": "O04",
+      "page": "Opportunity Detail",
+      "surface": "operator",
+      "state": "reconciliation-required",
+      "required": true
+    },
+    {
+      "templateId": "O05",
+      "page": "Contact / Property Detail",
+      "surface": "operator",
+      "state": "loading",
+      "required": true
+    },
+    {
+      "templateId": "O05",
+      "page": "Contact / Property Detail",
+      "surface": "operator",
+      "state": "empty",
+      "required": true
+    },
+    {
+      "templateId": "O05",
+      "page": "Contact / Property Detail",
+      "surface": "operator",
+      "state": "populated",
+      "required": true
+    },
+    {
+      "templateId": "O05",
+      "page": "Contact / Property Detail",
+      "surface": "operator",
+      "state": "partial",
+      "required": true
+    },
+    {
+      "templateId": "O05",
+      "page": "Contact / Property Detail",
+      "surface": "operator",
+      "state": "error",
+      "required": true
+    },
+    {
+      "templateId": "O05",
+      "page": "Contact / Property Detail",
+      "surface": "operator",
+      "state": "permission-denied",
+      "required": true
+    },
+    {
+      "templateId": "O05",
+      "page": "Contact / Property Detail",
+      "surface": "operator",
+      "state": "disabled-account",
+      "required": true
+    },
+    {
+      "templateId": "O05",
+      "page": "Contact / Property Detail",
+      "surface": "operator",
+      "state": "stale-integration",
+      "required": true
+    },
+    {
+      "templateId": "O05",
+      "page": "Contact / Property Detail",
+      "surface": "operator",
+      "state": "reconciliation-required",
+      "required": true
+    },
+    {
+      "templateId": "O05",
+      "page": "Contact / Property Detail",
+      "surface": "operator",
+      "state": "merge-review",
+      "required": true
+    },
+    {
+      "templateId": "O06",
+      "page": "Calendar",
+      "surface": "operator",
+      "state": "loading",
+      "required": true
+    },
+    {
+      "templateId": "O06",
+      "page": "Calendar",
+      "surface": "operator",
+      "state": "empty",
+      "required": true
+    },
+    {
+      "templateId": "O06",
+      "page": "Calendar",
+      "surface": "operator",
+      "state": "populated",
+      "required": true
+    },
+    {
+      "templateId": "O06",
+      "page": "Calendar",
+      "surface": "operator",
+      "state": "partial",
+      "required": true
+    },
+    {
+      "templateId": "O06",
+      "page": "Calendar",
+      "surface": "operator",
+      "state": "error",
+      "required": true
+    },
+    {
+      "templateId": "O06",
+      "page": "Calendar",
+      "surface": "operator",
+      "state": "permission-denied",
+      "required": true
+    },
+    {
+      "templateId": "O06",
+      "page": "Calendar",
+      "surface": "operator",
+      "state": "disabled-account",
+      "required": true
+    },
+    {
+      "templateId": "O06",
+      "page": "Calendar",
+      "surface": "operator",
+      "state": "stale-integration",
+      "required": true
+    },
+    {
+      "templateId": "O06",
+      "page": "Calendar",
+      "surface": "operator",
+      "state": "reconciliation-required",
+      "required": true
+    },
+    {
+      "templateId": "O06",
+      "page": "Calendar",
+      "surface": "operator",
+      "state": "provider-conflict",
+      "required": true
+    },
+    {
+      "templateId": "O07",
+      "page": "Estimate Builder",
+      "surface": "operator",
+      "state": "loading",
+      "required": true
+    },
+    {
+      "templateId": "O07",
+      "page": "Estimate Builder",
+      "surface": "operator",
+      "state": "empty",
+      "required": true
+    },
+    {
+      "templateId": "O07",
+      "page": "Estimate Builder",
+      "surface": "operator",
+      "state": "populated",
+      "required": true
+    },
+    {
+      "templateId": "O07",
+      "page": "Estimate Builder",
+      "surface": "operator",
+      "state": "partial",
+      "required": true
+    },
+    {
+      "templateId": "O07",
+      "page": "Estimate Builder",
+      "surface": "operator",
+      "state": "error",
+      "required": true
+    },
+    {
+      "templateId": "O07",
+      "page": "Estimate Builder",
+      "surface": "operator",
+      "state": "permission-denied",
+      "required": true
+    },
+    {
+      "templateId": "O07",
+      "page": "Estimate Builder",
+      "surface": "operator",
+      "state": "disabled-account",
+      "required": true
+    },
+    {
+      "templateId": "O07",
+      "page": "Estimate Builder",
+      "surface": "operator",
+      "state": "stale-integration",
+      "required": true
+    },
+    {
+      "templateId": "O07",
+      "page": "Estimate Builder",
+      "surface": "operator",
+      "state": "reconciliation-required",
+      "required": true
+    },
+    {
+      "templateId": "O07",
+      "page": "Estimate Builder",
+      "surface": "operator",
+      "state": "draft",
+      "required": true
+    },
+    {
+      "templateId": "O07",
+      "page": "Estimate Builder",
+      "surface": "operator",
+      "state": "issued",
+      "required": true
+    },
+    {
+      "templateId": "O07",
+      "page": "Estimate Builder",
+      "surface": "operator",
+      "state": "superseded",
+      "required": true
+    },
+    {
+      "templateId": "O08",
+      "page": "Proposal Builder",
+      "surface": "operator",
+      "state": "loading",
+      "required": true
+    },
+    {
+      "templateId": "O08",
+      "page": "Proposal Builder",
+      "surface": "operator",
+      "state": "empty",
+      "required": true
+    },
+    {
+      "templateId": "O08",
+      "page": "Proposal Builder",
+      "surface": "operator",
+      "state": "populated",
+      "required": true
+    },
+    {
+      "templateId": "O08",
+      "page": "Proposal Builder",
+      "surface": "operator",
+      "state": "partial",
+      "required": true
+    },
+    {
+      "templateId": "O08",
+      "page": "Proposal Builder",
+      "surface": "operator",
+      "state": "error",
+      "required": true
+    },
+    {
+      "templateId": "O08",
+      "page": "Proposal Builder",
+      "surface": "operator",
+      "state": "permission-denied",
+      "required": true
+    },
+    {
+      "templateId": "O08",
+      "page": "Proposal Builder",
+      "surface": "operator",
+      "state": "disabled-account",
+      "required": true
+    },
+    {
+      "templateId": "O08",
+      "page": "Proposal Builder",
+      "surface": "operator",
+      "state": "stale-integration",
+      "required": true
+    },
+    {
+      "templateId": "O08",
+      "page": "Proposal Builder",
+      "surface": "operator",
+      "state": "reconciliation-required",
+      "required": true
+    },
+    {
+      "templateId": "O08",
+      "page": "Proposal Builder",
+      "surface": "operator",
+      "state": "draft",
+      "required": true
+    },
+    {
+      "templateId": "O08",
+      "page": "Proposal Builder",
+      "surface": "operator",
+      "state": "sent",
+      "required": true
+    },
+    {
+      "templateId": "O08",
+      "page": "Proposal Builder",
+      "surface": "operator",
+      "state": "viewed",
+      "required": true
+    },
+    {
+      "templateId": "O08",
+      "page": "Proposal Builder",
+      "surface": "operator",
+      "state": "approved",
+      "required": true
+    },
+    {
+      "templateId": "O08",
+      "page": "Proposal Builder",
+      "surface": "operator",
+      "state": "expired",
+      "required": true
+    },
+    {
+      "templateId": "O09",
+      "page": "Agreement / Payment Monitor",
+      "surface": "operator",
+      "state": "loading",
+      "required": true
+    },
+    {
+      "templateId": "O09",
+      "page": "Agreement / Payment Monitor",
+      "surface": "operator",
+      "state": "empty",
+      "required": true
+    },
+    {
+      "templateId": "O09",
+      "page": "Agreement / Payment Monitor",
+      "surface": "operator",
+      "state": "populated",
+      "required": true
+    },
+    {
+      "templateId": "O09",
+      "page": "Agreement / Payment Monitor",
+      "surface": "operator",
+      "state": "partial",
+      "required": true
+    },
+    {
+      "templateId": "O09",
+      "page": "Agreement / Payment Monitor",
+      "surface": "operator",
+      "state": "error",
+      "required": true
+    },
+    {
+      "templateId": "O09",
+      "page": "Agreement / Payment Monitor",
+      "surface": "operator",
+      "state": "permission-denied",
+      "required": true
+    },
+    {
+      "templateId": "O09",
+      "page": "Agreement / Payment Monitor",
+      "surface": "operator",
+      "state": "disabled-account",
+      "required": true
+    },
+    {
+      "templateId": "O09",
+      "page": "Agreement / Payment Monitor",
+      "surface": "operator",
+      "state": "stale-integration",
+      "required": true
+    },
+    {
+      "templateId": "O09",
+      "page": "Agreement / Payment Monitor",
+      "surface": "operator",
+      "state": "reconciliation-required",
+      "required": true
+    },
+    {
+      "templateId": "O09",
+      "page": "Agreement / Payment Monitor",
+      "surface": "operator",
+      "state": "signature-pending",
+      "required": true
+    },
+    {
+      "templateId": "O09",
+      "page": "Agreement / Payment Monitor",
+      "surface": "operator",
+      "state": "payment-pending",
+      "required": true
+    },
+    {
+      "templateId": "O09",
+      "page": "Agreement / Payment Monitor",
+      "surface": "operator",
+      "state": "mismatch",
+      "required": true
+    },
+    {
+      "templateId": "O10",
+      "page": "Project Workspace",
+      "surface": "operator",
+      "state": "loading",
+      "required": true
+    },
+    {
+      "templateId": "O10",
+      "page": "Project Workspace",
+      "surface": "operator",
+      "state": "empty",
+      "required": true
+    },
+    {
+      "templateId": "O10",
+      "page": "Project Workspace",
+      "surface": "operator",
+      "state": "populated",
+      "required": true
+    },
+    {
+      "templateId": "O10",
+      "page": "Project Workspace",
+      "surface": "operator",
+      "state": "partial",
+      "required": true
+    },
+    {
+      "templateId": "O10",
+      "page": "Project Workspace",
+      "surface": "operator",
+      "state": "error",
+      "required": true
+    },
+    {
+      "templateId": "O10",
+      "page": "Project Workspace",
+      "surface": "operator",
+      "state": "permission-denied",
+      "required": true
+    },
+    {
+      "templateId": "O10",
+      "page": "Project Workspace",
+      "surface": "operator",
+      "state": "disabled-account",
+      "required": true
+    },
+    {
+      "templateId": "O10",
+      "page": "Project Workspace",
+      "surface": "operator",
+      "state": "stale-integration",
+      "required": true
+    },
+    {
+      "templateId": "O10",
+      "page": "Project Workspace",
+      "surface": "operator",
+      "state": "reconciliation-required",
+      "required": true
+    },
+    {
+      "templateId": "O11",
+      "page": "Crew Assignment",
+      "surface": "operator",
+      "state": "loading",
+      "required": true
+    },
+    {
+      "templateId": "O11",
+      "page": "Crew Assignment",
+      "surface": "operator",
+      "state": "empty",
+      "required": true
+    },
+    {
+      "templateId": "O11",
+      "page": "Crew Assignment",
+      "surface": "operator",
+      "state": "populated",
+      "required": true
+    },
+    {
+      "templateId": "O11",
+      "page": "Crew Assignment",
+      "surface": "operator",
+      "state": "partial",
+      "required": true
+    },
+    {
+      "templateId": "O11",
+      "page": "Crew Assignment",
+      "surface": "operator",
+      "state": "error",
+      "required": true
+    },
+    {
+      "templateId": "O11",
+      "page": "Crew Assignment",
+      "surface": "operator",
+      "state": "permission-denied",
+      "required": true
+    },
+    {
+      "templateId": "O11",
+      "page": "Crew Assignment",
+      "surface": "operator",
+      "state": "disabled-account",
+      "required": true
+    },
+    {
+      "templateId": "O11",
+      "page": "Crew Assignment",
+      "surface": "operator",
+      "state": "stale-integration",
+      "required": true
+    },
+    {
+      "templateId": "O11",
+      "page": "Crew Assignment",
+      "surface": "operator",
+      "state": "reconciliation-required",
+      "required": true
+    },
+    {
+      "templateId": "O11",
+      "page": "Crew Assignment",
+      "surface": "operator",
+      "state": "conflict",
+      "required": true
+    },
+    {
+      "templateId": "O12",
+      "page": "Files / Vault",
+      "surface": "operator",
+      "state": "loading",
+      "required": true
+    },
+    {
+      "templateId": "O12",
+      "page": "Files / Vault",
+      "surface": "operator",
+      "state": "empty",
+      "required": true
+    },
+    {
+      "templateId": "O12",
+      "page": "Files / Vault",
+      "surface": "operator",
+      "state": "populated",
+      "required": true
+    },
+    {
+      "templateId": "O12",
+      "page": "Files / Vault",
+      "surface": "operator",
+      "state": "partial",
+      "required": true
+    },
+    {
+      "templateId": "O12",
+      "page": "Files / Vault",
+      "surface": "operator",
+      "state": "error",
+      "required": true
+    },
+    {
+      "templateId": "O12",
+      "page": "Files / Vault",
+      "surface": "operator",
+      "state": "permission-denied",
+      "required": true
+    },
+    {
+      "templateId": "O12",
+      "page": "Files / Vault",
+      "surface": "operator",
+      "state": "disabled-account",
+      "required": true
+    },
+    {
+      "templateId": "O12",
+      "page": "Files / Vault",
+      "surface": "operator",
+      "state": "stale-integration",
+      "required": true
+    },
+    {
+      "templateId": "O12",
+      "page": "Files / Vault",
+      "surface": "operator",
+      "state": "reconciliation-required",
+      "required": true
+    },
+    {
+      "templateId": "O12",
+      "page": "Files / Vault",
+      "surface": "operator",
+      "state": "scan-pending",
+      "required": true
+    },
+    {
+      "templateId": "O12",
+      "page": "Files / Vault",
+      "surface": "operator",
+      "state": "quarantined",
+      "required": true
+    },
+    {
+      "templateId": "O12",
+      "page": "Files / Vault",
+      "surface": "operator",
+      "state": "retention-due",
+      "required": true
+    },
+    {
+      "templateId": "O13",
+      "page": "Change Orders",
+      "surface": "operator",
+      "state": "loading",
+      "required": true
+    },
+    {
+      "templateId": "O13",
+      "page": "Change Orders",
+      "surface": "operator",
+      "state": "empty",
+      "required": true
+    },
+    {
+      "templateId": "O13",
+      "page": "Change Orders",
+      "surface": "operator",
+      "state": "populated",
+      "required": true
+    },
+    {
+      "templateId": "O13",
+      "page": "Change Orders",
+      "surface": "operator",
+      "state": "partial",
+      "required": true
+    },
+    {
+      "templateId": "O13",
+      "page": "Change Orders",
+      "surface": "operator",
+      "state": "error",
+      "required": true
+    },
+    {
+      "templateId": "O13",
+      "page": "Change Orders",
+      "surface": "operator",
+      "state": "permission-denied",
+      "required": true
+    },
+    {
+      "templateId": "O13",
+      "page": "Change Orders",
+      "surface": "operator",
+      "state": "disabled-account",
+      "required": true
+    },
+    {
+      "templateId": "O13",
+      "page": "Change Orders",
+      "surface": "operator",
+      "state": "stale-integration",
+      "required": true
+    },
+    {
+      "templateId": "O13",
+      "page": "Change Orders",
+      "surface": "operator",
+      "state": "reconciliation-required",
+      "required": true
+    },
+    {
+      "templateId": "O14",
+      "page": "Tasks / SLA",
+      "surface": "operator",
+      "state": "loading",
+      "required": true
+    },
+    {
+      "templateId": "O14",
+      "page": "Tasks / SLA",
+      "surface": "operator",
+      "state": "empty",
+      "required": true
+    },
+    {
+      "templateId": "O14",
+      "page": "Tasks / SLA",
+      "surface": "operator",
+      "state": "populated",
+      "required": true
+    },
+    {
+      "templateId": "O14",
+      "page": "Tasks / SLA",
+      "surface": "operator",
+      "state": "partial",
+      "required": true
+    },
+    {
+      "templateId": "O14",
+      "page": "Tasks / SLA",
+      "surface": "operator",
+      "state": "error",
+      "required": true
+    },
+    {
+      "templateId": "O14",
+      "page": "Tasks / SLA",
+      "surface": "operator",
+      "state": "permission-denied",
+      "required": true
+    },
+    {
+      "templateId": "O14",
+      "page": "Tasks / SLA",
+      "surface": "operator",
+      "state": "disabled-account",
+      "required": true
+    },
+    {
+      "templateId": "O14",
+      "page": "Tasks / SLA",
+      "surface": "operator",
+      "state": "stale-integration",
+      "required": true
+    },
+    {
+      "templateId": "O14",
+      "page": "Tasks / SLA",
+      "surface": "operator",
+      "state": "reconciliation-required",
+      "required": true
+    },
+    {
+      "templateId": "O14",
+      "page": "Tasks / SLA",
+      "surface": "operator",
+      "state": "overdue",
+      "required": true
+    },
+    {
+      "templateId": "O15",
+      "page": "Automation Center",
+      "surface": "operator",
+      "state": "loading",
+      "required": true
+    },
+    {
+      "templateId": "O15",
+      "page": "Automation Center",
+      "surface": "operator",
+      "state": "empty",
+      "required": true
+    },
+    {
+      "templateId": "O15",
+      "page": "Automation Center",
+      "surface": "operator",
+      "state": "populated",
+      "required": true
+    },
+    {
+      "templateId": "O15",
+      "page": "Automation Center",
+      "surface": "operator",
+      "state": "partial",
+      "required": true
+    },
+    {
+      "templateId": "O15",
+      "page": "Automation Center",
+      "surface": "operator",
+      "state": "error",
+      "required": true
+    },
+    {
+      "templateId": "O15",
+      "page": "Automation Center",
+      "surface": "operator",
+      "state": "permission-denied",
+      "required": true
+    },
+    {
+      "templateId": "O15",
+      "page": "Automation Center",
+      "surface": "operator",
+      "state": "disabled-account",
+      "required": true
+    },
+    {
+      "templateId": "O15",
+      "page": "Automation Center",
+      "surface": "operator",
+      "state": "stale-integration",
+      "required": true
+    },
+    {
+      "templateId": "O15",
+      "page": "Automation Center",
+      "surface": "operator",
+      "state": "reconciliation-required",
+      "required": true
+    },
+    {
+      "templateId": "O15",
+      "page": "Automation Center",
+      "surface": "operator",
+      "state": "paused",
+      "required": true
+    },
+    {
+      "templateId": "O15",
+      "page": "Automation Center",
+      "surface": "operator",
+      "state": "retrying",
+      "required": true
+    },
+    {
+      "templateId": "O15",
+      "page": "Automation Center",
+      "surface": "operator",
+      "state": "approval-required",
+      "required": true
+    },
+    {
+      "templateId": "O16",
+      "page": "Integration Health",
+      "surface": "operator",
+      "state": "loading",
+      "required": true
+    },
+    {
+      "templateId": "O16",
+      "page": "Integration Health",
+      "surface": "operator",
+      "state": "empty",
+      "required": true
+    },
+    {
+      "templateId": "O16",
+      "page": "Integration Health",
+      "surface": "operator",
+      "state": "populated",
+      "required": true
+    },
+    {
+      "templateId": "O16",
+      "page": "Integration Health",
+      "surface": "operator",
+      "state": "partial",
+      "required": true
+    },
+    {
+      "templateId": "O16",
+      "page": "Integration Health",
+      "surface": "operator",
+      "state": "error",
+      "required": true
+    },
+    {
+      "templateId": "O16",
+      "page": "Integration Health",
+      "surface": "operator",
+      "state": "permission-denied",
+      "required": true
+    },
+    {
+      "templateId": "O16",
+      "page": "Integration Health",
+      "surface": "operator",
+      "state": "disabled-account",
+      "required": true
+    },
+    {
+      "templateId": "O16",
+      "page": "Integration Health",
+      "surface": "operator",
+      "state": "stale-integration",
+      "required": true
+    },
+    {
+      "templateId": "O16",
+      "page": "Integration Health",
+      "surface": "operator",
+      "state": "reconciliation-required",
+      "required": true
+    },
+    {
+      "templateId": "O16",
+      "page": "Integration Health",
+      "surface": "operator",
+      "state": "disconnected",
+      "required": true
+    },
+    {
+      "templateId": "O16",
+      "page": "Integration Health",
+      "surface": "operator",
+      "state": "degraded",
+      "required": true
+    },
+    {
+      "templateId": "O16",
+      "page": "Integration Health",
+      "surface": "operator",
+      "state": "credential-expiring",
+      "required": true
+    },
+    {
+      "templateId": "O17",
+      "page": "Content / CMS",
+      "surface": "operator",
+      "state": "loading",
+      "required": true
+    },
+    {
+      "templateId": "O17",
+      "page": "Content / CMS",
+      "surface": "operator",
+      "state": "empty",
+      "required": true
+    },
+    {
+      "templateId": "O17",
+      "page": "Content / CMS",
+      "surface": "operator",
+      "state": "populated",
+      "required": true
+    },
+    {
+      "templateId": "O17",
+      "page": "Content / CMS",
+      "surface": "operator",
+      "state": "partial",
+      "required": true
+    },
+    {
+      "templateId": "O17",
+      "page": "Content / CMS",
+      "surface": "operator",
+      "state": "error",
+      "required": true
+    },
+    {
+      "templateId": "O17",
+      "page": "Content / CMS",
+      "surface": "operator",
+      "state": "permission-denied",
+      "required": true
+    },
+    {
+      "templateId": "O17",
+      "page": "Content / CMS",
+      "surface": "operator",
+      "state": "disabled-account",
+      "required": true
+    },
+    {
+      "templateId": "O17",
+      "page": "Content / CMS",
+      "surface": "operator",
+      "state": "stale-integration",
+      "required": true
+    },
+    {
+      "templateId": "O17",
+      "page": "Content / CMS",
+      "surface": "operator",
+      "state": "reconciliation-required",
+      "required": true
+    },
+    {
+      "templateId": "O17",
+      "page": "Content / CMS",
+      "surface": "operator",
+      "state": "draft",
+      "required": true
+    },
+    {
+      "templateId": "O17",
+      "page": "Content / CMS",
+      "surface": "operator",
+      "state": "review-required",
+      "required": true
+    },
+    {
+      "templateId": "O17",
+      "page": "Content / CMS",
+      "surface": "operator",
+      "state": "published",
+      "required": true
+    },
+    {
+      "templateId": "O17",
+      "page": "Content / CMS",
+      "surface": "operator",
+      "state": "archived",
+      "required": true
+    },
+    {
+      "templateId": "O18",
+      "page": "SEO / GBP Workspace",
+      "surface": "operator",
+      "state": "loading",
+      "required": true
+    },
+    {
+      "templateId": "O18",
+      "page": "SEO / GBP Workspace",
+      "surface": "operator",
+      "state": "empty",
+      "required": true
+    },
+    {
+      "templateId": "O18",
+      "page": "SEO / GBP Workspace",
+      "surface": "operator",
+      "state": "populated",
+      "required": true
+    },
+    {
+      "templateId": "O18",
+      "page": "SEO / GBP Workspace",
+      "surface": "operator",
+      "state": "partial",
+      "required": true
+    },
+    {
+      "templateId": "O18",
+      "page": "SEO / GBP Workspace",
+      "surface": "operator",
+      "state": "error",
+      "required": true
+    },
+    {
+      "templateId": "O18",
+      "page": "SEO / GBP Workspace",
+      "surface": "operator",
+      "state": "permission-denied",
+      "required": true
+    },
+    {
+      "templateId": "O18",
+      "page": "SEO / GBP Workspace",
+      "surface": "operator",
+      "state": "disabled-account",
+      "required": true
+    },
+    {
+      "templateId": "O18",
+      "page": "SEO / GBP Workspace",
+      "surface": "operator",
+      "state": "stale-integration",
+      "required": true
+    },
+    {
+      "templateId": "O18",
+      "page": "SEO / GBP Workspace",
+      "surface": "operator",
+      "state": "reconciliation-required",
+      "required": true
+    },
+    {
+      "templateId": "O18",
+      "page": "SEO / GBP Workspace",
+      "surface": "operator",
+      "state": "approval-required",
+      "required": true
+    },
+    {
+      "templateId": "O19",
+      "page": "Reviews / Referrals",
+      "surface": "operator",
+      "state": "loading",
+      "required": true
+    },
+    {
+      "templateId": "O19",
+      "page": "Reviews / Referrals",
+      "surface": "operator",
+      "state": "empty",
+      "required": true
+    },
+    {
+      "templateId": "O19",
+      "page": "Reviews / Referrals",
+      "surface": "operator",
+      "state": "populated",
+      "required": true
+    },
+    {
+      "templateId": "O19",
+      "page": "Reviews / Referrals",
+      "surface": "operator",
+      "state": "partial",
+      "required": true
+    },
+    {
+      "templateId": "O19",
+      "page": "Reviews / Referrals",
+      "surface": "operator",
+      "state": "error",
+      "required": true
+    },
+    {
+      "templateId": "O19",
+      "page": "Reviews / Referrals",
+      "surface": "operator",
+      "state": "permission-denied",
+      "required": true
+    },
+    {
+      "templateId": "O19",
+      "page": "Reviews / Referrals",
+      "surface": "operator",
+      "state": "disabled-account",
+      "required": true
+    },
+    {
+      "templateId": "O19",
+      "page": "Reviews / Referrals",
+      "surface": "operator",
+      "state": "stale-integration",
+      "required": true
+    },
+    {
+      "templateId": "O19",
+      "page": "Reviews / Referrals",
+      "surface": "operator",
+      "state": "reconciliation-required",
+      "required": true
+    },
+    {
+      "templateId": "O20",
+      "page": "Analytics / Attribution",
+      "surface": "operator",
+      "state": "loading",
+      "required": true
+    },
+    {
+      "templateId": "O20",
+      "page": "Analytics / Attribution",
+      "surface": "operator",
+      "state": "empty",
+      "required": true
+    },
+    {
+      "templateId": "O20",
+      "page": "Analytics / Attribution",
+      "surface": "operator",
+      "state": "populated",
+      "required": true
+    },
+    {
+      "templateId": "O20",
+      "page": "Analytics / Attribution",
+      "surface": "operator",
+      "state": "partial",
+      "required": true
+    },
+    {
+      "templateId": "O20",
+      "page": "Analytics / Attribution",
+      "surface": "operator",
+      "state": "error",
+      "required": true
+    },
+    {
+      "templateId": "O20",
+      "page": "Analytics / Attribution",
+      "surface": "operator",
+      "state": "permission-denied",
+      "required": true
+    },
+    {
+      "templateId": "O20",
+      "page": "Analytics / Attribution",
+      "surface": "operator",
+      "state": "disabled-account",
+      "required": true
+    },
+    {
+      "templateId": "O20",
+      "page": "Analytics / Attribution",
+      "surface": "operator",
+      "state": "stale-integration",
+      "required": true
+    },
+    {
+      "templateId": "O20",
+      "page": "Analytics / Attribution",
+      "surface": "operator",
+      "state": "reconciliation-required",
+      "required": true
+    },
+    {
+      "templateId": "O20",
+      "page": "Analytics / Attribution",
+      "surface": "operator",
+      "state": "data-lag",
+      "required": true
+    },
+    {
+      "templateId": "O20",
+      "page": "Analytics / Attribution",
+      "surface": "operator",
+      "state": "reconciliation-mismatch",
+      "required": true
+    },
+    {
+      "templateId": "O21",
+      "page": "Users / Roles",
+      "surface": "operator",
+      "state": "loading",
+      "required": true
+    },
+    {
+      "templateId": "O21",
+      "page": "Users / Roles",
+      "surface": "operator",
+      "state": "empty",
+      "required": true
+    },
+    {
+      "templateId": "O21",
+      "page": "Users / Roles",
+      "surface": "operator",
+      "state": "populated",
+      "required": true
+    },
+    {
+      "templateId": "O21",
+      "page": "Users / Roles",
+      "surface": "operator",
+      "state": "partial",
+      "required": true
+    },
+    {
+      "templateId": "O21",
+      "page": "Users / Roles",
+      "surface": "operator",
+      "state": "error",
+      "required": true
+    },
+    {
+      "templateId": "O21",
+      "page": "Users / Roles",
+      "surface": "operator",
+      "state": "permission-denied",
+      "required": true
+    },
+    {
+      "templateId": "O21",
+      "page": "Users / Roles",
+      "surface": "operator",
+      "state": "disabled-account",
+      "required": true
+    },
+    {
+      "templateId": "O21",
+      "page": "Users / Roles",
+      "surface": "operator",
+      "state": "stale-integration",
+      "required": true
+    },
+    {
+      "templateId": "O21",
+      "page": "Users / Roles",
+      "surface": "operator",
+      "state": "reconciliation-required",
+      "required": true
+    },
+    {
+      "templateId": "O21",
+      "page": "Users / Roles",
+      "surface": "operator",
+      "state": "invite-pending",
+      "required": true
+    },
+    {
+      "templateId": "O21",
+      "page": "Users / Roles",
+      "surface": "operator",
+      "state": "disabled",
+      "required": true
+    },
+    {
+      "templateId": "O21",
+      "page": "Users / Roles",
+      "surface": "operator",
+      "state": "MFA-required",
+      "required": true
+    },
+    {
+      "templateId": "O22",
+      "page": "Settings",
+      "surface": "operator",
+      "state": "loading",
+      "required": true
+    },
+    {
+      "templateId": "O22",
+      "page": "Settings",
+      "surface": "operator",
+      "state": "empty",
+      "required": true
+    },
+    {
+      "templateId": "O22",
+      "page": "Settings",
+      "surface": "operator",
+      "state": "populated",
+      "required": true
+    },
+    {
+      "templateId": "O22",
+      "page": "Settings",
+      "surface": "operator",
+      "state": "partial",
+      "required": true
+    },
+    {
+      "templateId": "O22",
+      "page": "Settings",
+      "surface": "operator",
+      "state": "error",
+      "required": true
+    },
+    {
+      "templateId": "O22",
+      "page": "Settings",
+      "surface": "operator",
+      "state": "permission-denied",
+      "required": true
+    },
+    {
+      "templateId": "O22",
+      "page": "Settings",
+      "surface": "operator",
+      "state": "disabled-account",
+      "required": true
+    },
+    {
+      "templateId": "O22",
+      "page": "Settings",
+      "surface": "operator",
+      "state": "stale-integration",
+      "required": true
+    },
+    {
+      "templateId": "O22",
+      "page": "Settings",
+      "surface": "operator",
+      "state": "reconciliation-required",
+      "required": true
+    },
+    {
+      "templateId": "O22",
+      "page": "Settings",
+      "surface": "operator",
+      "state": "validation-error",
+      "required": true
+    }
+  ]
+}

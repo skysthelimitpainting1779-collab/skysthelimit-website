@@ -1,0 +1,132 @@
+{
+  "kind": "g20-live-source-inventory",
+  "capturedAt": "2026-07-27T21:45:44.9470290Z",
+  "mode": "read-only-sanitized-metadata",
+  "supabase": {
+    "projectId": "ouykfhoxlrkjgscdjjqg",
+    "projectName": "supabase-skysthelimitpaintingllc",
+    "region": "us-east-1",
+    "status": "ACTIVE_HEALTHY",
+    "postgresVersion": "17.6.1.127",
+    "queries": [
+      {
+        "tool": "supabase.list_tables",
+        "arguments": {
+          "schemas": [
+            "public"
+          ],
+          "verbose": false
+        },
+        "result": {
+          "tableCount": 11,
+          "aggregateRows": 77,
+          "rlsEnabledTableCount": 11,
+          "tables": [
+            {
+              "name": "public.leads",
+              "rows": 13,
+              "rlsEnabled": true
+            },
+            {
+              "name": "public.lead_events",
+              "rows": 52,
+              "rlsEnabled": true
+            },
+            {
+              "name": "public.customers",
+              "rows": 0,
+              "rlsEnabled": true
+            },
+            {
+              "name": "public.estimates",
+              "rows": 0,
+              "rlsEnabled": true
+            },
+            {
+              "name": "public.jobs",
+              "rows": 0,
+              "rlsEnabled": true
+            },
+            {
+              "name": "public.job_photos",
+              "rows": 0,
+              "rlsEnabled": true
+            },
+            {
+              "name": "public.profiles",
+              "rows": 0,
+              "rlsEnabled": true
+            },
+            {
+              "name": "public.settings",
+              "rows": 1,
+              "rlsEnabled": true
+            },
+            {
+              "name": "public.testimonials",
+              "rows": 4,
+              "rlsEnabled": true
+            },
+            {
+              "name": "public.portfolio",
+              "rows": 4,
+              "rlsEnabled": true
+            },
+            {
+              "name": "public.service_areas",
+              "rows": 3,
+              "rlsEnabled": true
+            }
+          ]
+        }
+      },
+      {
+        "tool": "supabase.execute_sql",
+        "query": "select (select count(*)::int from pg_catalog.pg_tables where schemaname = 'public') as public_table_count, (select count(*)::int from pg_catalog.pg_class c join pg_catalog.pg_namespace n on n.oid = c.relnamespace where n.nspname = 'public' and c.relkind = 'r' and c.relrowsecurity) as rls_enabled_table_count, (select count(*)::int from information_schema.tables where table_schema = 'public' and (table_name ilike '%payload%' or table_name ilike '%directus%')) as payload_directus_table_count, (select count(*)::int from storage.buckets) as storage_bucket_count, (select count(*)::int from storage.objects) as storage_object_count;",
+        "result": {
+          "publicTableCount": 11,
+          "rlsEnabledTableCount": 11,
+          "payloadDirectusTableCount": 0,
+          "storageBucketCount": 2,
+          "storageObjectCount": 0
+        }
+      }
+    ]
+  },
+  "vercel": {
+    "team": "skysthelimitpainting1779-4125s-projects",
+    "project": "website",
+    "context7": {
+      "libraryId": "/websites/vercel",
+      "contract": "vercel env ls lists all environment variables configured for the linked project"
+    },
+    "command": "npx vercel env ls",
+    "relevantNamesAndScopes": [
+      {
+        "name": "SUPABASE_DB_URL",
+        "scopes": [
+          "Production"
+        ]
+      },
+      {
+        "name": "SUPABASE_URL",
+        "scopes": [
+          "Production",
+          "Preview",
+          "Development"
+        ]
+      }
+    ],
+    "directusUrlNamesPresent": false,
+    "checkedNames": [
+      "DIRECTUS_URL",
+      "NEXT_PUBLIC_DIRECTUS_URL"
+    ]
+  },
+  "privacy": {
+    "rowPayloadsRead": false,
+    "personalIdentifiersRetained": false,
+    "secretValuesRead": false,
+    "secretHashesRetained": false
+  }
+}

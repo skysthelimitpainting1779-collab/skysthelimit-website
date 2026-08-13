@@ -1,0 +1,44 @@
+{
+  "nodeId": "STL-000",
+  "surface": "public-marketing | customer-portal | operator-cockpit",
+  "routes": [],
+  "designSha256": "",
+  "templateIds": [],
+  "skillsLoaded": [],
+  "uiUxProMaxQueries": [],
+  "impeccablePasses": [
+    "shape",
+    "audit",
+    "harden",
+    "polish"
+  ],
+  "tasteDisposition": "required-and-applied | not-applied-scope-exclusion",
+  "designLint": {
+    "passed": false,
+    "report": ""
+  },
+  "antiSlopLint": {
+    "passed": false,
+    "report": "",
+    "warningsResolved": []
+  },
+  "screenshots": {
+    "desktop": "",
+    "mobile": "",
+    "additional": []
+  },
+  "accessibility": {
+    "keyboard": false,
+    "focus": false,
+    "contrast": false,
+    "reducedMotion": false,
+    "screenReaderLabels": false
+  },
+  "vercel": {
+    "deploymentId": "",
+    "previewUrl": ""
+  },
+  "deviations": [],
+  "reviewer": "",
+  "reviewedAt": ""
+}

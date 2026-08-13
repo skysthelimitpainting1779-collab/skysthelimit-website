@@ -1,0 +1,134 @@
+{
+  "externalCache": {
+    "scheme": "external-cache",
+    "portable": true,
+    "localMappingRequired": true,
+    "purpose": "Source archives, Git checkouts, and rollback backups are retained outside the repository."
+  },
+  "package": {
+    "archive": "external-cache://downloads/skys-limit-post-b20-design-governed-execute.zip",
+    "archiveSha256": "9f2cc094f2613836aea5f225675c026bee3dfe49354e3a2a7c6b2ff6371405c3",
+    "entries": 387,
+    "manifestEntries": 386,
+    "correctedInstallerSha256": "6797489788df76ccd8c3289030011160e67278ef6d3559d075572db23dd9bc05",
+    "correction": "Select only single-skill source candidates that contain SKILL.md."
+  },
+  "installed": [
+    {
+      "name": "impeccable",
+      "destination": ".agents/skills/impeccable",
+      "sha256": "db18ed1dad20b082892004d8bcbdbf2aa14705ad2475f32cc62f4c1bf16430ae"
+    },
+    {
+      "name": "ui-ux-pro-max",
+      "destination": ".agents/skills/ui-ux-pro-max",
+      "sha256": "2eaf153a0be2e3c221a1122da5a024546dd31a011c54420f8a92a08751e4be39"
+    },
+    {
+      "name": "brandkit",
+      "destination": ".agents/skills/brandkit",
+      "sha256": "ebd576118efa8a4dc3319792ba0f436c827529be6113b1044267ea88f9058a97"
+    },
+    {
+      "name": "industrial-brutalist-ui",
+      "destination": ".agents/skills/industrial-brutalist-ui",
+      "sha256": "358876823a3b0eadd0f7377328815a9053c731b9bdc21ef47e3e1b7350827a8b"
+    },
+    {
+      "name": "gpt-taste",
+      "destination": ".agents/skills/gpt-taste",
+      "sha256": "6171fd26d8f13eb23ccd68219120f69a5e9f53cf0f72d09f8d54af15863bce34"
+    },
+    {
+      "name": "image-to-code",
+      "destination": ".agents/skills/image-to-code",
+      "sha256": "3bcbf87e5e72d1182bdcfa9c98c5b5ffe2e8b707ad96789fdc7668a2e1c4c690"
+    },
+    {
+      "name": "imagegen-frontend-mobile",
+      "destination": ".agents/skills/imagegen-frontend-mobile",
+      "sha256": "b1deea7c74b2895fa61ae27c02eab15e7dfd1dd868a0fe73ca11ddf1cc498211"
+    },
+    {
+      "name": "imagegen-frontend-web",
+      "destination": ".agents/skills/imagegen-frontend-web",
+      "sha256": "127363c48d36c5962a2aa4055c0d0483c16a7488a11f6db86043f725d729067f"
+    },
+    {
+      "name": "minimalist-ui",
+      "destination": ".agents/skills/minimalist-ui",
+      "sha256": "67a564d1dc7ced73d2dfe8237b3d429ef2788eedca097109e9424930b2c94a65"
+    },
+    {
+      "name": "full-output-enforcement",
+      "destination": ".agents/skills/full-output-enforcement",
+      "sha256": "0fea06230f4fc07de5eefbdcf9bd1168b9d3f89cc1e1c904a2b72b1435a159c5"
+    },
+    {
+      "name": "redesign-existing-projects",
+      "destination": ".agents/skills/redesign-existing-projects",
+      "sha256": "8ab7d9e26517fdee6ef08bbbf51d92f7c85864d1bb76bc85944ce1669046a28e"
+    },
+    {
+      "name": "high-end-visual-design",
+      "destination": ".agents/skills/high-end-visual-design",
+      "sha256": "6d0005e72a19d5dd7ad8ab7f4ffd5e72380c81b7c005f405055103baa4b4f5e9"
+    },
+    {
+      "name": "stitch-design-taste",
+      "destination": ".agents/skills/stitch-design-taste",
+      "sha256": "0e077f88477c56c322cb08180551a7ec4912f09fd796e64d6c35c5001b2953cc"
+    },
+    {
+      "name": "design-taste-frontend",
+      "destination": ".agents/skills/design-taste-frontend",
+      "sha256": "ceb4d2cb90ce429cdeecd73062b29abe11da3b7c2f3fec543a7939df6b7c14e9"
+    },
+    {
+      "name": "design-taste-frontend-v1",
+      "destination": ".agents/skills/design-taste-frontend-v1",
+      "sha256": "6efa3f08e0aebfaca1bb26ddad282c0c92249895a75aae31e39c07e0f214a625"
+    }
+  ],
+  "backedUp": [
+    {
+      "name": "impeccable",
+      "backup": "external-cache://b25-runtime-47492b88/skill-backups/2026-07-27T22-48-45-185Z/impeccable"
+    },
+    {
+      "name": "ui-ux-pro-max",
+      "backup": "external-cache://b25-runtime-47492b88/skill-backups/2026-07-27T22-48-45-185Z/ui-ux-pro-max"
+    }
+  ],
+  "conflicts": [
+    {
+      "name": "ui-ux-pro-max",
+      "resolution": "Replaced the preexisting skill with the pinned upstream source after preserving the original on E:."
+    },
+    {
+      "name": "installer-source-selection",
+      "resolution": "The first upstream candidate lacked SKILL.md; the cached installer was corrected to require SKILL.md before selection."
+    }
+  ],
+  "sources": [
+    {
+      "id": "impeccable",
+      "commit": "5e572c8b8af3e108ab52ce4180adb4d6eb1c2ebc",
+      "license": "Apache-2.0",
+      "checkout": "external-cache://b25-runtime-47492b88/vendor-sources/design/impeccable-5e572c8b8af3"
+    },
+    {
+      "id": "ui-ux-pro-max",
+      "commit": "3b5df7547964f0cb3424de74cff55b69039250d3",
+      "license": "MIT",
+      "checkout": "external-cache://b25-runtime-47492b88/vendor-sources/design/ui-ux-pro-max-3b5df7547964"
+    },
+    {
+      "id": "taste-skill-full-bundle",
+      "commit": "e988add20dab0fa97d7a76781c48961c8184288e",
+      "license": "MIT",
+      "checkout": "external-cache://b25-runtime-47492b88/vendor-sources/design/taste-skill-full-bundle-e988add20dab"
+    }
+  ],
+  "errors": []
+}

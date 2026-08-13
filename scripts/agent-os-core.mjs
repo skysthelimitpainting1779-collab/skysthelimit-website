@@ -10,10 +10,12 @@ import {
   readdirSync,
   writeFileSync,
   readFileSync,
+  realpathSync,
   renameSync,
   unlinkSync,
 } from 'node:fs';
-import { join } from 'node:path';
+import { basename, join, resolve } from 'node:path';
+import { tmpdir } from 'node:os';
 import crypto from 'node:crypto';
 
 export const MAX_TASK_ATTEMPTS = 3;
@@ -42,7 +44,6 @@ export function ensureControlPlane(root = process.cwd()) {
     join(agents, 'workflows'),
     join(agents, 'goals'),
     join(agents, 'goals', '_eval'),
-    join(agents, 'goals', '_harness'),
     join(root, '.learnings'),
   ];
   for (const d of dirs) ensureDir(d);
@@ -221,30 +222,88 @@ export function pickNextTask(tasks, now = Date.now()) {
   return candidates[0] || null;
 }
 
-export function hasCheckpointForTask(db, taskId, root = process.cwd()) {
-  if (!taskId) return false;
+function canonicalRepositoryPath(root) {
+  const resolved = resolve(String(root || process.cwd()));
+  let canonical = resolved;
+  try {
+    canonical = realpathSync.native(resolved);
+  } catch {
+    // A not-yet-created root still has a stable absolute identity.
+  }
+  const normalized = canonical.replace(/\\/g, '/').replace(/\/+$/, '');
+  return process.platform === 'win32' ? normalized.toLowerCase() : normalized;
+}
+
+export function getRepositoryStateNamespace(root = process.cwd()) {
+  const canonical = canonicalRepositoryPath(root);
+  const label = basename(canonical).replace(/[^a-zA-Z0-9._-]+/g, '-').slice(0, 48) || 'repository';
+  const digest = crypto.createHash('sha256').update(canonical).digest('hex').slice(0, 16);
+  return `${label}-${digest}`;
+}
+
+function getTaskCheckpointDir(checkpointRoot, taskId) {
+  const value = String(taskId);
+  const label = value.replace(/[^a-zA-Z0-9._-]+/g, '-').slice(0, 48) || 'task';
+  const digest = crypto.createHash('sha256').update(value).digest('hex').slice(0, 16);
+  return join(checkpointRoot, `${label}-${digest}`);
+}
+
+export function getAgentCheckpointDir(env = process.env, root = process.cwd()) {
+  const configured = String(env.ANTIGRAVITY_EXECUTABLE_DATA_DIR || '').trim();
+  const stateRoot = configured || join(tmpdir(), 'skysthelimit-agent-state');
+  return join(stateRoot, 'agent-os', getRepositoryStateNamespace(root), 'checkpoints');
+}
+
+export function hasCheckpointForTask(
+  db,
+  taskId,
+  root = process.cwd(),
+  dataDir
+) {
+  const canonicalTaskId = String(taskId || '');
+  if (!canonicalTaskId) return false;
 
   // In-memory first
   if (db && Array.isArray(db.checkpoints)) {
-    if (db.checkpoints.some((c) => c && (c.task_id === taskId || String(c.id || '').includes(taskId)))) {
+    if (
+      db.checkpoints.some(
+        (checkpoint) =>
+          checkpoint && String(checkpoint.task_id || '') === canonicalTaskId
+      )
+    ) {
       return true;
     }
   }
 
-  // Disk fallback (under goals/_harness — not theater checkpoints/)
-  const dir = join(root, '.agents', 'goals', '_harness');
-  if (!existsSync(dir)) return false;
+  // Dynamic state must stay outside the repository.
+  const taskDir = getTaskCheckpointDir(
+    dataDir || getAgentCheckpointDir(process.env, root),
+    canonicalTaskId
+  );
+  if (!existsSync(taskDir)) return false;
   try {
-    return readdirSync(dir).some((name) => name.includes(taskId));
+    return readdirSync(taskDir).some((name) => name.endsWith('.json'));
   } catch {
     return false;
   }
 }
 
-export function writePhaseCheckpoint(db, { taskId, sessionId, phase, logs = '', root = process.cwd() }) {
-  ensureDir(join(root, '.agents', 'goals', '_harness'));
+export function writePhaseCheckpoint(
+  db,
+  {
+    taskId,
+    sessionId,
+    phase,
+    logs = '',
+    root = process.cwd(),
+    dataDir,
+  }
+) {
+  const checkpointRoot = dataDir || getAgentCheckpointDir(process.env, root);
+  const taskDir = getTaskCheckpointDir(checkpointRoot, taskId);
+  ensureDir(taskDir);
   const chkId = `CHK-${taskId}-${Date.now()}-${phase}`;
-  const planPath = join(root, '.agents', 'goals', '_harness', `${chkId}.json`);
+  const planPath = join(taskDir, `${Date.now()}-${phase}.json`);
   const record = {
     id: chkId,
     task_id: taskId,
@@ -341,7 +400,9 @@ export function assertPhaseEntry(db, task, phase, sessionId, options = {}) {
   const initialPhases = new Set(['PLAN', 'QUERY', 'TRIAGE']);
   if (initialPhases.has(phase)) return { ok: true, seeded: false };
 
-  if (hasCheckpointForTask(db, task.id)) {
+  const root = options.root || process.cwd();
+  const dataDir = options.dataDir || getAgentCheckpointDir(process.env, root);
+  if (hasCheckpointForTask(db, task.id, root, dataDir)) {
     return { ok: true, seeded: false };
   }
 
@@ -352,6 +413,8 @@ export function assertPhaseEntry(db, task, phase, sessionId, options = {}) {
       sessionId,
       phase: 'PLAN',
       logs: `[auto-seed] Entry criteria: seeded PLAN checkpoint before ${phase}`,
+      root,
+      dataDir,
     });
     return { ok: true, seeded: true };
   }

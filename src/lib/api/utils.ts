@@ -29,6 +29,47 @@ export function buildLeadId(): string {
   return `SKY-${stamp}-${random}`;
 }
 
+export function buildIdempotentLeadId(source: string, idempotencyKey: string): string {
+  const normalizedSource = asText(source).toUpperCase().replace(/[^A-Z0-9]+/g, '-') || 'LEAD';
+  let hash = 2166136261;
+  for (const char of `${normalizedSource}:${idempotencyKey}`) {
+    hash ^= char.charCodeAt(0);
+    hash = Math.imul(hash, 16777619);
+  }
+  const digest = Array.from({ length: 3 }, (_, index) =>
+    (Math.imul(hash ^ index, 2246822519) >>> 0).toString(16).padStart(8, '0'),
+  ).join('').slice(0, 24).toUpperCase();
+  return `SKY-${normalizedSource}-${digest}`;
+}
+
+type WebhookSecretResult =
+  | { ok: true }
+  | { ok: false; status: 401 | 503; error: string };
+
+export function verifyRequiredWebhookSecret(
+  expected: string | undefined,
+  provided: string | undefined,
+): WebhookSecretResult {
+  if (!expected) {
+    return {
+      ok: false,
+      status: 503,
+      error: 'Webhook authentication is not configured.',
+    };
+  }
+  if (!provided || provided.length !== expected.length) {
+    return { ok: false, status: 401, error: 'Unauthorized.' };
+  }
+
+  let difference = 0;
+  for (let index = 0; index < expected.length; index += 1) {
+    difference |= expected.charCodeAt(index) ^ provided.charCodeAt(index);
+  }
+  return difference === 0
+    ? { ok: true }
+    : { ok: false, status: 401, error: 'Unauthorized.' };
+}
+
 export function buildManyChatLeadId(): string {
   const stamp = new Date().toISOString().replace(/[-:.TZ]/g, '').slice(0, 14);
   const random = Math.random().toString(36).slice(2, 8).toUpperCase();

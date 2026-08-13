@@ -1,0 +1,4 @@
+interface:
+  display_name: "Convex Migration Operator"
+  short_description: "Safely execute and reconcile Convex imports"
+  default_prompt: "Use $convex-migration-operator to validate, apply, export, and reconcile an approved Convex migration handoff."

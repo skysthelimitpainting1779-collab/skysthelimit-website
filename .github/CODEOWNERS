@@ -1,26 +1,25 @@
-# Code ownership — GitHub requests review from these accounts on PRs.
-# Requires: Settings → Branches → require review from Code Owners (recommended).
-#
-# Accounts:
-#   @skysthelimitpainting1779-collab  — Sky's the Limit Painting LLC website account
-#   @johnnycsv232                     — primary collaborator
+# Code ownership. Rulesets should require review from Code Owners.
+# @skysthelimitpainting1779-collab — company repository owner
+# @johnnycsv232 — primary product and platform collaborator
 
-# Default owner for the entire repository
 * @skysthelimitpainting1779-collab @johnnycsv232
 
-# Website product surface
+# Product surfaces
 /src/ @skysthelimitpainting1779-collab @johnnycsv232
 /public/ @skysthelimitpainting1779-collab @johnnycsv232
+/convex/ @skysthelimitpainting1779-collab @johnnycsv232
 
-# Infra / CI / deploy
+# Platform, delivery, and security boundaries
 /.github/ @skysthelimitpainting1779-collab @johnnycsv232
+/.agents/ @skysthelimitpainting1779-collab @johnnycsv232
+/.codex/ @skysthelimitpainting1779-collab @johnnycsv232
 /scripts/ @skysthelimitpainting1779-collab @johnnycsv232
+/config/ @skysthelimitpainting1779-collab @johnnycsv232
 /vercel.json @skysthelimitpainting1779-collab @johnnycsv232
+/vercel.ts @skysthelimitpainting1779-collab @johnnycsv232
 /package.json @skysthelimitpainting1779-collab @johnnycsv232
 /package-lock.json @skysthelimitpainting1779-collab @johnnycsv232
 
-# Data & backend
+# Legacy migration sources and rollback dependencies
 /supabase/ @skysthelimitpainting1779-collab @johnnycsv232
-
-# Agent OS control plane
-/.agents/ @skysthelimitpainting1779-collab @johnnycsv232
+/payload.config.ts @skysthelimitpainting1779-collab @johnnycsv232

@@ -1,10 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createRateLimiter, asText, escapeHtml, buildLeadId, isPayload, validate } from '@/lib/api/utils';
+import {
+  createRateLimiter,
+  asText,
+  escapeHtml,
+  buildIdempotentLeadId,
+  verifyRequiredWebhookSecret,
+  validate,
+} from '@/lib/api/utils';
+import {
+  persistCanonicalLead,
+  executeLeadDeliveryEffect,
+  type CanonicalLead,
+} from '@/lib/leads/persistence';
 
 const leadToEmail = process.env.LEAD_TO_EMAIL || 'skysthelimitpainting1779@gmail.com';
 
 // Simple in-memory IP rate limiter
 const rateLimit = createRateLimiter(5, 60 * 1000);
+
+function deliveryKey(payload: Record<string, unknown>, effect: string) {
+  return `${asText(payload.leadId)}:${effect}`;
+}
 
 function buildLeadHtml(payload: Record<string, unknown>): string {
   const rows = Object.entries(payload)
@@ -29,6 +45,7 @@ async function sendWithResend(payload: Record<string, unknown>) {
     headers: {
       Authorization: `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
+      'Idempotency-Key': deliveryKey(payload, 'owner-email'),
     },
     body: JSON.stringify({
       from: fromEmail,
@@ -59,6 +76,7 @@ async function sendLeadWebhook(payload: Record<string, unknown>) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'Idempotency-Key': deliveryKey(payload, 'custom-webhook'),
       ...(process.env.LEAD_WEBHOOK_SECRET ? { 'X-Sky-Lead-Secret': process.env.LEAD_WEBHOOK_SECRET } : {}),
     },
     body: JSON.stringify({
@@ -153,6 +171,7 @@ async function sendToHubspot(payload: Record<string, unknown>) {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
+          'Idempotency-Key': deliveryKey(payload, 'hubspot-contact'),
         },
         body: JSON.stringify({ properties }),
       });
@@ -163,6 +182,7 @@ async function sendToHubspot(payload: Record<string, unknown>) {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
+          'Idempotency-Key': deliveryKey(payload, 'hubspot-contact'),
         },
         body: JSON.stringify({ properties }),
       });
@@ -194,6 +214,7 @@ async function sendToHubspot(payload: Record<string, unknown>) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Idempotency-Key': deliveryKey(payload, 'hubspot-form'),
       },
       body: JSON.stringify({
         fields,
@@ -217,12 +238,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 });
   }
 
-  const webhookSecret = process.env.MANYCHAT_WEBHOOK_SECRET;
-  if (webhookSecret) {
-    const provided = req.headers.get('x-manychat-secret') || '';
-    if (provided !== webhookSecret) {
-      return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
-    }
+  const authentication = verifyRequiredWebhookSecret(
+    process.env.MANYCHAT_WEBHOOK_SECRET,
+    req.headers.get('x-manychat-secret') || '',
+  );
+  if (!authentication.ok) {
+    return NextResponse.json(
+      { error: authentication.error },
+      { status: authentication.status },
+    );
   }
 
   let body: any;
@@ -247,7 +271,11 @@ export async function POST(req: NextRequest) {
   const contactMethod = asText(customFields["Preferred Contact"] || customFields.contact_method || 'Text');
   const notes = asText(customFields.Notes || customFields.notes || 'Submitted via ManyChat FB/IG Chatbot');
 
-  const lead = {
+  const idempotencyKey =
+    asText(req.headers.get('idempotency-key')) ||
+    asText(body.subscriber_id || body.id) ||
+    JSON.stringify(body);
+  const lead: CanonicalLead = {
     source: 'ManyChat',
     name,
     phone,
@@ -261,7 +289,7 @@ export async function POST(req: NextRequest) {
     budget,
     contactMethod,
     notes,
-    leadId: buildLeadId(),
+    leadId: buildIdempotentLeadId('manychat', idempotencyKey),
     submittedAt: new Date().toISOString(),
   };
 
@@ -275,11 +303,36 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+    await persistCanonicalLead(lead);
+  } catch (error) {
+    console.error('ManyChat lead persistence failed:', error);
+    return NextResponse.json(
+      { error: 'Lead persistence is temporarily unavailable.' },
+      { status: 503 },
+    );
+  }
+
+  try {
     const delivery = await Promise.allSettled([
-      sendWithResend(lead),
-      sendLeadWebhook(lead),
-      sendToHubspot(lead),
+      executeLeadDeliveryEffect(lead.leadId, 'email_notify', 'resend', () =>
+        sendWithResend(lead),
+      ),
+      executeLeadDeliveryEffect(lead.leadId, 'webhook', 'custom', () =>
+        sendLeadWebhook(lead),
+      ),
+      executeLeadDeliveryEffect(lead.leadId, 'crm', 'hubspot', () =>
+        sendToHubspot(lead),
+      ),
     ]);
+    const anyClaimed = delivery.some(
+      (result) => result.status === 'fulfilled' && result.value.claimed,
+    );
+    if (!anyClaimed) {
+      return NextResponse.json(
+        { ok: true, leadId: lead.leadId, duplicate: true, queued: false },
+        { status: 200 },
+      );
+    }
     const configured = delivery.some((result) => result.status === 'fulfilled' && result.value.configured);
     const failed = delivery.find((result) => result.status === 'rejected');
 
@@ -287,18 +340,19 @@ export async function POST(req: NextRequest) {
       console.error('ManyChat lead delivery failure detail:', failed.reason);
     }
 
-    if (!configured && failed) {
-      throw failed.reason;
-    }
-
     if (!configured) {
       console.error('ManyChat lead delivery error: Lead delivery is not configured yet.');
-      return NextResponse.json({ error: 'Lead delivery platforms not configured in .env', fallback: 'email' }, { status: 500 });
+      return NextResponse.json(
+        { ok: true, leadId: lead.leadId, queued: true },
+        { status: 202 },
+      );
     }
+    return NextResponse.json(
+      { ok: true, leadId: lead.leadId, queued: Boolean(failed) },
+      { status: failed ? 202 : 201 },
+    );
   } catch (error) {
     console.error('ManyChat lead delivery failed with error:', error);
     return NextResponse.json({ error: 'ManyChat lead delivery failed.', fallback: 'email' }, { status: 500 });
   }
-
-  return NextResponse.json({ ok: true, leadId: lead.leadId }, { status: 201 });
 }

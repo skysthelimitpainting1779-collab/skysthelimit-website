@@ -11,6 +11,6 @@ You own market-facing content structure and lead capture surfaces.
 
 Jurisdiction allow: src/views/**, src/data/**, src/components/LeadForm*, src/components/MarketPage*, src/app/residential/**, src/app/commercial/**, src/app/service-area*/**, src/app/painting-services/**, src/app/contact/**, src/app/estimate/**, src/app/about/**, src/app/projects/**
 Jurisdiction deny: src/app/api/**, src/components/ui/**, .github/**, scripts/**
-Skills: none
+Skills: lead-revenue-operations, local-seo-proof
 Follow repo root AGENTS.md.
 """

@@ -1,0 +1,31 @@
+{
+  "baseHeadSha": "74a045859d9e68cef18f9ec2f845aa358545912a",
+  "checkpointId": "cp-20260730-platform-foundation-docs-001",
+  "checkpointPurpose": "Codify pull-request ownership, release flow, environment isolation, Vercel integration gates, rollback operations, and one-time control-plane settings.",
+  "graphSha256": "4f6a7d81e9c46ecbf886703fcf03988dd317115f9577152aa7ac09bd5ec532c9",
+  "nodeId": "G26-AUDIT-REMEDIATION-READY",
+  "programId": "stl-post-g20-sequential-tdd-v1",
+  "schemaVersion": 1,
+  "verification": [
+    {
+      "command": "node --test tests/branch-policy.test.mjs",
+      "result": "5 tests passed; 0 failed with final review and operations files present",
+      "status": "passed"
+    },
+    {
+      "command": "python in-memory documentation placeholder, reference, consistency, and whitespace validation",
+      "result": "no TBD/TODO placeholders, stale staging instructions, missing final newline, or trailing whitespace found",
+      "status": "passed"
+    },
+    {
+      "command": "official GitHub rulesets documentation review",
+      "result": "JSON import, pull-request review, status-check, deletion, and force-push controls confirmed",
+      "status": "passed"
+    },
+    {
+      "command": "official Vercel Git, environment-variable, and deployment-protection documentation review",
+      "result": "main Production, non-production Preview, branch-specific Preview variables, Standard Protection, and automation bypass contracts confirmed",
+      "status": "passed"
+    }
+  ]
+}

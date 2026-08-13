@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "repository": "skysthelimitpainting1779-collab/skys-the-limit-painting-llc-website",
+  "branches": {
+    "production": "main",
+    "integration": "dev",
+    "protected": [
+      "main",
+      "dev"
+    ],
+    "releaseSources": [
+      "dev",
+      "hotfix/*"
+    ],
+    "integrationSources": [
+      "feat/*",
+      "fix/*",
+      "infra/*",
+      "docs/*",
+      "agent/*",
+      "chore/*",
+      "devin/*",
+      "test/*",
+      "refactor/*",
+      "dependabot/*",
+      "renovate/*"
+    ],
+    "directPushAllowed": []
+  },
+  "vercel": {
+    "teamId": "team_bseTA2AuCO6A2fCOVY9ubrJo",
+    "projectId": "prj_L3ZMoQ79YLx9G2o6Lg9OubqO9H8m",
+    "projectName": "website",
+    "statusContext": "Vercel – website",
+    "productionBranch": "main",
+    "integrationPreviewBranch": "dev",
+    "previewHostPatterns": [
+      "website-*.vercel.app",
+      "website-git-*.vercel.app"
+    ],
+    "ignoredBranchPatterns": [
+      "entire/*"
+    ]
+  },
+  "effects": {
+    "productionRequiresHumanApproval": true,
+    "productionPromotionAutomatic": false,
+    "allowProductionSecretsInPreview": false,
+    "allowLivePaymentsInPreview": false,
+    "allowCustomerMessagingInPreview": false
+  }
+}

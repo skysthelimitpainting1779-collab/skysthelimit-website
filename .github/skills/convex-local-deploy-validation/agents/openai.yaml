@@ -1,0 +1,4 @@
+interface:
+  display_name: "Convex Local Deploy Validation"
+  short_description: "Validate Convex functions against a local backend"
+  default_prompt: "Use $convex-local-deploy-validation to generate bindings, push locally, and typecheck Convex functions."

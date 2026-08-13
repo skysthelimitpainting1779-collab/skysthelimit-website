@@ -1,0 +1,87 @@
+{
+  "baseHeadSha": "4c92242ec386d4cd1b91d7cdb88f92eab05edd1f",
+  "checkpointId": "cp-20260728-g26-remediation-001",
+  "completedStage": "stage:G26-AUDIT-REMEDIATION-READY:verify_vercel_preview",
+  "graphSha256": "4f6a7d81e9c46ecbf886703fcf03988dd317115f9577152aa7ac09bd5ec532c9",
+  "nodeId": "G26-AUDIT-REMEDIATION-READY",
+  "programId": "stl-post-g20-sequential-tdd-v1",
+  "providerConfiguration": [
+    {
+      "provider": "Convex",
+      "result": "Preview-only project defaults set; existing branch Preview bound to endpoint-specific Clerk webhook secret; Production unchanged",
+      "status": "verified"
+    },
+    {
+      "provider": "Clerk",
+      "result": "development endpoint targets the exact Convex Preview lifecycle URL and subscribes only to governed lifecycle events",
+      "status": "verified"
+    },
+    {
+      "provider": "Vercel",
+      "result": "duplicate branch webhook secret removed; Convex remains the only runtime secret owner; Production unchanged",
+      "status": "verified"
+    }
+  ],
+  "reviewAudit": [
+    {
+      "reviewer": "Kierkegaard",
+      "status": "no remaining P0/P1/P2 findings after provider and sanitizer re-review",
+      "taskId": "019faab9-3b09-7190-969f-ad4134a5d63d"
+    },
+    {
+      "reviewer": "Galileo",
+      "status": "no remaining P0/P1/P2 findings after provider and sanitizer re-review",
+      "taskId": "019faab9-56e0-7102-9f38-4c7676057db7"
+    }
+  ],
+  "schemaVersion": 1,
+  "verification": [
+    {
+      "command": "npx tsx --test tests/convex-deployment-command.test.mjs tests/convex-migration-operator.test.mjs tests/identity-provider.test.mjs tests/impeccable-codeql-html-filtering.test.mjs tests/security-provider-contracts.test.mjs",
+      "result": "43/43 provider, CLI, identity, sanitizer, and security regressions",
+      "status": "passed"
+    },
+    {
+      "command": "npm test",
+      "result": "473/473 tests",
+      "status": "passed"
+    },
+    {
+      "command": "npm run ci:contract",
+      "status": "passed"
+    },
+    {
+      "command": "npm run lint:ci",
+      "status": "passed"
+    },
+    {
+      "command": "npm run skills:validate",
+      "result": "66 routes and 14 primary skills",
+      "status": "passed"
+    },
+    {
+      "command": "npm audit --audit-level=high",
+      "result": "0 vulnerabilities",
+      "status": "passed"
+    },
+    {
+      "command": "npm run build",
+      "result": "Next.js 16.2.12 production build, TypeScript passed, 44 routes",
+      "status": "passed"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed"
+    },
+    {
+      "command": "SHA-256 mirror comparison for changed agent runtime files",
+      "result": "all .agents and .github copies are byte-identical",
+      "status": "passed"
+    },
+    {
+      "command": "Convex CLI direct Node launcher test on Windows",
+      "result": "installed CLI launched without npx.cmd or shell interpretation",
+      "status": "passed"
+    }
+  ]
+}

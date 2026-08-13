@@ -8,7 +8,7 @@ const exists = (path) => existsSync(new URL(`../${path}`, import.meta.url));
 describe('Tier 1: Feature Coverage', () => {
 
   test('T1.1 Routing & Navigation - Core layout components render successfully', () => {
-    const layout = read('src/app/layout.tsx');
+    const layout = read('src/app/(marketing)/layout.tsx');
     assert.match(layout, /import ConversionHeader/);
     assert.match(layout, /import ConversionFooterCta/);
     assert.ok(exists('src/app/layout.tsx'));
@@ -42,26 +42,26 @@ describe('Tier 1: Feature Coverage', () => {
   });
 
   test('T1.6 Three-Market Content - Home page renders the approved positioning statement', () => {
-    const home = read('src/app/HomeClient.tsx');
+    const home = read('src/app/(marketing)/HomeClient.tsx');
     assert.match(home, /Residential detail\. Commercial discipline\.[\s\S]*Preps[\s\S]*first\./i);
   });
 
   test('T1.7 Three-Market Content - Residential page loads specific data fields', () => {
-    const res = read('src/app/residential/page.tsx');
+    const res = read('src/app/(marketing)/residential/page.tsx');
     assert.match(res, /MarketPage/);
     assert.match(res, /slug="residential"/);
     assert.match(res, /export const metadata/);
   });
 
   test('T1.8 Three-Market Content - Commercial page loads specific data fields', () => {
-    const comm = read('src/app/commercial/page.tsx');
+    const comm = read('src/app/(marketing)/commercial/page.tsx');
     assert.match(comm, /MarketPage/);
     assert.match(comm, /slug="commercial"/);
     assert.match(comm, /export const metadata/);
   });
 
   test('T1.9 Three-Market Content - Public Sector page loads specific data fields', () => {
-    const pub = read('src/app/public-sector/page.tsx');
+    const pub = read('src/app/(marketing)/public-sector/page.tsx');
     assert.match(pub, /MarketPage/);
     assert.match(pub, /slug="public-sector"/);
     assert.match(pub, /export const metadata/);
@@ -92,10 +92,10 @@ describe('Tier 1: Feature Coverage', () => {
   });
 
   test('T1.14 Local SEO Pages - App Router pages exist for market and SEO routes', () => {
-    assert.ok(exists('src/app/residential/page.tsx'));
-    assert.ok(exists('src/app/commercial/page.tsx'));
-    assert.ok(exists('src/app/service-areas/[slug]/page.tsx'));
-    assert.ok(exists('src/app/painting-services/[slug]/page.tsx'));
+    assert.ok(exists('src/app/(marketing)/residential/page.tsx'));
+    assert.ok(exists('src/app/(marketing)/commercial/page.tsx'));
+    assert.ok(exists('src/app/(marketing)/service-areas/[slug]/page.tsx'));
+    assert.ok(exists('src/app/(marketing)/painting-services/[slug]/page.tsx'));
     assert.ok(exists('src/app/not-found.tsx'));
   });
 
@@ -208,7 +208,7 @@ describe('Tier 2: Boundary/Corner Cases', () => {
   });
 
   test('T2.2 Routing & Navigation - Sticky mobile call CTAs render on narrow layouts', () => {
-    const layout = read('src/app/layout.tsx');
+    const layout = read('src/app/(marketing)/layout.tsx');
     assert.match(layout, /href="tel:\+16514104196"/);
     assert.match(layout, /mobile_sticky/);
   });
@@ -231,16 +231,16 @@ describe('Tier 2: Boundary/Corner Cases', () => {
   test('T2.5 Routing & Navigation - E.164 phone numbers are format-compliant', () => {
     const header = read('src/components/ConversionHeader.tsx');
     assert.match(header, /tel:\+16514104196/);
-    const layout = read('src/app/layout.tsx');
+    const layout = read('src/app/(marketing)/layout.tsx');
     assert.match(layout, /tel:\+16514104196/);
   });
 
   test('T2.6 Three-Market Content - Emojis are 100% absent in code/components/markup', () => {
     const files = [
-      'src/app/layout.tsx',
+      'src/app/(marketing)/layout.tsx',
       'src/components/ConversionHeader.tsx',
       'src/components/LeadForm.tsx',
-      'src/app/HomeClient.tsx',
+      'src/app/(marketing)/HomeClient.tsx',
       'src/views/Estimate.tsx',
       'src/views/Review.tsx',
       'src/app/api/leads/route.ts',
@@ -254,14 +254,14 @@ describe('Tier 2: Boundary/Corner Cases', () => {
   });
 
   test('T2.7 Three-Market Content - Licensed or Bonded claims are absent on Home page', () => {
-    const home = read('src/app/HomeClient.tsx');
+    const home = read('src/app/(marketing)/HomeClient.tsx');
     assert.doesNotMatch(home, /Licensed/i);
     assert.doesNotMatch(home, /Bonded/i);
     assert.doesNotMatch(home, /Government-certified/i);
   });
 
   test('T2.8 Three-Market Content - Contractor registration ID is present on all pages', () => {
-    const footer = read('src/app/layout.tsx');
+    const footer = read('src/app/(marketing)/layout.tsx');
     assert.match(footer, /IR816596/);
   });
 
@@ -296,8 +296,8 @@ describe('Tier 2: Boundary/Corner Cases', () => {
   });
 
   test('T2.14 Local SEO Pages - App Router generateMetadata covers dynamic SEO slugs', () => {
-    const areas = read('src/app/service-areas/[slug]/page.tsx');
-    const services = read('src/app/painting-services/[slug]/page.tsx');
+    const areas = read('src/app/(marketing)/service-areas/[slug]/page.tsx');
+    const services = read('src/app/(marketing)/painting-services/[slug]/page.tsx');
     assert.match(areas, /generateMetadata/);
     assert.match(services, /generateMetadata/);
   });
@@ -328,7 +328,7 @@ describe('Tier 2: Boundary/Corner Cases', () => {
   });
 
   test('T2.19 Interactive Components - root layout has no next/dynamic ssr:false theater', () => {
-    const layout = read('src/app/layout.tsx');
+    const layout = read('src/app/(marketing)/layout.tsx');
     assert.doesNotMatch(layout, /next\/dynamic/);
     assert.doesNotMatch(layout, /ssr:\s*false/);
     assert.doesNotMatch(layout, /CustomCursor|HeatmapOverlay/);
@@ -479,7 +479,7 @@ describe('Tier 4: Real-World Scenarios', () => {
   });
 
   test('T4.5 Static SEO Crawler - Indexation, sitemaps validation, and schema markup checks', () => {
-    const layout = read('src/app/layout.tsx');
+    const layout = read('src/app/(marketing)/layout.tsx');
     const sitemap = read('scripts/generate-sitemap.js');
     assert.match(layout, /application\/ld\+json/);
     assert.match(sitemap, /generateSitemap/);

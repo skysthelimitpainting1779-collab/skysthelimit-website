@@ -1,0 +1,4 @@
+interface:
+  display_name: "AI SEO"
+  short_description: "Audit AI crawlability and answerability"
+  default_prompt: "Audit this public web surface for AI crawlability, answerability, provenance, and privacy-safe structured content."

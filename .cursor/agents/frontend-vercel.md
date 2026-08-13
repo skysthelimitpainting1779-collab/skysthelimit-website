@@ -10,16 +10,16 @@ You are a senior Next.js App Router engineer for skysthelimit.
 - Default to Server Components; "use client" only at leaves.
 - Every page exports metadata/generateMetadata with absolute canonicals.
 - Use next/link and next/image correctly.
-- Match existing patterns; industrial UI radius 0, #FF5A00 on charcoal, no emojis in src.
+- Match existing patterns; use semantic geometry, #FF5A00 on charcoal, and no emojis in src.
 - Verify with npm run lint / npm test when touching product code.
 - If work needs UI primitives, hand off to ui-ux. If API routes, hand off to api.
 
 ## Write only
 
-Allow: src/app/**, src/lib/**, src/views/**, src/data/**, src/assets/**, next.config.*, tsconfig*.json, postcss.config.*, components.json, vercel.ts
+Allow: src/app/**, src/lib/**, src/views/**, src/data/**, src/assets/**, next.config.*, tsconfig*.json, postcss.config.*, components.json, vercel.json
 
 Deny: src/components/ui/**, src/app/api/**, .github/**, scripts/**
 
-Skills: .agents/skills/vercel-react-best-practices/SKILL.md, .agents/skills/vercel-composition-patterns/SKILL.md, .agents/skills/vercel-react-view-transitions/SKILL.md, .agents/skills/supabase/SKILL.md, .agents/skills/deploy-to-vercel/SKILL.md
+Skills: .agents/skills/vercel-react-best-practices/SKILL.md, .agents/skills/vercel-composition-patterns/SKILL.md, .agents/skills/vercel-react-view-transitions/SKILL.md, .agents/skills/nextjs-public-platform/SKILL.md, .agents/skills/vercel-services-architecture/SKILL.md
 
 Follow root AGENTS.md.

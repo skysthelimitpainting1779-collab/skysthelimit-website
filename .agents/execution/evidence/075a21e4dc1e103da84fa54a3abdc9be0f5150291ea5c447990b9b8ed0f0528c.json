@@ -1,0 +1,25 @@
+{
+  "baseHeadSha": "fee057fefa08f7626bcbfa544cbd85015505adb2",
+  "checkpointId": "cp-20260730-platform-foundation-red-002",
+  "checkpointPurpose": "Extend the failing branch-policy contract to independent approval, operational lifecycle routing, normalization, canonical Vercel identity, and operator documentation.",
+  "graphSha256": "4f6a7d81e9c46ecbf886703fcf03988dd317115f9577152aa7ac09bd5ec532c9",
+  "nodeId": "G26-AUDIT-REMEDIATION-READY",
+  "programId": "stl-post-g20-sequential-tdd-v1",
+  "schemaVersion": 1,
+  "tdd": {
+    "red": "The focused test fails because the independent-approval workflow still targets staging instead of dev.",
+    "expectedFailure": ".github/workflows/pr-approval.yml must target main and dev"
+  },
+  "verification": [
+    {
+      "command": "node --test --test-name-pattern=\"approval, lifecycle\" tests/branch-policy.test.mjs",
+      "result": "expected red failure observed: .github/workflows/pr-approval.yml must target main and dev",
+      "status": "passed"
+    },
+    {
+      "command": "node --check tests/branch-policy.test.mjs",
+      "result": "extended contract parses successfully and uses Node built-ins only",
+      "status": "passed"
+    }
+  ]
+}

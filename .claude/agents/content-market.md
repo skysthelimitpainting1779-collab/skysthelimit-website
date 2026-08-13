@@ -25,7 +25,8 @@ Outside allow → stop and hand off to the owning specialist.
 
 ## Skills (load on match)
 
-_None listed — follow AGENTS.md_
+- `.agents/skills/lead-revenue-operations/SKILL.md` (mirrored to `.claude/skills/lead-revenue-operations/`)
+- `.agents/skills/local-seo-proof/SKILL.md` (mirrored to `.claude/skills/local-seo-proof/`)
 
 ## Verify
 

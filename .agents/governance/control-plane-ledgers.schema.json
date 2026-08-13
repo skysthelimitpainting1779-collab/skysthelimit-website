@@ -1,0 +1,291 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://skysthelimitpaintingllc.com/schemas/control-plane-ledgers.schema.json",
+  "title": "Control Plane Ledgers",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "execution",
+    "approvals"
+  ],
+  "properties": {
+    "execution": {
+      "$ref": "#/$defs/executionLedger"
+    },
+    "approvals": {
+      "$ref": "#/$defs/approvalLedger"
+    }
+  },
+  "$defs": {
+    "gitSha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "executionLedger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "programId",
+        "checkpointId",
+        "currentNode",
+        "currentStage",
+        "status",
+        "commitSha",
+        "blockers",
+        "nextAction",
+        "productionMutationAuthorized",
+        "projectedAt"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": "1.0.0"
+        },
+        "programId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "checkpointId": {
+          "type": "string",
+          "pattern": "^cp-[a-z0-9-]+$"
+        },
+        "currentNode": {
+          "type": "string",
+          "minLength": 1
+        },
+        "currentStage": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "active",
+            "lease-expired",
+            "handoff-pending"
+          ]
+        },
+        "commitSha": {
+          "$ref": "#/$defs/gitSha"
+        },
+        "blockers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "nextAction": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "nodeId",
+            "stageId",
+            "summary"
+          ],
+          "properties": {
+            "nodeId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "stageId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "summary": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "productionMutationAuthorized": {
+          "const": false
+        },
+        "projectedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "approvalEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "productionMutationAuthorized": {
+                "const": true
+              }
+            },
+            "required": [
+              "productionMutationAuthorized"
+            ]
+          },
+          "then": {
+            "properties": {
+              "environment": {
+                "enum": [
+                  "production",
+                  "live"
+                ]
+              },
+              "status": {
+                "const": "granted"
+              },
+              "exactApprovalText": {
+                "type": "string",
+                "pattern": "\\S"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "environment": {
+                "enum": [
+                  "production",
+                  "live"
+                ]
+              },
+              "status": {
+                "const": "granted"
+              }
+            },
+            "required": [
+              "environment",
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "productionMutationAuthorized": {
+                "const": true
+              },
+              "exactApprovalText": {
+                "type": "string",
+                "pattern": "\\S"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "granted"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "exactApprovalText": {
+                "type": "string",
+                "pattern": "\\S"
+              }
+            }
+          }
+        }
+      ],
+      "required": [
+        "approvalEventId",
+        "programId",
+        "scope",
+        "environment",
+        "action",
+        "status",
+        "actor",
+        "commitSha",
+        "exactApprovalText",
+        "productionMutationAuthorized",
+        "recordedAt",
+        "supersedesEventId"
+      ],
+      "properties": {
+        "approvalEventId": {
+          "type": "string",
+          "pattern": "^approval-[a-z0-9-]+$"
+        },
+        "programId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "environment": {
+          "type": "string",
+          "minLength": 1
+        },
+        "action": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "required",
+            "granted",
+            "denied",
+            "revoked",
+            "expired"
+          ]
+        },
+        "actor": {
+          "type": "string",
+          "minLength": 1
+        },
+        "commitSha": {
+          "$ref": "#/$defs/gitSha"
+        },
+        "exactApprovalText": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "productionMutationAuthorized": {
+          "type": "boolean"
+        },
+        "recordedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "supersedesEventId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "approvalLedger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "programId",
+        "events"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": "1.0.0"
+        },
+        "programId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/approvalEvent"
+          }
+        }
+      }
+    }
+  }
+}

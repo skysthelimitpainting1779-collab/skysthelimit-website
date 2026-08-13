@@ -1,10 +1,16 @@
 #!/bin/sh
+set -e
+
+_PUSH_UPDATES=$(cat)
+printf '%s\n' "$_PUSH_UPDATES" | node scripts/verify-push-target.mjs "$1"
+npm run lifecycle:verify -- --require-clean
+printf '%s\n' "$_PUSH_UPDATES" | python scripts/execution/verify_control_plane_state.py --push-updates
+
 # Entire CLI hooks
 # Pre-push hook: push session logs alongside user's push
 # $1 is the remote name (e.g., "origin")
-if command -v entire >/dev/null 2>&1; then entire hooks git pre-push "$1"; else :; fi
-# Chain: run pre-existing hook
-_entire_hook_dir="$(dirname "$0")"
-if [ -x "$_entire_hook_dir/pre-push.pre-entire" ]; then
-    "$_entire_hook_dir/pre-push.pre-entire" "$@"
+if command -v entire >/dev/null 2>&1; then
+  printf '%s\n' "$_PUSH_UPDATES" | entire hooks git pre-push "$1"
+else
+  :
 fi

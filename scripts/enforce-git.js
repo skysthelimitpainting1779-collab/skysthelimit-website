@@ -1,24 +1,23 @@
 #!/usr/bin/env node
 /**
- * Git standards: branch prefixes + conventional commits.
- * Safe on Windows/CI (execFileSync; no shell % expansion).
+ * Git standards: protected branches, governed branch patterns, and Conventional Commits.
+ * Safe on Windows and CI: execFileSync only, with no shell expansion.
  */
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-const PROTECTED = new Set(['main', 'staging']);
-const ALLOWED_PREFIXES = [
-  'feat/',
-  'fix/',
-  'chore/',
-  'docs/',
-  'infra/',
-  'devin/',
-  'agent/',
-  'dependabot/',
+const root = resolve(import.meta.dirname, '..');
+const policy = JSON.parse(
+  readFileSync(resolve(root, 'config/platform-foundation.json'), 'utf8'),
+);
+const PROTECTED = new Set(policy.branches.protected);
+const ALLOWED_PATTERNS = [
+  ...policy.branches.integrationSources,
+  ...policy.branches.releaseSources,
 ];
+
 const CC_RE =
   /^(feat|fix|chore|docs|infra|refactor|test|style|ci|build|perf|revert)(?:\([a-z0-9_./-]+\))*!?: .{1,200}/i;
 const MERGE_RE = /^Merge (pull request|branch|remote-tracking branch)\b/i;
@@ -26,10 +25,19 @@ const REVERT_RE = /^Revert\b/i;
 
 function git(args) {
   return execFileSync('git', args, {
+    cwd: root,
     encoding: 'utf8',
     stdio: ['ignore', 'pipe', 'pipe'],
     windowsHide: true,
   }).trim();
+}
+
+function matchesPattern(branch, pattern) {
+  if (pattern.endsWith('/*')) {
+    const prefix = pattern.slice(0, -1);
+    return branch.startsWith(prefix) && branch.length > prefix.length;
+  }
+  return branch === pattern;
 }
 
 function getBranchName() {
@@ -53,9 +61,6 @@ function readPullRequestTitle() {
 }
 
 export function getCommitMessagesToCheck() {
-  // GitHub checks out a synthetic merge commit for pull_request events. Validate
-  // the PR title instead of that generated commit message so the guard measures
-  // author-controlled input and remains stable across checkout implementations.
   if (process.env.GITHUB_EVENT_NAME === 'pull_request') {
     const title = readPullRequestTitle();
     return title ? [title] : [];
@@ -86,18 +91,20 @@ export function runGitGuard() {
     console.log(`[Git Guard] Branch: "${branchName}"`);
 
     if (!branchName) {
-      console.warn('[Git Guard] Could not resolve branch name; skipping prefix check.');
+      console.warn('[Git Guard] Could not resolve branch name; skipping branch check.');
     } else if (PROTECTED.has(branchName)) {
       console.log(
-        `\x1b[33m[WARNING] On protected branch "${branchName}". Use feature branches + PRs.\x1b[0m`
+        `\x1b[33m[WARNING] On protected branch "${branchName}". Changes require a governed pull request.\x1b[0m`,
       );
     } else if (branchName === 'HEAD') {
-      console.log('[Git Guard] Detached HEAD — skipping prefix check.');
+      console.log('[Git Guard] Detached HEAD — skipping branch check.');
     } else {
-      const ok = ALLOWED_PREFIXES.some((prefix) => branchName.startsWith(prefix));
+      const ok = ALLOWED_PATTERNS.some((pattern) =>
+        matchesPattern(branchName, pattern),
+      );
       if (!ok) {
         console.error(`\x1b[31m[ERROR] Invalid branch name: "${branchName}".\x1b[0m`);
-        console.error('[ERROR] Allowed prefixes:', ALLOWED_PREFIXES.join(' '));
+        console.error('[ERROR] Allowed patterns:', ALLOWED_PATTERNS.join(' '));
         return 1;
       }
       console.log('\x1b[32m[Git Guard] Branch name OK.\x1b[0m');
@@ -122,7 +129,8 @@ export function runGitGuard() {
     if (anyOk) return 0;
 
     const strict =
-      process.env.GIT_GUARD_STRICT === '1' || process.env.GIT_GUARD_STRICT === 'true';
+      process.env.GIT_GUARD_STRICT === '1' ||
+      process.env.GIT_GUARD_STRICT === 'true';
     const text = 'Commit message should follow Conventional Commits: type(scope): subject';
     if (strict) {
       console.error(`\x1b[31m[ERROR] ${text}\x1b[0m`);

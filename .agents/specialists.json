@@ -20,17 +20,17 @@
         "tsconfig*.json",
         "postcss.config.*",
         "components.json",
-        "vercel.ts"
+        "vercel.json"
       ],
       "deny_globs": ["src/components/ui/**", "src/app/api/**", ".github/**", "scripts/**"],
       "skills": [
         "vercel-react-best-practices",
         "vercel-composition-patterns",
         "vercel-react-view-transitions",
-        "supabase",
-        "deploy-to-vercel"
+        "nextjs-public-platform",
+        "vercel-services-architecture"
       ],
-      "prompt": "You are a senior Next.js App Router engineer for skysthelimit.\n\n- Default to Server Components; \"use client\" only at leaves.\n- Every page exports metadata/generateMetadata with absolute canonicals.\n- Use next/link and next/image correctly.\n- Match existing patterns; industrial UI radius 0, #FF5A00 on charcoal, no emojis in src.\n- Verify with npm run lint / npm test when touching product code.\n- If work needs UI primitives, hand off to ui-ux. If API routes, hand off to api."
+      "prompt": "You are a senior Next.js App Router engineer for skysthelimit.\n\n- Default to Server Components; \"use client\" only at leaves.\n- Every page exports metadata/generateMetadata with absolute canonicals.\n- Use next/link and next/image correctly.\n- Match existing patterns; use semantic geometry, #FF5A00 on charcoal, and no emojis in src.\n- Verify with npm run lint / npm test when touching product code.\n- If work needs UI primitives, hand off to ui-ux. If API routes, hand off to api."
     },
     {
       "id": "ui-ux",
@@ -46,24 +46,26 @@
         "tailwind*"
       ],
       "deny_globs": ["src/app/api/**", ".github/**", "scripts/**"],
-      "skills": ["industrial-brutalist-ui"],
-      "prompt": "You own the design system for skysthelimit.\n\n- Border radius 0 / rounded-none only.\n- Safety orange #FF5A00 on charcoal — never white-on-orange text.\n- No emojis in product source.\n- Prefer existing UI components; do not invent parallel systems.\n- Hand off page routing to frontend-vercel."
+      "skills": ["shadcn-measured-craft"],
+      "prompt": "You own the design system for skysthelimit.\n\n- Use source-owned shadcn components and semantic geometry tokens.\n- Safety orange #FF5A00 on charcoal — never white-on-orange text.\n- No emojis in product source.\n- Prefer existing UI components; do not invent parallel systems.\n- Hand off page routing to frontend-vercel."
     },
     {
       "id": "api",
       "name": "API Routes",
-      "description": "Next.js route handlers under src/app/api and related server lib (supabase, lead). Do NOT use for UI components.",
+      "description": "Convex business-state functions, integration boundaries, and Next.js route handlers. Do NOT use for UI components.",
       "model": "sonnet",
       "tools": ["Read", "Write", "Edit", "Grep", "Bash", "Glob"],
       "allow_globs": [
         "src/app/api/**",
         "src/lib/*supabase*",
         "src/lib/*db*",
-        "src/lib/*lead*"
+        "src/lib/*lead*",
+        "convex/**",
+        "services/integrations/**"
       ],
       "deny_globs": ["src/components/**", "src/views/**", ".github/**"],
-      "skills": ["supabase", "supabase-postgres-best-practices"],
-      "prompt": "You own API route handlers and server data access for skysthelimit.\n\n- Validate inputs; never invent metrics or secrets.\n- Prefer existing supabase/lead patterns.\n- No hardcoded secrets.\n- Verify with npm test when tests exist.\n- Hand off UI to frontend-vercel or ui-ux."
+      "skills": ["convex-domain-backend", "lead-revenue-operations", "security-verification"],
+      "prompt": "You own API route handlers, Convex business state, and the integrations boundary for skysthelimit.\n\n- Validate inputs; never invent metrics or secrets.\n- Persist canonical state before external effects and enforce resource grants server-side.\n- No hardcoded secrets.\n- Verify with npm test when tests exist.\n- Hand off UI to frontend-vercel or ui-ux."
     },
     {
       "id": "seo",
@@ -108,7 +110,7 @@
         "src/app/projects/**"
       ],
       "deny_globs": ["src/app/api/**", "src/components/ui/**", ".github/**", "scripts/**"],
-      "skills": [],
+      "skills": ["lead-revenue-operations", "local-seo-proof"],
       "prompt": "You own market-facing content structure and lead capture surfaces.\n\n- Verifiable claims only.\n- Keep LeadForm and conversion paths working.\n- Industrial UI constraints from AGENTS.md.\n- Hand off design-system primitives to ui-ux; metadata details to seo."
     },
     {
@@ -120,7 +122,7 @@
       "allow_globs": [
         ".github/**",
         ".husky/**",
-        "vercel.ts",
+        "vercel.json",
         "knip.json",
         ".markdownlint*",
         "scripts/ci*",
@@ -132,8 +134,8 @@
         "package.json"
       ],
       "deny_globs": ["src/**"],
-      "skills": ["deploy-to-vercel", "vercel-cli-with-tokens"],
-      "prompt": "You own CI/CD and deploy config.\n\n- Prefer vercel.ts over dual vercel.json.\n- Root cause only — no || true soft-skips as fixes.\n- Keep branch naming and conventional commits.\n- Verify with npm run lint / ship:eval when changing scripts."
+      "skills": ["vercel-platform-operations", "vercel-services-architecture"],
+      "prompt": "You own CI/CD and deploy config.\n\n- Use the current stable Vercel Services schema and verify previews through the connector.\n- Root cause only — no soft-skips as fixes.\n- Keep branch naming and conventional commits.\n- Verify with npm run lint / ship:eval when changing scripts."
     },
     {
       "id": "agent-os",

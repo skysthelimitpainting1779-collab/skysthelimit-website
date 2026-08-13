@@ -1,4 +1,0 @@
-#!/bin/sh
-# Entire CLI — sync checkpoint branch with push
-if [ -f 'C:\Users\Johnny Cage\.local\bin\entire.exe' ]; then 'C:\Users\Johnny Cage\.local\bin\entire.exe' hooks git pre-push "$1"; else :; fi
-# Project CI health gate (removed)

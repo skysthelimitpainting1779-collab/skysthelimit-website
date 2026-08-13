@@ -1,21 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { Resend } from 'resend';
-import { createClient } from '@supabase/supabase-js';
 import {
   asText,
   isPayload,
   validate,
-  buildLeadId,
+  buildIdempotentLeadId,
   buildLeadHtml,
   createRateLimiter
 } from '@/lib/api/utils';
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-const supabase = supabaseUrl && supabaseServiceKey 
-  ? createClient(supabaseUrl, supabaseServiceKey) 
-  : null;
+import {
+  persistCanonicalLead,
+  executeLeadDeliveryEffect,
+  type CanonicalLead,
+} from '@/lib/leads/persistence';
 
 
 const leadToEmail = process.env.LEAD_TO_EMAIL || 'skysthelimitpainting1779@gmail.com';
@@ -23,10 +19,14 @@ const leadToEmail = process.env.LEAD_TO_EMAIL || 'skysthelimitpainting1779@gmail
 // Simple in-memory IP rate limiter
 const rateLimit = createRateLimiter(5, 60 * 1000);
 
+function deliveryKey(payload: Record<string, unknown>, effect: string) {
+  return `${asText(payload.leadId)}:${effect}`;
+}
+
 // Database Ingestion and Event Logging Helpers
 // (Refactored to use high-performance pooled HTTP connections via supabase-js client)
 
-interface LeadPayload extends Record<string, unknown> {
+interface LeadPayload extends CanonicalLead {
   leadId: string;
   source?: unknown;
   name?: unknown;
@@ -56,60 +56,6 @@ interface LeadPayload extends Record<string, unknown> {
   photos_url?: unknown;
 }
 
-async function saveLeadToDb(lead: LeadPayload) {
-  if (!supabase) {
-    console.warn("Supabase client not initialized. Skipping database insertion.");
-    return;
-  }
-  const { error } = await supabase.from('leads').insert({
-    lead_id: lead.leadId,
-    source: asText(lead.source) || 'website',
-    name: asText(lead.name),
-    phone: asText(lead.phone),
-    email: asText(lead.email),
-    city: asText(lead.city),
-    project_address: asText(lead.projectAddress || lead.project_address),
-    market: asText(lead.market),
-    project_type: asText(lead.projectType || lead.project_type),
-    property_type: asText(lead.propertyType || lead.property_type),
-    timeline: asText(lead.timeline),
-    budget: asText(lead.budget),
-    contact_method: asText(lead.contactMethod || lead.contact_method),
-    notes: asText(lead.notes),
-    utm_source: asText(lead.utm_source || lead.utmSource),
-    utm_medium: asText(lead.utm_medium || lead.utmMedium),
-    utm_campaign: asText(lead.utm_campaign || lead.utmCampaign),
-    page: asText(lead.page),
-    status: 'new',
-    photos_url: asText(lead.photosUrl || lead.photos_url)
-  });
-
-  if (error) {
-    console.error("Failed to store lead in Supabase:", error);
-  } else {
-    console.log(`Lead stored in Supabase: ${lead.leadId}`);
-  }
-}
-
-async function saveLeadEventToDb(leadId: string, eventType: string, provider: string, status: string, message?: string) {
-  if (!supabase) {
-    console.warn("Supabase client not initialized. Skipping lead event insertion.");
-    return;
-  }
-  const { error } = await supabase.from('lead_events').insert({
-    lead_id: leadId,
-    event_type: eventType,
-    provider: provider,
-    status: status,
-    message: message || null
-  });
-
-  if (error) {
-    console.error("Failed to store lead event in Supabase for lead %s:", leadId, error);
-  }
-}
-
-
 async function sendWithResend(payload: Record<string, unknown>) {
   const apiKey = process.env.RESEND_API_KEY;
   const fromEmail = process.env.LEAD_FROM_EMAIL || 'Sky Leads <onboarding@resend.dev>';
@@ -119,18 +65,24 @@ async function sendWithResend(payload: Record<string, unknown>) {
     return { configured: false };
   }
 
-  const resend = new Resend(apiKey);
-  const { error } = await resend.emails.send({
-    from: fromEmail,
-    to: [leadToEmail],
-    cc: process.env.LEAD_CC_EMAIL ? [process.env.LEAD_CC_EMAIL] : undefined,
-    subject: `New ${asText(payload.market)} lead - ${asText(payload.name)} - ${asText(payload.leadId)}`,
-    html: buildLeadHtml(payload),
-    replyTo: asText(payload.email),
+  const response = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+      'Idempotency-Key': deliveryKey(payload, 'owner-email'),
+    },
+    body: JSON.stringify({
+      from: fromEmail,
+      to: [leadToEmail],
+      cc: process.env.LEAD_CC_EMAIL ? [process.env.LEAD_CC_EMAIL] : undefined,
+      subject: `New ${asText(payload.market)} lead - ${asText(payload.name)} - ${asText(payload.leadId)}`,
+      html: buildLeadHtml(payload),
+      reply_to: asText(payload.email),
+    }),
   });
-
-  if (error) {
-    throw new Error(error.message);
+  if (!response.ok) {
+    throw new Error(`Resend owner notification failed: ${response.status} ${await response.text()}`);
   }
 
   return { configured: true };
@@ -169,6 +121,7 @@ async function sendAutoReplyToLead(payload: Record<string, unknown>) {
     headers: {
       Authorization: 'Bearer ' + apiKey,
       'Content-Type': 'application/json',
+      'Idempotency-Key': deliveryKey(payload, 'lead-auto-reply'),
     },
     body: JSON.stringify({
       from: fromEmail,
@@ -198,6 +151,7 @@ async function sendLeadWebhook(payload: Record<string, unknown>) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'Idempotency-Key': deliveryKey(payload, 'custom-webhook'),
       ...(process.env.LEAD_WEBHOOK_SECRET ? { 'X-Sky-Lead-Secret': process.env.LEAD_WEBHOOK_SECRET } : {}),
     },
     body: JSON.stringify({
@@ -293,6 +247,7 @@ async function sendToHubspot(payload: Record<string, unknown>) {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
+          'Idempotency-Key': deliveryKey(payload, 'hubspot-contact'),
         },
         body: JSON.stringify({ properties }),
       });
@@ -303,6 +258,7 @@ async function sendToHubspot(payload: Record<string, unknown>) {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
+          'Idempotency-Key': deliveryKey(payload, 'hubspot-contact'),
         },
         body: JSON.stringify({ properties }),
       });
@@ -339,6 +295,7 @@ async function sendToHubspot(payload: Record<string, unknown>) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Idempotency-Key': deliveryKey(payload, 'hubspot-form'),
       },
       body: JSON.stringify({
         fields,
@@ -378,62 +335,54 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: validationError }, { status: 400 });
   }
 
-  const lead = {
+  const idempotencyKey =
+    asText(req.headers.get('idempotency-key')) ||
+    asText(payload.idempotencyKey) ||
+    globalThis.crypto.randomUUID();
+  const lead: LeadPayload = {
     ...payload,
-    leadId: buildLeadId(),
+    leadId: buildIdempotentLeadId('website', idempotencyKey),
     submittedAt: new Date().toISOString(),
     userAgent: asText(req.headers.get('user-agent')),
     referrer: asText(req.headers.get('referer') || req.headers.get('referrer')),
   };
 
-  // Save lead first to Supabase
-  await saveLeadToDb(lead);
+  try {
+    await persistCanonicalLead(lead);
+  } catch (error) {
+    console.error('Lead persistence failed:', error);
+    return NextResponse.json(
+      { error: 'We could not safely save this request. Please try again.' },
+      { status: 503 },
+    );
+  }
 
   try {
     const results = await Promise.allSettled([
-      (async () => {
-        try {
-          const res = await sendWithResend(lead);
-          await saveLeadEventToDb(lead.leadId, 'email_notify', 'resend', res.configured ? 'success' : 'skipped');
-          return res;
-        } catch (err) {
-          await saveLeadEventToDb(lead.leadId, 'email_notify', 'resend', 'failed', err instanceof Error ? err.message : String(err));
-          throw err;
-        }
-      })(),
-      (async () => {
-        try {
-          const res = await sendAutoReplyToLead(lead);
-          await saveLeadEventToDb(lead.leadId, 'email_autoreply', 'resend', res.configured ? 'success' : 'skipped');
-          return res;
-        } catch (err) {
-          await saveLeadEventToDb(lead.leadId, 'email_autoreply', 'resend', 'failed', err instanceof Error ? err.message : String(err));
-          throw err;
-        }
-      })(),
-      (async () => {
-        try {
-          const res = await sendLeadWebhook(lead);
-          await saveLeadEventToDb(lead.leadId, 'webhook', 'custom', res.configured ? 'success' : 'skipped');
-          return res;
-        } catch (err) {
-          await saveLeadEventToDb(lead.leadId, 'webhook', 'custom', 'failed', err instanceof Error ? err.message : String(err));
-          throw err;
-        }
-      })(),
-      (async () => {
-        try {
-          const res = await sendToHubspot(lead);
-          await saveLeadEventToDb(lead.leadId, 'crm', 'hubspot', res.configured ? 'success' : 'skipped');
-          return res;
-        } catch (err) {
-          await saveLeadEventToDb(lead.leadId, 'crm', 'hubspot', 'failed', err instanceof Error ? err.message : String(err));
-          throw err;
-        }
-      })()
+      executeLeadDeliveryEffect(lead.leadId, 'email_notify', 'resend', () =>
+        sendWithResend(lead),
+      ),
+      executeLeadDeliveryEffect(lead.leadId, 'email_autoreply', 'resend', () =>
+        sendAutoReplyToLead(lead),
+      ),
+      executeLeadDeliveryEffect(lead.leadId, 'webhook', 'custom', () =>
+        sendLeadWebhook(lead),
+      ),
+      executeLeadDeliveryEffect(lead.leadId, 'crm', 'hubspot', () =>
+        sendToHubspot(lead),
+      ),
     ]);
 
-    const configured = results.some((result) => result.status === 'fulfilled' && (result.value as { configured: boolean }).configured);
+    const anyClaimed = results.some(
+      (result) => result.status === 'fulfilled' && result.value.claimed,
+    );
+    if (!anyClaimed) {
+      return NextResponse.json(
+        { ok: true, leadId: lead.leadId, duplicate: true, queued: false },
+        { status: 200 },
+      );
+    }
+    const configured = results.some((result) => result.status === 'fulfilled' && result.value.configured);
     const failed = results.find((result) => result.status === 'rejected');
 
     if (failed) {
@@ -445,11 +394,15 @@ export async function POST(req: NextRequest) {
     } else if (!configured) {
       console.warn('Lead delivery warning: No delivery providers configured (Resend, Webhook, HubSpot). Lead saved to DB only.');
     }
+
+    const queued = Boolean(failed) || !configured;
+    return NextResponse.json(
+      { ok: true, leadId: lead.leadId, queued },
+      { status: queued ? 202 : 201 },
+    );
   } catch (error) {
     console.error('Lead delivery failed with error:', error);
     // res.status(500).json({ error: 'Lead delivery failed.', fallback: 'email' })
     return NextResponse.json({ error: 'Lead delivery failed. Please email us directly at skysthelimitpainting1779@gmail.com', fallback: 'email' }, { status: 500 });
   }
-
-  return NextResponse.json({ ok: true, leadId: lead.leadId }, { status: 201 });
 }

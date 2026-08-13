@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": 1,
+  "programId": "stl-post-g20-sequential-tdd-v1",
+  "enforceAfter": "5eb385d33976503cdac81e982ed74fbbc7f6839c",
+  "integrationBranch": "agent/skys-limit-convex-os",
+  "integrationBranchRole": "historical_reconciliation_anchor",
+  "operationalIntegrationBranch": "dev",
+  "productionBranch": "main",
+  "branchPolicyPath": "config/platform-foundation.json",
+  "evidenceReceipts": {
+    "directory": ".agents/execution/evidence"
+  },
+  "remoteStartReconciliations": [
+    {
+      "mergeCommitSha": "1693afff2c3e44f08baa5debf87ba81238227cc2",
+      "mergeTreeSha": "ac5be24f851515642249b8f210250e9098471b0f",
+      "evidenceSha256": "f02ef467a4f161e62e9b5fb1a70735612b5bc6d58bba85018367c2e38e890bf1",
+      "firstParentSha": "82b182d9d4bc2f75b213ff4eee6c9cbb3f4ac08a",
+      "remoteStartSha": "9c10da6e5d15151a6fb4367f004d268c6245d71d",
+      "mergeBaseSha": "fb4a8f154b32a3337be444159c80c9183eeb4f9c",
+      "pushedRef": "refs/heads/agent/skys-limit-convex-os",
+      "ungovernedCommitCount": 1
+    }
+  ],
+  "executionGraph": {
+    "authoritative": true,
+    "path": ".agents/execution/skys-limit-sequential-tdd-execution-graph-audited.jsonl",
+    "schemaPath": ".agents/execution/skys-limit-sequential-tdd-execution-graph-audited.schema.json",
+    "validationPath": ".agents/execution/skys-limit-sequential-tdd-execution-graph-audited-validation.json",
+    "manifestPath": ".agents/execution/skys-limit-sequential-tdd-execution-graph-audit-manifest.json",
+    "sha256": "4f6a7d81e9c46ecbf886703fcf03988dd317115f9577152aa7ac09bd5ec532c9"
+  },
+  "requiredCommitTrailers": [
+    "Execution-Program",
+    "Execution-Node",
+    "Checkpoint-ID",
+    "Evidence-SHA256"
+  ],
+  "pullRequestApproval": {
+    "workflow": ".github/workflows/pr-approval.yml",
+    "requiredCheck": "Independent PR Approval",
+    "trustedCheckout": "base_sha",
+    "requiredEvents": [
+      "pull_request_target",
+      "pull_request_review"
+    ]
+  },
+  "runtimeState": {
+    "databaseEnvironmentVariable": "SKY_DEV_RUNTIME",
+    "defaultWindowsDirectory": "%LOCALAPPDATA%/SkyDevControlPlane",
+    "committed": false
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "baseHeadSha": "b73388480c0e4aa84d59dcd1573be84cd38b71da",
+  "checkpointId": "cp-20260730-platform-foundation-ci-green-001",
+  "checkpointPurpose": "Restore the full CI contract after the platform bootstrap change by aligning governed workflow topology and making telemetry completion commands explicit.",
+  "graphSha256": "4f6a7d81e9c46ecbf886703fcf03988dd317115f9577152aa7ac09bd5ec532c9",
+  "nodeId": "G26-AUDIT-REMEDIATION-READY",
+  "programId": "stl-post-g20-sequential-tdd-v1",
+  "schemaVersion": 1,
+  "tdd": {
+    "red": "GitHub CI runs 30540380276, 30540804975, and 30541080352 failed the workflow-topology and telemetry lifecycle contracts.",
+    "green": "The topology contract recognizes the intentional Branch Policy workflow, and AGENTS.md names the exact telemetry gate and persistence operation required before checkpoint completion."
+  },
+  "verification": [
+    {
+      "command": "python in-memory governed workflow topology and telemetry contract validation",
+      "result": "five expected workflows are declared; AGENTS.md contains telemetry:gate and lifecycle_record_telemetry_decision in required execution guidance",
+      "status": "passed"
+    },
+    {
+      "command": "GitHub Actions root-cause analysis for CI runs 30540380276, 30540804975, and 30541080352",
+      "result": "remaining failures isolated to stale five-workflow topology expectation and missing explicit telemetry command literals",
+      "status": "passed"
+    }
+  ]
+}

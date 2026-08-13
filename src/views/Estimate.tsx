@@ -1,16 +1,30 @@
 'use client';
 
-import { useState, FormEvent, useEffect, useRef } from 'react';
-import { Calculator, ArrowRight, ShieldCheck, CheckCircle2, User, Bot, Loader2 } from 'lucide-react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
+import { Bot, Loader2, User } from 'lucide-react';
 import PageTransition from '../components/PageTransition';
 import RangeSlider from '../components/RangeSlider';
 import { trackEvent } from '../lib/analytics';
 import { buildEstimateMailto } from '../lib/contact';
-import { motion, AnimatePresence } from 'motion/react';
+import {
+  buildEstimateLeadFields,
+  calculateEstimate,
+  formatEstimateRange,
+  selectEstimateIdempotency,
+  type EstimateIdempotencyState,
+  type EstimateInput,
+  type EstimateProjectType,
+  type EstimateRange,
+  type ExteriorSiding,
+  type ExteriorStories,
+  type PrepLevel,
+} from '../lib/estimate';
+import { AnimatePresence, MotionConfig, motion, useReducedMotion } from 'motion/react';
 import { cn } from '../lib/utils';
+import { Button } from '../components/ui/button';
+import { Input } from '../components/ui/input';
 
-type ProjectType = 'interior' | 'exterior' | 'cabinets' | null;
-type PrepLevel = 'standard' | 'premium' | null;
+type ProjectType = EstimateProjectType | null;
 
 interface ChatMessage {
   id: string;
@@ -19,34 +33,40 @@ interface ChatMessage {
   isComponent?: boolean;
 }
 
-const springConfig: any = { type: "spring", stiffness: 300, damping: 24 };
+const springConfig = {
+  type: 'spring' as const,
+  stiffness: 300,
+  damping: 24,
+};
 
 export default function EstimatePage() {
+  const idempotencyRef = useRef<EstimateIdempotencyState | null>(null);
+  const initializedRef = useRef(false);
+  const messageIdRef = useRef(0);
+  const timersRef = useRef(new Set<ReturnType<typeof setTimeout>>());
+  const prefersReducedMotion = useReducedMotion();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const controlsRef = useRef<HTMLDivElement>(null);
 
-  // State
   const [step, setStep] = useState(0);
   const [projectType, setProjectType] = useState<ProjectType>(null);
-  
-  // Interior State
   const [roomType, setRoomType] = useState('Bedroom');
   const [width, setWidth] = useState(12);
   const [length, setLength] = useState(14);
   const [height, setHeight] = useState(8);
-
-  // Exterior State
-  const [stories, setStories] = useState('1 Story');
-  const [siding, setSiding] = useState('Wood / LP SmartSide');
-
-  // Cabinet State
+  const [stories, setStories] = useState<ExteriorStories>('1 Story');
+  const [siding, setSiding] =
+    useState<ExteriorSiding>('Wood / LP SmartSide');
   const [cabinetCount, setCabinetCount] = useState(20);
-
-  // Common State
-  const [prepLevel, setPrepLevel] = useState<PrepLevel>(null);
-
-  // Lead State
+  const [prepLevel, setPrepLevel] = useState<PrepLevel | null>(null);
+  const [estimateInput, setEstimateInput] = useState<EstimateInput | null>(
+    null,
+  );
+  const [estimateRange, setEstimateRange] = useState<EstimateRange | null>(
+    null,
+  );
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
@@ -54,11 +74,25 @@ export default function EstimatePage() {
   const [status, setStatus] = useState<'idle' | 'submitting' | 'sent' | 'fallback' | 'error'>('idle');
   const [submitMessage, setSubmitMessage] = useState('');
 
+  const nextMessageId = () => {
+    messageIdRef.current += 1;
+    return `estimate-message-${messageIdRef.current}`;
+  };
+
+  const schedule = (callback: () => void, delay: number) => {
+    const timer = setTimeout(() => {
+      timersRef.current.delete(timer);
+      callback();
+    }, prefersReducedMotion ? 0 : delay);
+    timersRef.current.add(timer);
+    return timer;
+  };
+
   const scrollToBottom = () => {
     if (scrollRef.current) {
       scrollRef.current.scrollTo({
         top: scrollRef.current.scrollHeight,
-        behavior: 'smooth'
+        behavior: prefersReducedMotion ? 'auto' : 'smooth',
       });
     }
   };
@@ -69,27 +103,56 @@ export default function EstimatePage() {
 
   const addBotMessage = (text: React.ReactNode, delay = 600, isComponent = false) => {
     setIsTyping(true);
-    setTimeout(() => {
+    schedule(() => {
       setIsTyping(false);
-      setMessages(prev => [...prev, { id: Math.random().toString(), sender: 'bot', text, isComponent }]);
+      setMessages((previous) => [
+        ...previous,
+        { id: nextMessageId(), sender: 'bot', text, isComponent },
+      ]);
     }, delay);
   };
 
   const addUserMessage = (text: string) => {
-    setMessages(prev => [...prev, { id: Math.random().toString(), sender: 'user', text }]);
+    setMessages((previous) => [
+      ...previous,
+      { id: nextMessageId(), sender: 'user', text },
+    ]);
   };
 
-  // Initialize
   useEffect(() => {
-    if (step === 0) {
-      addBotMessage("Hi there! I'm the Sky's the Limit pricing assistant. I can help you build a rough price range for your painting project in under a minute.", 400);
-      setTimeout(() => setStep(1), 1200);
-    }
-  }, []);
+    if (initializedRef.current) return;
+    initializedRef.current = true;
+    addBotMessage(
+      "Let's build a rough planning range for your painting project. It takes about a minute.",
+      300,
+    );
+    schedule(() => setStep(1), 800);
+  }, [prefersReducedMotion]);
 
-  const handleProjectType = (type: ProjectType, label: string) => {
+  useEffect(
+    () => () => {
+      for (const timer of timersRef.current) clearTimeout(timer);
+      timersRef.current.clear();
+    },
+    [],
+  );
+
+  useEffect(() => {
+    if (isTyping) return;
+    const frame = requestAnimationFrame(() => {
+      controlsRef.current
+        ?.querySelector<HTMLElement>(
+          'button:not([disabled]), input:not([disabled]), a[href]',
+        )
+        ?.focus();
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [isTyping, step]);
+
+  const handleProjectType = (type: EstimateProjectType, label: string) => {
     addUserMessage(label);
     setProjectType(type);
+    trackEvent('estimate_started', { projectType: type });
     
     if (type === 'interior') {
       addBotMessage("Great. Interior painting it is. What kind of room are we looking at?");
@@ -116,14 +179,14 @@ export default function EstimatePage() {
     setStep(5);
   };
 
-  const handleExteriorStories = (val: string) => {
+  const handleExteriorStories = (val: ExteriorStories) => {
     addUserMessage(val);
     setStories(val);
     addBotMessage("What type of siding do you have?");
     setStep(3.1);
   };
 
-  const handleExteriorSiding = (val: string) => {
+  const handleExteriorSiding = (val: ExteriorSiding) => {
     addUserMessage(val);
     setSiding(val);
     addBotMessage("What level of prep and finish are you looking for?");
@@ -136,91 +199,171 @@ export default function EstimatePage() {
     setStep(5);
   };
 
-  const handlePrep = (prep: PrepLevel, label: string) => {
-    addUserMessage(label);
-    setPrepLevel(prep);
-    addBotMessage("Calculating your estimate...", 400);
-    setTimeout(() => {
-      calculateFinal();
-    }, 1500);
-    setStep(6);
+  const buildCurrentInput = (prep: PrepLevel): EstimateInput | null => {
+    if (projectType === 'interior') {
+      return {
+        height,
+        length,
+        prepLevel: prep,
+        projectType,
+        roomType,
+        width,
+      };
+    }
+    if (projectType === 'exterior') {
+      return {
+        prepLevel: prep,
+        projectType,
+        siding,
+        stories,
+      };
+    }
+    if (projectType === 'cabinets') {
+      return {
+        cabinetCount,
+        prepLevel: prep,
+        projectType,
+      };
+    }
+    return null;
   };
 
-  const calculateFinal = () => {
-    let low = 0;
-    let high = 0;
-
-    if (projectType === 'interior') {
-      const wallArea = 2 * (width + length) * height;
-      const base = wallArea * 3.50;
-      const prepVal = prepLevel === 'premium' ? base * 0.35 : 0;
-      const total = base + prepVal + 250;
-      low = total * 0.90;
-      high = total * 1.15;
-    } else if (projectType === 'exterior') {
-      let base = 3500;
-      if (stories === '2 Story') base = 5500;
-      if (stories === '3+ Story') base = 8500;
-      
-      let mult = 1.0;
-      if (siding === 'Stucco') mult = 1.3;
-      if (siding === 'Brick / Masonry') mult = 1.4;
-
-      const total = base * mult * (prepLevel === 'premium' ? 1.3 : 1.0);
-      low = total * 0.85;
-      high = total * 1.20;
-    } else if (projectType === 'cabinets') {
-      const total = cabinetCount * (prepLevel === 'premium' ? 150 : 115);
-      low = total * 0.90;
-      high = total * 1.15;
-    }
-
-    low = Math.round(low / 100) * 100;
-    high = Math.round(high / 100) * 100;
-
+  const revealEstimate = (range: EstimateRange) => {
+    const formattedRange = formatEstimateRange(range);
     addBotMessage(
-      <div className="space-y-4 reveal-up">
-        <p className="text-sm font-medium">Based on your selections, here is your rough planning range:</p>
-        <div className="bg-[#11100d] border border-white/10 p-6 shadow-2xl relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#FF5A00]/5 to-transparent pointer-events-none"></div>
-          <p className="eyebrow mb-2">Estimated Range</p>
-          <p className="text-4xl font-black text-white tnum">${low.toLocaleString()} - ${high.toLocaleString()}</p>
+      <div className="space-y-4">
+        <p className="text-sm font-medium text-[var(--foreground)]">
+          Your rough planning range
+        </p>
+        <div className="relative overflow-hidden border border-[var(--border)] bg-[var(--card)] p-6 shadow-lg">
+          <div className="absolute inset-y-0 left-0 w-1 bg-[var(--primary)]" />
+          <p className="eyebrow mb-2">Estimated range</p>
+          <p className="tnum text-3xl font-black text-[var(--foreground)] sm:text-4xl">
+            {formattedRange}
+          </p>
         </div>
-        <p className="text-sm">If this fits your budget, fill out the form below and Anthony will reach out within one business day to schedule a firm, on-site walkthrough. No obligation, no pressure.</p>
-      </div>
-    , 200, true);
-
+        <p className="text-sm text-[var(--muted-foreground)]">
+          This is a planning range, not a quote. Anthony will confirm surfaces,
+          preparation, and access during a no-pressure walkthrough.
+        </p>
+      </div>,
+      0,
+      true,
+    );
     setStep(7);
+  };
+
+  const handlePrep = (prep: PrepLevel, label: string) => {
+    const input = buildCurrentInput(prep);
+    if (!input) {
+      setStatus('error');
+      setSubmitMessage('Choose a project type before calculating a range.');
+      return;
+    }
+    const range = calculateEstimate(input);
+    addUserMessage(label);
+    setPrepLevel(prep);
+    setEstimateInput(input);
+    setEstimateRange(range);
+    trackEvent('estimate_calculated', {
+      high: range.high,
+      low: range.low,
+      modelVersion: range.modelVersion,
+      prepLevel: prep,
+      projectType: input.projectType,
+    });
+    addBotMessage('Calculating your planning range...', 150);
+    schedule(() => revealEstimate(range), 650);
+    setStep(6);
   };
 
   const handleFinalSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const payload = {
+    if (!estimateInput || !estimateRange) {
+      setStatus('error');
+      setSubmitMessage(
+        'Your planning range expired. Recalculate it before submitting.',
+      );
+      return;
+    }
+    const estimateFields = buildEstimateLeadFields(
+      estimateInput,
+      estimateRange,
+    );
+    const submission = {
       source: 'Chatbot Estimate',
       page: '/estimate',
-      name, phone, email, city,
-      projectType, prepLevel,
-      notes: `Project: ${projectType} \nPrep: ${prepLevel}`
+      name,
+      phone,
+      email,
+      city,
+      projectType,
+      prepLevel,
+      market: 'Residential',
+      timeline: 'Estimate requested',
+      contactMethod: 'Phone',
+      ...estimateFields,
+    };
+    const fingerprint = JSON.stringify(submission);
+    const idempotency = selectEstimateIdempotency(
+      idempotencyRef.current,
+      fingerprint,
+      () => globalThis.crypto.randomUUID(),
+    );
+    idempotencyRef.current = idempotency;
+    const payload = {
+      idempotencyKey: idempotency.key,
+      ...submission,
     };
 
     setStatus('submitting');
+    setSubmitMessage('Saving your request securely...');
     try {
       const response = await fetch('/api/leads', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Idempotency-Key': idempotency.key,
+        },
         body: JSON.stringify(payload),
       });
       if (response.ok) {
         setStatus('sent');
-        addUserMessage("Submitted my info.");
-        addBotMessage("Thanks! We've received your request and will be in touch shortly to schedule a walkthrough.", 600);
+        setSubmitMessage('');
+        trackEvent('estimate_submitted', {
+          modelVersion: estimateRange.modelVersion,
+          projectType: estimateInput.projectType,
+        });
+        addUserMessage('Requested a walkthrough.');
+        addBotMessage(
+          "Thanks. We've saved your request and will follow up within one business day.",
+          400,
+        );
       } else {
         setStatus('fallback');
+        setSubmitMessage(
+          'We could not confirm the request. Retry with the same details or email us directly.',
+        );
       }
     } catch {
       setStatus('fallback');
+      setSubmitMessage(
+        'Your connection dropped before confirmation. Retry or email us directly.',
+      );
     }
   };
+
+  const fallbackHref =
+    estimateInput && estimateRange
+      ? buildEstimateMailto({
+          Budget: formatEstimateRange(estimateRange),
+          City: city,
+          Email: email,
+          Name: name,
+          Notes: buildEstimateLeadFields(estimateInput, estimateRange).notes,
+          Phone: phone,
+        })
+      : buildEstimateMailto({});
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -234,33 +377,83 @@ export default function EstimatePage() {
     hidden: { opacity: 0, y: 15, scale: 0.95 },
     show: { opacity: 1, y: 0, scale: 1, transition: springConfig }
   };
+  const phase =
+    status === 'sent'
+      ? 6
+      : step <= 1
+        ? 1
+        : step < 5
+          ? 2
+          : step === 5
+            ? 3
+            : step === 6
+              ? 4
+              : 5;
+  const phaseLabels = [
+    'Project',
+    'Scope',
+    'Preparation',
+    'Range',
+    'Contact',
+    'Complete',
+  ];
 
   return (
-    <PageTransition>
-      <section className="relative min-h-[calc(100svh-116px)] flex items-center justify-center bg-[#050505] py-12 px-4 sm:px-6 lg:px-8 overflow-hidden mesh-gradient-bg">
-        
-        <div className="noise-overlay"></div>
+    <MotionConfig reducedMotion="user">
+      <PageTransition>
+        <section
+          data-estimate-planner
+          aria-labelledby="estimate-title"
+          className="dark relative flex min-h-[calc(100svh-116px)] items-center justify-center overflow-hidden bg-[var(--background)] px-4 py-8 sm:px-6 lg:px-8"
+        >
+          <div className="relative flex w-full max-w-2xl flex-col gap-2">
+            <div className="relative flex h-[min(780px,calc(100svh-148px))] min-h-[560px] w-full flex-col overflow-hidden border border-[var(--border)] bg-[var(--background)] shadow-2xl">
+              <header className="z-10 shrink-0 border-b border-[var(--border)] bg-[var(--card)] p-5">
+                <div className="flex items-center gap-4">
+                  <div className="flex size-10 shrink-0 items-center justify-center bg-white">
+                    <img
+                      src="/brand/SkyLLP_BrandLogo.svg"
+                      alt=""
+                      className="size-6"
+                    />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h1
+                      id="estimate-title"
+                      className="text-lg font-bold text-[var(--foreground)]"
+                    >
+                      Project planner
+                    </h1>
+                    <p className="mt-1 text-xs font-semibold uppercase text-[var(--muted-foreground)]">
+                      Step {phase} of 6: {phaseLabels[phase - 1]}
+                    </p>
+                  </div>
+                </div>
+                <div
+                  role="progressbar"
+                  aria-label="Estimate progress"
+                  aria-valuemin={1}
+                  aria-valuemax={6}
+                  aria-valuenow={phase}
+                  className="mt-4 h-1 overflow-hidden bg-[var(--muted)]"
+                >
+                  <div
+                    className="h-full bg-[var(--primary)] transition-[width] motion-reduce:transition-none"
+                    style={{ width: `${(phase / 6) * 100}%` }}
+                  />
+                </div>
+              </header>
 
-        <div className="relative w-full max-w-2xl flex flex-col h-[85svh] border border-white/10 bg-white/5 backdrop-blur-2xl shadow-2xl overflow-hidden perspective-1000">
-          
-          {/* Header */}
-          <div className="flex items-center gap-4 bg-[#070706]/90 backdrop-blur-md p-5 border-b border-white/10 z-10 shrink-0">
-            <div className="h-10 w-10 bg-white flex items-center justify-center shrink-0">
-               <img src="/brand/SkyLLP_BrandLogo.svg" alt="Sky" className="h-6 w-6" />
-            </div>
-            <div>
-              <h2 className="font-bold text-white text-lg tracking-tight uppercase">Pricing Engine</h2>
-              <p className="eyebrow flex items-center gap-2 mt-1">
-                <span className="w-1.5 h-1.5 bg-[#FF5A00] animate-pulse"></span> Agent Online
-              </p>
-            </div>
-          </div>
-
-          {/* Chat Area */}
-          <div 
-            ref={scrollRef}
-            className="flex-1 overflow-y-auto p-4 sm:p-8 space-y-8 scroll-smooth pb-32"
-          >
+              <div
+                ref={scrollRef}
+                role="log"
+                aria-live="polite"
+                aria-relevant="additions"
+                className={cn(
+                  'flex-1 space-y-8 overflow-y-auto p-4 motion-reduce:scroll-auto sm:p-8',
+                  step === 7 ? 'pb-[24rem] sm:pb-[21rem]' : 'pb-32',
+                )}
+              >
             <AnimatePresence initial={false}>
               {messages.map((msg) => (
                 <motion.div
@@ -272,17 +465,20 @@ export default function EstimatePage() {
                 >
                   <div className={`max-w-[85%] flex gap-4 ${msg.sender === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
                     
-                    <div className={`shrink-0 w-10 h-10 flex items-center justify-center ${msg.sender === 'user' ? 'bg-[#FF5A00]/20 text-[#FF5A00]' : 'bg-[#182023] text-white border border-white/10'}`}>
+                    <div
+                      aria-hidden="true"
+                      className={`flex size-10 shrink-0 items-center justify-center ${msg.sender === 'user' ? 'bg-[var(--primary)] text-[var(--primary-foreground)]' : 'border border-[var(--border)] bg-[var(--secondary)] text-[var(--foreground)]'}`}
+                    >
                       {msg.sender === 'user' ? <User size={18} strokeWidth={1.5} /> : <Bot size={18} strokeWidth={1.5} />}
                     </div>
 
                     <div className={cn(
                       "p-5 text-sm leading-relaxed",
                       msg.sender === 'user' 
-                        ? "bg-[#FF5A00] text-white" 
+                        ? "bg-[var(--primary)] text-[var(--primary-foreground)]"
                         : msg.isComponent 
                           ? "bg-transparent p-0 w-full"
-                          : "bg-[#11100d] border border-white/10 text-[#c9c1b4]"
+                          : "border border-[var(--border)] bg-[var(--card)] text-[var(--muted-foreground)]"
                     )}>
                       {msg.text}
                     </div>
@@ -299,13 +495,19 @@ export default function EstimatePage() {
                   className="flex justify-start"
                 >
                   <div className="flex gap-4">
-                    <div className="shrink-0 w-10 h-10 flex items-center justify-center bg-[#182023] text-white border border-white/10">
+                    <div
+                      aria-hidden="true"
+                      className="flex size-10 shrink-0 items-center justify-center border border-[var(--border)] bg-[var(--secondary)] text-[var(--foreground)]"
+                    >
                       <Bot size={18} strokeWidth={1.5} />
                     </div>
-                    <div className="bg-[#11100d] border border-white/10 p-5 flex items-center gap-2 h-[60px]">
-                      <div className="w-1.5 h-1.5 bg-white/40 animate-bounce [animation-delay:-0.3s]"></div>
-                      <div className="w-1.5 h-1.5 bg-white/40 animate-bounce [animation-delay:-0.15s]"></div>
-                      <div className="w-1.5 h-1.5 bg-white/40 animate-bounce"></div>
+                    <div
+                      aria-label="Calculating"
+                      className="flex h-[60px] items-center gap-2 border border-[var(--border)] bg-[var(--card)] p-5"
+                    >
+                      <div className="size-1.5 animate-bounce bg-[var(--muted-foreground)] [animation-delay:-0.3s] motion-reduce:animate-none" />
+                      <div className="size-1.5 animate-bounce bg-[var(--muted-foreground)] [animation-delay:-0.15s] motion-reduce:animate-none" />
+                      <div className="size-1.5 animate-bounce bg-[var(--muted-foreground)] motion-reduce:animate-none" />
                     </div>
                   </div>
                 </motion.div>
@@ -313,97 +515,120 @@ export default function EstimatePage() {
             </AnimatePresence>
           </div>
 
-          {/* Controls Footer */}
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#050505] via-[#050505]/95 to-transparent pt-12 pb-6 px-4 sm:px-8 border-t border-white/5 z-20">
+              <div ref={controlsRef} className="absolute inset-x-0 bottom-0 z-20 max-h-[58%] overflow-y-auto border-t border-[var(--border)] bg-[var(--background)] px-4 py-5 sm:px-8">
              <AnimatePresence mode="wait">
                {step === 1 && !isTyping && (
-                 <motion.div variants={containerVariants} initial="hidden" animate="show" exit="hidden" className="flex flex-col sm:flex-row gap-3">
-                   <motion.button variants={itemVariants} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => handleProjectType('interior', 'Interior Rooms')} className="flex-1 bg-[#182023] hover:bg-white/10 border border-white/10 p-4 text-sm font-bold transition-colors shadow-lg">Interior Rooms</motion.button>
-                   <motion.button variants={itemVariants} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => handleProjectType('exterior', 'Exterior Painting')} className="flex-1 bg-[#182023] hover:bg-white/10 border border-white/10 p-4 text-sm font-bold transition-colors shadow-lg">Exterior Painting</motion.button>
-                   <motion.button variants={itemVariants} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => handleProjectType('cabinets', 'Cabinet Refinishing')} className="flex-1 bg-[#182023] hover:bg-white/10 border border-white/10 p-4 text-sm font-bold transition-colors shadow-lg">Cabinet Refinishing</motion.button>
+                 <motion.div role="group" aria-label="Project type" variants={containerVariants} initial="hidden" animate="show" exit="hidden" className="flex flex-col gap-3 sm:flex-row">
+                   <motion.button variants={itemVariants} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => handleProjectType('interior', 'Interior Rooms')} className="flex-1 border border-[var(--border)] bg-[var(--secondary)] p-4 text-sm font-bold text-[var(--foreground)] shadow-lg transition-colors hover:bg-[var(--muted)]">Interior Rooms</motion.button>
+                   <motion.button variants={itemVariants} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => handleProjectType('exterior', 'Exterior Painting')} className="flex-1 border border-[var(--border)] bg-[var(--secondary)] p-4 text-sm font-bold text-[var(--foreground)] shadow-lg transition-colors hover:bg-[var(--muted)]">Exterior Painting</motion.button>
+                   <motion.button variants={itemVariants} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => handleProjectType('cabinets', 'Cabinet Refinishing')} className="flex-1 border border-[var(--border)] bg-[var(--secondary)] p-4 text-sm font-bold text-[var(--foreground)] shadow-lg transition-colors hover:bg-[var(--muted)]">Cabinet Refinishing</motion.button>
                  </motion.div>
                )}
 
                {step === 2 && !isTyping && (
-                 <motion.div variants={containerVariants} initial="hidden" animate="show" exit="hidden" className="grid grid-cols-2 gap-3">
+                 <motion.div role="group" aria-label="Room type" variants={containerVariants} initial="hidden" animate="show" exit="hidden" className="grid grid-cols-2 gap-3">
                    {['Bedroom', 'Living Room', 'Kitchen', 'Bathroom', 'Hallway', 'Other'].map(r => (
-                     <motion.button variants={itemVariants} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} key={r} onClick={() => handleInteriorRoom(r)} className="bg-[#182023] hover:bg-white/10 border border-white/10 p-4 text-sm font-bold transition-colors shadow-lg">{r}</motion.button>
+                     <motion.button variants={itemVariants} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} key={r} onClick={() => handleInteriorRoom(r)} className="border border-[var(--border)] bg-[var(--secondary)] p-4 text-sm font-bold text-[var(--foreground)] shadow-lg transition-colors hover:bg-[var(--muted)]">{r}</motion.button>
                    ))}
                  </motion.div>
                )}
 
                {step === 2.1 && !isTyping && (
-                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} transition={springConfig} className="bg-[#11100d] border border-white/10 p-6 space-y-6 shadow-2xl">
+                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} transition={springConfig} className="space-y-6 border border-[var(--border)] bg-[var(--card)] p-6 shadow-2xl">
                     <RangeSlider id="w" label="Width" value={width} min={5} max={40} suffix="FT" onChange={setWidth} />
                     <RangeSlider id="l" label="Length" value={length} min={5} max={40} suffix="FT" onChange={setLength} />
                     <RangeSlider id="h" label="Ceiling Height" value={height} min={7} max={20} suffix="FT" onChange={setHeight} />
-                    <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }} onClick={submitInteriorDimensions} className="w-full bg-white text-black p-4 text-sm font-bold hover:bg-gray-200 transition-colors mt-4">Confirm Dimensions</motion.button>
+                    <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }} onClick={submitInteriorDimensions} className="mt-4 w-full bg-[var(--primary)] p-4 text-sm font-bold text-[var(--primary-foreground)] transition-colors hover:bg-[var(--primary-hover)]">Confirm dimensions</motion.button>
                  </motion.div>
                )}
 
                {step === 3 && !isTyping && (
-                 <motion.div variants={containerVariants} initial="hidden" animate="show" exit="hidden" className="flex flex-col gap-3">
-                   {['1 Story', '2 Story', '3+ Story'].map(s => (
-                     <motion.button variants={itemVariants} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} key={s} onClick={() => handleExteriorStories(s)} className="bg-[#182023] hover:bg-white/10 border border-white/10 p-4 text-sm font-bold transition-colors shadow-lg text-left">{s}</motion.button>
+                 <motion.div role="group" aria-label="Home stories" variants={containerVariants} initial="hidden" animate="show" exit="hidden" className="flex flex-col gap-3">
+                   {(['1 Story', '2 Story', '3+ Story'] as const).map(s => (
+                     <motion.button variants={itemVariants} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} key={s} onClick={() => handleExteriorStories(s)} className="border border-[var(--border)] bg-[var(--secondary)] p-4 text-left text-sm font-bold text-[var(--foreground)] shadow-lg transition-colors hover:bg-[var(--muted)]">{s}</motion.button>
                    ))}
                  </motion.div>
                )}
 
                {step === 3.1 && !isTyping && (
-                 <motion.div variants={containerVariants} initial="hidden" animate="show" exit="hidden" className="grid grid-cols-2 gap-3">
-                   {['Wood / LP SmartSide', 'Stucco', 'Vinyl / Aluminum', 'Brick / Masonry'].map(s => (
-                     <motion.button variants={itemVariants} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} key={s} onClick={() => handleExteriorSiding(s)} className="bg-[#182023] hover:bg-white/10 border border-white/10 p-4 text-sm font-bold transition-colors shadow-lg text-center flex items-center justify-center h-full">{s}</motion.button>
+                 <motion.div role="group" aria-label="Siding type" variants={containerVariants} initial="hidden" animate="show" exit="hidden" className="grid grid-cols-2 gap-3">
+                   {(['Wood / LP SmartSide', 'Stucco', 'Vinyl / Aluminum', 'Brick / Masonry'] as const).map(s => (
+                     <motion.button variants={itemVariants} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} key={s} onClick={() => handleExteriorSiding(s)} className="flex h-full items-center justify-center border border-[var(--border)] bg-[var(--secondary)] p-4 text-center text-sm font-bold text-[var(--foreground)] shadow-lg transition-colors hover:bg-[var(--muted)]">{s}</motion.button>
                    ))}
                  </motion.div>
                )}
 
                {step === 4 && !isTyping && (
-                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} transition={springConfig} className="bg-[#11100d] border border-white/10 p-6 space-y-6 shadow-2xl">
+                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} transition={springConfig} className="space-y-6 border border-[var(--border)] bg-[var(--card)] p-6 shadow-2xl">
                     <RangeSlider id="c" label="Total Doors & Drawers" value={cabinetCount} min={5} max={60} onChange={setCabinetCount} />
-                    <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }} onClick={submitCabinets} className="w-full bg-white text-black p-4 text-sm font-bold hover:bg-gray-200 transition-colors mt-4">Confirm Count</motion.button>
+                    <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }} onClick={submitCabinets} className="mt-4 w-full bg-[var(--primary)] p-4 text-sm font-bold text-[var(--primary-foreground)] transition-colors hover:bg-[var(--primary-hover)]">Confirm count</motion.button>
                  </motion.div>
                )}
 
                {step === 5 && !isTyping && (
-                 <motion.div variants={containerVariants} initial="hidden" animate="show" exit="hidden" className="flex flex-col gap-3">
-                   <motion.button variants={itemVariants} whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }} onClick={() => handlePrep('standard', 'Standard Prep')} className="text-left bg-[#182023] hover:bg-white/10 border border-white/10 p-5 transition-colors shadow-lg">
-                     <p className="font-bold text-sm text-white">Standard Prep</p>
-                     <p className="text-xs text-[#9ca3af] mt-2 leading-relaxed">Light সংকট, minor caulk, 1 coat primer & topcoat. Great for minor refreshes.</p>
+                 <motion.div role="group" aria-label="Preparation level" variants={containerVariants} initial="hidden" animate="show" exit="hidden" className="flex flex-col gap-3">
+                   <motion.button aria-label="Standard prep" variants={itemVariants} whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }} onClick={() => handlePrep('standard', 'Standard Prep')} className="border border-[var(--border)] bg-[var(--secondary)] p-5 text-left shadow-lg transition-colors hover:bg-[var(--muted)]">
+                     <p className="text-sm font-bold text-[var(--foreground)]">Standard prep</p>
+                     <p className="mt-2 text-xs leading-relaxed text-[var(--muted-foreground)]">Light patching, minor caulk, one primer coat, and one topcoat. Best for minor refreshes.</p>
                    </motion.button>
-                   <motion.button variants={itemVariants} whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }} onClick={() => handlePrep('premium', 'Premium Detail Prep')} className="text-left bg-[#182023] hover:bg-white/10 border border-white/10 p-5 transition-colors shadow-lg">
-                     <p className="font-bold text-sm text-[#FF5A00] flex items-center gap-2">Premium Detail Prep <span className="bg-[#FF5A00]/20 text-[#FF5A00] text-[10px] uppercase px-2 py-0.5 tracking-wider font-bold">Recommended</span></p>
-                     <p className="text-xs text-[#9ca3af] mt-2 leading-relaxed">Elite multi-stage sanding, deep caulking, wood stabilization, premium coats.</p>
+                   <motion.button aria-label="Premium detail prep" variants={itemVariants} whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }} onClick={() => handlePrep('premium', 'Premium Detail Prep')} className="border border-[var(--primary)] bg-[var(--secondary)] p-5 text-left shadow-lg transition-colors hover:bg-[var(--muted)]">
+                     <p className="flex items-center gap-2 text-sm font-bold text-[var(--foreground)]">Premium detail prep <span className="bg-[var(--primary)] px-2 py-0.5 text-[10px] font-bold uppercase text-[var(--primary-foreground)]">Recommended</span></p>
+                     <p className="mt-2 text-xs leading-relaxed text-[var(--muted-foreground)]">Multi-stage sanding, deep caulking, wood stabilization, and premium coats.</p>
                    </motion.button>
                  </motion.div>
                )}
 
                {step === 7 && !isTyping && status !== 'sent' && (
-                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={springConfig} className="bg-[#11100d] border border-[#FF5A00]/30 p-6 shadow-2xl relative overflow-hidden">
-                   <div className="absolute top-0 left-0 right-0 h-1 bg-[#FF5A00]"></div>
+                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={springConfig} className="relative overflow-hidden border border-[var(--primary)] bg-[var(--card)] p-6 shadow-2xl">
+                   <div className="absolute inset-x-0 top-0 h-1 bg-[var(--primary)]" />
                    <form onSubmit={handleFinalSubmit} className="space-y-4">
-                     <p className="eyebrow mb-4">Request Walkthrough</p>
-                     <div className="grid grid-cols-2 gap-4">
-                       <input required type="text" placeholder="Name" value={name} onChange={e => setName(e.target.value)} className="bg-[#050505] border border-white/10 p-3 text-sm focus:border-[#FF5A00] outline-none transition-colors text-white placeholder:text-gray-600" />
-                       <input required type="tel" placeholder="Phone" value={phone} onChange={e => setPhone(e.target.value)} className="bg-[#050505] border border-white/10 p-3 text-sm focus:border-[#FF5A00] outline-none transition-colors text-white placeholder:text-gray-600" />
+                     <fieldset className="space-y-4">
+                       <legend className="eyebrow mb-4">Request a walkthrough</legend>
+                       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                         <div className="space-y-1.5">
+                           <label htmlFor="estimate-name" className="text-xs font-semibold text-[var(--foreground)]">Name</label>
+                           <Input id="estimate-name" required type="text" autoComplete="name" value={name} onChange={e => setName(e.target.value)} className="h-11 bg-[var(--background)]" />
+                         </div>
+                         <div className="space-y-1.5">
+                           <label htmlFor="estimate-phone" className="text-xs font-semibold text-[var(--foreground)]">Phone</label>
+                           <Input id="estimate-phone" required type="tel" autoComplete="tel" inputMode="tel" value={phone} onChange={e => setPhone(e.target.value)} className="h-11 bg-[var(--background)]" />
+                         </div>
+                       </div>
+                       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                         <div className="space-y-1.5">
+                           <label htmlFor="estimate-email" className="text-xs font-semibold text-[var(--foreground)]">Email</label>
+                           <Input id="estimate-email" required type="email" autoComplete="email" inputMode="email" value={email} onChange={e => setEmail(e.target.value)} className="h-11 bg-[var(--background)]" />
+                         </div>
+                         <div className="space-y-1.5">
+                           <label htmlFor="estimate-city" className="text-xs font-semibold text-[var(--foreground)]">Project city</label>
+                           <Input id="estimate-city" required type="text" autoComplete="address-level2" value={city} onChange={e => setCity(e.target.value)} className="h-11 bg-[var(--background)]" />
+                         </div>
+                       </div>
+                     </fieldset>
+                     <Button disabled={status === 'submitting'} type="submit" size="lg" className="h-11 w-full">
+                       {status === 'submitting' ? <Loader2 className="animate-spin motion-reduce:animate-none" aria-hidden="true" /> : null}
+                       {status === 'submitting' ? 'Saving request' : 'Request walkthrough'}
+                     </Button>
+                     <div aria-live="polite" className="min-h-5 text-xs text-[var(--muted-foreground)]">
+                       {submitMessage}
                      </div>
-                     <div className="grid grid-cols-2 gap-4">
-                       <input required type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} className="bg-[#050505] border border-white/10 p-3 text-sm focus:border-[#FF5A00] outline-none transition-colors text-white placeholder:text-gray-600" />
-                       <input required type="text" placeholder="City" value={city} onChange={e => setCity(e.target.value)} className="bg-[#050505] border border-white/10 p-3 text-sm focus:border-[#FF5A00] outline-none transition-colors text-white placeholder:text-gray-600" />
-                     </div>
-                     <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }} disabled={status === 'submitting'} type="submit" className="w-full bg-[#FF5A00] text-white p-4 text-sm font-bold flex items-center justify-center gap-2 hover:bg-[#ff7a33] transition-colors disabled:opacity-50 mt-2 shimmer-cta">
-                       {status === 'submitting' ? <Loader2 className="animate-spin" size={16} /> : 'Lock In Estimate'}
-                     </motion.button>
+                     {status === 'fallback' ? (
+                       <a href={fallbackHref} className="inline-flex min-h-11 items-center text-sm font-semibold text-[var(--primary)] underline underline-offset-4">
+                         Email this request instead
+                       </a>
+                     ) : null}
                    </form>
                  </motion.div>
                )}
              </AnimatePresence>
+              </div>
+            </div>
+            <p className="text-center text-xs text-[var(--muted-foreground)]">
+              MN reg: ir816596 | painting contractor
+            </p>
           </div>
-
-        </div>
-        <div className="text-center text-xs text-gray-600 mt-2 pb-4">
-          reg: ir816596 | painting
-        </div>
-      </section>
-    </PageTransition>
+        </section>
+      </PageTransition>
+    </MotionConfig>
   );
 }

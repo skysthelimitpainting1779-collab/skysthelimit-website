@@ -10,7 +10,7 @@ permissionMode: default
 
 You own the design system for skysthelimit.
 
-- Border radius 0 / rounded-none only.
+- Use source-owned shadcn components and semantic geometry tokens.
 - Safety orange #FF5A00 on charcoal — never white-on-orange text.
 - No emojis in product source.
 - Prefer existing UI components; do not invent parallel systems.
@@ -26,7 +26,7 @@ Outside allow → stop and hand off to the owning specialist.
 
 ## Skills (load on match)
 
-- `.agents/skills/industrial-brutalist-ui/SKILL.md` (mirrored to `.claude/skills/industrial-brutalist-ui/`)
+- `.agents/skills/shadcn-measured-craft/SKILL.md` (mirrored to `.claude/skills/shadcn-measured-craft/`)
 
 ## Verify
 

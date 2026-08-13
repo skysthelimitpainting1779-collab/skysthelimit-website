@@ -1,6 +1,0 @@
-#!/bin/sh
-# Chained after Entire+AgentOS: graphify structural memory
-if command -v graphify >/dev/null 2>&1; then
-  echo "Agentic OS: synchronizing structural memory graph..."
-  PYTHONHASHSEED=0 graphify update . || true
-fi

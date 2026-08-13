@@ -1,0 +1,617 @@
+{
+  "$schema": "./provider-access-ledger.schema.json",
+  "schemaVersion": "1.0.0",
+  "programId": "stl-post-g20-sequential-tdd-v1",
+  "capturedAt": "2026-07-29T14:20:00Z",
+  "productionMutationAuthorized": false,
+  "providers": [
+    {
+      "providerId": "calcom",
+      "displayName": "Cal.com",
+      "accessStatus": "unverified",
+      "account": {
+        "id": "not-observed",
+        "label": "Access required later",
+        "verificationStatus": "unverified"
+      },
+      "teams": [],
+      "resources": [],
+      "environments": [
+        {
+          "name": "unknown",
+          "verificationStatus": "unverified",
+          "resourceIds": []
+        }
+      ],
+      "permissions": [
+        "none-verified"
+      ],
+      "requiredForNodes": [
+        "STL-202"
+      ],
+      "evidence": [
+        {
+          "kind": "approval-policy",
+          "reference": ".agents/handoffs/skys-limit-convex-production-os/EXTERNAL_ACCESS_AND_APPROVALS.md",
+          "verificationStatus": "verified"
+        }
+      ],
+      "secretMaterialStored": false
+    },
+    {
+      "providerId": "clerk",
+      "displayName": "Clerk",
+      "accessStatus": "partial",
+      "account": {
+        "id": "not-observed",
+        "label": "Application identity requires provider preflight",
+        "verificationStatus": "unverified"
+      },
+      "teams": [],
+      "resources": [
+        {
+          "resourceType": "webhook-endpoint",
+          "id": "convex-preview-clerk-lifecycle",
+          "name": "Clerk lifecycle webhook",
+          "environment": "preview",
+          "verificationStatus": "verified"
+        }
+      ],
+      "environments": [
+        {
+          "name": "development",
+          "verificationStatus": "partial",
+          "resourceIds": []
+        },
+        {
+          "name": "preview",
+          "verificationStatus": "verified",
+          "resourceIds": [
+            "convex-preview-clerk-lifecycle"
+          ]
+        },
+        {
+          "name": "production",
+          "verificationStatus": "blocked",
+          "resourceIds": []
+        }
+      ],
+      "permissions": [
+        "application:read-unverified",
+        "webhook:preview-configured",
+        "production:blocked"
+      ],
+      "requiredForNodes": [
+        "STL-102",
+        "STL-103"
+      ],
+      "evidence": [
+        {
+          "kind": "architecture-decision",
+          "reference": ".agents/handoffs/skys-limit-convex-production-os/CURRENT_DECISIONS.json#ADR-002",
+          "verificationStatus": "verified"
+        },
+        {
+          "kind": "executable-contract",
+          "reference": "tests/convex-deployment-command.test.mjs",
+          "verificationStatus": "verified"
+        }
+      ],
+      "secretMaterialStored": false
+    },
+    {
+      "providerId": "convex",
+      "displayName": "Convex",
+      "accessStatus": "partial",
+      "account": {
+        "id": "not-observed",
+        "label": "Deployment access verified without account identity",
+        "verificationStatus": "partial"
+      },
+      "teams": [],
+      "resources": [
+        {
+          "resourceType": "deployment",
+          "id": "hidden-roadrunner-577",
+          "name": "Governed Convex Preview",
+          "environment": "preview",
+          "verificationStatus": "verified"
+        }
+      ],
+      "environments": [
+        {
+          "name": "preview",
+          "verificationStatus": "verified",
+          "resourceIds": [
+            "hidden-roadrunner-577"
+          ]
+        },
+        {
+          "name": "production",
+          "verificationStatus": "blocked",
+          "resourceIds": []
+        }
+      ],
+      "permissions": [
+        "deployment:preview-read",
+        "deployment:preview-write",
+        "production:blocked"
+      ],
+      "requiredForNodes": [
+        "STL-101",
+        "STL-103",
+        "STL-105"
+      ],
+      "evidence": [
+        {
+          "kind": "executable-contract",
+          "reference": "tests/convex-deployment-command.test.mjs",
+          "verificationStatus": "verified"
+        },
+        {
+          "kind": "evidence-receipt",
+          "reference": ".agents/execution/evidence/86b44e3f4a5becee689cff193316d58d299c50559f3eedb197f3324284da8470.json",
+          "verificationStatus": "verified"
+        }
+      ],
+      "secretMaterialStored": false
+    },
+    {
+      "providerId": "directus",
+      "displayName": "Directus",
+      "accessStatus": "unverified",
+      "account": {
+        "id": "not-observed",
+        "label": "Migration source access required later",
+        "verificationStatus": "unverified"
+      },
+      "teams": [],
+      "resources": [],
+      "environments": [
+        {
+          "name": "legacy",
+          "verificationStatus": "unverified",
+          "resourceIds": []
+        }
+      ],
+      "permissions": [
+        "export:unverified",
+        "mutation:blocked"
+      ],
+      "requiredForNodes": [
+        "STL-109",
+        "STL-304"
+      ],
+      "evidence": [
+        {
+          "kind": "approval-policy",
+          "reference": ".agents/handoffs/skys-limit-convex-production-os/EXTERNAL_ACCESS_AND_APPROVALS.md",
+          "verificationStatus": "verified"
+        }
+      ],
+      "secretMaterialStored": false
+    },
+    {
+      "providerId": "github",
+      "displayName": "GitHub",
+      "accessStatus": "verified",
+      "account": {
+        "id": "285461942",
+        "label": "skysthelimitpainting1779-collab",
+        "verificationStatus": "verified"
+      },
+      "teams": [
+        {
+          "id": "skysthelimitpainting1779-collab",
+          "label": "Repository owner",
+          "verificationStatus": "verified"
+        }
+      ],
+      "resources": [
+        {
+          "resourceType": "repository",
+          "id": "R_kgDOSgH8ng",
+          "name": "skysthelimitpainting1779-collab/skys-the-limit-painting-llc-website",
+          "environment": "integration",
+          "verificationStatus": "verified"
+        }
+      ],
+      "environments": [
+        {
+          "name": "integration",
+          "verificationStatus": "verified",
+          "resourceIds": [
+            "R_kgDOSgH8ng"
+          ]
+        }
+      ],
+      "permissions": [
+        "repository:admin",
+        "pull-request:write",
+        "workflow:read"
+      ],
+      "requiredForNodes": [
+        "PR-001-OPEN-DRAFT",
+        "G70-PACKET-ASSEMBLE"
+      ],
+      "evidence": [
+        {
+          "kind": "provider-api",
+          "reference": "gh api user; gh repo view",
+          "verificationStatus": "verified"
+        }
+      ],
+      "secretMaterialStored": false
+    },
+    {
+      "providerId": "google-business-profile",
+      "displayName": "Google Business Profile",
+      "accessStatus": "unverified",
+      "account": {
+        "id": "not-observed",
+        "label": "Owner or manager access required later",
+        "verificationStatus": "unverified"
+      },
+      "teams": [],
+      "resources": [],
+      "environments": [
+        {
+          "name": "production",
+          "verificationStatus": "blocked",
+          "resourceIds": []
+        }
+      ],
+      "permissions": [
+        "profile:read-unverified",
+        "profile:write-blocked"
+      ],
+      "requiredForNodes": [
+        "STL-408"
+      ],
+      "evidence": [
+        {
+          "kind": "approval-policy",
+          "reference": ".agents/handoffs/skys-limit-convex-production-os/EXTERNAL_ACCESS_AND_APPROVALS.md",
+          "verificationStatus": "verified"
+        }
+      ],
+      "secretMaterialStored": false
+    },
+    {
+      "providerId": "payload",
+      "displayName": "Payload",
+      "accessStatus": "partial",
+      "account": {
+        "id": "repository-runtime",
+        "label": "Legacy application is present in the repository",
+        "verificationStatus": "partial"
+      },
+      "teams": [],
+      "resources": [],
+      "environments": [
+        {
+          "name": "legacy",
+          "verificationStatus": "partial",
+          "resourceIds": []
+        }
+      ],
+      "permissions": [
+        "source:read",
+        "live-data:unverified",
+        "decommission:blocked"
+      ],
+      "requiredForNodes": [
+        "STL-109",
+        "STL-304",
+        "STL-505"
+      ],
+      "evidence": [
+        {
+          "kind": "dependency-manifest",
+          "reference": "package.json",
+          "verificationStatus": "verified"
+        }
+      ],
+      "secretMaterialStored": false
+    },
+    {
+      "providerId": "resend",
+      "displayName": "Resend",
+      "accessStatus": "partial",
+      "account": {
+        "id": "not-observed",
+        "label": "Runtime configuration exists; account identity unverified",
+        "verificationStatus": "partial"
+      },
+      "teams": [],
+      "resources": [],
+      "environments": [
+        {
+          "name": "development",
+          "verificationStatus": "partial",
+          "resourceIds": []
+        },
+        {
+          "name": "production",
+          "verificationStatus": "blocked",
+          "resourceIds": []
+        }
+      ],
+      "permissions": [
+        "configuration:present",
+        "send:production-blocked"
+      ],
+      "requiredForNodes": [
+        "STL-204",
+        "STL-405"
+      ],
+      "evidence": [
+        {
+          "kind": "dependency-manifest",
+          "reference": "package.json",
+          "verificationStatus": "verified"
+        },
+        {
+          "kind": "approval-policy",
+          "reference": ".agents/handoffs/skys-limit-convex-production-os/EXTERNAL_ACCESS_AND_APPROVALS.md",
+          "verificationStatus": "verified"
+        }
+      ],
+      "secretMaterialStored": false
+    },
+    {
+      "providerId": "sms",
+      "displayName": "SMS provider",
+      "accessStatus": "not-selected",
+      "account": {
+        "id": "not-selected",
+        "label": "Provider selection pending",
+        "verificationStatus": "not-selected"
+      },
+      "teams": [],
+      "resources": [],
+      "environments": [
+        {
+          "name": "none",
+          "verificationStatus": "not-selected",
+          "resourceIds": []
+        }
+      ],
+      "permissions": [
+        "none"
+      ],
+      "requiredForNodes": [
+        "STL-405"
+      ],
+      "evidence": [
+        {
+          "kind": "approval-policy",
+          "reference": ".agents/handoffs/skys-limit-convex-production-os/EXTERNAL_ACCESS_AND_APPROVALS.md",
+          "verificationStatus": "verified"
+        }
+      ],
+      "secretMaterialStored": false
+    },
+    {
+      "providerId": "stripe",
+      "displayName": "Stripe",
+      "accessStatus": "unverified",
+      "account": {
+        "id": "not-observed",
+        "label": "Test and Production identities require preflight",
+        "verificationStatus": "unverified"
+      },
+      "teams": [],
+      "resources": [],
+      "environments": [
+        {
+          "name": "test",
+          "verificationStatus": "unverified",
+          "resourceIds": []
+        },
+        {
+          "name": "production",
+          "verificationStatus": "blocked",
+          "resourceIds": []
+        }
+      ],
+      "permissions": [
+        "test:unverified",
+        "live-effects:blocked"
+      ],
+      "requiredForNodes": [
+        "STL-208",
+        "STL-402"
+      ],
+      "evidence": [
+        {
+          "kind": "architecture-decision",
+          "reference": ".agents/handoffs/skys-limit-convex-production-os/CURRENT_DECISIONS.json#ADR-005",
+          "verificationStatus": "verified"
+        }
+      ],
+      "secretMaterialStored": false
+    },
+    {
+      "providerId": "supabase",
+      "displayName": "Supabase",
+      "accessStatus": "partial",
+      "account": {
+        "id": "ouykfhoxlrkjgscdjjqg",
+        "label": "Legacy migration and rollback project",
+        "verificationStatus": "partial"
+      },
+      "teams": [],
+      "resources": [
+        {
+          "resourceType": "project",
+          "id": "ouykfhoxlrkjgscdjjqg",
+          "name": "Legacy Supabase project",
+          "environment": "legacy",
+          "verificationStatus": "partial"
+        }
+      ],
+      "environments": [
+        {
+          "name": "legacy",
+          "verificationStatus": "partial",
+          "resourceIds": [
+            "ouykfhoxlrkjgscdjjqg"
+          ]
+        }
+      ],
+      "permissions": [
+        "configuration:present",
+        "export:unverified",
+        "decommission:blocked"
+      ],
+      "requiredForNodes": [
+        "STL-109",
+        "STL-304",
+        "STL-505"
+      ],
+      "evidence": [
+        {
+          "kind": "repository-configuration",
+          "reference": "next.config.ts",
+          "verificationStatus": "verified"
+        },
+        {
+          "kind": "approval-policy",
+          "reference": ".agents/handoffs/skys-limit-convex-production-os/EXTERNAL_ACCESS_AND_APPROVALS.md",
+          "verificationStatus": "verified"
+        }
+      ],
+      "secretMaterialStored": false
+    },
+    {
+      "providerId": "turso",
+      "displayName": "Turso",
+      "accessStatus": "partial",
+      "account": {
+        "id": "not-observed",
+        "label": "Remote libSQL is optional; local SQLite remains available",
+        "verificationStatus": "partial"
+      },
+      "teams": [],
+      "resources": [
+        {
+          "resourceType": "local-database",
+          "id": "agent-os-local-libsql",
+          "name": "Agent OS local libSQL fallback",
+          "environment": "local",
+          "verificationStatus": "verified"
+        }
+      ],
+      "environments": [
+        {
+          "name": "local",
+          "verificationStatus": "verified",
+          "resourceIds": [
+            "agent-os-local-libsql"
+          ]
+        },
+        {
+          "name": "remote",
+          "verificationStatus": "unverified",
+          "resourceIds": []
+        }
+      ],
+      "permissions": [
+        "local:read-write",
+        "remote:unverified"
+      ],
+      "requiredForNodes": [
+        "ORCH-002",
+        "ORCH-004"
+      ],
+      "evidence": [
+        {
+          "kind": "executable-contract",
+          "reference": "tests/agent-os-store.test.mjs",
+          "verificationStatus": "verified"
+        },
+        {
+          "kind": "implementation",
+          "reference": "scripts/agent-os-store.mjs",
+          "verificationStatus": "verified"
+        }
+      ],
+      "secretMaterialStored": false
+    },
+    {
+      "providerId": "vercel",
+      "displayName": "Vercel",
+      "accessStatus": "verified",
+      "account": {
+        "id": "vsbqTjYBFLBvFoDeklM8rzBb",
+        "label": "skysthelimitpainting1779-4125",
+        "verificationStatus": "verified"
+      },
+      "teams": [
+        {
+          "id": "team_bseTA2AuCO6A2fCOVY9ubrJo",
+          "label": "skysthelimitpainting1779-4125s-projects",
+          "verificationStatus": "verified"
+        }
+      ],
+      "resources": [
+        {
+          "resourceType": "project",
+          "id": "prj_L3ZMoQ79YLx9G2o6Lg9OubqO9H8m",
+          "name": "website",
+          "environment": "shared",
+          "verificationStatus": "verified"
+        },
+        {
+          "resourceType": "deployment",
+          "id": "dpl_69Y7A2m1wZsGqy1N1goHp7bLcBFw",
+          "name": "Audited PR 169 Preview",
+          "environment": "preview",
+          "verificationStatus": "verified"
+        }
+      ],
+      "environments": [
+        {
+          "name": "preview",
+          "verificationStatus": "verified",
+          "resourceIds": [
+            "dpl_69Y7A2m1wZsGqy1N1goHp7bLcBFw",
+            "prj_L3ZMoQ79YLx9G2o6Lg9OubqO9H8m"
+          ]
+        },
+        {
+          "name": "production",
+          "verificationStatus": "blocked",
+          "resourceIds": [
+            "prj_L3ZMoQ79YLx9G2o6Lg9OubqO9H8m"
+          ]
+        }
+      ],
+      "permissions": [
+        "project:read",
+        "deployment:preview",
+        "environment-metadata:read",
+        "production-mutation:blocked"
+      ],
+      "requiredForNodes": [
+        "STL-104",
+        "STL-106",
+        "G70-PACKET-ASSEMBLE"
+      ],
+      "evidence": [
+        {
+          "kind": "provider-api",
+          "reference": "vercel whoami; vercel api /v9/projects/{projectId}",
+          "verificationStatus": "verified"
+        },
+        {
+          "kind": "provider-baseline",
+          "reference": ".agents/handoffs/skys-limit-convex-production-os/VERCEL_PLATFORM_BASELINE.json",
+          "verificationStatus": "verified"
+        }
+      ],
+      "secretMaterialStored": false
+    }
+  ]
+}

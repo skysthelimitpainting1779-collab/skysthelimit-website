@@ -1,9 +1,10 @@
 {
   "slug": "guapo-upgrade-campaign",
   "title": "Guapo Upgrade Campaign",
-  "status": "active",
+  "status": "paused",
   "phase": "implement",
   "created": "2026-07-10T11:40:15.402Z",
   "path": ".agents/goals/guapo-upgrade-campaign",
-  "updated": "2026-07-10T17:17:14.738Z"
+  "updated": "2026-07-10T17:17:14.738Z",
+  "paused": "2026-07-27T08:08:36.852Z"
 }

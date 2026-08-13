@@ -1,0 +1,1066 @@
+{
+  "schemaVersion": "1.0.0",
+  "components": [
+    {
+      "component": "Accordion",
+      "usedByTemplates": [
+        "P01",
+        "P02",
+        "P05"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "ActivityTimeline",
+      "usedByTemplates": [
+        "O04",
+        "O05"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "Agenda",
+      "usedByTemplates": [
+        "O06"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "Alert",
+      "usedByTemplates": [
+        "C03",
+        "C04",
+        "C07",
+        "C08",
+        "C09",
+        "C11",
+        "O09",
+        "O11",
+        "O12",
+        "O15",
+        "O22",
+        "P04",
+        "P08",
+        "P09",
+        "P12",
+        "P13",
+        "P15",
+        "P16",
+        "P18"
+      ],
+      "source": "shadcn"
+    },
+    {
+      "component": "AppShell",
+      "usedByTemplates": [
+        "C01"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "AppointmentCard",
+      "usedByTemplates": [
+        "C03"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "AppointmentSheet",
+      "usedByTemplates": [
+        "O06"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "ApprovalActions",
+      "usedByTemplates": [
+        "C04",
+        "C05"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "ApprovalPanel",
+      "usedByTemplates": [
+        "O15"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "Article",
+      "usedByTemplates": [
+        "P15",
+        "P17"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "AssignmentBoard",
+      "usedByTemplates": [
+        "O10",
+        "O11"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "Assumptions",
+      "usedByTemplates": [
+        "O07"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "AttributionTable",
+      "usedByTemplates": [
+        "O20"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "AuditTimeline",
+      "usedByTemplates": [
+        "O21",
+        "O22"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "Badge",
+      "usedByTemplates": [
+        "C08",
+        "O02",
+        "O03",
+        "O14",
+        "P06",
+        "P14"
+      ],
+      "source": "shadcn"
+    },
+    {
+      "component": "BeforeAfter",
+      "usedByTemplates": [
+        "P07"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "Breadcrumb",
+      "usedByTemplates": [
+        "P03"
+      ],
+      "source": "shadcn"
+    },
+    {
+      "component": "BusinessFacts",
+      "usedByTemplates": [
+        "P09",
+        "P10"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "Button",
+      "usedByTemplates": [
+        "C07",
+        "P01",
+        "P11",
+        "P13",
+        "P16",
+        "P18"
+      ],
+      "source": "shadcn"
+    },
+    {
+      "component": "Calendar",
+      "usedByTemplates": [
+        "O06"
+      ],
+      "source": "shadcn"
+    },
+    {
+      "component": "CalendarActions",
+      "usedByTemplates": [
+        "C03"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "CalendarSummary",
+      "usedByTemplates": [
+        "O01"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "CapabilityFacts",
+      "usedByTemplates": [
+        "P11"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "CapacityCard",
+      "usedByTemplates": [
+        "O11"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "Card",
+      "usedByTemplates": [
+        "C01"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "ChangeSummary",
+      "usedByTemplates": [
+        "C09",
+        "O13"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "Checkbox",
+      "usedByTemplates": [
+        "C06"
+      ],
+      "source": "shadcn"
+    },
+    {
+      "component": "Checklist",
+      "usedByTemplates": [
+        "P15"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "ClerkAuth",
+      "usedByTemplates": [
+        "P16"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "Command",
+      "usedByTemplates": [
+        "O02",
+        "P04"
+      ],
+      "source": "shadcn"
+    },
+    {
+      "component": "Composer",
+      "usedByTemplates": [
+        "C10"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "ContactChannels",
+      "usedByTemplates": [
+        "P09"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "ContentTable",
+      "usedByTemplates": [
+        "O17"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "ConversionFooter",
+      "usedByTemplates": [
+        "P01"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "ConversionHeader",
+      "usedByTemplates": [
+        "P01"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "CoverageFacts",
+      "usedByTemplates": [
+        "P05"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "DataQuality",
+      "usedByTemplates": [
+        "O20"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "DataTable",
+      "usedByTemplates": [
+        "O02",
+        "O09",
+        "O13",
+        "O21"
+      ],
+      "source": "shadcn"
+    },
+    {
+      "component": "DocumentApproval",
+      "usedByTemplates": [
+        "C09"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "DocumentList",
+      "usedByTemplates": [
+        "C02",
+        "O04",
+        "O10",
+        "P11"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "DocumentPreview",
+      "usedByTemplates": [
+        "O07",
+        "O08",
+        "O13"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "DocumentSurface",
+      "usedByTemplates": [
+        "C04",
+        "C05",
+        "C06"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "DraftQueue",
+      "usedByTemplates": [
+        "O18"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "Editor",
+      "usedByTemplates": [
+        "O17"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "Empty",
+      "usedByTemplates": [
+        "C08",
+        "P06",
+        "P18"
+      ],
+      "source": "shadcn"
+    },
+    {
+      "component": "EnvironmentBadge",
+      "usedByTemplates": [
+        "O16"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "EstimateEditor",
+      "usedByTemplates": [
+        "O07"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "EstimateLines",
+      "usedByTemplates": [
+        "C04"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "ExperimentCard",
+      "usedByTemplates": [
+        "O18"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "ExperimentTable",
+      "usedByTemplates": [
+        "O20"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "FactList",
+      "usedByTemplates": [
+        "O05"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "FieldGroup",
+      "usedByTemplates": [
+        "O22",
+        "P08",
+        "P09",
+        "P12",
+        "P13"
+      ],
+      "source": "shadcn"
+    },
+    {
+      "component": "FileTable",
+      "usedByTemplates": [
+        "C08",
+        "O12"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "FilterBar",
+      "usedByTemplates": [
+        "O03",
+        "O14"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "FunnelChart",
+      "usedByTemplates": [
+        "O20"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "GrantTable",
+      "usedByTemplates": [
+        "O21"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "Input",
+      "usedByTemplates": [
+        "P08"
+      ],
+      "source": "shadcn"
+    },
+    {
+      "component": "IntegrationHealthCard",
+      "usedByTemplates": [
+        "O01",
+        "O06",
+        "O16"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "InviteDialog",
+      "usedByTemplates": [
+        "O21"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "JsonLd",
+      "usedByTemplates": [
+        "P07"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "Kanban",
+      "usedByTemplates": [
+        "O03"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "LeadQuality",
+      "usedByTemplates": [
+        "O02"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "LineItems",
+      "usedByTemplates": [
+        "O07"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "LocationCard",
+      "usedByTemplates": [
+        "P04"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "LocationHero",
+      "usedByTemplates": [
+        "P05"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "MarketHero",
+      "usedByTemplates": [
+        "P02"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "MarketPath",
+      "usedByTemplates": [
+        "P01"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "MediaGallery",
+      "usedByTemplates": [
+        "C09",
+        "P07",
+        "P10"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "MessageThread",
+      "usedByTemplates": [
+        "C10"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "MetricCard",
+      "usedByTemplates": [
+        "O01",
+        "O09",
+        "O18",
+        "O19",
+        "O20"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "NextActionPanel",
+      "usedByTemplates": [
+        "C01",
+        "C02",
+        "O04",
+        "O10",
+        "P08",
+        "P13"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "NotificationSettings",
+      "usedByTemplates": [
+        "C11"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "OperatorShell",
+      "usedByTemplates": [
+        "O01"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "OpportunityCard",
+      "usedByTemplates": [
+        "O03"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "OpportunityHeader",
+      "usedByTemplates": [
+        "O04"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "OwnerProfile",
+      "usedByTemplates": [
+        "P10"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "PaymentSummary",
+      "usedByTemplates": [
+        "C07"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "PlanningRange",
+      "usedByTemplates": [
+        "P08"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "PolicyAlert",
+      "usedByTemplates": [
+        "O19"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "PolicyEditor",
+      "usedByTemplates": [
+        "O22"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "PreparationChecklist",
+      "usedByTemplates": [
+        "P02",
+        "P03",
+        "P07"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "PreviewPanel",
+      "usedByTemplates": [
+        "O17"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "PrincipleList",
+      "usedByTemplates": [
+        "P10"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "PriorityQueue",
+      "usedByTemplates": [
+        "O01"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "PrivacyBadge",
+      "usedByTemplates": [
+        "O12"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "Profile",
+      "usedByTemplates": [
+        "C11"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "Progress",
+      "usedByTemplates": [
+        "P08"
+      ],
+      "source": "shadcn"
+    },
+    {
+      "component": "ProjectEvidenceCard",
+      "usedByTemplates": [
+        "P01",
+        "P02",
+        "P03",
+        "P05",
+        "P06",
+        "P11"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "ProjectFilter",
+      "usedByTemplates": [
+        "P06"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "ProjectHeader",
+      "usedByTemplates": [
+        "O10"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "ProjectSummary",
+      "usedByTemplates": [
+        "C01"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "ProofGap",
+      "usedByTemplates": [
+        "O18"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "ProofPicker",
+      "usedByTemplates": [
+        "O08"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "ProofStamp",
+      "usedByTemplates": [
+        "C05",
+        "P01",
+        "P07"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "PropertyHeader",
+      "usedByTemplates": [
+        "C02"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "ProposalEditor",
+      "usedByTemplates": [
+        "O08"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "ProposalSummary",
+      "usedByTemplates": [
+        "C05"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "ProvenancePanel",
+      "usedByTemplates": [
+        "O17"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "PublicationControl",
+      "usedByTemplates": [
+        "O12"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "Receipt",
+      "usedByTemplates": [
+        "C06",
+        "C07"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "ReconciliationPanel",
+      "usedByTemplates": [
+        "O09"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "RecordHeader",
+      "usedByTemplates": [
+        "O05"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "RecordPreview",
+      "usedByTemplates": [
+        "O14"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "ReferralCode",
+      "usedByTemplates": [
+        "P12"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "ReferralTable",
+      "usedByTemplates": [
+        "O19"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "RelatedLinks",
+      "usedByTemplates": [
+        "P03",
+        "P15"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "RelationshipTable",
+      "usedByTemplates": [
+        "O05"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "ResourceCard",
+      "usedByTemplates": [
+        "P14"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "ReviewEventTable",
+      "usedByTemplates": [
+        "O19"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "RoleEditor",
+      "usedByTemplates": [
+        "O21"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "RouteHealthTable",
+      "usedByTemplates": [
+        "O18"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "RunTimeline",
+      "usedByTemplates": [
+        "O15"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "Runbook",
+      "usedByTemplates": [
+        "O16"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "Schedule",
+      "usedByTemplates": [
+        "O10"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "ScopeMatrix",
+      "usedByTemplates": [
+        "P02",
+        "P11"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "ScopeSummary",
+      "usedByTemplates": [
+        "C02",
+        "C04",
+        "P03"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "Search",
+      "usedByTemplates": [
+        "P14"
+      ],
+      "source": "shadcn"
+    },
+    {
+      "component": "SecurityPanel",
+      "usedByTemplates": [
+        "C11"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "SendPanel",
+      "usedByTemplates": [
+        "O08"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "ServiceAreaMap",
+      "usedByTemplates": [
+        "P04"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "ServiceHero",
+      "usedByTemplates": [
+        "P03"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "ServiceLinks",
+      "usedByTemplates": [
+        "P05"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "SettingsNav",
+      "usedByTemplates": [
+        "O22"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "ShareActions",
+      "usedByTemplates": [
+        "P12"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "Sheet",
+      "usedByTemplates": [
+        "O02",
+        "O11"
+      ],
+      "source": "shadcn"
+    },
+    {
+      "component": "SignatureAction",
+      "usedByTemplates": [
+        "C06"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "StatusBadge",
+      "usedByTemplates": [
+        "C10"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "StatusTimeline",
+      "usedByTemplates": [
+        "C01",
+        "C02",
+        "C03",
+        "O10",
+        "O13",
+        "P12"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "SupportLink",
+      "usedByTemplates": [
+        "P16"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "SupportQueue",
+      "usedByTemplates": [
+        "O19"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "TableOfContents",
+      "usedByTemplates": [
+        "P15",
+        "P17"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "Tabs",
+      "usedByTemplates": [
+        "P14"
+      ],
+      "source": "shadcn"
+    },
+    {
+      "component": "TaskList",
+      "usedByTemplates": [
+        "O04",
+        "O14"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "ToggleGroup",
+      "usedByTemplates": [
+        "P08"
+      ],
+      "source": "shadcn"
+    },
+    {
+      "component": "Upload",
+      "usedByTemplates": [
+        "C08",
+        "C10",
+        "O12",
+        "P08"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "VersionHistory",
+      "usedByTemplates": [
+        "O07",
+        "O17"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "WebhookReceiptTable",
+      "usedByTemplates": [
+        "O16"
+      ],
+      "source": "project-composition"
+    },
+    {
+      "component": "WorkflowTable",
+      "usedByTemplates": [
+        "O15"
+      ],
+      "source": "project-composition"
+    }
+  ]
+}

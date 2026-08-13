@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "1.0.0",
+  "gate": "G25-DESIGN-SPEC-LOCKED",
+  "status": "passed-by-handoff",
+  "preparedAt": "2026-07-27T12:55:28+00:00",
+  "criteria": {
+    "routeInventoryComplete": true,
+    "informationArchitectureComplete": true,
+    "userFlowsComplete": true,
+    "uniquePageTemplates": 51,
+    "everyNonLegacyRouteMapped": true,
+    "pageStatesDefined": true,
+    "componentInventoryDefined": true,
+    "responsiveOrderDefined": true,
+    "marketingSkillsMapped": true,
+    "designSystemDefined": true,
+    "wireframeViewerGenerated": true
+  },
+  "implementationRule": "B30, B31, and B50 implement these artifacts. They do not repeat wireframing or visual strategy unless a verified delta invalidates a template."
+}

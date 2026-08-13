@@ -1,0 +1,21 @@
+{
+  "baseHeadSha": "ebb0282ceb275b52fe397504a2fa8792c43672d3",
+  "checkpointId": "cp-20260730-platform-foundation-design-001",
+  "checkpointPurpose": "Record the approved non-production GitHub, Vercel, branch, and agent-governance design before implementation.",
+  "graphSha256": "4f6a7d81e9c46ecbf886703fcf03988dd317115f9577152aa7ac09bd5ec532c9",
+  "nodeId": "G26-AUDIT-REMEDIATION-READY",
+  "programId": "stl-post-g20-sequential-tdd-v1",
+  "schemaVersion": 1,
+  "verification": [
+    {
+      "command": "python in-memory platform-foundation design self-review",
+      "result": "placeholder, consistency, scope, branch-policy, identity-provider, production-boundary, and newline checks passed",
+      "status": "passed"
+    },
+    {
+      "command": "GitHub and Vercel exact-head baseline audit for ebb0282ceb275b52fe397504a2fa8792c43672d3",
+      "result": "Repository Quality passed, Security passed, canonical website preview READY, and main remained unchanged",
+      "status": "passed"
+    }
+  ]
+}

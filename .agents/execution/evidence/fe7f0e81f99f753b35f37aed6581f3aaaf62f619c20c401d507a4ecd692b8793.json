@@ -1,0 +1,60 @@
+{
+  "baseHeadSha": "f5425a78b793eb8cc4f4433edc5d520dd7c8af31",
+  "checkpointId": "cp-20260728-g26-ledgers-001",
+  "completedStage": "stage:G26-AUDIT-REMEDIATION-READY:update_ledgers",
+  "graphSha256": "4f6a7d81e9c46ecbf886703fcf03988dd317115f9577152aa7ac09bd5ec532c9",
+  "nodeId": "G26-AUDIT-REMEDIATION-READY",
+  "programId": "stl-post-g20-sequential-tdd-v1",
+  "remediation": [
+    "portable verification receipts redact workspace, home, sensitive environment values, JSON escapes, and equivalent URL encodings",
+    "durable pending-event arrival time drives both resume guidance and restored poll FIFO ordering",
+    "all remaining PR review findings are fixed, outdated, duplicate, or disproven by executable contracts"
+  ],
+  "reviewAudit": [
+    {
+      "reviewer": "Pascal",
+      "status": "no remaining P0/P1/P2 findings after four-pass adversarial review",
+      "taskId": "019fabf4-250b-7561-a44f-945b2e25ee34"
+    }
+  ],
+  "schemaVersion": 1,
+  "verification": [
+    {
+      "command": "node --test tests/evidence-output.test.mjs tests/development-lifecycle-review.test.mjs tests/impeccable-codeql-regressions.test.mjs",
+      "result": "17/17 evidence, recovery, mirror, and poll-order regressions",
+      "status": "passed"
+    },
+    {
+      "command": "npm test",
+      "result": "477/477 tests",
+      "status": "passed"
+    },
+    {
+      "command": "npm run lint:ci",
+      "status": "passed"
+    },
+    {
+      "command": "npm run ci:contract",
+      "status": "passed"
+    },
+    {
+      "command": "npm run skills:validate",
+      "result": "66 routes and 14 primary skills",
+      "status": "passed"
+    },
+    {
+      "command": "npm run host:compile",
+      "result": "7 specialists and host-native adapters compiled",
+      "status": "passed"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed"
+    },
+    {
+      "command": "SHA-256 mirror comparison for changed Impeccable runtime files",
+      "result": "all .agents and .github copies are byte-identical",
+      "status": "passed"
+    }
+  ]
+}

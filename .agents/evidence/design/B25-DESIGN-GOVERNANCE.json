@@ -1,0 +1,70 @@
+{
+  "nodeId": "B25-DESIGN-GOVERNANCE",
+  "surface": "public-marketing",
+  "routes": [
+    "/",
+    "/estimate",
+    "/refer"
+  ],
+  "designSha256": "c40220b22064bc083bd51787488bb04051edf7cfaac27d3c8a367a86f2182ae0",
+  "templateIds": [
+    "P01",
+    "P08",
+    "P12"
+  ],
+  "skillsLoaded": [
+    "design-md-governance",
+    "ui-ux-pro-max",
+    "impeccable",
+    "design-taste-frontend",
+    "redesign-existing-projects",
+    "anti-slop-ui-review"
+  ],
+  "impeccablePasses": [
+    "shape",
+    "audit",
+    "harden",
+    "polish"
+  ],
+  "tasteDisposition": "Applied to the public-marketing transition repair; no layout or visual-direction change.",
+  "designLint": {
+    "passed": true,
+    "modes": [
+      "changed",
+      "all"
+    ]
+  },
+  "antiSlopLint": {
+    "passed": true,
+    "modes": [
+      "changed",
+      "all"
+    ]
+  },
+  "screenshots": {
+    "desktop": {
+      "path": "output/playwright/b25-refer-desktop.png",
+      "sha256": "21109c4726053c7b5d339871fd5f03e2bab5ce8d5cb527f3027d0f4e94a86446",
+      "viewport": "1440x1000"
+    },
+    "mobile": {
+      "path": "output/playwright/b25-refer-mobile.png",
+      "sha256": "f10f6c50f5cd300b810ca9e678476eea987567e09f780a70172c16cc6c837e19",
+      "viewport": "390x844"
+    }
+  },
+  "accessibility": {
+    "passed": true,
+    "method": "Playwright semantic snapshot at desktop and mobile widths",
+    "checks": [
+      "skip link present",
+      "banner, navigation, main, and contentinfo landmarks present",
+      "single level-one heading present",
+      "email input has an accessible name",
+      "mobile navigation control has an accessible name"
+    ],
+    "nonBlockingConsole": [
+      "Local development favicon.ico returned 404."
+    ]
+  }
+}

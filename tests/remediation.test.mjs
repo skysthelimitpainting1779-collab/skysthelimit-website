@@ -21,7 +21,7 @@ test('lead email HTML escapes submitted keys and values', () => {
   assert.match(leadsApi, /escapeHtml\(value\)/);
 });
 
-test('Vercel config has security headers and no blanket SPA rewrite', () => {
+test('Vercel config has security headers and no legacy string blanket SPA rewrite', () => {
   assert.ok(!existsSync(new URL('../vercel.ts', import.meta.url)), 'legacy vercel.ts should remain deleted');
   assert.ok(existsSync(new URL('../vercel.json', import.meta.url)), 'vercel.json should exist');
 
@@ -40,7 +40,15 @@ test('Vercel config has security headers and no blanket SPA rewrite', () => {
     assert.ok(headerKeys.has(key), `${key} header is missing`);
   }
 
-  assert.ok(!Object.hasOwn(vercel, 'rewrites'));
+  const rewrites = vercel.rewrites ?? [];
+  const blanketRewrite = rewrites.find(({ source }) => source === '/(.*)');
+  assert.equal(blanketRewrite, undefined);
+  assert.equal(
+    rewrites.some(
+      ({ source, destination }) => source === '/(.*)' && typeof destination === 'string'
+    ),
+    false
+  );
   assert.ok(
     vercel.redirects.some(
       ({ source, destination }) => source === '/services' && destination === '/residential'
@@ -52,13 +60,13 @@ test('build pipeline prerenders public routes and static 404 metadata', () => {
   const packageJson = JSON.parse(read('package.json'));
   assert.equal(packageJson.scripts.build, 'next build');
 
-  const layout = read('src/app/layout.tsx');
+  const layout = read('src/app/(marketing)/layout.tsx');
   assert.match(layout, /application\/ld\+json/);
   assert.match(layout, /canonical/);
 
   // Assert that App Router directories exist for core pages
   for (const route of ['residential', 'commercial', 'public-sector', 'projects', 'about', 'contact', 'capabilities', 'service-area']) {
-    const pagePath = `src/app/${route}/page.tsx`;
+    const pagePath = `src/app/(marketing)/${route}/page.tsx`;
     assert.ok(existsSync(new URL(`../${pagePath}`, import.meta.url)), `${pagePath} should exist for the route ${route}`);
   }
 });
@@ -77,7 +85,7 @@ test('service area map is fast, routable, and accessible', () => {
   const appExists = existsSync(new URL('../src/App.tsx', import.meta.url));
   assert.ok(!appExists, 'src/App.tsx should be deleted to clean up Vite router remnants');
 
-  const page = read('src/app/service-area/page.tsx');
+  const page = read('src/app/(marketing)/service-area/page.tsx');
   const header = read('src/components/ConversionHeader.tsx');
   const map = read('src/components/ServiceAreaMap.tsx');
   const sitemapGenerator = read('scripts/generate-sitemap.js');

@@ -1,0 +1,55 @@
+{
+  "schemaVersion": "1.0.0",
+  "globalUiOrder": [
+    "Read DESIGN.md and active page wireframe.",
+    "Load the technical primary skill.",
+    "Load ui-ux-pro-max.",
+    "Load impeccable and perform shape/critique before implementation.",
+    "Apply Taste according to surface scope.",
+    "Implement.",
+    "Run DESIGN.md lint and anti-slop lint.",
+    "Run impeccable audit, harden, and polish.",
+    "Capture screenshots and evidence."
+  ],
+  "surfaceRules": {
+    "public-marketing": {
+      "requiredSkills": [
+        "design-md-governance",
+        "ui-ux-pro-max",
+        "impeccable",
+        "design-taste-frontend",
+        "redesign-existing-projects",
+        "anti-slop-ui-review"
+      ],
+      "tasteDisposition": "required"
+    },
+    "customer-portal": {
+      "requiredSkills": [
+        "design-md-governance",
+        "ui-ux-pro-max",
+        "impeccable",
+        "anti-slop-ui-review"
+      ],
+      "tasteDisposition": "The default Taste landing-page skill explicitly excludes dashboards. Record not-applied-scope-exclusion; do not force landing-page patterns into product UI."
+    },
+    "operator-cockpit": {
+      "requiredSkills": [
+        "design-md-governance",
+        "ui-ux-pro-max",
+        "impeccable",
+        "anti-slop-ui-review"
+      ],
+      "tasteDisposition": "Record not-applied-scope-exclusion for dashboard/table work. Use Impeccable product lane and UI/UX Pro Max."
+    }
+  },
+  "failClosedConditions": [
+    "DESIGN.md missing or invalid",
+    "active route has no wireframe/page spec",
+    "required skill unavailable",
+    "design lint fails",
+    "anti-slop lint has error findings",
+    "desktop/mobile screenshot evidence missing",
+    "accessibility or reduced-motion verification missing",
+    "design evidence ledger missing"
+  ]
+}

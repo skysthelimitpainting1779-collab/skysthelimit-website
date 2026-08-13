@@ -1,0 +1,84 @@
+{
+  "schemaVersion": "1.0.0",
+  "designFile": "DESIGN.md",
+  "baselineSha256": "c40220b22064bc083bd51787488bb04051edf7cfaac27d3c8a367a86f2182ae0",
+  "routeInventory": "design/ROUTE_INVENTORY.json",
+  "pageSpecs": "design/PAGE_SPECS.json",
+  "designChangelog": "design/DESIGN_CHANGELOG.md",
+  "requiredHeadings": [
+    "Product idea",
+    "Surfaces",
+    "Brand and color",
+    "Typography",
+    "Geometry and spacing",
+    "Navigation",
+    "Public-page conversion pattern",
+    "Components",
+    "Forms",
+    "States",
+    "Motion",
+    "Photography and media",
+    "Copy system",
+    "Accessibility",
+    "Responsive behavior",
+    "Design gate"
+  ],
+  "requiredTemplateCount": 51,
+  "allowedDesignChangeProtocol": {
+    "hashMarker": "DESIGN-SHA256:",
+    "approverMarker": "APPROVED-BY:",
+    "reasonMarker": "REASON:"
+  },
+  "uiRoots": [
+    "src/app",
+    "src/components",
+    "src/views"
+  ],
+  "ignore": [
+    "**/*.test.*",
+    "**/*.spec.*",
+    "**/node_modules/**",
+    "**/.next/**",
+    "**/generated/**"
+  ],
+  "bannedCopyPhrases": [
+    "Elevate your",
+    "Unlock your",
+    "Unleash the",
+    "Seamless experience",
+    "Revolutionize your",
+    "Transform your business"
+  ],
+  "bannedCodePatterns": [
+    {
+      "id": "transition-all",
+      "pattern": "\\btransition-all\\b",
+      "severity": "error",
+      "message": "Animate named properties, not transition-all."
+    },
+    {
+      "id": "generic-purple-gradient",
+      "pattern": "(from|via|to)-(purple|violet|fuchsia)-[0-9]{2,3}",
+      "severity": "error",
+      "message": "Generic AI purple gradients contradict DESIGN.md."
+    },
+    {
+      "id": "global-zero-radius",
+      "pattern": "(--radius\\s*:\\s*0|border-radius\\s*:\\s*0\\s*[;}]|\\*\\s*\\{[^}]*border-radius\\s*:\\s*0)",
+      "severity": "error",
+      "message": "Do not globally force radius zero."
+    },
+    {
+      "id": "emoji-product-chrome",
+      "pattern": "(<Button|<nav|aria-label=)[^\\n]*(🚀|✨|🔥|💡|✅|⭐|🎨|📈)",
+      "severity": "error",
+      "message": "No emoji in product chrome."
+    },
+    {
+      "id": "unbounded-card-nesting",
+      "pattern": "<Card[^>]*>[\\s\\S]{0,1500}<Card",
+      "severity": "warning",
+      "message": "Review cards nested inside cards."
+    }
+  ]
+}
