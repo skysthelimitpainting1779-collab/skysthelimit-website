@@ -8,7 +8,7 @@ contact_links:
     about: CMS, homebase, portal, procurement.
   - name: skysthelimit · Reliability
     url: https://linear.app/skysthelimit/project/skysthelimit-reliability-a29ad741ff6a
-    about: Production, leads, security, infra P0s.
+    about: Production, leads, security, infra P0s — file audit findings here.
   - name: Naming SSOT
     url: https://github.com/skysthelimitpainting1779-collab/skys-the-limit-painting-llc-website/blob/main/docs/NAMING.md
     about: Canonical names across GitHub / Vercel / Linear / local.
