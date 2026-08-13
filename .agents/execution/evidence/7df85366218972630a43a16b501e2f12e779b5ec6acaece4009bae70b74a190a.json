@@ -1,0 +1,50 @@
+{
+  "baseHeadSha": "df6f1a4341a73123b1d15fddcb5b06ba0a88518c",
+  "checkpointId": "cp-20260812-stl203-acquisition-engine-dev-001",
+  "checkpointPurpose": "Implement and verify the repeatable Convex acquisition loop before draft preview publication.",
+  "completedStage": "stage:STL-203:scoped_verify",
+  "graphSha256": "4f6a7d81e9c46ecbf886703fcf03988dd317115f9577152aa7ac09bd5ec532c9",
+  "issueDecision": {
+    "action": "open_replacement_draft_pr",
+    "reason": "Publish the verified acquisition delta on the governed dev integration branch; production mutation remains unauthorized."
+  },
+  "nodeId": "STL-203",
+  "productionMutationAuthorized": false,
+  "programId": "stl-post-g20-sequential-tdd-v1",
+  "reviewAudit": [
+    {
+      "reviewer": "Sartre",
+      "status": "READY — no Critical or Important findings after idempotency, suppression, identity enrichment, cooldown, and receipt repairs"
+    }
+  ],
+  "schemaVersion": 1,
+  "tdd": {
+    "green": "The same focused contracts now pass for deterministic scoring, bounded queues, semantic idempotency, suppression, enrichment aliases, five-business-day cooldown, and durable execution receipts.",
+    "red": "The acquisition contract test initially failed because the module did not exist; independent-review findings were reproduced with handler regressions before correction."
+  },
+  "verification": [
+    {
+      "command": "npx tsc --noEmit",
+      "status": "passed"
+    },
+    {
+      "command": "node --import tsx --test tests/acquisition-engine.test.mjs tests/acquisition-mutations.test.mjs",
+      "result": "12/12 focused tests",
+      "status": "passed"
+    },
+    {
+      "command": "npm run goal:verify -- --build",
+      "result": "549 tests: 535 passed, 14 intentional skips; lint and 44-route Next.js build passed",
+      "status": "passed"
+    },
+    {
+      "command": "independent Critical/Important review",
+      "result": "READY — no remaining Critical or Important findings",
+      "status": "passed"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed"
+    }
+  ]
+}
