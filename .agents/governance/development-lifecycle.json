@@ -23,6 +23,21 @@
       "ungovernedCommitCount": 1
     }
   ],
+  "squashIntegrationReconciliations": [
+    {
+      "integrationCommitSha": "df6f1a4341a73123b1d15fddcb5b06ba0a88518c",
+      "integrationTreeSha": "84f6151950012750b38dd7ca2ee58e181adceb46",
+      "integrationParentSha": "ebb0282ceb275b52fe397504a2fa8792c43672d3",
+      "integrationSubject": "infra(platform): establish dev and Vercel governance (#174)",
+      "pullRequestNumber": 174,
+      "sourceHeadSha": "4c66995711aadeb56a5a8ea3e6ff9d06930b1d80",
+      "sourceHeadParentSha": "e59c57621c8bfb7abdc72ecd7217140bc1685ca4",
+      "sourceHeadTreeSha": "84f6151950012750b38dd7ca2ee58e181adceb46",
+      "sourceHeadMessage": "fix(platform): document executable telemetry gate\n\nExecution-Program: stl-post-g20-sequential-tdd-v1\nExecution-Node: G26-AUDIT-REMEDIATION-READY\nCheckpoint-ID: cp-20260730-platform-foundation-telemetry-cli-green-001\nEvidence-SHA256: 70872d07247106bfddf770f0900dceab3cac85f5be0e4caea94650e187540ed6\n",
+      "sourceHeadEvidenceSha256": "70872d07247106bfddf770f0900dceab3cac85f5be0e4caea94650e187540ed6",
+      "targetRef": "refs/heads/dev"
+    }
+  ],
   "executionGraph": {
     "authoritative": true,
     "path": ".agents/execution/skys-limit-sequential-tdd-execution-graph-audited.jsonl",

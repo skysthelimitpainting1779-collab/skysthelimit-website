@@ -26,6 +26,7 @@ import { canonicalSha256 } from '../scripts/lib/canonical-text.mjs';
 import {
   collectCommitPaths,
   validateRemoteMergeReconciliation,
+  validateSquashIntegrationReconciliation,
 } from '../scripts/verify-development-lifecycle.mjs';
 
 const governedMessage = `fix(ci): enforce lifecycle contract
@@ -232,6 +233,29 @@ test('repository pins one audited execution graph as lifecycle authority', () =>
       mergeBaseSha: 'fb4a8f154b32a3337be444159c80c9183eeb4f9c',
       pushedRef: 'refs/heads/agent/skys-limit-convex-os',
       ungovernedCommitCount: 1,
+    },
+  ]);
+  assert.deepEqual(config.squashIntegrationReconciliations, [
+    {
+      integrationCommitSha: 'df6f1a4341a73123b1d15fddcb5b06ba0a88518c',
+      integrationTreeSha: '84f6151950012750b38dd7ca2ee58e181adceb46',
+      integrationParentSha: 'ebb0282ceb275b52fe397504a2fa8792c43672d3',
+      integrationSubject:
+        'infra(platform): establish dev and Vercel governance (#174)',
+      pullRequestNumber: 174,
+      sourceHeadSha: '4c66995711aadeb56a5a8ea3e6ff9d06930b1d80',
+      sourceHeadParentSha: 'e59c57621c8bfb7abdc72ecd7217140bc1685ca4',
+      sourceHeadTreeSha: '84f6151950012750b38dd7ca2ee58e181adceb46',
+      sourceHeadMessage: `fix(platform): document executable telemetry gate
+
+Execution-Program: stl-post-g20-sequential-tdd-v1
+Execution-Node: G26-AUDIT-REMEDIATION-READY
+Checkpoint-ID: cp-20260730-platform-foundation-telemetry-cli-green-001
+Evidence-SHA256: 70872d07247106bfddf770f0900dceab3cac85f5be0e4caea94650e187540ed6
+`,
+      sourceHeadEvidenceSha256:
+        '70872d07247106bfddf770f0900dceab3cac85f5be0e4caea94650e187540ed6',
+      targetRef: 'refs/heads/dev',
     },
   ]);
   assert.doesNotMatch(graph.toString('utf8'), /\/mnt\/data\//);
@@ -748,6 +772,117 @@ test('the lifecycle gate permits only an exact bounded reconciled remote merge',
       gitRun: wrongBaseGit,
     }).errors.join('\n'),
     /exact merge base/
+  );
+});
+
+test('the lifecycle gate permits only an exact evidence-bound squash integration', () => {
+  const integrationCommit = 'a'.repeat(40);
+  const integrationTree = 'b'.repeat(40);
+  const integrationParent = 'c'.repeat(40);
+  const sourceHead = 'd'.repeat(40);
+  const sourceParent = 'e'.repeat(40);
+  const subject = 'infra(platform): establish dev and Vercel governance (#174)';
+  const sourceMessage = `fix(platform): document executable telemetry gate
+
+Execution-Program: stl-post-g20-sequential-tdd-v1
+Execution-Node: G26-AUDIT-REMEDIATION-READY
+Checkpoint-ID: cp-20260730-platform-foundation-telemetry-cli-green-001
+Evidence-SHA256: EVIDENCE_DIGEST
+`;
+  const receipt = {
+    baseHeadSha: sourceParent,
+    checkpointId: 'cp-20260730-platform-foundation-telemetry-cli-green-001',
+    graphSha256: 'f'.repeat(64),
+    nodeId: 'G26-AUDIT-REMEDIATION-READY',
+    programId: 'stl-post-g20-sequential-tdd-v1',
+    schemaVersion: 1,
+    verification: [{ command: 'focused regression suite', status: 'passed' }],
+  };
+  const receiptBytes = Buffer.from(`${JSON.stringify(receipt)}\n`);
+  const evidenceSha256 = createHash('sha256').update(receiptBytes).digest('hex');
+  const config = {
+    programId: 'stl-post-g20-sequential-tdd-v1',
+    operationalIntegrationBranch: 'dev',
+    evidenceReceipts: { directory: '.agents/execution/evidence' },
+    executionGraph: { sha256: 'f'.repeat(64) },
+    squashIntegrationReconciliations: [
+      {
+        integrationCommitSha: integrationCommit,
+        integrationTreeSha: integrationTree,
+        integrationParentSha: integrationParent,
+        integrationSubject: subject,
+        pullRequestNumber: 174,
+        sourceHeadSha: sourceHead,
+        sourceHeadParentSha: sourceParent,
+        sourceHeadTreeSha: integrationTree,
+        sourceHeadMessage: sourceMessage.replace('EVIDENCE_DIGEST', evidenceSha256),
+        sourceHeadEvidenceSha256: evidenceSha256,
+        targetRef: 'refs/heads/dev',
+      },
+    ],
+  };
+  const gitRun = (args) => {
+    if (args[0] === 'show' && args.includes('--format=%T')) return integrationTree;
+    throw new Error(`unexpected git probe: ${args.join(' ')}`);
+  };
+  const gitRead = (args) => {
+    assert.deepEqual(args, [
+      'show',
+      `${integrationCommit}:.agents/execution/evidence/${evidenceSha256}.json`,
+    ]);
+    return receiptBytes;
+  };
+  const input = {
+    commit: integrationCommit,
+    message: subject,
+    parents: [integrationParent],
+    config,
+    executionGraph: { nodeIds: new Set(['G26-AUDIT-REMEDIATION-READY']) },
+    gitRun,
+    gitRead,
+  };
+
+  assert.deepEqual(validateSquashIntegrationReconciliation(input), {
+    errors: [],
+    matched: true,
+  });
+
+  for (const mutation of [
+    { parents: ['9'.repeat(40)] },
+    { message: 'infra(platform): a different integration' },
+    {
+      config: {
+        ...config,
+        squashIntegrationReconciliations: [
+          { ...config.squashIntegrationReconciliations[0], targetRef: 'refs/heads/main' },
+        ],
+      },
+    },
+    {
+      config: {
+        ...config,
+        squashIntegrationReconciliations: [
+          {
+            ...config.squashIntegrationReconciliations[0],
+            sourceHeadTreeSha: '8'.repeat(40),
+          },
+        ],
+      },
+    },
+    { gitRead: () => Buffer.from('{}\n') },
+  ]) {
+    assert.notEqual(
+      validateSquashIntegrationReconciliation({ ...input, ...mutation }).errors.length,
+      0
+    );
+  }
+
+  assert.deepEqual(
+    validateSquashIntegrationReconciliation({
+      ...input,
+      commit: '7'.repeat(40),
+    }),
+    { errors: [], matched: false }
   );
 });
 

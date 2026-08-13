@@ -65,7 +65,7 @@ Additional approved prefixes are listed in the policy manifest.
 2. Open a release pull request from `dev` to `main`.
 3. Record customer impact, schema/data effects, provider changes, and rollback target.
 4. Require Repository Quality, Security, independent approval, and
-   `Vercel – website` at the exact release head.
+   repository-owned `Vercel` verification at the exact release head.
 5. Verify the Preview and the production smoke-test plan.
 6. Record explicit production approval.
 7. Integrate and allow the canonical `website` project to deploy `main`.
@@ -80,7 +80,7 @@ default branch:
 - `Repository Quality`, including the live base/head branch-policy validation;
 - `CodeQL JavaScript and TypeScript`;
 - `Production Dependency Audit`;
-- `Vercel – website`;
+- `Vercel`;
 - native pull-request, Code Owner, and approval rules.
 
 The `main` desired-state ruleset additionally requires `Validate Branch Flow` and
@@ -96,7 +96,8 @@ scoped release-manager bypass; never configure a force-push bypass.
 
 ## Merge and provenance
 
-The repository permits rebase merges and disables merge commits. Rebase integration may
+The repository permits only rebase merges; merge commits and squash merges are disabled.
+Rebase integration may
 change commit SHAs, so the resulting protected-branch head must be treated as a new
 revision and must pass lifecycle, CI, Security, and canonical Vercel verification again.
 

@@ -14,7 +14,7 @@ repository commits. Apply them against the exact desired state below, then recor
 - Block deletion and force pushes.
 - Require strict current-branch status checks.
 - Require `Repository Quality`, `CodeQL JavaScript and TypeScript`,
-  `Production Dependency Audit`, and canonical `Vercel – website`.
+  `Production Dependency Audit`, and canonical `Vercel`.
 - Do not require `Validate Branch Flow` or `Independent PR Approval` on `dev` until
   their `pull_request_target` workflow definitions exist on the default branch and have
   emitted those exact checks. During bootstrap, `Repository Quality` validates the live
@@ -27,7 +27,7 @@ repository commits. Apply them against the exact desired state below, then recor
 - Do not activate `.github/rulesets/main.json` until the foundation workflows exist on
   the default branch and their exact status contexts have been observed.
 - Accept normal release pull requests only from `dev`.
-- Require the quality/security checks and canonical `Vercel – website` named by the
+- Require the quality/security checks and canonical `Vercel` named by the
   manifest.
 - Block deletion and force pushes.
 - Require a named production approver and rollback evidence.
@@ -36,6 +36,7 @@ repository commits. Apply them against the exact desired state below, then recor
 
 - Default branch remains `main`.
 - Merge commits remain disabled.
+- Squash merges are disabled because they discard governed commit trailers.
 - Rebase merge remains enabled.
 - Automatically delete merged short-lived branches when safe.
 - Confirm secret scanning, push protection, Dependabot alerts, and CodeQL are enabled.
@@ -68,7 +69,7 @@ repository commits. Apply them against the exact desired state below, then recor
 
 ### Deployment checks
 
-- Confirm the GitHub `Vercel – website` status is emitted by the canonical project.
+- Confirm the GitHub Actions `Vercel` check verifies the canonical project and exact commit.
 - Configure deployment checks only after verifying they cannot deadlock the release.
 - Preserve exact-head deployment and route-smoke verification.
 

@@ -53,7 +53,7 @@ Canonical Vercel authority:
 Team:    team_bseTA2AuCO6A2fCOVY9ubrJo
 Project: prj_L3ZMoQ79YLx9G2o6Lg9OubqO9H8m
 Name:    website
-Status:  Vercel – website
+Status:  Vercel
 ```
 
 Statuses from any other Vercel project are not release evidence. `main` owns Production.
@@ -258,7 +258,7 @@ For integration, the exact reviewed head also requires:
 - Repository Quality passing;
 - Security passing;
 - independent review with no blocking findings;
-- canonical `Vercel – website` Preview in READY state;
+- repository-owned `Vercel` verification of the canonical Preview in READY state;
 - customer-route smoke validation when runtime behavior changes;
 - clean worktree and immutable evidence receipt.
 

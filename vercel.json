@@ -3,7 +3,7 @@
   "framework": "nextjs",
   "installCommand": "npm ci",
   "buildCommand": "npm run build:vercel",
-  "ignoreCommand": "case \"$VERCEL_GIT_COMMIT_REF\" in entire/*) echo 'agent checkpoint branch, skipping'; exit 0;; *) echo 'proceeding with canonical build'; exit 1;; esac",
+  "ignoreCommand": "node scripts/vercel-ignore-build.mjs",
   "headers": [
     {
       "source": "/(.*)",

@@ -87,6 +87,8 @@ test('security workflow consolidates CodeQL, dependency review, and npm audit', 
 test('deployment verification consumes Vercel events and runs route smoke only', () => {
   const verification = read('.github/workflows/deployment-verification.yml');
 
+  assert.match(verification, /pull_request:/);
+  assert.match(verification, /push:/);
   assert.match(verification, /repository_dispatch:/);
   assert.match(verification, /vercel\.deployment\.success/);
   assert.match(verification, /vercel\.deployment\.promoted/);
@@ -105,6 +107,20 @@ test('deployment verification consumes Vercel events and runs route smoke only',
   assert.doesNotMatch(verification, /--url "\$\{\{/);
   assert.match(verification, /npm run smoke:site/);
   assert.match(verification, /https:\/\/www\.skysthelimitpaintingllc\.com/);
+  assert.match(verification, /name:\s*Vercel\s*$/m);
+  assert.match(
+    verification,
+    /ref:\s*\$\{\{ github\.event\.pull_request\.base\.sha \|\| github\.sha \}\}/
+  );
+  assert.doesNotMatch(
+    verification,
+    /ref:\s*\$\{\{ github\.event\.pull_request\.head\.sha \|\| github\.sha \}\}/
+  );
+  assert.match(
+    verification,
+    /DEPLOYMENT_SHA:\s*\$\{\{ github\.event\.pull_request\.head\.sha \|\| github\.sha \}\}/
+  );
+  assert.match(verification, /VERCEL_TOKEN:\s*\$\{\{ secrets\.VERCEL_TOKEN \}\}/);
 });
 
 test('Vercel Git integration owns main deployment and the release marker is gone', () => {

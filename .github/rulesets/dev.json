@@ -46,7 +46,7 @@
             "context": "Production Dependency Audit"
           },
           {
-            "context": "Vercel – website"
+            "context": "Vercel"
           }
         ],
         "strict_required_status_checks_policy": true

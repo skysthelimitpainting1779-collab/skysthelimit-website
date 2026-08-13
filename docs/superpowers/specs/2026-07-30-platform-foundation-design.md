@@ -105,7 +105,7 @@ The canonical deployment signal is only:
 ```text
 Team: team_bseTA2AuCO6A2fCOVY9ubrJo
 Project: prj_L3ZMoQ79YLx9G2o6Lg9OubqO9H8m
-Status context: Vercel – website
+Status context: Vercel
 ```
 
 A deployment from any duplicate project is informational noise and must not satisfy a

@@ -105,7 +105,7 @@ The canonical deployment authority is:
 Team:    team_bseTA2AuCO6A2fCOVY9ubrJo
 Project: prj_L3ZMoQ79YLx9G2o6Lg9OubqO9H8m
 Name:    website
-Status:  Vercel – website
+Status:  Vercel
 ```
 
 Vercel Git integration owns application builds. GitHub Actions verifies the immutable
