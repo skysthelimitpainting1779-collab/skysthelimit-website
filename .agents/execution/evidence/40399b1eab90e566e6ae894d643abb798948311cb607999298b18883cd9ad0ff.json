@@ -1,0 +1,58 @@
+{
+  "baseHeadSha": "df6f1a4341a73123b1d15fddcb5b06ba0a88518c",
+  "checkpointId": "cp-20260813-cicd-recovery-green-001",
+  "checkpointPurpose": "Restore governed GitHub Actions, remove production dependency advisories, and make the canonical Vercel project the only build authority.",
+  "graphSha256": "4f6a7d81e9c46ecbf886703fcf03988dd317115f9577152aa7ac09bd5ec532c9",
+  "nodeId": "AUDIT-SECURITY-REMEDIATION",
+  "programId": "stl-post-g20-sequential-tdd-v1",
+  "providerEvidence": {
+    "canonicalDeploymentId": "dpl_4d8ch2ifMC75xiHeceSb4szAS7L5",
+    "canonicalDeploymentState": "READY",
+    "canonicalProjectId": "prj_L3ZMoQ79YLx9G2o6Lg9OubqO9H8m",
+    "duplicateProjectId": "prj_0VaZXkgqdU3XKJW7jGOc2XCYJNcF",
+    "duplicateProjectState": "ERROR",
+    "githubRulesetObservation": "Only main ruleset 19932476 was active; checked-in desired state now requires the repository-owned Vercel check and rebase-only integration."
+  },
+  "schemaVersion": 1,
+  "tdd": {
+    "green": "Exact squash reconciliation, canonical project filtering, repository-owned Vercel verification, and advisory overrides pass the focused and full suites.",
+    "red": "Lifecycle verification rejected dev commit df6f1a4, Vercel emitted a failed duplicate status and stuck canonical pending status, and npm audit reported ten production advisories."
+  },
+  "verification": [
+    {
+      "command": "node --import tsx --test tests/branch-policy.test.mjs tests/cicd-topology.test.mjs tests/development-lifecycle.test.mjs",
+      "result": "30 passed, 0 failed",
+      "status": "passed"
+    },
+    {
+      "command": "npm run lint:ci",
+      "result": "design, architecture, React-version, and TypeScript checks passed",
+      "status": "passed"
+    },
+    {
+      "command": "npm test",
+      "result": "531 passed, 0 failed, 14 skipped",
+      "status": "passed"
+    },
+    {
+      "command": "npm audit --audit-level=high --omit=dev",
+      "result": "0 vulnerabilities",
+      "status": "passed"
+    },
+    {
+      "command": "npm run build",
+      "result": "Next.js 16.3.0 production build compiled, typechecked, and generated 44 static pages",
+      "status": "passed"
+    },
+    {
+      "command": "npm run ci:contract && npm run lifecycle:verify",
+      "result": "workflow contract and governed history passed",
+      "status": "passed"
+    },
+    {
+      "command": "python scripts/execution/validate_execution_graph.py ... --schema ...",
+      "result": "parse, schema, semantic, node DAG, and stage DAG validation passed",
+      "status": "passed"
+    }
+  ]
+}

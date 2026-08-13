@@ -30,7 +30,7 @@ test('the repository declares one canonical Vercel project and a dev preview bra
   assert.equal(policy.branches.integration, 'dev');
   assert.equal(policy.vercel.projectId, 'prj_L3ZMoQ79YLx9G2o6Lg9OubqO9H8m');
   assert.equal(policy.vercel.teamId, 'team_bseTA2AuCO6A2fCOVY9ubrJo');
-  assert.equal(policy.vercel.statusContext, 'Vercel – website');
+  assert.equal(policy.vercel.statusContext, 'Vercel');
 
   const vercel = JSON.parse(read('vercel.json'));
   assert.equal(vercel.git.deploymentEnabled.main, true);
@@ -66,7 +66,7 @@ test('branch policy accepts only governed integration and release paths', async 
       {
         teamId: 'team_bseTA2AuCO6A2fCOVY9ubrJo',
         projectId: 'prj_L3ZMoQ79YLx9G2o6Lg9OubqO9H8m',
-        statusContext: 'Vercel – website',
+        statusContext: 'Vercel',
       },
       policy
     ),
@@ -77,7 +77,7 @@ test('branch policy accepts only governed integration and release paths', async 
       {
         teamId: 'team_bseTA2AuCO6A2fCOVY9ubrJo',
         projectId: 'wrong-project',
-        statusContext: 'Vercel – website',
+        statusContext: 'Vercel',
       },
       policy
     ),
@@ -93,8 +93,15 @@ test('Dependabot, rulesets, agents, and deployment verification agree with the b
     const ruleset = JSON.parse(read(`.github/rulesets/${branch}.json`));
     assert.deepEqual(ruleset.conditions.ref_name.include, [`refs/heads/${branch}`]);
     assert.ok(ruleset.rules.some((rule) => rule.type === 'non_fast_forward'));
-    assert.ok(ruleset.rules.some((rule) => rule.type === 'pull_request'));
+    const pullRequest = ruleset.rules.find((rule) => rule.type === 'pull_request');
+    assert.ok(pullRequest);
+    assert.deepEqual(pullRequest.parameters.allowed_merge_methods, ['rebase']);
     assert.ok(ruleset.rules.some((rule) => rule.type === 'required_status_checks'));
+    const required = ruleset.rules.find((rule) => rule.type === 'required_status_checks');
+    assert.ok(
+      required.parameters.required_status_checks.some((check) => check.context === 'Vercel'),
+      `${branch} must require the repository-owned canonical Vercel check`
+    );
   }
 
   const agents = read('AGENTS.md');
@@ -148,7 +155,7 @@ test('dev bootstrap uses checks that run before governance reaches the default b
     'CodeQL JavaScript and TypeScript',
     'Production Dependency Audit',
     'Repository Quality',
-    'Vercel – website',
+    'Vercel',
   ]);
 
   const ci = read('.github/workflows/ci.yml');
@@ -162,4 +169,27 @@ test('dev bootstrap uses checks that run before governance reaches the default b
     settings,
     /Do not require `Validate Branch Flow` or `Independent PR Approval` on `dev` until/
   );
+});
+
+test('Vercel builds proceed only for the canonical project and governed branches', async () => {
+  const config = JSON.parse(read('vercel.json'));
+  assert.equal(config.ignoreCommand, 'node scripts/vercel-ignore-build.mjs');
+
+  const { shouldIgnoreVercelBuild } = await import(
+    resolve(root, 'scripts/vercel-ignore-build.mjs')
+  );
+  const canonical = 'prj_L3ZMoQ79YLx9G2o6Lg9OubqO9H8m';
+  assert.equal(
+    shouldIgnoreVercelBuild({ projectId: canonical, branch: 'fix/ci-recovery' }),
+    false
+  );
+  assert.equal(
+    shouldIgnoreVercelBuild({ projectId: 'prj_duplicate', branch: 'fix/ci-recovery' }),
+    true
+  );
+  assert.equal(
+    shouldIgnoreVercelBuild({ projectId: canonical, branch: 'entire/checkpoint' }),
+    true
+  );
+  assert.equal(shouldIgnoreVercelBuild({ projectId: '', branch: 'dev' }), false);
 });

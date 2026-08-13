@@ -271,6 +271,142 @@ export function validateRemoteMergeReconciliation({
   };
 }
 
+export function validateSquashIntegrationReconciliation({
+  commit,
+  message,
+  parents,
+  config,
+  executionGraph,
+  gitRun,
+  gitRead,
+}) {
+  const errors = [];
+  const policies = Array.isArray(config.squashIntegrationReconciliations)
+    ? config.squashIntegrationReconciliations
+    : [];
+  const matchingPolicies = policies.filter(
+    (candidate) => candidate?.integrationCommitSha === commit
+  );
+  if (matchingPolicies.length === 0) return { errors, matched: false };
+  if (matchingPolicies.length !== 1) {
+    errors.push(`${commit}: squash integration is not authorized by one exact policy`);
+    return { errors, matched: true };
+  }
+
+  const policy = matchingPolicies[0];
+  for (const field of [
+    'integrationCommitSha',
+    'integrationTreeSha',
+    'integrationParentSha',
+    'sourceHeadSha',
+    'sourceHeadParentSha',
+    'sourceHeadTreeSha',
+  ]) {
+    if (!/^[a-f0-9]{40}$/.test(policy[field] || '')) {
+      errors.push(`${commit}: squash reconciliation policy ${field} is invalid`);
+    }
+  }
+  if (!/^[a-f0-9]{64}$/.test(policy.sourceHeadEvidenceSha256 || '')) {
+    errors.push(`${commit}: squash reconciliation source evidence SHA-256 is invalid`);
+  }
+  if (
+    !Number.isSafeInteger(policy.pullRequestNumber) ||
+    policy.pullRequestNumber < 1
+  ) {
+    errors.push(`${commit}: squash reconciliation pull request number is invalid`);
+  }
+  if (
+    policy.targetRef !==
+    `refs/heads/${config.operationalIntegrationBranch}`
+  ) {
+    errors.push(`${commit}: squash reconciliation does not target the integration branch`);
+  }
+  if (parents.length !== 1 || parents[0] !== policy.integrationParentSha) {
+    errors.push(`${commit}: squash integration parent does not match policy`);
+  }
+  const subject = String(message || '').split(/\r?\n/, 1)[0];
+  const pullRequestSuffix = ` (#${policy.pullRequestNumber})`;
+  if (
+    !policy.integrationSubject ||
+    subject !== policy.integrationSubject ||
+    !policy.integrationSubject.endsWith(pullRequestSuffix)
+  ) {
+    errors.push(`${commit}: squash integration subject or pull request does not match policy`);
+  }
+  if (policy.sourceHeadSha === policy.integrationCommitSha) {
+    errors.push(`${commit}: squash source head must differ from the integration commit`);
+  }
+  if (policy.sourceHeadTreeSha !== policy.integrationTreeSha) {
+    errors.push(`${commit}: squash source and integration trees must match exactly`);
+  }
+  if (errors.length) return { errors, matched: true };
+
+  let integrationTree;
+  try {
+    integrationTree = gitRun(['show', '-s', '--format=%T', commit]);
+  } catch {
+    errors.push(`${commit}: unable to verify the squash integration tree`);
+  }
+  if (integrationTree !== policy.integrationTreeSha) {
+    errors.push(`${commit}: squash integration tree does not match policy`);
+  }
+
+  const sourceMessage = String(policy.sourceHeadMessage || '');
+  for (const detail of validateGovernedCommit(sourceMessage)) {
+    errors.push(`${commit}: recorded squash source ${detail}`);
+  }
+  const sourceTrailers = parseLifecycleTrailers(sourceMessage);
+  if (
+    sourceTrailers.get('Evidence-SHA256') !== policy.sourceHeadEvidenceSha256
+  ) {
+    errors.push(`${commit}: recorded squash source evidence does not match policy`);
+  }
+
+  const directory = config.evidenceReceipts?.directory;
+  const receiptPath = directory
+    ? `${directory.replace(/\/+$/, '')}/${policy.sourceHeadEvidenceSha256}.json`
+    : null;
+  let receiptBytes;
+  if (!receiptPath) {
+    errors.push(`${commit}: evidenceReceipts.directory is required`);
+  } else {
+    try {
+      receiptBytes = gitRead(['show', `${commit}:${receiptPath}`]);
+    } catch {
+      errors.push(`${commit}: squash source evidence is absent from the integrated tree`);
+    }
+  }
+  if (receiptBytes) {
+    const digest = sha256Bytes(receiptBytes);
+    if (digest !== policy.sourceHeadEvidenceSha256) {
+      errors.push(`${commit}: squash source evidence bytes do not match policy`);
+    } else {
+      let receipt;
+      try {
+        receipt = JSON.parse(receiptBytes.toString('utf8'));
+      } catch (error) {
+        errors.push(`${commit}: squash source evidence is invalid JSON: ${error.message}`);
+      }
+      if (receipt) {
+        for (const detail of validateEvidenceReceipt({
+          message: sourceMessage,
+          config,
+          nodeIds: executionGraph.nodeIds,
+          receipt,
+          receiptSha256: digest,
+        })) {
+          errors.push(`${commit}: recorded squash source ${detail}`);
+        }
+        if (receipt.baseHeadSha !== policy.sourceHeadParentSha) {
+          errors.push(`${commit}: squash source evidence parent does not match policy`);
+        }
+      }
+    }
+  }
+
+  return { errors, matched: true };
+}
+
 export function collectCommitPaths(commits, gitRun) {
   return commits.flatMap((commit) =>
     gitRun([
@@ -318,6 +454,7 @@ function verifyCommits(config, executionGraph, errors, { head, requireClean }) {
     ])
   );
   const reconciledCommits = new Set();
+  const reconciledSquashIntegrations = new Set();
   const validatedMerges = new Set();
   let commitsChecked = 0;
   let reconciliationsChecked = 0;
@@ -353,9 +490,34 @@ function verifyCommits(config, executionGraph, errors, { head, requireClean }) {
         }
       }
     }
+    if (parents.length === 1) {
+      const reconciliation = validateSquashIntegrationReconciliation({
+        commit,
+        message,
+        parents,
+        config,
+        executionGraph,
+        gitRun: git,
+        gitRead: gitBuffer,
+      });
+      if (reconciliation.matched) {
+        reconciliationsChecked += 1;
+        for (const detail of reconciliation.errors) errors.push(detail);
+        if (reconciliation.errors.length === 0) {
+          reconciledSquashIntegrations.add(commit);
+        }
+      }
+    }
   }
   for (const [commit, { message }] of metadata) {
-    if (validatedMerges.has(commit) || reconciledCommits.has(commit)) continue;
+    if (
+      validatedMerges.has(commit) ||
+      reconciledCommits.has(commit) ||
+      reconciledSquashIntegrations.has(commit)
+    ) {
+      if (reconciledSquashIntegrations.has(commit)) commitsChecked += 1;
+      continue;
+    }
     commitsChecked += 1;
     for (const detail of validateGovernedCommit(message)) {
       errors.push(`${commit}: ${detail}`);
@@ -387,7 +549,8 @@ function verifyCommits(config, executionGraph, errors, { head, requireClean }) {
   }
   return {
     commitsChecked,
-    reconciledCommitsChecked: reconciledCommits.size,
+    reconciledCommitsChecked:
+      reconciledCommits.size + reconciledSquashIntegrations.size,
     reconciliationsChecked,
     pathsChecked: paths.length,
   };

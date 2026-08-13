@@ -6,7 +6,7 @@
 Team ID:    team_bseTA2AuCO6A2fCOVY9ubrJo
 Project ID: prj_L3ZMoQ79YLx9G2o6Lg9OubqO9H8m
 Project:    website
-Status:     Vercel – website
+Status:     Vercel
 Production: main
 Staging:    dev as Vercel Preview
 ```
