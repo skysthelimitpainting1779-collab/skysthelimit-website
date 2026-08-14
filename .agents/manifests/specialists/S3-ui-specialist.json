@@ -1,0 +1,12 @@
+{
+  "identity": {
+    "id": "S3",
+    "name": "UI Implementation Specialist",
+    "role": "Frontend UI Specialist"
+  },
+  "parent_agent": "A4",
+  "read_only": true,
+  "mission": "Investigate tricky React 19 / shadcn component state and animation interactions.",
+  "tools": ["view_file", "run_command", "send_message"],
+  "plugins": ["stl-kernel", "ui-craft"]
+}

@@ -1,0 +1,89 @@
+{
+  "identity": {
+    "id": "A2",
+    "name": "Product Architect",
+    "role": "Productizer"
+  },
+  "model": {
+    "tier": "pro",
+    "fallback": "flash"
+  },
+  "mission": "Make the application reusable across contractor businesses without premature SaaS complexity.",
+  "responsibilities": [
+    "Product/customer boundary enforcement",
+    "White-label configuration models",
+    "Isolated deployment and bootstrap architectures",
+    "Feature flag and integration interface definitions",
+    "Resale-readiness verification"
+  ],
+  "non_responsibilities": [
+    "Unapproved runtime multi-tenancy implementation",
+    "Unnecessary database migrations",
+    "Replacing the core stack"
+  ],
+  "default_write_scope": {
+    "allow": [
+      "src/config/**",
+      "src/types/product/**",
+      "docs/architecture/**"
+    ],
+    "deny": [
+      "src/components/ui/**",
+      "convex/schema.ts"
+    ]
+  },
+  "tools": {
+    "allowed": ["view_file", "write_to_file", "replace_file_content", "multi_replace_file_content", "run_command", "send_message", "invoke_subagent"],
+    "denied": []
+  },
+  "plugins": {
+    "universal": ["stl-kernel", "graphify-core", "context7-core", "git-discipline"],
+    "domain": ["productization"]
+  },
+  "skills": {
+    "always": ["graphify-traversal", "context7-research"],
+    "conditional": ["worktree-management"]
+  },
+  "mcps": {
+    "always": ["codebase-memory-mcp", "context7"],
+    "conditional": []
+  },
+  "github": {
+    "permissions": ["issues:read", "pull_requests:read"]
+  },
+  "subagents": {
+    "enabled": true,
+    "max": 1,
+    "specialists": ["S1"],
+    "verifier": "V2"
+  },
+  "communication": {
+    "may_message": ["A0", "S1", "V2"],
+    "may_not_message": ["A4", "A5", "A6", "A7", "A8", "A9", "A10"]
+  },
+  "loops": {
+    "implementation": 3,
+    "remediation": 3,
+    "verifier": 2
+  },
+  "circuit_breaker": {
+    "thresholds": {
+      "maxConsecutiveFailures": 2,
+      "maxCycleBudget": 6,
+      "resetAuthority": "A0_ONLY"
+    }
+  },
+  "hooks": {
+    "pre_invocation": ["check_agent_identity"],
+    "pre_tool_use": ["enforce_write_scope", "enforce_communication_acl"],
+    "post_tool_use": [],
+    "stop": ["verify_evidence_contract"]
+  },
+  "completion_requires": [
+    "product_boundary_verified",
+    "blind_verifier_pass"
+  ],
+  "stop_conditions": [
+    "architecture_contract_fulfilled"
+  ]
+}

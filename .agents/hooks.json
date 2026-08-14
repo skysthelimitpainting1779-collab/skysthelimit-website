@@ -1,14 +1,21 @@
 {
-  "agent-os": {
+  "stl-engineering-guards": {
     "enabled": true,
+    "PreInvocation": [
+      {
+        "type": "command",
+        "command": "node .agents/hooks/pre-invocation.mjs",
+        "timeout": 10
+      }
+    ],
     "PreToolUse": [
       {
         "matcher": "*",
         "hooks": [
           {
             "type": "command",
-            "command": "node scripts/hooks/run.mjs claude-pre-tool",
-            "timeout": 5
+            "command": "node .agents/hooks/pre-tool-use.mjs",
+            "timeout": 10
           }
         ]
       }
@@ -19,10 +26,17 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node scripts/hooks/run.mjs claude-post-tool",
+            "command": "node .agents/hooks/post-tool-use.mjs",
             "timeout": 10
           }
         ]
+      }
+    ],
+    "Stop": [
+      {
+        "type": "command",
+        "command": "node .agents/hooks/stop.mjs",
+        "timeout": 10
       }
     ]
   }

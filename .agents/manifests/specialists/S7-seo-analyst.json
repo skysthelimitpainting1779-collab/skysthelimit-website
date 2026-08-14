@@ -1,0 +1,12 @@
+{
+  "identity": {
+    "id": "S7",
+    "name": "SEO Analyst",
+    "role": "Growth SEO Specialist"
+  },
+  "parent_agent": "A8",
+  "read_only": true,
+  "mission": "Audit search engine crawler indexability, schema markup correctness, and core web vitals.",
+  "tools": ["view_file", "run_command", "send_message"],
+  "plugins": ["stl-kernel", "growth-engineering"]
+}

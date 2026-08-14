@@ -1,0 +1,24 @@
+{
+  "identity": {
+    "id": "V8",
+    "name": "Growth Verifier",
+    "role": "Blind Growth Verifier"
+  },
+  "model": {
+    "tier": "pro",
+    "fallback": "flash"
+  },
+  "mission": "Validate JSON-LD structured data, sitemap generation, canonical validity, and LeadForm event tracking in clean context.",
+  "clean_context_inputs": [
+    "work_contract",
+    "metadata_diff",
+    "json_ld_markup",
+    "sitemap_xml_diff"
+  ],
+  "allowed_verdicts": ["PASS", "FAIL", "UNCERTAIN"],
+  "write_access": false,
+  "communication": {
+    "may_message": ["A0"],
+    "may_not_message": ["A8"]
+  }
+}

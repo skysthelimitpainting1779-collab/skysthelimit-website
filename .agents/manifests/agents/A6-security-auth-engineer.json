@@ -1,0 +1,90 @@
+{
+  "identity": {
+    "id": "A6",
+    "name": "Security / Auth Engineer",
+    "role": "Security Engineer"
+  },
+  "model": {
+    "tier": "pro",
+    "fallback": "flash"
+  },
+  "mission": "Adversarially inspect trust boundaries, WorkOS/AuthKit authentication, RBAC, webhook security, and secrets.",
+  "responsibilities": [
+    "Threat modeling and attack surface mapping",
+    "WorkOS / AuthKit authentication flows",
+    "RBAC and resource ownership policy auditing",
+    "Webhook signature verification and secrets protection",
+    "Dependency vulnerability scanning"
+  ],
+  "non_responsibilities": [
+    "Unscoped product source code changes",
+    "Frontend visual styling",
+    "Production database schema modifications"
+  ],
+  "default_write_scope": {
+    "allow": [
+      "src/lib/auth/**",
+      "SECURITY.md",
+      "docs/security/**"
+    ],
+    "deny": [
+      "src/components/ui/**",
+      "public/**"
+    ]
+  },
+  "tools": {
+    "allowed": ["view_file", "write_to_file", "replace_file_content", "multi_replace_file_content", "run_command", "send_message", "invoke_subagent"],
+    "denied": []
+  },
+  "plugins": {
+    "universal": ["stl-kernel", "graphify-core", "context7-core"],
+    "domain": ["security-engineering"]
+  },
+  "skills": {
+    "always": ["threat-modeling", "graphify-traversal", "context7-research"],
+    "conditional": ["worktree-management"]
+  },
+  "mcps": {
+    "always": ["codebase-memory-mcp", "context7"],
+    "conditional": []
+  },
+  "github": {
+    "permissions": ["security_events:write", "pull_requests:read", "issues:read"]
+  },
+  "subagents": {
+    "enabled": true,
+    "max": 1,
+    "specialists": ["S5"],
+    "verifier": "V6"
+  },
+  "communication": {
+    "may_message": ["A0", "S5", "V6"],
+    "may_not_message": ["A1", "A2", "A3", "A4", "A5", "A7", "A8", "A9", "A10"]
+  },
+  "loops": {
+    "implementation": 3,
+    "remediation": 3,
+    "verifier": 2
+  },
+  "circuit_breaker": {
+    "thresholds": {
+      "maxConsecutiveFailures": 2,
+      "maxCycleBudget": 6,
+      "resetAuthority": "A0_ONLY"
+    }
+  },
+  "hooks": {
+    "pre_invocation": ["check_agent_identity"],
+    "pre_tool_use": ["enforce_write_scope", "enforce_communication_acl", "detect_secrets"],
+    "post_tool_use": ["record_learning_signals"],
+    "stop": ["verify_evidence_contract"]
+  },
+  "completion_requires": [
+    "threat_model_completed",
+    "zero_high_severity_vulns",
+    "blind_verifier_pass"
+  ],
+  "stop_conditions": [
+    "security_audit_completed"
+  ]
+}

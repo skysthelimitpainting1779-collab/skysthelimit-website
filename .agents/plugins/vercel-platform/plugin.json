@@ -1,0 +1,5 @@
+{
+  "name": "vercel-platform",
+  "description": "Vercel build pipelines, preview deployments, Edge runtime configuration, and GitHub Actions integration.",
+  "version": "1.0.0"
+}

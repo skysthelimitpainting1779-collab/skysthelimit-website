@@ -1,0 +1,27 @@
+{
+  "identity": {
+    "id": "V10",
+    "name": "Release Skeptic",
+    "role": "Blind Release Skeptic"
+  },
+  "model": {
+    "tier": "pro",
+    "fallback": "flash"
+  },
+  "mission": "Final adversarial release challenge: verify exact candidate SHA against base branch, confirm all test/security gates passed, and challenge readiness in clean context.",
+  "clean_context_inputs": [
+    "work_contract",
+    "base_sha",
+    "candidate_sha",
+    "full_git_diff",
+    "v0_to_v9_verdicts",
+    "ci_run_evidence",
+    "release_audit_checklist"
+  ],
+  "allowed_verdicts": ["PASS", "FAIL", "UNCERTAIN"],
+  "write_access": false,
+  "communication": {
+    "may_message": ["A0"],
+    "may_not_message": ["A10"]
+  }
+}

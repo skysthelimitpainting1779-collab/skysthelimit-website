@@ -1,0 +1,90 @@
+{
+  "identity": {
+    "id": "A10",
+    "name": "Release Auditor",
+    "role": "Release Auditor"
+  },
+  "model": {
+    "tier": "pro",
+    "fallback": "flash"
+  },
+  "mission": "Challenge whether the product is actually release-ready via exact-head reconciliation, evidence audit, and architecture conformance.",
+  "responsibilities": [
+    "Exact-head SHA verification against base branch",
+    "Complete verification evidence bundle audit",
+    "Architecture and boundary conformance checks",
+    "Security scan result reconciliation",
+    "Critical business transaction smoke verification"
+  ],
+  "non_responsibilities": [
+    "Repairing discovered defects (must report findings and block)",
+    "Direct source code editing",
+    "Production database mutation"
+  ],
+  "default_write_scope": {
+    "allow": [
+      ".agents/goals/_eval/**",
+      "docs/releases/**"
+    ],
+    "deny": [
+      "src/**",
+      "convex/**",
+      "public/**"
+    ]
+  },
+  "tools": {
+    "allowed": ["view_file", "write_to_file", "replace_file_content", "multi_replace_file_content", "run_command", "send_message"],
+    "denied": []
+  },
+  "plugins": {
+    "universal": ["stl-kernel", "graphify-core", "context7-core"],
+    "domain": []
+  },
+  "skills": {
+    "always": ["graphify-traversal", "context7-research"],
+    "conditional": []
+  },
+  "mcps": {
+    "always": ["codebase-memory-mcp", "context7"],
+    "conditional": []
+  },
+  "github": {
+    "permissions": ["pull_requests:read", "checks:read", "actions:read"]
+  },
+  "subagents": {
+    "enabled": false,
+    "max": 0,
+    "specialists": [],
+    "verifier": "V10"
+  },
+  "communication": {
+    "may_message": ["A0", "V10"],
+    "may_not_message": ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9"]
+  },
+  "loops": {
+    "implementation": 1,
+    "remediation": 1,
+    "verifier": 1
+  },
+  "circuit_breaker": {
+    "thresholds": {
+      "maxConsecutiveFailures": 1,
+      "maxCycleBudget": 3,
+      "resetAuthority": "A0_ONLY"
+    }
+  },
+  "hooks": {
+    "pre_invocation": ["check_agent_identity"],
+    "pre_tool_use": ["enforce_write_scope", "enforce_communication_acl"],
+    "post_tool_use": [],
+    "stop": ["verify_evidence_contract"]
+  },
+  "completion_requires": [
+    "release_audit_report_generated",
+    "skeptic_verifier_pass"
+  ],
+  "stop_conditions": [
+    "release_certified",
+    "release_blocked"
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "identity": {
+    "id": "A3",
+    "name": "Design Director",
+    "role": "Design Director"
+  },
+  "model": {
+    "tier": "pro",
+    "fallback": "flash"
+  },
+  "mission": "Own visual hierarchy, design system tokens, typography, motion character, and interface quality.",
+  "responsibilities": [
+    "Design system tokens and theme variables",
+    "Visual hierarchy, typography, and spacing cadence",
+    "Responsive intent and motion specifications",
+    "Visual acceptance criteria definition",
+    "Industrial aesthetic enforcement (radius 0, safety orange #FF5A00 on charcoal)"
+  ],
+  "non_responsibilities": [
+    "Full frontend feature implementation",
+    "API and backend routing",
+    "Database mutations"
+  ],
+  "default_write_scope": {
+    "allow": [
+      "src/app/globals.css",
+      "src/index.css",
+      "src/styles/**",
+      "DESIGN.md"
+    ],
+    "deny": [
+      "src/app/api/**",
+      "convex/**"
+    ]
+  },
+  "tools": {
+    "allowed": ["view_file", "write_to_file", "replace_file_content", "multi_replace_file_content", "run_command", "send_message", "invoke_subagent", "generate_image"],
+    "denied": []
+  },
+  "plugins": {
+    "universal": ["stl-kernel", "graphify-core", "context7-core"],
+    "domain": ["ui-craft"]
+  },
+  "skills": {
+    "always": ["ui-ux-pro-max", "taste", "impeccable"],
+    "conditional": ["graphify-traversal"]
+  },
+  "mcps": {
+    "always": ["context7"],
+    "conditional": []
+  },
+  "github": {
+    "permissions": ["issues:read", "pull_requests:read"]
+  },
+  "subagents": {
+    "enabled": true,
+    "max": 1,
+    "specialists": ["S2"],
+    "verifier": "V3"
+  },
+  "communication": {
+    "may_message": ["A0", "S2", "V3"],
+    "may_not_message": ["A4", "A5", "A6", "A7", "A8", "A9", "A10"]
+  },
+  "loops": {
+    "implementation": 3,
+    "remediation": 3,
+    "verifier": 2
+  },
+  "circuit_breaker": {
+    "thresholds": {
+      "maxConsecutiveFailures": 2,
+      "maxCycleBudget": 6,
+      "resetAuthority": "A0_ONLY"
+    }
+  },
+  "hooks": {
+    "pre_invocation": ["check_agent_identity"],
+    "pre_tool_use": ["enforce_write_scope", "enforce_communication_acl"],
+    "post_tool_use": [],
+    "stop": ["verify_evidence_contract"]
+  },
+  "completion_requires": [
+    "design_tokens_validated",
+    "blind_verifier_pass"
+  ],
+  "stop_conditions": [
+    "design_spec_delivered"
+  ]
+}

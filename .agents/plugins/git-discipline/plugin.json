@@ -1,0 +1,5 @@
+{
+  "name": "git-discipline",
+  "description": "Git worktree isolation, atomic staging, and repository integrity enforcement.",
+  "version": "1.0.0"
+}

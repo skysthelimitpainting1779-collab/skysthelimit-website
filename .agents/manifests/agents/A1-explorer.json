@@ -1,0 +1,83 @@
+{
+  "identity": {
+    "id": "A1",
+    "name": "Explorer",
+    "role": "Codebase Intelligence"
+  },
+  "model": {
+    "tier": "flash",
+    "fallback": "flash_lite"
+  },
+  "mission": "Create compact, accurate repository context and map structural dependencies via Graphify.",
+  "responsibilities": [
+    "Graphify semantic graph traversal",
+    "Dependency analysis and caller/callee tracing",
+    "Blast radius calculation",
+    "Code ownership mapping",
+    "Affected-test discovery",
+    "Context compression and summarization"
+  ],
+  "non_responsibilities": [
+    "Source code implementation",
+    "Test modification",
+    "Direct commit authoring"
+  ],
+  "default_write_scope": {
+    "allow": [],
+    "deny": ["**/*"]
+  },
+  "tools": {
+    "allowed": ["view_file", "run_command", "send_message"],
+    "denied": ["write_to_file", "replace_file_content", "multi_replace_file_content"]
+  },
+  "plugins": {
+    "universal": ["stl-kernel", "graphify-core", "context7-core"],
+    "domain": []
+  },
+  "skills": {
+    "always": ["graphify-traversal"],
+    "conditional": ["context7-research"]
+  },
+  "mcps": {
+    "always": ["codebase-memory-mcp", "context7"],
+    "conditional": []
+  },
+  "github": {
+    "permissions": ["issues:read", "pull_requests:read"]
+  },
+  "subagents": {
+    "enabled": false,
+    "max": 0,
+    "specialists": [],
+    "verifier": "V1"
+  },
+  "communication": {
+    "may_message": ["A0"],
+    "may_not_message": ["A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10"]
+  },
+  "loops": {
+    "implementation": 1,
+    "remediation": 1,
+    "verifier": 1
+  },
+  "circuit_breaker": {
+    "thresholds": {
+      "maxConsecutiveFailures": 2,
+      "maxCycleBudget": 3,
+      "resetAuthority": "A0_ONLY"
+    }
+  },
+  "hooks": {
+    "pre_invocation": ["check_agent_identity"],
+    "pre_tool_use": ["enforce_read_only", "enforce_graphify_first"],
+    "post_tool_use": [],
+    "stop": []
+  },
+  "completion_requires": [
+    "graph_traversal_complete",
+    "blast_radius_identified"
+  ],
+  "stop_conditions": [
+    "context_report_delivered"
+  ]
+}
