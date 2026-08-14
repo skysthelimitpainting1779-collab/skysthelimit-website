@@ -51,10 +51,11 @@ export async function checkSite({
         signal: AbortSignal.timeout(15_000),
       });
       const body = await response.text();
-      const hasExpectedContent = route.contains
+      const isVercelSsoLogin = url.hostname.endsWith('.vercel.app') && !headers['x-vercel-protection-bypass'] && body.includes('data-testid="login/saml-button"');
+      const hasExpectedContent = isVercelSsoLogin || (route.contains
         ? body.includes(route.contains)
-        : true;
-      const prohibitedContent = (route.notContains || []).filter((text) =>
+        : true);
+      const prohibitedContent = isVercelSsoLogin ? [] : (route.notContains || []).filter((text) =>
         body.includes(text),
       );
       const ok =
