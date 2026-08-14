@@ -246,7 +246,7 @@ Always obey root **AGENTS.md**. Never bulk-load wiki/GRAPH_REPORT.
 }
 
 function antigravityAgent(a) {
-  const tools = a.tools ? a.tools.map(t => {
+  const baseTools = a.tools ? a.tools.map(t => {
     switch(t.toLowerCase()) {
       case 'read': return 'view_file';
       case 'write': return 'write_to_file';
@@ -259,6 +259,21 @@ function antigravityAgent(a) {
     }
   }) : ['view_file', 'replace_file_content', 'run_command', 'manage_task'];
 
+  const toolsSet = new Set(baseTools);
+  // Merge communication and task-management capabilities
+  if (a.id === 'A0') {
+    toolsSet.add('invoke_subagent');
+    toolsSet.add('send_message');
+    toolsSet.add('manage_subagents');
+    toolsSet.add('define_subagent');
+    toolsSet.add('manage_task');
+    toolsSet.add('schedule');
+  } else {
+    toolsSet.add('send_message');
+    toolsSet.add('manage_task');
+  }
+
+  const tools = Array.from(toolsSet);
   const toolsYaml = tools.map(t => `  - ${t}`).join('\n');
   const slug = `${a.id.toLowerCase()}-${a.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}`;
 
@@ -273,12 +288,12 @@ commandExecutionPolicy: auto
 hooks:
   PreInvocation:
     - type: command
-      command: node scripts/hooks/run.mjs pre-invocation
+      command: node .agents/hooks/pre-invocation.mjs
   PreToolUse:
     - matcher: run_command
       hooks:
         - type: command
-          command: node scripts/hooks/run.mjs pre-tool-use
+          command: node .agents/hooks/pre-tool-use.mjs
 ---
 
 # ${a.name} (${a.id})

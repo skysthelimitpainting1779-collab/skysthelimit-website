@@ -51,7 +51,17 @@ export async function checkSite({
         signal: AbortSignal.timeout(15_000),
       });
       const body = await response.text();
-      const isVercelSsoLogin = url.hostname.endsWith('.vercel.app') && !headers['x-vercel-protection-bypass'] && body.includes('data-testid="login/saml-button"');
+      const isVercelSsoLogin =
+        url.hostname.endsWith('.vercel.app') &&
+        !headers['x-vercel-protection-bypass'] &&
+        body.includes('data-testid="login/saml-button"');
+
+      if (isVercelSsoLogin) {
+        console.warn(
+          `[smoke] WARNING: Route ${route.path} on ${url.hostname} is protected by Vercel SSO. Deep content assertion was skipped. Set VERCEL_AUTOMATION_BYPASS_SECRET in repository secrets for full verification.`,
+        );
+      }
+
       const hasExpectedContent = isVercelSsoLogin || (route.contains
         ? body.includes(route.contains)
         : true);
@@ -65,6 +75,7 @@ export async function checkSite({
         path: route.path,
         status: response.status,
         ok,
+        ssoProtected: isVercelSsoLogin,
       });
 
       if (!response.ok) {
@@ -78,7 +89,7 @@ export async function checkSite({
       }
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      results.push({ path: route.path, status: null, ok: false });
+      results.push({ path: route.path, status: null, ok: false, ssoProtected: false });
       failures.push(`${route.path} request failed: ${message}`);
     }
   }
@@ -109,8 +120,15 @@ async function main() {
     : {};
   const results = await checkSite({ baseUrl, headers });
 
+  const ssoDetected = results.some((r) => r.ssoProtected);
+  if (ssoDetected) {
+    console.warn(
+      '::warning::Vercel SSO Deployment Protection is active on preview deployment. Configure VERCEL_AUTOMATION_BYPASS_SECRET in GitHub Actions secrets for deep content verification.',
+    );
+  }
+
   for (const result of results) {
-    console.log(`PASS ${result.path} (${result.status})`);
+    console.log(`PASS ${result.path} (${result.status})${result.ssoProtected ? ' [SSO-200]' : ''}`);
   }
 }
 
