@@ -1,0 +1,5 @@
+{
+  "name": "security-engineering",
+  "description": "Adversarial trust boundary analysis, AuthKit/WorkOS security, RBAC enforcement, and secret protection.",
+  "version": "1.0.0"
+}

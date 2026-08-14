@@ -1,10 +1,96 @@
 {
-  "at": "2026-07-10T10:19:33.636Z",
-  "deleted_paths": 0,
-  "deleted_files": 0,
-  "deleted_mb": 0,
-  "remaining_agents_files": 29,
-  "deleted": [],
+  "at": "2026-08-14T19:35:50.518Z",
+  "deleted_paths": 17,
+  "deleted_files": 24,
+  "deleted_mb": 0.56,
+  "remaining_agents_files": 851,
+  "deleted": [
+    {
+      "path": ".agents/evidence",
+      "files": 8,
+      "bytes": 357962
+    },
+    {
+      "path": ".agents/hooks-state.json",
+      "files": 1,
+      "bytes": 2563
+    },
+    {
+      "path": ".agents/entire-sync-state.json",
+      "files": 1,
+      "bytes": 182106
+    },
+    {
+      "path": ".agents/AGENTS.md",
+      "files": 1,
+      "bytes": 1859
+    },
+    {
+      "path": ".agents\\governance\\FROM_ENTIRE_RULES.md",
+      "files": 1,
+      "bytes": 421
+    },
+    {
+      "path": ".agents\\workflows\\memory-audit.md",
+      "files": 1,
+      "bytes": 194
+    },
+    {
+      "path": ".agents\\workflows\\memory-boost.md",
+      "files": 1,
+      "bytes": 191
+    },
+    {
+      "path": ".agents\\workflows\\memory-compound.md",
+      "files": 1,
+      "bytes": 208
+    },
+    {
+      "path": ".agents\\workflows\\workflow_cascade.md",
+      "files": 1,
+      "bytes": 2368
+    },
+    {
+      "path": ".agents\\workflows\\workflow_evolve_rules.md",
+      "files": 1,
+      "bytes": 774
+    },
+    {
+      "path": ".agents\\workflows\\workflow_heal_project.md",
+      "files": 1,
+      "bytes": 1996
+    },
+    {
+      "path": ".agents\\workflows\\workflow_init_autonomy.md",
+      "files": 1,
+      "bytes": 984
+    },
+    {
+      "path": ".agents\\workflows\\workflow_plan_and_execute.md",
+      "files": 1,
+      "bytes": 1546
+    },
+    {
+      "path": ".agents\\workflows\\workflow_plan_review_execute.md",
+      "files": 1,
+      "bytes": 1721
+    },
+    {
+      "path": ".agents\\workflows\\workflow_react.md",
+      "files": 1,
+      "bytes": 1615
+    },
+    {
+      "path": ".agents\\workflows\\workflow_reflexion.md",
+      "files": 1,
+      "bytes": 1640
+    },
+    {
+      "path": ".agents\\workflows\\workflow_universal_ci.md",
+      "files": 1,
+      "bytes": 1288
+    }
+  ],
   "keep": [
     "specialists.json",
     "skills/",

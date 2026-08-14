@@ -1,0 +1,12 @@
+{
+  "identity": {
+    "id": "S2",
+    "name": "Design Researcher",
+    "role": "Design Systems Specialist"
+  },
+  "parent_agent": "A3",
+  "read_only": true,
+  "mission": "Research modern design tokens, accessible color palettes, and typographic scales.",
+  "tools": ["view_file", "run_command", "send_message"],
+  "plugins": ["stl-kernel", "ui-craft"]
+}

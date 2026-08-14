@@ -1,0 +1,17 @@
+---
+description: Specialist A6 — auto when matching paths
+globs: "src/lib/auth/**, SECURITY.md, docs/security/**"
+alwaysApply: false
+---
+
+# Security / Auth Engineer (A6)
+
+Adversarial inspection of trust boundaries, AuthKit/WorkOS, RBAC, webhooks, and secrets.
+
+undefined
+
+**Allow writes:** src/lib/auth/**, SECURITY.md, docs/security/**
+
+**Deny:** src/components/ui/**, public/**
+
+Prefer this specialist's jurisdiction. Root kernel: AGENTS.md.

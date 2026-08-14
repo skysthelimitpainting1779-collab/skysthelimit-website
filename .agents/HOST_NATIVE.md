@@ -1,14 +1,14 @@
-# Host-native only (zero theater)
+# Host-native layout
 
-| Host | Loads |
-|------|--------|
-| All | root `AGENTS.md` |
-| Claude | `CLAUDE.md` @AGENTS + `.claude/agents` + `.claude/skills` |
-| Cursor | `.cursor/rules` + `.cursor/agents` |
-| Codex | `AGENTS.md` + `.codex/agents` + `.agents/skills` |
-| Antigravity | `GEMINI.md` + `.agents/rules` + `.agents/skills` |
-| Copilot | `.github/copilot-instructions.md` + `.github/skills` |
+| Host | Always-on | Specialists | Skills |
+|------|-----------|-------------|--------|
+| **All** | `AGENTS.md` | `.agents/specialists.json` | `.agents/skills/` |
+| **Claude** | `CLAUDE.md` → @AGENTS.md | `.claude/agents/*.md` | `.claude/skills/` |
+| **Cursor** | `.cursor/rules/00-agents-kernel.mdc` | `.cursor/agents/` + `specialist-*.mdc` | via AGENTS + skills path |
+| **Codex** | `AGENTS.md` | `.codex/agents/*.toml` | `.agents/skills/` |
+| **Antigravity** | `GEMINI.md` + `.agents/rules/` | rules/specialists.md | `.agents/skills/` |
+| **Copilot** | `.github/copilot-instructions.md` | (path rules) | `.github/skills/` |
+| **Gemini CLI** | `context.fileName`: AGENTS + GEMINI | same | `.agents/skills/` |
 
-**SSOT:** `.agents/specialists.json` · `.agents/skills/`  
-**Compile:** `npm run host:compile`  
-**No** domains/, queues/, hub_db, ontology novels, status mirrors.
+Compile: `npm run host:compile`  
+Clean custom domains: `npm run host:compile -- --clean-domains`

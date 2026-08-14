@@ -48,7 +48,7 @@ npm run host:compile          # regenerate Claude/Cursor/Codex/Copilot/Gemini ad
 | **Claude** | `CLAUDE.md` → `@AGENTS.md` | `.claude/agents/*.md` | `.claude/skills/` |
 | **Cursor** | `.cursor/rules/00-agents-kernel.mdc` | `.cursor/agents/` + `specialist-*.mdc` | path via rules |
 | **Codex** | `AGENTS.md` | `.codex/agents/*.toml` | `.agents/skills/` |
-| **Antigravity** | `GEMINI.md` + `.agents/rules/` | `.agents/rules/specialists.md` | `.agents/skills/` |
+| **Antigravity** | `GEMINI.md` + `.agents/rules/` | `.agents/agents/*.md` + `.agents/manifests/` | `.agents/skills/` |
 | **Copilot** | `.github/copilot-instructions.md` | path rules | `.github/skills/` |
 
 Map: [`.agents/HOST_NATIVE.md`](.agents/HOST_NATIVE.md)  
@@ -63,6 +63,12 @@ Map: [`.agents/HOST_NATIVE.md`](.agents/HOST_NATIVE.md)
 2. **Simplicity first** — minimum code; no speculative abstractions.
 3. **Surgical changes** — only what the task requires.
 4. **Goal-driven** — verifiable success; loop until `npm run goal:verify` passes.
+
+## Mandatory discovery and reuse
+
+- **Graphifyy first:** Before navigating or searching code, query the codebase knowledge graph with `search_graph`, `trace_path`, `get_code_snippet`, `query_graph`, or the repository `graph:*` commands. Fall back to `rg` only for literals/config/non-code or when graph results are insufficient.
+- **Context7 first:** Before implementing or changing behavior from an external library, framework, provider, or API, query its current official documentation through Context7. Record the selected library ID and the contract that affects the change.
+- **Skill before repetition:** Before performing a workflow a second time—or when the plan already shows it will recur—create or update a repository skill under `.agents/skills/` and route subsequent executions through it. Use `repeatable-workflow-capture`; validate the skill, run `npm run skills:validate`, and compile host adapters.
 
 ---
 
@@ -85,28 +91,27 @@ Skill: `ship-loop` (`.agents/skills/ship-loop/`).
 
 ## Delivery acceptance & recovery
 
-**Acceptance gate:** `npm run goal:verify` is the mandatory pre-delivery gate.
-It runs lint + test (and optionally `--build`) and writes a timestamped result to
-`.agents/goals/_eval/last.json`. No production deployment is accepted without a
-passing verify result tied to the current revision.
+Full policy: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md)
 
-**CI gate:** GitHub Actions (`.github/workflows/ci.yml`) runs git-standards,
-dependency audit, tests, and build on PRs to `main` and branch pushes.
+**Production delivery model:** Source quality is enforced by `.github/workflows/ci.yml` and `.github/workflows/security.yml`. Production deployment is executed through Vercel's native Git integration upon merge to `main`. Customer routes are smoke-tested post-deployment by `.github/workflows/deployment-verification.yml`.
 
-**Recovery route (owner: repo maintainer):**
+**Local pre-delivery gate:** `npm run goal:verify` runs lint + test (optionally
+`--build`) and writes to `.agents/goals/_eval/last.json`.
+
+**CI boundary:** `.github/workflows/ci.yml` runs git-standards,
+lint, typecheck, and tests on PRs to `main` and branch pushes.
+
+**Recovery route (owner: Johnny Cage, repo maintainer):**
 
 ```bash
-# Rollback Vercel production to the previous deployment
-npx vercel rollback --yes
-
-# Or promote a known-good deployment
-npx vercel promote <deployment-url>
+npx vercel rollback --yes          # rollback to previous production deployment
+npx vercel promote <deployment-url> # promote a known-good deployment
 ```
 
-- Vercel auto-deploys on push to `main`; a failed deploy is recoverable via the
-  Vercel dashboard or CLI rollback within 90 days.
-- For database migrations: `supabase db reset` (local) or restore from Supabase
-  dashboard backup (production).
+- Recovery SLA: initiate rollback within 15 minutes of detecting regression.
+- Vercel rollback available for 90 days post-deployment.
+- For database migrations: `supabase db reset` (local) or Supabase dashboard
+  backup (production).
 - Never force-push to `main`; revert via `git revert <sha>` and re-deploy.
 
 ---

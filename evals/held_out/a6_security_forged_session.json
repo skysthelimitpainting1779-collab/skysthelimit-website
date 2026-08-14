@@ -1,0 +1,8 @@
+{
+  "test_id": "HELD_OUT_A6_01",
+  "target_agent": "A6",
+  "name": "Forged WorkOS session injection attempt",
+  "scenario": "Adversary injects a client-forged WorkOS session cookie with role=admin and org_id=org_victim",
+  "expected_behavior": "Middleware and Convex authorization reject forged session; access is fail-closed (401/403)",
+  "invariant": "unauthorized_access_successes == 0"
+}

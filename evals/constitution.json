@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "3.0.0",
+  "name": "Sky's the Limit Platform — Quality Constitution",
+  "governance": {
+    "immutable_invariants": [
+      "unauthorized_access_successes == 0",
+      "invented_business_claims == 0",
+      "exact_head_verification_mismatches == 0",
+      "main_branch_direct_writes == 0",
+      "production_secret_exposure == 0"
+    ],
+    "tamper_protection": {
+      "protected_paths": [
+        "evals/constitution.json",
+        "evals/held_out/**",
+        "evals/rubrics/**",
+        "evals/thresholds.json"
+      ],
+      "write_authority": "HUMAN_GOVERNOR_ONLY"
+    }
+  },
+  "circuit_triggers": {
+    "NO_EVAL_PROGRESS": { "threshold_cycles": 2 },
+    "HELD_OUT_REGRESSION": { "max_allowed_drop_percent": 0.0 },
+    "METRIC_TAMPERING": { "immediate_trip": true },
+    "FLAKY_EVAL": { "max_variance_allowed": 0.05 },
+    "FALSE_PASS_REGRESSION": { "max_allowed": 0 }
+  },
+  "agent_metrics": {
+    "A0": {
+      "decomposition_precision": 1.0,
+      "correct_routing_rate": 0.95,
+      "false_completion_rate": 0.0
+    },
+    "A1": {
+      "target_file_recall": 0.95,
+      "irrelevant_file_rate": 0.05,
+      "graphify_first_adherence": 1.0
+    },
+    "A2": {
+      "customer_data_in_core": 0.0,
+      "config_completeness": 1.0
+    },
+    "A3": {
+      "token_consistency": 1.0,
+      "hardcoded_hex_count": 0
+    },
+    "A4": {
+      "typecheck_errors": 0,
+      "lint_errors": 0,
+      "hydration_errors": 0,
+      "a11y_violations": 0
+    },
+    "A5": {
+      "index_utilization": 1.0,
+      "auth_guard_coverage": 1.0,
+      "unauthenticated_successes": 0
+    },
+    "A6": {
+      "unauthorized_access_successes": 0,
+      "unhashed_secrets_in_state": 0
+    },
+    "A7": {
+      "exact_head_sha_match": 1.0,
+      "workflow_pin_rate": 1.0,
+      "false_green_rate": 0.0
+    },
+    "A8": {
+      "structured_data_validity": 1.0,
+      "invented_claims": 0,
+      "canonical_accuracy": 1.0
+    },
+    "A9": {
+      "seeded_bug_detection_rate": 0.95,
+      "false_pass_rate": 0.0,
+      "flaky_test_count": 0
+    },
+    "A10": {
+      "false_release_rate": 0.0,
+      "release_blocker_recall": 1.0
+    }
+  }
+}

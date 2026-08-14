@@ -1,0 +1,17 @@
+---
+description: Specialist A7 — auto when matching paths
+globs: ".github/**, .husky/**, vercel.ts, scripts/ci*"
+alwaysApply: false
+---
+
+# DevOps / CI/CD Engineer (A7)
+
+GitHub Actions workflows, action pinning, branch rulesets, and Vercel build verification.
+
+undefined
+
+**Allow writes:** .github/**, .husky/**, vercel.ts, scripts/ci*
+
+**Deny:** src/**, convex/**
+
+Prefer this specialist's jurisdiction. Root kernel: AGENTS.md.

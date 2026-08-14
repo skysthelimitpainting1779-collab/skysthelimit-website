@@ -1,0 +1,5 @@
+{
+  "name": "qa-browser",
+  "description": "Playwright end-to-end testing, responsive matrix evaluation, accessibility audits, and regression verification.",
+  "version": "1.0.0"
+}

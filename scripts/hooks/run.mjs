@@ -241,6 +241,61 @@ function runSessionLearn(state, { force = false } = {}) {
   }
 }
 
+const EPISODE_DEBOUNCE = Number(process.env.EPISODE_DEBOUNCE_MS || 60_000);
+
+/**
+ * Automatic episode recording — fires on post-commit, debounced.
+ * Detects task from latest git commit, derives pattern/friction, syncs to Turso.
+ */
+function runEpisodeRecord(state, { force = false } = {}) {
+  if (process.env.EPISODE_SKIP === '1') {
+    return { ok: true, skipped: 'EPISODE_SKIP' };
+  }
+  const now = Date.now();
+  if (!force && now - (state.last_episode || 0) < EPISODE_DEBOUNCE) {
+    return { ok: true, skipped: 'debounce' };
+  }
+  try {
+    // Fire-and-forget async episode recording (non-blocking for git hook)
+    const script = join(ROOT, 'scripts', 'learning-loop.mjs');
+    spawnSync(process.execPath, [script, 'episode'], {
+      cwd: ROOT,
+      stdio: 'ignore',
+      timeout: 30_000,
+      windowsHide: true,
+    });
+    state.last_episode = Date.now();
+    logEvent(state, 'episode_record', { ok: true });
+    saveState(state);
+    return { ok: true };
+  } catch (err) {
+    logEvent(state, 'episode_record', { ok: false, error: err.message });
+    saveState(state);
+    return { ok: false, error: err.message };
+  }
+}
+
+/**
+ * Sync hook telemetry to Turso (best-effort, fire-and-forget).
+ * Gives cross-device visibility into what automation actually fires.
+ */
+function runTelemetrySync(state) {
+  if (process.env.TELEMETRY_SKIP === '1') return { ok: true, skipped: 'TELEMETRY_SKIP' };
+  try {
+    const script = join(ROOT, 'scripts', 'hooks', 'telemetry-sync.mjs');
+    if (!existsSync(script)) return { ok: false, error: 'telemetry-sync.mjs missing' };
+    spawnSync(process.execPath, [script], {
+      cwd: ROOT,
+      stdio: 'ignore',
+      timeout: 20_000,
+      windowsHide: true,
+    });
+    return { ok: true };
+  } catch (err) {
+    return { ok: false, error: err.message };
+  }
+}
+
 function claudePreTool(payload) {
   const tool = toolNameFromPayload(payload);
   const input = toolInputFromPayload(payload);
@@ -346,8 +401,12 @@ function main() {
       const r = runSessionSync(state, { force: event === 'post-commit' });
       // Optional full learn close when SESSION_LEARN_AUTO=1
       const learn = runSessionLearn(state, { force: false });
+      // Automatic episode recording (debounced, syncs to Turso)
+      const ep = runEpisodeRecord(state, { force: event === 'post-commit' });
+      // Telemetry: push hook event log to Turso
+      runTelemetrySync(state);
       if (process.env.HOOKS_VERBOSE === '1') {
-        console.error('[hooks] post-session', r, learn);
+        console.error('[hooks] post-session', r, learn, ep);
       }
       break;
     }
@@ -355,12 +414,78 @@ function main() {
       // Git post-commit: force session sync; graphify left to chained graphify hook
       runSessionSync(state, { force: true });
       runSessionLearn(state, { force: false });
+      runEpisodeRecord(state, { force: true });
+      runTelemetrySync(state);
       break;
     }
     case 'session-learn': {
       // Explicit: node scripts/hooks/run.mjs session-learn
       const r = runSessionLearn(state, { force: true });
       if (process.env.HOOKS_VERBOSE === '1') console.error('[hooks] session-learn', r);
+      break;
+    }
+    case 'pre-invocation': {
+      // Pre-invocation hook: check circuit breaker state & graph health
+      const circuitFile = join(ROOT, '.learnings', 'CIRCUIT_STATE.json');
+      let circuitOpen = false;
+      if (existsSync(circuitFile)) {
+        try {
+          const circuit = JSON.parse(readFileSync(circuitFile, 'utf8'));
+          if (circuit.state === 'OPEN') circuitOpen = true;
+        } catch {}
+      }
+      const injectSteps = [];
+      if (circuitOpen) {
+        injectSteps.push({
+          ephemeralMessage: '[CIRCUIT_BREAKER_OPEN]: Automated retries are currently paused. Escalating to A0 Commander for strategy reconciliation.',
+        });
+      }
+      process.stdout.write(JSON.stringify({ injectSteps }));
+      logEvent(state, 'pre-invocation', { circuit_open: circuitOpen });
+      saveState(state);
+      break;
+    }
+    case 'pre-tool-use': {
+      // Pre-tool-use hook: enforce Git discipline, Graphify-first, and safety policies
+      const toolCall = payload.toolCall || payload;
+      const toolName = toolNameFromPayload(toolCall) || toolCall.name || '';
+      const args = toolInputFromPayload(toolCall) || toolCall.args || {};
+      let decision = 'allow';
+      let reason = '';
+
+      if (toolName === 'run_command' && args.CommandLine) {
+        const cmd = String(args.CommandLine).trim();
+        if (/(?:git\s+add\s+\.|\bgit\s+add\s+-A\b)/i.test(cmd)) {
+          decision = 'deny';
+          reason = 'HARD DENIAL: "git add ." and "git add -A" are prohibited. Use explicit, surgical file staging.';
+        } else if (/(?:git\s+push\s+.*--force|\bgit\s+push\s+.*-f\b)/i.test(cmd)) {
+          decision = 'deny';
+          reason = 'HARD DENIAL: Force pushing is strictly prohibited to preserve git history integrity.';
+        } else if (/--no-verify\b/i.test(cmd)) {
+          decision = 'deny';
+          reason = 'HARD DENIAL: Bypassing git verification hooks (--no-verify) is prohibited.';
+        } else if (/(?:git\s+reset\s+--hard|\bgit\s+clean\s+-fd)/i.test(cmd)) {
+          decision = 'deny';
+          reason = 'HARD DENIAL: Unscoped hard reset and aggressive clean are prohibited.';
+        } else if (/(?:vercel\s+--prod|deploy-production|convex\s+deploy\s+--prod)/i.test(cmd)) {
+          decision = 'deny';
+          reason = 'HARD DENIAL: Autonomous production deployment/promotion is prohibited. Must flow through Pull Request gate.';
+        }
+      }
+
+      if (toolName === 'grep_search') {
+        const searchPath = String(args.SearchPath || '');
+        const query = String(args.Query || '');
+        const isCodeDir = /(?:src|convex|pages|components|app)/i.test(searchPath) && !searchPath.endsWith('.json') && !searchPath.endsWith('.md');
+        if (isCodeDir && (query === '*' || query.length < 3)) {
+          decision = 'deny';
+          reason = 'GRAPHIFY MANDATE: Broad repository code scans via grep are prohibited. Use Graphify semantic query (npm run graph:query) first.';
+        }
+      }
+
+      process.stdout.write(JSON.stringify({ decision, reason }));
+      logEvent(state, 'pre-tool-use', { tool: toolName, decision });
+      saveState(state);
       break;
     }
     case 'claude-pre-tool': {

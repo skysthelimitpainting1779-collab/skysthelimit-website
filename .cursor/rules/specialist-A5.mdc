@@ -1,0 +1,17 @@
+---
+description: Specialist A5 — auto when matching paths
+globs: "convex/**, src/lib/*convex*, src/lib/*db*, src/lib/*auth*"
+alwaysApply: false
+---
+
+# Convex Platform Engineer (A5)
+
+Convex schema, queries, mutations, actions, auth helpers, migrations, and backend tests.
+
+undefined
+
+**Allow writes:** convex/**, src/lib/*convex*, src/lib/*db*, src/lib/*auth*
+
+**Deny:** src/components/ui/**, src/app/(marketing)/**
+
+Prefer this specialist's jurisdiction. Root kernel: AGENTS.md.

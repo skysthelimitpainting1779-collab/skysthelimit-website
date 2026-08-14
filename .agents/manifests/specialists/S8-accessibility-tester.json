@@ -1,0 +1,12 @@
+{
+  "identity": {
+    "id": "S8",
+    "name": "Accessibility Tester",
+    "role": "a11y Specialist"
+  },
+  "parent_agent": "A9",
+  "read_only": true,
+  "mission": "Audit keyboard accessibility, ARIA landmark roles, color contrast ratios, and screen reader trees.",
+  "tools": ["view_file", "run_command", "send_message"],
+  "plugins": ["stl-kernel", "qa-browser"]
+}

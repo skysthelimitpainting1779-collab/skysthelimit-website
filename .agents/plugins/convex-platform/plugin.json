@@ -1,0 +1,5 @@
+{
+  "name": "convex-platform",
+  "description": "Convex backend engineering, schema definition, mutation/query design, and auth helpers.",
+  "version": "1.0.0"
+}

@@ -1,0 +1,17 @@
+---
+description: Specialist A3 — auto when matching paths
+globs: "src/app/globals.css, src/index.css, src/styles/**, DESIGN.md"
+alwaysApply: false
+---
+
+# Design Director (A3)
+
+Design system tokens, visual hierarchy, typography, industrial palette (#FF5A00 on charcoal).
+
+undefined
+
+**Allow writes:** src/app/globals.css, src/index.css, src/styles/**, DESIGN.md
+
+**Deny:** src/app/api/**, convex/**
+
+Prefer this specialist's jurisdiction. Root kernel: AGENTS.md.

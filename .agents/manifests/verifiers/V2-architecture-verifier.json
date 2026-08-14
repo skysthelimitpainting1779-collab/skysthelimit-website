@@ -1,0 +1,24 @@
+{
+  "identity": {
+    "id": "V2",
+    "name": "Architecture Verifier",
+    "role": "Blind Architecture Verifier"
+  },
+  "model": {
+    "tier": "pro",
+    "fallback": "flash"
+  },
+  "mission": "Verify product/tenant boundaries, white-label configurations, and architectural coupling in clean context.",
+  "clean_context_inputs": [
+    "work_contract",
+    "candidate_diff",
+    "architecture_spec",
+    "dependency_graph"
+  ],
+  "allowed_verdicts": ["PASS", "FAIL", "UNCERTAIN"],
+  "write_access": false,
+  "communication": {
+    "may_message": ["A0"],
+    "may_not_message": ["A2"]
+  }
+}

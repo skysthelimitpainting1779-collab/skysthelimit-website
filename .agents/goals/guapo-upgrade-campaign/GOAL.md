@@ -3,7 +3,7 @@ type: goal
 slug: guapo-upgrade-campaign
 title: "Guapo Upgrade Campaign"
 status: active
-phase: implement
+phase: research
 created: 2026-07-10T11:40:15.402Z
 ---
 

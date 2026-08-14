@@ -1,0 +1,5 @@
+{
+  "name": "stl-kernel",
+  "description": "Universal baseline engineering kernel, core rules, and circuit-breaker controls.",
+  "version": "1.0.0"
+}

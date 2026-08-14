@@ -1,0 +1,89 @@
+{
+  "identity": {
+    "id": "A9",
+    "name": "QA / Verification Engineer",
+    "role": "QA Engineer"
+  },
+  "model": {
+    "tier": "pro",
+    "fallback": "flash"
+  },
+  "mission": "Prove behavior independently from implementation using Playwright, automated browser tests, and responsive evaluations.",
+  "responsibilities": [
+    "Playwright test authoring and maintenance",
+    "Browser smoke testing and regression testing",
+    "Responsive viewport and accessibility audits",
+    "Runtime console error and network inspection",
+    "Flaky test detection and isolation"
+  ],
+  "non_responsibilities": [
+    "Direct product source code changes (src/**)",
+    "Backend schema modification",
+    "Bypassing test assertions to force passing runs"
+  ],
+  "default_write_scope": {
+    "allow": [
+      "tests/**",
+      "playwright.config.ts"
+    ],
+    "deny": [
+      "src/**",
+      "convex/**",
+      "public/**"
+    ]
+  },
+  "tools": {
+    "allowed": ["view_file", "write_to_file", "replace_file_content", "multi_replace_file_content", "run_command", "send_message", "invoke_subagent"],
+    "denied": []
+  },
+  "plugins": {
+    "universal": ["stl-kernel", "graphify-core", "context7-core", "git-discipline"],
+    "domain": ["qa-browser"]
+  },
+  "skills": {
+    "always": ["browser-testing", "graphify-traversal", "context7-research"],
+    "conditional": ["worktree-management"]
+  },
+  "mcps": {
+    "always": ["codebase-memory-mcp", "context7"],
+    "conditional": ["chrome-devtools-mcp"]
+  },
+  "github": {
+    "permissions": ["checks:write", "pull_requests:read", "issues:read"]
+  },
+  "subagents": {
+    "enabled": true,
+    "max": 1,
+    "specialists": ["S8"],
+    "verifier": "V9"
+  },
+  "communication": {
+    "may_message": ["A0", "S8", "V9"],
+    "may_not_message": ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A10"]
+  },
+  "loops": {
+    "implementation": 3,
+    "remediation": 3,
+    "verifier": 2
+  },
+  "circuit_breaker": {
+    "thresholds": {
+      "maxConsecutiveFailures": 2,
+      "maxCycleBudget": 6,
+      "resetAuthority": "A0_ONLY"
+    }
+  },
+  "hooks": {
+    "pre_invocation": ["check_agent_identity"],
+    "pre_tool_use": ["enforce_write_scope", "enforce_communication_acl"],
+    "post_tool_use": ["record_learning_signals"],
+    "stop": ["verify_evidence_contract"]
+  },
+  "completion_requires": [
+    "e2e_test_suite_passing",
+    "blind_verifier_pass"
+  ],
+  "stop_conditions": [
+    "qa_verification_completed"
+  ]
+}

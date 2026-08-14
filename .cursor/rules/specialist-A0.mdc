@@ -1,0 +1,17 @@
+---
+description: Specialist A0 — auto when matching paths
+globs: ".agents/goals/**, .learnings/**, implementation_plan.md, walkthrough.md"
+alwaysApply: false
+---
+
+# Commander / Engineering Orchestrator (A0)
+
+Root orchestrator: converts goals into work contracts, coordinates domain dispatch, manages circuit breakers.
+
+undefined
+
+**Allow writes:** .agents/goals/**, .learnings/**, implementation_plan.md, walkthrough.md
+
+**Deny:** src/**, convex/**, public/**
+
+Prefer this specialist's jurisdiction. Root kernel: AGENTS.md.

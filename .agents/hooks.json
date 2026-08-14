@@ -1,5 +1,35 @@
 {
-  "agent-os": {
+  "git-discipline": {
+    "enabled": true,
+    "PreToolUse": [
+      {
+        "matcher": "run_command",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/hooks/guard-git.mjs",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  },
+  "graphify-enforcer": {
+    "enabled": true,
+    "PreToolUse": [
+      {
+        "matcher": "grep_search",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/hooks/guard-graphify.mjs",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  },
+  "circuit-guard": {
     "enabled": true,
     "PreToolUse": [
       {
@@ -7,20 +37,33 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node scripts/hooks/run.mjs claude-pre-tool",
+            "command": "node scripts/hooks/guard-circuit.mjs",
             "timeout": 5
           }
         ]
       }
-    ],
-    "PostToolUse": [
+    ]
+  },
+  "production-guard": {
+    "enabled": true,
+    "PreToolUse": [
       {
-        "matcher": "*",
+        "matcher": "run_command",
         "hooks": [
           {
             "type": "command",
-            "command": "node scripts/hooks/run.mjs claude-post-tool",
-            "timeout": 10
+            "command": "node scripts/hooks/guard-production.mjs",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "write_to_file",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/hooks/guard-production.mjs",
+            "timeout": 5
           }
         ]
       }
