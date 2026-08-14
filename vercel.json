@@ -2,7 +2,7 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
   "buildCommand": "npm run build",
-  "installCommand": "npm install",
+  "installCommand": "npm ci",
   "headers": [
     {
       "source": "/(.*)",
@@ -29,7 +29,7 @@
     {
       "source": "/brand/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, maxAge=31536000, immutable" }
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
     }
   ],
@@ -50,6 +50,7 @@
   "ignoreCommand": "case \"$VERCEL_GIT_COMMIT_REF\" in entire/*) echo 'agent branch, skipping'; exit 0;; *) echo 'proceeding with build'; exit 1;; esac",
   "git": {
     "deploymentEnabled": {
+      "main": true,
       "entire/*": false
     }
   }

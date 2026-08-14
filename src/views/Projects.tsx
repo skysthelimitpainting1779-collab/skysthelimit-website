@@ -4,7 +4,7 @@ import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import HoverLift from '../components/animations/HoverLift';
 import BeforeAfterSlider from '../components/BeforeAfterSlider';
 import ResponsiveImage from '../components/ResponsiveImage';
-import { createClient } from '../lib/supabase/server';
+import { createPublicClient } from '../lib/supabase/public';
 import { getCaseStudies, directusAssetUrl } from '../lib/directus/client';
 import JsonLd from '../components/JsonLd';
 import { businessSchema, breadcrumbSchema } from '../lib/seo';
@@ -101,24 +101,27 @@ export default async function ProjectsPage() {
     ])
   ];
 
-  // 1. Try Directus CMS first (graceful fallback if unreachable during Vercel build)
+  // 1. Try Directus CMS first (graceful fallback if not configured or unreachable)
   const cmsStudies = await getCaseStudies();
 
-  // 2. Try Supabase portfolio table as secondary source
+  // 2. Try the anonymous Supabase portfolio table as a secondary source.
+  // This client is deliberately cookie-free so the public page can prerender safely.
   let portfolioItems: Array<{ title: string; location: string; problem: string; prep: string[]; result: string; image_url?: string; before_image_url?: string; after_image_url?: string }> = [];
   if (cmsStudies.length === 0) {
-    try {
-      const supabase = await createClient();
-      const { data, error } = await supabase
-        .from('portfolio')
-        .select('*')
-        .order('created_at', { ascending: false });
-      if (data && !error) {
-        portfolioItems = data;
+    const supabase = createPublicClient();
+    if (supabase) {
+      try {
+        const { data, error } = await supabase
+          .from('portfolio')
+          .select('*')
+          .order('created_at', { ascending: false });
+        if (data && !error) {
+          portfolioItems = data;
+        }
+      } catch (err) {
+        const message = err instanceof Error ? err.message : String(err);
+        console.warn(`Portfolio DB fetch failed (${message}), using static fallback.`);
       }
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
-      console.warn(`Portfolio DB fetch failed (${message}), using static fallback.`);
     }
   }
 

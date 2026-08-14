@@ -1,73 +1,88 @@
 # CI/CD workflows
 
+## Ownership model
+
+GitHub validates source code and security. Vercel owns every Preview and Production Deployment through the repository's native Git integration.
+
+GitHub Actions must never run `vercel build`, `vercel deploy`, `vercel promote`, `vercel alias`, Vercel domain commands, or a second `npm run build`.
+
 ## Pipeline topology
 
 | Workflow | Trigger | Responsibility |
 |---|---|---|
-| `ci.yml` | Pushes and pull requests for governed branches | Git standards, then the reusable quality gate |
-| `quality-gate.yml` | Reusable workflow and manual dispatch | Workflow contract, install, lint/typecheck, tests, Next.js build |
-| `security-scan.yml` | Push, pull request, weekly schedule | Production dependency audit and pull-request dependency review |
-| `codeql.yml` | Push, pull request, weekly schedule | The only CodeQL analysis workflow |
-| `release.yml` | `v*` tags or confirmed manual dispatch | Reuse the quality gate, deploy a Vercel production artifact, publish a GitHub release for tags |
-| `learn-pipeline.yml` | Successful `CI` completion or manual dispatch | Active-prevention self-test and rebuild verification |
-| `ci-health-check.yml` | Daily schedule or manual dispatch | Run the reusable quality gate and maintain one deduplicated health incident issue |
+| `ci.yml` | Pull requests and pushes for `main` and `staging` | Workflow contract, Git standards, lockfile install, TypeScript checks, and tests |
+| `security.yml` | Pull requests, pushes, weekly schedule, manual dispatch | CodeQL, dependency review, and production dependency audit |
+| `deployment-verification.yml` | Vercel deployment events, daily schedule, manual dispatch | Smoke-test the exact Vercel deployment URL or the production customer domain |
 
-## Local quality gate
+Exactly these three YAML files belong in `.github/workflows`.
+
+## Local source-validation gate
 
 ```bash
-npm run ci:contract
 npm ci
+npm run ci:contract
+node scripts/enforce-git.js
 npm run lint:ci
 npm test
-npm run build
 ```
 
-`npm run ci:contract` verifies that every `npm run` command and every local script or reusable-workflow path referenced from `.github/workflows` exists. It also requires steps from the same action repository, such as CodeQL `init` and `analyze`, to use the same pinned ref. Run it whenever a workflow or `package.json` script changes.
+The GitHub CI workflow intentionally does not run `npm run build`. Vercel's Preview Deployment is the authoritative Next.js build with the correct Vercel environment and project configuration.
 
-## Required deployment secrets
+## Vercel project
 
-- `VERCEL_TOKEN`
-- `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- `PAYLOAD_SECRET`
-- `DATABASE_URI`
+- Project: `website`
+- Project ID: `prj_L3ZMoQ79YLx9G2o6Lg9OubqO9H8m`
+- Team ID: `team_bseTA2AuCO6A2fCOVY9ubrJo`
+- Framework: Next.js
+- Node.js: `24.x`
+- Production branch: `main`
 
-The quality gate tolerates absent application secrets only when the application build itself tolerates them. Production deployment fails immediately when `VERCEL_TOKEN` is missing.
+`vercel.json` uses `npm ci`, enables Git deployment for `main`, and disables Git deployment for `entire/*` agent branches.
 
-## Production release
+Pull requests should receive a Vercel Preview Deployment. A merge to `main` should create the Vercel Production Deployment without a GitHub Actions token or manual promotion workflow.
 
-Preferred release path:
+## Required secret
 
-1. Merge a green pull request into `main`.
-2. Create and push a tag such as `v1.2.3` on that `main` commit.
-3. `release.yml` reruns the canonical quality gate.
-4. The workflow verifies that the tag commit belongs to `main`.
-5. Vercel is pulled, built, and deployed with `--prebuilt --prod`.
-6. GitHub release notes are generated after deployment succeeds.
+`VERCEL_AUTOMATION_BYPASS_SECRET` is optional for public deployments and required when Vercel Deployment Protection blocks automated access to preview URLs.
 
-Manual production deployment is available through `workflow_dispatch`; select the intended ref and explicitly enable `deploy_production`.
+Create the secret in Vercel's automated-access settings and save the same value as a GitHub Actions repository secret. The smoke runner sends it only as the `x-vercel-protection-bypass` request header and never prints it.
 
-## Dependency updates
+No `VERCEL_TOKEN` repository secret is required for CI/CD.
 
-Dependabot opens dependency pull requests, but the repository does not auto-merge them. Review and merge only after CI, CodeQL, and Dependency Security are green. Do not restore workflow-driven auto-merge unless repository rulesets require those checks before merge.
+## Deployment events
 
-## Branch coverage
+The preferred trigger is Vercel's `repository_dispatch` integration:
 
-CI runs for `main`, `staging`, and the branch prefixes enforced by `scripts/enforce-git.js`:
+- `vercel.deployment.success`
+- `vercel.deployment.promoted`
 
-`feat/`, `fix/`, `chore/`, `docs/`, `infra/`, `devin/`, `agent/`, and `dependabot/`.
+`deployment_status` remains as a compatibility fallback until Vercel is confirmed to send repository-dispatch events for this repository. Remove the fallback only after a successful dispatch-triggered run has been observed.
 
-For pull requests, Git Guard validates the author-controlled PR title rather than GitHub's generated merge-commit message. Conventional titles may contain repeated scopes used by dependency automation, such as `chore(deps)(deps-dev): ...`.
+## Required merge checks
+
+Protect `main` and require:
+
+- `CI / Repository Quality`
+- `Security / CodeQL JavaScript and TypeScript`
+- `Security / Dependency Review`
+- `Security / Production Dependency Audit`
+- The Vercel Preview Deployment check
+
+Do not enable dependency auto-merge unless the repository ruleset enforces every required check.
 
 ## Failure routing
 
-- A workflow command, local path, or shared action-ref mismatch fails at **Validate workflow contracts** before dependency installation.
-- Lint and type failures fail at **Lint and typecheck**.
-- Test failures fail at **Run tests**.
-- Build failures fail at **Build Next.js app**.
-- Missing Vercel credentials fail at **Verify production credentials**.
-- The scheduled health workflow creates one open `CI health check failed` issue and comments on it for repeated failures; it closes the issue after recovery.
+- **Validate workflow contracts:** a workflow references a missing npm script, local file, or inconsistent action SHA.
+- **Enforce branch and commit standards:** the PR title or branch name violates repository conventions.
+- **Lint and typecheck:** TypeScript or React-version validation failed.
+- **Run tests:** an application or pipeline contract failed.
+- **CodeQL:** static security analysis found or failed to analyze code.
+- **Dependency Review:** a pull request introduces a dependency at moderate or higher severity.
+- **Production Dependency Audit:** npm reports a critical production vulnerability.
+- **Verify Vercel Routes:** the reported deployment URL, customer route, expected content, or production domain is unhealthy.
 
-## Node version
+## Production rollback
 
-`.nvmrc` is the single source of truth. Every Node workflow uses `node-version-file: '.nvmrc'`.
+Rollback is owned by Vercel. Select the previous healthy Production Deployment in the Vercel dashboard and promote or roll it back there. Do not recreate a GitHub Actions deployment workflow to perform recovery.
+
+After rollback, run `deployment-verification.yml` manually to verify the production customer routes.

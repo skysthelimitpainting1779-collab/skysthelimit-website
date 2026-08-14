@@ -65,13 +65,31 @@ export interface DirectusSchema {
   site_config: SiteConfig;
 }
 
+export interface DirectusEnv {
+  NEXT_PUBLIC_DIRECTUS_URL?: string;
+  DIRECTUS_URL?: string;
+}
+
 export type DirectusClient = RestClient<DirectusSchema>;
 
 // ─── Client Factory ─────────────────────────────────────────────────
-export function getDirectusUrl(): string {
+function runtimeDirectusEnv(): DirectusEnv {
+  return {
+    NEXT_PUBLIC_DIRECTUS_URL: process.env.NEXT_PUBLIC_DIRECTUS_URL,
+    DIRECTUS_URL: process.env.DIRECTUS_URL,
+  };
+}
+
+export function hasDirectusConfig(
+  env: DirectusEnv = runtimeDirectusEnv(),
+): boolean {
+  return Boolean(env.NEXT_PUBLIC_DIRECTUS_URL?.trim() || env.DIRECTUS_URL?.trim());
+}
+
+export function getDirectusUrl(env: DirectusEnv = runtimeDirectusEnv()): string {
   return (
-    process.env.NEXT_PUBLIC_DIRECTUS_URL ||
-    process.env.DIRECTUS_URL ||
+    env.NEXT_PUBLIC_DIRECTUS_URL ||
+    env.DIRECTUS_URL ||
     'http://localhost:8055'
   ).replace(/\/$/, '');
 }
@@ -83,8 +101,9 @@ export function createDirectusClient(url: string = getDirectusUrl()): DirectusCl
   return createDirectus<DirectusSchema>(url).with(rest()) as DirectusClient;
 }
 
-function getClient(): DirectusClient {
-  return createDirectusClient();
+function resolveClient(client?: DirectusClient): DirectusClient | null {
+  if (client) return client;
+  return hasDirectusConfig() ? createDirectusClient() : null;
 }
 
 // ─── Asset URL Helper ───────────────────────────────────────────────
@@ -108,10 +127,13 @@ export function filterPublishedMarkets(items: CMSMarket[] | null | undefined): C
 }
 
 // ─── Data Fetchers (with graceful fallback) ─────────────────────────
-export async function getCaseStudies(client: DirectusClient = getClient()): Promise<CaseStudy[]> {
+export async function getCaseStudies(client?: DirectusClient): Promise<CaseStudy[]> {
   'use cache';
+  const resolvedClient = resolveClient(client);
+  if (!resolvedClient) return [];
+
   try {
-    const data = await client.request(
+    const data = await resolvedClient.request(
       readItems('case_studies', {
         filter: { status: { _eq: 'published' } },
         sort: ['sort'],
@@ -125,10 +147,13 @@ export async function getCaseStudies(client: DirectusClient = getClient()): Prom
   }
 }
 
-export async function getMarkets(client: DirectusClient = getClient()): Promise<CMSMarket[]> {
+export async function getMarkets(client?: DirectusClient): Promise<CMSMarket[]> {
   'use cache';
+  const resolvedClient = resolveClient(client);
+  if (!resolvedClient) return [];
+
   try {
-    const data = await client.request(
+    const data = await resolvedClient.request(
       readItems('markets', {
         filter: { status: { _eq: 'published' } },
         sort: ['sort'],
@@ -142,10 +167,13 @@ export async function getMarkets(client: DirectusClient = getClient()): Promise<
   }
 }
 
-export async function getSiteConfig(client: DirectusClient = getClient()): Promise<SiteConfig | null> {
+export async function getSiteConfig(client?: DirectusClient): Promise<SiteConfig | null> {
   'use cache';
+  const resolvedClient = resolveClient(client);
+  if (!resolvedClient) return null;
+
   try {
-    const data = await client.request(readSingleton('site_config', { fields: ['*'] }));
+    const data = await resolvedClient.request(readSingleton('site_config', { fields: ['*'] }));
     return data as SiteConfig;
   } catch (err) {
     console.warn('[CMS] site_config fetch failed, returning null:', (err as Error).message);

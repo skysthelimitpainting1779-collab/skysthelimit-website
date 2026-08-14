@@ -2,17 +2,7 @@ name: CI
 
 on:
   push:
-    branches:
-      - main
-      - staging
-      - 'feat/**'
-      - 'fix/**'
-      - 'chore/**'
-      - 'docs/**'
-      - 'infra/**'
-      - 'devin/**'
-      - 'agent/**'
-      - 'dependabot/**'
+    branches: [main, staging]
   pull_request:
     branches: [main, staging]
   workflow_dispatch:
@@ -24,14 +14,20 @@ concurrency:
   group: ci-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
+env:
+  HOOKS_SKIP: '1'
+  ENTIRE_SYNC_SKIP: '1'
+  GRAPHIFY_SKIP_HOOK: '1'
+  AGENT_OS_SKIP_SCAN: '1'
+
 jobs:
-  git-standards:
-    name: Git Standards
+  quality:
+    name: Repository Quality
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 20
     steps:
       - name: Checkout full history
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
 
@@ -39,14 +35,34 @@ jobs:
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version-file: '.nvmrc'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate workflow contracts
+        run: npm run ci:contract
 
       - name: Enforce branch and commit standards
         run: node scripts/enforce-git.js
         env:
           GIT_GUARD_STRICT: '1'
 
-  quality:
-    name: Quality Gate
-    needs: git-standards
-    uses: ./.github/workflows/quality-gate.yml
-    secrets: inherit
+      - name: Lint and typecheck
+        run: npm run lint:ci
+
+      - name: Run tests
+        id: tests
+        shell: bash
+        run: |
+          set -o pipefail
+          npm test 2>&1 | tee test.log
+
+      - name: Upload test diagnostics
+        if: failure() && steps.tests.outcome == 'failure'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: test-diagnostics
+          path: test.log
+          if-no-files-found: error
+          retention-days: 7

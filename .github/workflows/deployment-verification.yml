@@ -1,0 +1,75 @@
+name: Deployment Verification
+
+on:
+  repository_dispatch:
+    types:
+      - vercel.deployment.success
+      - vercel.deployment.promoted
+  deployment_status:
+  schedule:
+    - cron: '17 13 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deployment-verification-${{ github.event.client_payload.url || github.event.deployment_status.target_url || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    name: Verify Vercel Routes
+    if: github.event_name != 'deployment_status' || github.event.deployment_status.state == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Resolve verification target
+        id: target
+        shell: bash
+        env:
+          DISPATCH_URL: ${{ github.event.client_payload.url }}
+          DEPLOYMENT_TARGET_URL: ${{ github.event.deployment_status.target_url }}
+          DEPLOYMENT_ENVIRONMENT_URL: ${{ github.event.deployment_status.environment_url }}
+          DISPATCH_TYPE: ${{ github.event.action }}
+        run: |
+          set -euo pipefail
+
+          if [[ "$GITHUB_EVENT_NAME" == "schedule" || "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
+            site_url="https://www.skysthelimitpaintingllc.com"
+          elif [[ "$GITHUB_EVENT_NAME" == "repository_dispatch" && "$DISPATCH_TYPE" == "vercel.deployment.promoted" ]]; then
+            site_url="https://www.skysthelimitpaintingllc.com"
+          elif [[ "$GITHUB_EVENT_NAME" == "repository_dispatch" ]]; then
+            site_url="$DISPATCH_URL"
+          else
+            site_url="${DEPLOYMENT_TARGET_URL:-$DEPLOYMENT_ENVIRONMENT_URL}"
+          fi
+
+          case "$site_url" in
+            https://*) ;;
+            *)
+              echo "::error::Vercel did not provide a valid HTTPS deployment URL"
+              exit 1
+              ;;
+          esac
+
+          echo "url=$site_url" >> "$GITHUB_OUTPUT"
+          {
+            echo "## Deployment verification"
+            echo "- Event: $GITHUB_EVENT_NAME"
+            echo "- Target: $site_url"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Smoke-test customer routes
+        env:
+          SITE_URL: ${{ steps.target.outputs.url }}
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+        run: npm run smoke:site

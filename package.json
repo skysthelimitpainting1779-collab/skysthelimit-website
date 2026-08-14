@@ -20,6 +20,7 @@
     "ci": "node scripts/ci_check.js",
     "ci:contract": "node scripts/ci-contract.mjs",
     "test": "tsx --test tests/*.mjs",
+    "smoke:site": "node scripts/smoke-site.mjs",
     "learn:prevent:test": "node scripts/active-prevention.mjs self-test",
     "learn:prevent:rebuild": "node scripts/active-prevention.mjs rebuild",
     "ops:harness": "node scripts/harness-ops.js",
