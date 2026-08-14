@@ -245,6 +245,61 @@ Always obey root **AGENTS.md**. Never bulk-load wiki/GRAPH_REPORT.
 `;
 }
 
+function antigravityAgent(a) {
+  const tools = a.tools ? a.tools.map(t => {
+    switch(t.toLowerCase()) {
+      case 'read': return 'view_file';
+      case 'write': return 'write_to_file';
+      case 'edit': return 'replace_file_content';
+      case 'grep': return 'grep_search';
+      case 'bash': return 'run_command';
+      case 'glob': return 'find_by_name';
+      case 'subagent': return 'invoke_subagent';
+      default: return t;
+    }
+  }) : ['view_file', 'replace_file_content', 'run_command', 'manage_task'];
+
+  const toolsYaml = tools.map(t => `  - ${t}`).join('\n');
+  const slug = `${a.id.toLowerCase()}-${a.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}`;
+
+  return `---
+name: ${slug}
+description: ${a.description}
+model: ${a.model || 'pro'}
+tools:
+${toolsYaml}
+subagent: true
+commandExecutionPolicy: auto
+hooks:
+  PreInvocation:
+    - type: command
+      command: node scripts/hooks/run.mjs pre-invocation
+  PreToolUse:
+    - matcher: run_command
+      hooks:
+        - type: command
+          command: node scripts/hooks/run.mjs pre-tool-use
+---
+
+# ${a.name} (${a.id})
+
+${a.description}
+
+## Responsibilities & Jurisdiction
+
+**Allow Writes:** ${(a.allow_globs || []).map(g => `\`${g}\``).join(', ') || '_Strictly Read-Only_'}
+
+**Deny Writes:** ${(a.deny_globs || []).map(g => `\`${g}\``).join(', ') || 'n/a'}
+
+## Operating Directives
+
+1. **Graphify First**: Query \`graphify-out/graph.json\` before touching code.
+2. **Context7 Grounding**: Query official documentation for any 3rd party library behavior.
+3. **Clean-Context Verification**: Handoff candidates to independent blind verifiers.
+4. **Zero Silent Failures**: Fail fast with explicit errors and diagnostics.
+`;
+}
+
 function main() {
   const specs = loadSpecs();
   const agents = specs.agents || [];
@@ -270,6 +325,7 @@ function main() {
     out.push({ wrote: write(`.cursor/agents/${a.id}.md`, cursorAgent(a)) });
     out.push({ wrote: write(`.cursor/rules/specialist-${a.id}.mdc`, cursorRule(a)) });
     out.push({ wrote: write(`.codex/agents/${a.id}.toml`, codexToml(a)) });
+    out.push({ wrote: write(`.agents/agents/${a.id.toLowerCase()}.md`, antigravityAgent(a)) });
   }
 
   // Cursor always-on pointer rule

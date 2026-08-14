@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { pathToFileURL } from 'node:url';
 
 export const DEFAULT_ROUTES = [
@@ -15,11 +14,8 @@ export const DEFAULT_ROUTES = [
 ];
 
 function normalizeBaseUrl(baseUrl) {
-  if (!baseUrl) {
-    throw new Error('A site URL is required. Pass --base-url or set SITE_URL.');
-  }
-
-  const url = new URL(baseUrl);
+  const target = baseUrl || process.env.SITE_URL || 'https://www.skysthelimitpaintingllc.com';
+  const url = new URL(target);
   url.pathname = '/';
   url.search = '';
   url.hash = '';
@@ -102,7 +98,7 @@ function readArgument(name, args = process.argv.slice(2)) {
 }
 
 async function main() {
-  const baseUrl = readArgument('--base-url') || process.env.SITE_URL;
+  const baseUrl = readArgument('--base-url') || process.env.SITE_URL || 'https://www.skysthelimitpaintingllc.com';
   const bypassSecret = process.env.VERCEL_AUTOMATION_BYPASS_SECRET?.trim();
   const headers = bypassSecret
     ? {
@@ -126,69 +122,3 @@ if (isDirectExecution) {
     process.exitCode = 1;
   });
 }
-=======
-#!/usr/bin/env node
-
-/**
- * Production Site Smoke Test
- * Verifies live apex & www domains, key pages, and security headers.
- */
-
-const TARGET_HOST = process.env.SMOKE_TARGET_URL || 'https://www.skysthelimitpaintingllc.com';
-
-const ROUTES_TO_CHECK = [
-  '/',
-  '/about',
-  '/residential',
-  '/commercial',
-  '/estimate',
-  '/contact',
-  '/robots.txt',
-  '/sitemap.xml'
-];
-
-async function checkRoute(url) {
-  const start = Date.now();
-  try {
-    const res = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'User-Agent': 'SkysTheLimit-CI-SmokeTest/1.0'
-      }
-    });
-    const elapsed = Date.now() - start;
-    const ok = res.status >= 200 && res.status < 400;
-    console.log(`[smoke] ${res.status} ${url} (${elapsed}ms)`);
-    return { url, status: res.status, ok, elapsed };
-  } catch (err) {
-    const elapsed = Date.now() - start;
-    console.error(`[smoke] FAIL ${url} (${elapsed}ms):`, err.message);
-    return { url, status: 0, ok: false, error: err.message, elapsed };
-  }
-}
-
-async function runSmokeTests() {
-  console.log(`[smoke] Starting smoke test against ${TARGET_HOST}...`);
-  let failures = 0;
-
-  for (const route of ROUTES_TO_CHECK) {
-    const fullUrl = new URL(route, TARGET_HOST).toString();
-    const result = await checkRoute(fullUrl);
-    if (!result.ok) failures++;
-  }
-
-  // Also check apex domain
-  const apexUrl = 'https://skysthelimitpaintingllc.com/';
-  const apexResult = await checkRoute(apexUrl);
-  if (!apexResult.ok) failures++;
-
-  if (failures > 0) {
-    console.error(`[smoke] Smoke test FAILED with ${failures} error(s).`);
-    process.exit(1);
-  }
-
-  console.log('[smoke] All production smoke checks PASSED successfully!');
-}
-
-runSmokeTests();
->>>>>>> 1342eee7 (feat(ci): automate end-to-end pipeline and factory fix-it engine)

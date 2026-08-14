@@ -20,16 +20,12 @@
     "ci": "node scripts/ci_check.js",
     "ci:contract": "node scripts/ci-contract.mjs",
     "test": "tsx --test tests/*.mjs",
-<<<<<<< HEAD
-    "smoke:site": "node scripts/smoke-site.mjs",
-=======
     "learn": "node scripts/learning-loop.mjs episode",
     "learn:status": "node scripts/learning-loop.mjs episode-status",
     "learn:sync": "node scripts/learning-loop.mjs episode-sync",
     "learn:insights": "node scripts/learning-loop.mjs insights",
     "learn:heal": "node scripts/learning-loop.mjs heal-sync",
     "hooks:status": "node scripts/hooks/status.mjs",
->>>>>>> 1342eee7 (feat(ci): automate end-to-end pipeline and factory fix-it engine)
     "learn:prevent:test": "node scripts/active-prevention.mjs self-test",
     "learn:prevent:rebuild": "node scripts/active-prevention.mjs rebuild",
     "ops:harness": "node scripts/harness-ops.js",
