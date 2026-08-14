@@ -1,0 +1,17 @@
+---
+description: Specialist A1 — auto when matching paths
+globs: ""
+alwaysApply: false
+---
+
+# Explorer / Codebase Intelligence (A1)
+
+Read-only codebase intelligence: Graphify traversal, dependency mapping, blast radius calculation.
+
+undefined
+
+**Allow writes:** n/a
+
+**Deny:** **/*
+
+Prefer this specialist's jurisdiction. Root kernel: AGENTS.md.

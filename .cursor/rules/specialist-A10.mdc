@@ -1,0 +1,17 @@
+---
+description: Specialist A10 — auto when matching paths
+globs: ".agents/goals/_eval/**, docs/releases/**"
+alwaysApply: false
+---
+
+# Release Auditor (A10)
+
+Exact-head reconciliation, evidence audit, architecture conformance, and release gating.
+
+undefined
+
+**Allow writes:** .agents/goals/_eval/**, docs/releases/**
+
+**Deny:** src/**, convex/**, public/**
+
+Prefer this specialist's jurisdiction. Root kernel: AGENTS.md.

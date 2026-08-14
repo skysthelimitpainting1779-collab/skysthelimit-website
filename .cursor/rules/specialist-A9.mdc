@@ -1,0 +1,17 @@
+---
+description: Specialist A9 — auto when matching paths
+globs: "tests/**, playwright.config.ts"
+alwaysApply: false
+---
+
+# QA / Verification Engineer (A9)
+
+Playwright end-to-end tests, responsive matrix checks, accessibility audits.
+
+undefined
+
+**Allow writes:** tests/**, playwright.config.ts
+
+**Deny:** src/**, convex/**, public/**
+
+Prefer this specialist's jurisdiction. Root kernel: AGENTS.md.

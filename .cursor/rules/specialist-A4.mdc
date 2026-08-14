@@ -1,0 +1,17 @@
+---
+description: Specialist A4 — auto when matching paths
+globs: "src/app/**, src/components/**, src/views/**, src/data/**, src/lib/**"
+alwaysApply: false
+---
+
+# Frontend Engineer (A4)
+
+Next.js App Router, React 19, shadcn/ui components, marketing & portal vertical slices.
+
+undefined
+
+**Allow writes:** src/app/**, src/components/**, src/views/**, src/data/**, src/lib/**
+
+**Deny:** convex/schema.ts, convex/mutations.ts, .github/workflows/**
+
+Prefer this specialist's jurisdiction. Root kernel: AGENTS.md.

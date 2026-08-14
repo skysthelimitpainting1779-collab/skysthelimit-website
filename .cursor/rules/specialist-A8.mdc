@@ -1,0 +1,17 @@
+---
+description: Specialist A8 — auto when matching paths
+globs: "src/app/(marketing)/**, src/app/service-area*/**, src/app/robots*, src/app/sitemap*, src/components/JsonLd*"
+alwaysApply: false
+---
+
+# Growth / SEO / CRO Engineer (A8)
+
+Local SEO, JSON-LD structured data, service-area routes, and CRO conversion funnels.
+
+undefined
+
+**Allow writes:** src/app/(marketing)/**, src/app/service-area*/**, src/app/robots*, src/app/sitemap*, src/components/JsonLd*
+
+**Deny:** convex/**, src/app/api/**
+
+Prefer this specialist's jurisdiction. Root kernel: AGENTS.md.

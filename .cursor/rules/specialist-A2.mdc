@@ -1,0 +1,17 @@
+---
+description: Specialist A2 — auto when matching paths
+globs: "src/config/**, src/types/product/**, docs/architecture/**"
+alwaysApply: false
+---
+
+# Product Architect / Productizer (A2)
+
+Product/tenant boundary isolation, white-label configurations, and architecture decisions.
+
+undefined
+
+**Allow writes:** src/config/**, src/types/product/**, docs/architecture/**
+
+**Deny:** src/components/ui/**, convex/schema.ts
+
+Prefer this specialist's jurisdiction. Root kernel: AGENTS.md.

@@ -4,8 +4,7 @@ Follow root **[AGENTS.md](AGENTS.md)**.
 
 Specialists: `.agents/specialists.json` (compiled to host agents).  
 Skills: `.agents/skills/`  
-Rules: `.agents/rules/`  
-Hooks: `.agents/rules/antigravity-hooks.md`
+Rules: `.agents/rules/`
 
 ```bash
 npm run lint && npm test
