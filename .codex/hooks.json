@@ -1,36 +1,12 @@
 {
   "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": null,
-        "hooks": [
-          {
-            "type": "command",
-            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; exec entire hooks codex post-tool-use'",
-            "timeout": 30
-          }
-        ]
-      }
-    ],
     "SessionStart": [
       {
         "matcher": null,
         "hooks": [
           {
             "type": "command",
-            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then printf \"%s\\n\" \"{\\\"systemMessage\\\":\\\"Entire CLI is enabled but not installed or not on PATH. Installation guide: https://docs.entire.io/cli/installation#installation-methods\\\"}\"; exit 0; fi; exec entire hooks codex session-start'",
-            "timeout": 30
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "matcher": null,
-        "hooks": [
-          {
-            "type": "command",
-            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; exec entire hooks codex stop'",
+            "command": "node scripts/hooks/entire-codex.mjs session-start",
             "timeout": 30
           }
         ]
@@ -42,7 +18,53 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; exec entire hooks codex user-prompt-submit'",
+            "command": "node scripts/hooks/entire-codex.mjs user-prompt-submit",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          { "type": "command", "command": "node scripts/hooks/guard-git.mjs", "timeout": 10 },
+          { "type": "command", "command": "node scripts/hooks/guard-graphify.mjs", "timeout": 10 },
+          { "type": "command", "command": "node scripts/hooks/guard-production.mjs", "timeout": 10 },
+          { "type": "command", "command": "node scripts/hooks/guard-circuit.mjs", "timeout": 10 }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|apply_patch",
+        "hooks": [
+          { "type": "command", "command": "node scripts/hooks/guard-production.mjs", "timeout": 10 },
+          { "type": "command", "command": "node scripts/hooks/guard-circuit.mjs", "timeout": 10 }
+        ]
+      },
+      {
+        "matcher": "Agent|spawn_agent|send_message",
+        "hooks": [
+          { "type": "command", "command": "node scripts/hooks/guard-communication.mjs", "timeout": 10 },
+          { "type": "command", "command": "node scripts/hooks/guard-circuit.mjs", "timeout": 10 }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": null,
+        "hooks": [
+          { "type": "command", "command": "node scripts/hooks/entire-codex.mjs post-tool-use", "timeout": 30 },
+          { "type": "command", "command": "node scripts/hooks/telemetry-post-tool.mjs", "timeout": 10 }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": null,
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/hooks/entire-codex.mjs stop",
             "timeout": 30
           }
         ]

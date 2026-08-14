@@ -1,5 +1,6 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import { execFileSync } from 'child_process';
 
 // Verify agent communication ACL rules are declared in agent prompts
 export default async function checkCommunicationACL() {
@@ -36,4 +37,29 @@ export default async function checkCommunicationACL() {
   if (!a4Content.includes('May NOT message') || !a4Content.match(/May NOT message.*A5|A5.*May NOT/)) {
     throw new Error('A4 does not explicitly prohibit messaging A5 (worker→worker violation)');
   }
+
+  const codexGuard = join(root, 'scripts', 'hooks', 'guard-communication.mjs');
+  let peerDenied = false;
+  try {
+    execFileSync('node', [codexGuard], {
+      cwd: root,
+      input: JSON.stringify({
+        tool_name: 'send_message',
+        tool_input: { source_agent: 'A4', target_agent: 'A5' },
+      }),
+      stdio: ['pipe', 'pipe', 'pipe'],
+    });
+  } catch (error) {
+    peerDenied = error.status === 2;
+  }
+  if (!peerDenied) throw new Error('Codex ACL guard allowed A4 → A5 worker side channel');
+
+  execFileSync('node', [codexGuard], {
+    cwd: root,
+    input: JSON.stringify({
+      tool_name: 'send_message',
+      tool_input: { source_agent: 'A4', target_agent: 'A0' },
+    }),
+    stdio: ['pipe', 'pipe', 'pipe'],
+  });
 }

@@ -17,14 +17,19 @@ function readStdin() {
 const input = readStdin();
 const root = process.cwd();
 
-const circuitFile = join(root, '.learnings', 'CIRCUIT_STATE.json');
+const runtimeCircuitFile = join(root, '.learnings', 'CIRCUIT_STATE.json');
+const defaultCircuitFile = join(root, '.agents', 'governance', 'CIRCUIT_STATE.default.json');
+const circuitFile = existsSync(runtimeCircuitFile) ? runtimeCircuitFile : defaultCircuitFile;
 let circuitOpen = false;
 if (existsSync(circuitFile)) {
   try {
     const circuit = JSON.parse(readFileSync(circuitFile, 'utf-8'));
-    if (circuit.state === 'OPEN') {
-      circuitOpen = true;
-    }
+    const agentId = input?.agent_id || input?.agentId || input?.senderId;
+    const entries = circuit.active_circuits || circuit;
+    const entry = agentId
+      ? entries[agentId] || Object.entries(entries).find(([key]) => key.startsWith(`${agentId}_`))?.[1]
+      : null;
+    circuitOpen = entry?.state === 'OPEN';
   } catch {}
 }
 

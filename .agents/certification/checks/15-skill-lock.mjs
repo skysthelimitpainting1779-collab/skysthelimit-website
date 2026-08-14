@@ -31,13 +31,15 @@ export default async function checkSkillLock() {
     throw new Error(`specialists.json missing agent entries: ${missing.join(', ')}`);
   }
 
-  // sidecars.json must be valid JSON
+  // Current Antigravity discovers per-sidecar sidecar.json files, not a
+  // workspace-level aggregate registry. The legacy hardcoded file must stay retired.
   const sidecarsPath = join(root, '.agents/sidecars.json');
-  try {
-    JSON.parse(readFileSync(sidecarsPath, 'utf8'));
-  } catch (err) {
-    throw new Error(`sidecars.json is invalid JSON: ${err.message}`);
-  }
+  if (existsSync(sidecarsPath)) throw new Error('Unsupported legacy .agents/sidecars.json is present');
+
+  const mcpPath = join(root, '.agents/mcp_config.json');
+  const mcpSource = readFileSync(mcpPath, 'utf8');
+  JSON.parse(mcpSource);
+  if (/C:\\Users\\/i.test(mcpSource)) throw new Error('mcp_config.json contains a machine-specific path');
 
   // hooks.json must be valid JSON
   const hooksPath = join(root, '.agents/hooks.json');

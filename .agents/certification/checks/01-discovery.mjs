@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from 'fs';
+import { existsSync, readFileSync, readdirSync } from 'fs';
 import { join } from 'path';
 
 // Check all A0-A10 and V0-V10 agent files exist
@@ -27,5 +27,34 @@ export default async function checkDiscovery() {
     if (!content.includes('name:')) {
       throw new Error(`${f} missing 'name:' in frontmatter`);
     }
+  }
+
+  const codexDir = join(root, '.codex', 'agents');
+  const codexRequired = [
+    ...Array.from({ length: 11 }, (_, index) => `A${index}.toml`),
+    ...Array.from({ length: 11 }, (_, index) => `V${index}.toml`),
+    ...Array.from({ length: 8 }, (_, index) => `S${index + 1}.toml`),
+  ].sort();
+  const codexActual = readdirSync(codexDir).filter((file) => file.endsWith('.toml')).sort();
+  if (JSON.stringify(codexActual) !== JSON.stringify(codexRequired)) {
+    throw new Error(`Codex agent set drifted: expected ${codexRequired.length}, found ${codexActual.length}`);
+  }
+
+  for (const file of codexRequired) {
+    const content = readFileSync(join(codexDir, file), 'utf8');
+    if (!/^name\s*=\s*".+"/m.test(content) || !/^description\s*=\s*".+"/m.test(content)) {
+      throw new Error(`${file} is missing required Codex identity fields`);
+    }
+    if (!/^developer_instructions\s*=\s*"""/m.test(content) || /^instructions\s*=/m.test(content)) {
+      throw new Error(`${file} does not use the current Codex developer_instructions schema`);
+    }
+    if (/C:\\Users\\|Supabase/i.test(content)) {
+      throw new Error(`${file} contains a machine-specific path or obsolete backend routing`);
+    }
+  }
+
+  const codexConfig = readFileSync(join(root, '.codex', 'config.toml'), 'utf8');
+  if (!/^\[mcp_servers\.supabase\][\s\S]*?^enabled\s*=\s*false/m.test(codexConfig)) {
+    throw new Error('Codex project config does not withhold the user-global Supabase MCP');
   }
 }

@@ -2,18 +2,13 @@
   "mcpServers": {
     "devhealer": {
       "command": "python",
-      "args": [
-        "c:/Users/Johnny Cage/DEV/skysthelimit-collab/.agents/plugins/dev-healer/mcp/server.py"
-      ]
+      "args": [".agents/plugins/dev-healer/mcp/server.py"],
+      "cwd": "."
     },
     "graphify": {
       "command": "uvx",
-      "args": [
-        "--from",
-        "graphifyy",
-        "graphify-mcp",
-        "c:/Users/Johnny Cage/DEV/skysthelimit-collab/graphify-out/graph.json"
-      ]
+      "args": ["--from", "graphifyy", "graphify-mcp", "graphify-out/graph.json"],
+      "cwd": "."
     }
   }
 }

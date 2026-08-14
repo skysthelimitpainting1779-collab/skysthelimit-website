@@ -6,30 +6,35 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { getWorkspaceRoot } from '../resolve-root.mjs';
+import { allowHook, denyHook, readHookInput, sourceAgent, targetAgent } from './hook-input.mjs';
 
-const chunks = [];
-process.stdin.on('data', d => chunks.push(d));
-process.stdin.on('end', () => {
+const input = await readHookInput();
+const agentId = sourceAgent(input) || targetAgent(input);
+
+const root = getWorkspaceRoot();
+const runtimeStateFile = join(root, '.learnings', 'CIRCUIT_STATE.json');
+const defaultStateFile = join(root, '.agents', 'governance', 'CIRCUIT_STATE.default.json');
+const stateFile = existsSync(runtimeStateFile) ? runtimeStateFile : defaultStateFile;
+
+if (agentId && existsSync(stateFile)) {
   try {
-    const raw = Buffer.concat(chunks).toString('utf8');
-    if (!raw.trim()) process.exit(0);
-    const input = JSON.parse(raw);
-    const agentId = input?.agent_id || input?.agentId || input?.senderId;
+    const state = JSON.parse(readFileSync(stateFile, 'utf8'));
+    const circuits = state?.active_circuits ?? state;
+    const circuit =
+      circuits?.[agentId] ??
+      Object.entries(circuits ?? {}).find(([key]) => key === agentId || key.startsWith(`${agentId}_`))?.[1];
 
-    const root = getWorkspaceRoot();
-    const stateFile = join(root, '.learnings', 'CIRCUIT_STATE.json');
-
-    if (existsSync(stateFile)) {
-      const state = JSON.parse(readFileSync(stateFile, 'utf8'));
-      if (agentId && state[agentId]?.state === 'OPEN') {
-        process.stderr.write(
-          `DENY [guard-circuit]: Circuit is OPEN for agent ${agentId}.\n` +
-          `Remediation limit exceeded or critical boundary tripped.\n` +
-          `Only A0 Commander may authorize HALF_OPEN recovery.\n`
-        );
-        process.exit(2);
-      }
+    if (circuit?.state === 'OPEN') {
+      denyHook(
+        input,
+        `DENY [guard-circuit]: Circuit is OPEN for agent ${agentId}.\n` +
+        'Remediation limit exceeded or a critical boundary tripped.\n' +
+        'Only A0 Commander may authorize HALF_OPEN recovery.',
+      );
     }
-  } catch (_) {}
-  process.exit(0);
-});
+  } catch {
+    denyHook(input, 'DENY [guard-circuit]: Circuit ledger is malformed; execution cannot be proven safe.');
+  }
+}
+
+allowHook(input);

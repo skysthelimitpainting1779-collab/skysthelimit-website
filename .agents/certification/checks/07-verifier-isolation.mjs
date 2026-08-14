@@ -33,4 +33,16 @@ export default async function checkVerifierIsolation() {
       throw new Error(`${id}.md has write_to_file without denial hook — verifier isolation broken`);
     }
   }
+
+  const codexDir = join(root, '.codex', 'agents');
+  for (let index = 0; index <= 10; index++) {
+    const id = `V${index}`;
+    const content = readFileSync(join(codexDir, `${id}.toml`), 'utf8');
+    if (!/clean.context/i.test(content)) throw new Error(`Codex ${id} lacks clean-context isolation`);
+    if (!/Parent conversation history is prohibited/i.test(content)) {
+      throw new Error(`Codex ${id} does not reject parent reasoning`);
+    }
+    if (!/PASS.*FAIL.*UNCERTAIN/is.test(content)) throw new Error(`Codex ${id} lacks bounded verdicts`);
+    if (!/^sandbox_mode\s*=\s*"read-only"/m.test(content)) throw new Error(`Codex ${id} can write`);
+  }
 }

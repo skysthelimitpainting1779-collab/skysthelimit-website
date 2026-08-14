@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Antigravity Engineering Team Certification Suite
+ * Antigravity + Codex Engineering Team Certification Suite
  * Sky's the Limit Platform
  *
  * Usage: node .agents/certification/run-certification.mjs
@@ -20,7 +20,7 @@ const YELLOW = '\x1b[33m';
 const BOLD = '\x1b[1m';
 
 console.log(`\n${BOLD}================================================================${RESET}`);
-console.log(`${BOLD}  SKY'S THE LIMIT — ANTIGRAVITY TEAM CERTIFICATION SUITE${RESET}`);
+console.log(`${BOLD}  SKY'S THE LIMIT — ANTIGRAVITY + CODEX TEAM CERTIFICATION${RESET}`);
 console.log(`${BOLD}================================================================${RESET}\n`);
 
 const files = readdirSync(checksDir)

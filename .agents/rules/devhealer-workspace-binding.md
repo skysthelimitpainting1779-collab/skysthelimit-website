@@ -1,14 +1,12 @@
 ---
-trigger: always_on
-description: Verify DevHealer hooks/MCP paths are bound to this workspace before first use each session.
+trigger: model_decision
+description: Diagnose DevHealer or Graphify MCP startup from portable workspace configuration.
 ---
 
-# DevHealer Workspace Binding
+# DevHealer workspace binding
 
-Configs (`hooks.json`, `mcp_config.json`, `sidecars.json`) contain hardcoded absolute paths that go stale on clone/copy.
+`.agents/mcp_config.json` uses workspace-relative commands and arguments. Resolve the active Git root before diagnostics; never commit `C:\Users\...` or another machine-specific prefix.
 
-- Run `graph_stats` — fewer than 100 nodes on a real codebase = wrong `graph.json`. Fix `mcp_config.json`.
-- Every path in `hooks.json`/`sidecars.json` must resolve. Remove any MISSING entries.
-- Stale prefix (e.g. `ITS/`, `MEMORY_GH/`)? Replace in all three files, commit, restart IDE.
+The former `.agents/sidecars.json` registry is retired because current Antigravity discovers sidecars from individual `sidecar.json` files in global or plugin-sidecar locations, not from a workspace aggregate file. The existing DevHealer code remains an on-demand MCP/skill capability and bounded remediation input, not a self-authorizing background repair loop.
 
-Each project's configs are fully independent.
+If Graphify reports an implausibly small graph, verify `graphify-out/graph.json`, reload the MCP, and record the failure. Do not rewrite the project path into configuration.

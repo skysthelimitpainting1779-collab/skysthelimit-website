@@ -50,7 +50,7 @@
   },
   "mcps": {
     "always": ["codebase-memory-mcp", "context7"],
-    "conditional": ["chrome-devtools-mcp", "supabase"]
+    "conditional": ["chrome-devtools-mcp"]
   },
   "github": {
     "permissions": ["pull_requests:write", "issues:read"]

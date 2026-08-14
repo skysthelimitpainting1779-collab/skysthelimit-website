@@ -1,0 +1,15 @@
+{
+  "$schema": "./circuit-state.schema.json",
+  "version": "1.0.0",
+  "A0": { "state": "CLOSED", "active_task": null, "failure_fingerprint": null, "consecutive_identical_failures": 0, "remediation_cycle_count": 0, "verifier_rejections": 0 },
+  "A1": { "state": "CLOSED", "active_task": null, "failure_fingerprint": null, "consecutive_identical_failures": 0, "remediation_cycle_count": 0, "verifier_rejections": 0 },
+  "A2": { "state": "CLOSED", "active_task": null, "failure_fingerprint": null, "consecutive_identical_failures": 0, "remediation_cycle_count": 0, "verifier_rejections": 0 },
+  "A3": { "state": "CLOSED", "active_task": null, "failure_fingerprint": null, "consecutive_identical_failures": 0, "remediation_cycle_count": 0, "verifier_rejections": 0 },
+  "A4": { "state": "CLOSED", "active_task": null, "failure_fingerprint": null, "consecutive_identical_failures": 0, "remediation_cycle_count": 0, "verifier_rejections": 0 },
+  "A5": { "state": "CLOSED", "active_task": null, "failure_fingerprint": null, "consecutive_identical_failures": 0, "remediation_cycle_count": 0, "verifier_rejections": 0 },
+  "A6": { "state": "CLOSED", "active_task": null, "failure_fingerprint": null, "consecutive_identical_failures": 0, "remediation_cycle_count": 0, "verifier_rejections": 0 },
+  "A7": { "state": "CLOSED", "active_task": null, "failure_fingerprint": null, "consecutive_identical_failures": 0, "remediation_cycle_count": 0, "verifier_rejections": 0 },
+  "A8": { "state": "CLOSED", "active_task": null, "failure_fingerprint": null, "consecutive_identical_failures": 0, "remediation_cycle_count": 0, "verifier_rejections": 0 },
+  "A9": { "state": "CLOSED", "active_task": null, "failure_fingerprint": null, "consecutive_identical_failures": 0, "remediation_cycle_count": 0, "verifier_rejections": 0 },
+  "A10": { "state": "CLOSED", "active_task": null, "failure_fingerprint": null, "consecutive_identical_failures": 0, "remediation_cycle_count": 0, "verifier_rejections": 0 }
+}

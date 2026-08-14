@@ -52,4 +52,30 @@ export default async function checkGraphifyEnforcement() {
       throw new Error('graphify-enforcer BLOCKED break-glass request (should allow it)');
     }
   }
+
+  const codexHook = join(root, 'scripts/hooks/guard-graphify.mjs');
+  const codexAttempt = JSON.stringify({
+    tool_name: 'Bash',
+    tool_input: { command: 'rg "function handleSubmit" src' },
+  });
+  let codexDenied = false;
+  try {
+    execFileSync('node', [codexHook], {
+      input: codexAttempt,
+      stdio: ['pipe', 'pipe', 'pipe'],
+      cwd: root,
+    });
+  } catch (err) {
+    codexDenied = err.status === 2;
+  }
+  if (!codexDenied) throw new Error('Codex Graphify guard did not deny broad source discovery');
+
+  execFileSync('node', [codexHook], {
+    input: JSON.stringify({
+      tool_name: 'Bash',
+      tool_input: { command: "Get-Content -Raw '.codex/config.toml'" },
+    }),
+    stdio: ['pipe', 'pipe', 'pipe'],
+    cwd: root,
+  });
 }

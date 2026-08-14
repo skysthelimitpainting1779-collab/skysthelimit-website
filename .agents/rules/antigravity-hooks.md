@@ -1,23 +1,14 @@
 ---
 trigger: always_on
-description: Antigravity hooks schema — matcher required on all PreToolUse/PostToolUse entries. Active hooks in hooks.json enforce git-discipline and graphify-grep.
+description: Official Antigravity hook schema and active portable enforcement boundaries.
 ---
 
-# Antigravity Hook Rules
+# Antigravity hook contract
 
-## Schema Requirements
-- Every `PreToolUse`/`PostToolUse` entry MUST have a `"matcher"` key.
-- Commands MUST use absolute paths — relative paths resolve against the terminal CWD, not workspace root.
-- Each named hook block MUST have `"enabled": true`.
+- Workspace hooks live in `.agents/hooks.json`.
+- Every `PreToolUse` and `PostToolUse` entry has an explicit tool-name regular-expression matcher.
+- Hook commands use repository-relative paths and resolve the active Git root at runtime; canonical configuration contains no machine-specific path.
+- `PreToolUse` handlers read camelCase metadata plus `toolCall.name` and `toolCall.args`, then return JSON with `decision: allow | deny | ask | force_ask | deny_unless_prior_grant`.
+- `PostToolUse` handlers return `{}` and only record fields Antigravity actually supplies.
 
-## Active Hooks (`hooks.json`)
-| Hook | Event | Matcher | Enforcement |
-|------|-------|---------|-------------|
-| `dev-healer` | PreToolUse | `grep_search` | Warns when grepping `.ts/.js` for code structure (use Graphify instead) |
-| `git-discipline` | PreToolUse | `run_command` | Hard-denies `git add .`, `git add -A`, `--force`, `--no-verify`, direct commits to `main`/`dev` |
-
-## Hard Denials
-- Never add a hook without a valid, resolvable absolute path for the command.
-- Never disable hooks without explicit approval.
-- Never use `--no-verify` to bypass Husky hooks.
-- After `npm install`, verify Husky hooks still contain Entire CLI calls (`.husky/` may be overwritten).
+Active guards cover dangerous Git commands, Graphify-first discovery, production writes/deployments, open circuits, and hub-and-spoke communication. CI and Husky remain the unbypassable repository boundary outside the IDE.

@@ -47,13 +47,26 @@ npm run host:compile          # regenerate Claude/Cursor/Codex/Copilot/Gemini ad
 | **All** | this file | `.agents/specialists.json` | `.agents/skills/` |
 | **Claude** | `CLAUDE.md` → `@AGENTS.md` | `.claude/agents/*.md` | `.claude/skills/` |
 | **Cursor** | `.cursor/rules/00-agents-kernel.mdc` | `.cursor/agents/` + `specialist-*.mdc` | path via rules |
-| **Codex** | `AGENTS.md` | `.codex/agents/*.toml` | `.agents/skills/` |
+| **Codex** | `AGENTS.md` + `.codex/config.toml` | `.codex/agents/{A0-A10,V0-V10,S1-S8}.toml` | `.agents/skills/` |
 | **Antigravity** | `GEMINI.md` + `.agents/rules/` | `.agents/agents/*.md` + `.agents/manifests/` | `.agents/skills/` |
 | **Copilot** | `.github/copilot-instructions.md` | path rules | `.github/skills/` |
 
 Map: [`.agents/HOST_NATIVE.md`](.agents/HOST_NATIVE.md)  
 **Zero theater:** only host-native paths + hard hooks. No domains/queues/hub_db/ontology novels.  
 `npm run agents:zero-theater` · `npm run host:compile`
+
+---
+
+## Codex operating contract
+
+- The primary Codex thread acts as **A0**. Never spawn another A0 as a child.
+- Dispatch only registered profiles from `.codex/agents/`: A1–A10 for standing work, the matching V-agent for independent verification, and the owning S-agent for one narrow diagnostic question.
+- Spawn V-agents with clean context (`fork_turns = "none"` where the host exposes it). Provide only the task contract, base/candidate SHAs, exact diff, acceptance criteria, Graphify context, Context7 evidence, and reproducible checks. Never include parent reasoning or a desired verdict.
+- V-agents and S-agents are read-only. S-agents cannot spawn children and report only to their registered parent. Worker-to-worker coordination routes through A0.
+- Inspect or steer native Codex threads with `/agent`. Do not dynamically invent writer roles.
+- Project hooks in `.codex/hooks.json` require repository trust. After cloning or changing hook hashes, review and trust them through `/hooks` before relying on enforcement.
+
+Navigation and exact-SHA handoff: [`docs/CODEX-NAVIGATION-GUIDE.md`](docs/CODEX-NAVIGATION-GUIDE.md).
 
 ---
 
@@ -66,7 +79,7 @@ Map: [`.agents/HOST_NATIVE.md`](.agents/HOST_NATIVE.md)
 
 ## Mandatory discovery and reuse
 
-- **Graphifyy first:** Before navigating or searching code, query the codebase knowledge graph with `search_graph`, `trace_path`, `get_code_snippet`, `query_graph`, or the repository `graph:*` commands. Fall back to `rg` only for literals/config/non-code or when graph results are insufficient.
+- **Graphify first:** Before navigating or searching code, query the codebase knowledge graph with `search_graph`, `trace_path`, `get_code_snippet`, `query_graph`, or the repository `graph:*` commands. Fall back to `rg` only for literals/config/non-code or when graph results are insufficient and exhaustion is recorded.
 - **Context7 first:** Before implementing or changing behavior from an external library, framework, provider, or API, query its current official documentation through Context7. Record the selected library ID and the contract that affects the change.
 - **Skill before repetition:** Before performing a workflow a second time—or when the plan already shows it will recur—create or update a repository skill under `.agents/skills/` and route subsequent executions through it. Use `repeatable-workflow-capture`; validate the skill, run `npm run skills:validate`, and compile host adapters.
 
@@ -110,8 +123,7 @@ npx vercel promote <deployment-url> # promote a known-good deployment
 
 - Recovery SLA: initiate rollback within 15 minutes of detecting regression.
 - Vercel rollback available for 90 days post-deployment.
-- For database migrations: `supabase db reset` (local) or Supabase dashboard
-  backup (production).
+- Convex recovery and live-data restoration require the repository runbook and a human operator; agents never alter production data autonomously.
 - Never force-push to `main`; revert via `git revert <sha>` and re-deploy.
 
 ---

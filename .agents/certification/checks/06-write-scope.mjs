@@ -49,4 +49,17 @@ export default async function checkWriteScope() {
   if (a4Allowed.includes('convex')) {
     throw new Error('A4 incorrectly claims write access to convex/**');
   }
+
+  const codexDir = join(root, '.codex', 'agents');
+  const codexReadOnly = [
+    'A1', 'A6', 'A10',
+    ...Array.from({ length: 11 }, (_, index) => `V${index}`),
+    ...Array.from({ length: 8 }, (_, index) => `S${index + 1}`),
+  ];
+  for (const id of codexReadOnly) {
+    const content = readFileSync(join(codexDir, `${id}.toml`), 'utf8');
+    if (!/^sandbox_mode\s*=\s*"read-only"/m.test(content)) {
+      throw new Error(`Codex ${id} is not structurally read-only`);
+    }
+  }
 }

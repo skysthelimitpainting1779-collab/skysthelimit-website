@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://skysthelimit.local/schemas/circuit-state.json",
+  "type": "object",
+  "required": ["version", "A0", "A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": { "type": "string" }
+  },
+  "patternProperties": {
+    "^A(?:[0-9]|10)$": {
+      "type": "object",
+      "required": ["state", "consecutive_identical_failures", "remediation_cycle_count", "verifier_rejections"],
+      "properties": {
+        "state": { "enum": ["CLOSED", "OPEN", "HALF_OPEN"] },
+        "active_task": { "type": ["string", "null"] },
+        "failure_fingerprint": { "type": ["string", "null"] },
+        "consecutive_identical_failures": { "type": "integer", "minimum": 0, "maximum": 2 },
+        "remediation_cycle_count": { "type": "integer", "minimum": 0, "maximum": 3 },
+        "verifier_rejections": { "type": "integer", "minimum": 0, "maximum": 2 }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

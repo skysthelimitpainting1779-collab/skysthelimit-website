@@ -47,7 +47,7 @@
   },
   "mcps": {
     "always": ["codebase-memory-mcp", "context7"],
-    "conditional": ["supabase"]
+    "conditional": []
   },
   "github": {
     "permissions": ["pull_requests:write", "issues:read"]

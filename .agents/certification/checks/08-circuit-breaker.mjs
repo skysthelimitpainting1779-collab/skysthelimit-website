@@ -6,9 +6,11 @@ export default async function checkCircuitBreaker() {
   const root = process.cwd();
 
   // Circuit state file must exist with correct structure
-  const circuitPath = join(root, '.learnings/CIRCUIT_STATE.json');
+  const runtimePath = join(root, '.learnings/CIRCUIT_STATE.json');
+  const defaultPath = join(root, '.agents/governance/CIRCUIT_STATE.default.json');
+  const circuitPath = existsSync(runtimePath) ? runtimePath : defaultPath;
   if (!existsSync(circuitPath)) {
-    throw new Error('.learnings/CIRCUIT_STATE.json not found');
+    throw new Error('No runtime or canonical default circuit state found');
   }
 
   const state = JSON.parse(readFileSync(circuitPath, 'utf8'));

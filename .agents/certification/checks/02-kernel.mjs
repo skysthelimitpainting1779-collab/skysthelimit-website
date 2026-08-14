@@ -37,4 +37,10 @@ export default async function checkKernel() {
       throw new Error(`${id}.md does not reference KERNEL.md`);
     }
   }
+
+  const adapter = readFileSync(join(root, '.agents', 'AGENTS.md'), 'utf8');
+  const kernelRule = readFileSync(join(root, '.agents', 'rules', '00-kernel.md'), 'utf8');
+  if (!adapter.includes('KERNEL.md') || !kernelRule.includes('@../KERNEL.md')) {
+    throw new Error('Antigravity runtime adapter does not inherit the canonical kernel');
+  }
 }

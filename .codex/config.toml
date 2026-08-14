@@ -1,3 +1,14 @@
 
 [features]
 hooks = true
+
+[agents]
+enabled = true
+max_concurrent_threads_per_session = 10
+interrupt_message = true
+
+# The user-global Codex config may expose legacy backends. This project layer
+# explicitly withholds Supabase from every Sky's agent while preserving private
+# user configuration outside the repository.
+[mcp_servers.supabase]
+enabled = false
