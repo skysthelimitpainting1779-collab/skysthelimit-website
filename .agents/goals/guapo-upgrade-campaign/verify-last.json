@@ -1,18 +1,18 @@
 {
-  "ok": false,
-  "at": "2026-07-10T17:18:14.996Z",
+  "ok": true,
+  "at": "2026-07-27T21:32:02.158Z",
   "results": [
     {
       "name": "lint",
       "pass": true,
       "status": 0,
-      "tail": "[Git Guard] Running Git standards compliance check...\n[Git Guard] Branch: \"infra/fix-ci-cd-pipeline-end-to-end\"\n\u001b[32m[Git Guard] Branch name OK.\u001b[0m\n[Git Guard] Checking: \"feat(agent-os): active prevention, learning control plane, and CI/ontology hardening\"\n\u001b[32m[Git Guard] Commit message OK.\u001b[0m\n[verify-react-versions] OK — react and react-dom are pinned to identical versions\n"
+      "tail": "[Git Guard] Running Git standards compliance check...\n[Git Guard] Branch: \"main\"\n\u001b[33m[WARNING] On protected branch \"main\". Use feature branches + PRs.\u001b[0m\n[Git Guard] Checking: \"feat(perf): enforce Lighthouse 95+ on all metrics, add estimate + service-area URLs\"\n\u001b[32m[Git Guard] Commit message OK.\u001b[0m\n[verify-react-versions] OK — react and react-dom are pinned to identical versions\n"
     },
     {
       "name": "test",
-      "pass": false,
-      "status": 1,
-      "tail": "[#FF5A00] text-white p-4 text-sm font-bold flex items-center justify-center gap-2 hover:bg-[#ff7a33] transition-colors disabled:opacity-50 mt-2 shimmer-cta\">\n                           {status === 'submitting' ? <Loader2 className=\"animate-spin\" size={16} /> : 'Lock In Estimate'}\n                         </motion.button>\n                       </form>\n                     </motion.div>\n                   )}\n                 </AnimatePresence>\n              </div>\n    \n            </div>\n          </section>\n        </PageTransition>\n      );\n    }\n    \n  operator: 'match'\n  stack: |-\n    TestContext.<anonymous> (file:///C:/Users/Johnny%20Cage/DEV/skysthelimit-collab/tests/site-architecture.test.mjs:154:10)\n    Test.runInAsyncScope (node:async_hooks:214:14)\n    Test.run (node:internal/test_runner/test:1047:25)\n    Test.processPendingSubtests (node:internal/test_runner/test:744:18)\n    Test.postRun (node:internal/test_runner/test:1173:19)\n    Test.run (node:internal/test_runner/test:1101:12)\n    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)\n  ...\n1..101\n# tests 299\n# suites 22\n# pass 281\n# fail 18\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 18179.7881\n"
+      "pass": true,
+      "status": 0,
+      "tail": "yield empty list (1.1366ms)\n✔ Vite config is deleted and package.json does not expose Gemini sdk (19.0452ms)\n✔ lead email HTML escapes submitted keys and values (0.6969ms)\n✔ Vercel config has security headers and no blanket SPA rewrite (3.6218ms)\n✔ build pipeline prerenders public routes and static 404 metadata (2.5618ms)\n✔ before and after slider remains pointer-enabled and is keyboard accessible (0.6749ms)\n✔ service area map is fast, routable, and accessible (1.2446ms)\n✔ lead form controls have accessible names and normalized funnel events (2.4117ms)\n✔ top-level routes use the three-market architecture in Next.js filesystem routing (4.7993ms)\n✔ primary navigation leads with residential, commercial, and public sector (0.827ms)\n✔ homepage states the approved positioning and avoids forbidden claims (3.4293ms)\n✔ remediation guardrails cover secrets, headers, App Router SEO, and accessible interactions (4.5662ms)\n✔ local SEO and service landing pages are routable and listed in the sitemap (2.7865ms)\n✔ M2 compliance and contractor registration statements are correctly set (8.5877ms)\nℹ tests 302\nℹ suites 22\nℹ pass 302\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 11426.9888\n"
     }
   ],
   "goal": "guapo-upgrade-campaign",

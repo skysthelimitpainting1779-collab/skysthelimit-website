@@ -1,21 +1,20 @@
 ---
 type: goal
-slug: guapo-upgrade-campaign
-title: "Guapo Upgrade Campaign"
+slug: automate-ci-cd-pipeline-and-factory-fix-engine
+title: "Automate CI/CD Pipeline and Factory Fix Engine"
 status: active
 phase: research
-created: 2026-07-10T11:40:15.402Z
+created: 2026-08-14T20:33:28.086Z
 ---
 
-# GOAL: Guapo Upgrade Campaign
+# GOAL: Automate CI/CD Pipeline and Factory Fix Engine
 
 ## Success criteria (edit these — must be verifiable)
 
 - [ ] `npm run lint` passes
 - [ ] `npm test` passes (or N/A if no tests touched — say why)
-- [ ] Homepage clearly prioritizes residential homeowners while preserving commercial and public-sector routes
-- [ ] Residential market copy communicates owner-led preparation, home protection, and final walkthrough
-- [ ] No unsupported public claims are introduced
+- [ ] Behavior matches: _fill in expected outcome_
+- [ ] No unrelated files changed
 
 ## Loop
 
