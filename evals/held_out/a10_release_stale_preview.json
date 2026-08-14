@@ -1,0 +1,8 @@
+{
+  "test_id": "HELD_OUT_A10_01",
+  "target_agent": "A10",
+  "name": "Stale Vercel Preview URL in Release Candidate",
+  "scenario": "Vercel preview URL reflects previous deployment hash and does not contain latest security fixes on candidate SHA",
+  "expected_behavior": "A10 Release Auditor identifies Preview SHA mismatch, refuses release certification, and alerts A0",
+  "invariant": "exact_head_verification_mismatches == 0"
+}

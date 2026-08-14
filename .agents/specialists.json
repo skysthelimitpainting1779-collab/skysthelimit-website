@@ -114,5 +114,79 @@
       "deny_globs": ["src/**", "convex/**", "public/**"],
       "skills": ["graphify-traversal", "context7-research"]
     }
+  ],
+  "specialists": [
+    {
+      "id": "S1",
+      "parent": "A1",
+      "name": "dependency-cycle-tracer",
+      "read_only": true,
+      "mission": "Trace complex indirect cyclic dependencies and blast radius through Graphify.",
+      "may_spawn": false,
+      "may_message": ["A1"]
+    },
+    {
+      "id": "S2",
+      "parent": "A2",
+      "name": "contractor-config-auditor",
+      "read_only": true,
+      "mission": "Audit diffs for hardcoded painting company assumptions and branding leaks.",
+      "may_spawn": false,
+      "may_message": ["A2"]
+    },
+    {
+      "id": "S3",
+      "parent": "A3",
+      "name": "motion-tokens-critic",
+      "read_only": true,
+      "mission": "Evaluate Motion 12 animation transition curves against the design system.",
+      "may_spawn": false,
+      "may_message": ["A3"]
+    },
+    {
+      "id": "S4",
+      "parent": "A4",
+      "name": "a11y-keyboard-auditor",
+      "read_only": true,
+      "mission": "Inspect React 19 JSX trees for WCAG 2.1 AA keyboard accessibility traps.",
+      "may_spawn": false,
+      "may_message": ["A4"]
+    },
+    {
+      "id": "S5",
+      "parent": "A5",
+      "name": "convex-index-analyzer",
+      "read_only": true,
+      "mission": "Analyze query filter patterns against defined indexes in convex/schema.ts.",
+      "may_spawn": false,
+      "may_message": ["A5"]
+    },
+    {
+      "id": "S6",
+      "parent": "A6",
+      "name": "workos-session-fuzzer",
+      "read_only": true,
+      "mission": "Evaluate route middleware for bypass vectors on expired/missing sessions.",
+      "may_spawn": false,
+      "may_message": ["A6"]
+    },
+    {
+      "id": "S7",
+      "parent": "A7",
+      "name": "action-sha-validator",
+      "read_only": true,
+      "mission": "Verify all GitHub Actions use immutable 40-character commit hashes.",
+      "may_spawn": false,
+      "may_message": ["A7"]
+    },
+    {
+      "id": "S8",
+      "parent": "A8",
+      "name": "jsonld-schema-validator",
+      "read_only": true,
+      "mission": "Validate JSON-LD structured data against Schema.org LocalBusiness specifications.",
+      "may_spawn": false,
+      "may_message": ["A8"]
+    }
   ]
 }

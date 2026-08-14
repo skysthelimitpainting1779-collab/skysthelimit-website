@@ -1,0 +1,10 @@
+{
+  "version": "3.0.0",
+  "thresholds": {
+    "minimum_certification_pass_rate": 1.0,
+    "minimum_unit_test_pass_rate": 1.0,
+    "maximum_remediation_cycles": 3,
+    "maximum_identical_failures_before_circuit_open": 2,
+    "maximum_verifier_rejections_before_circuit_open": 2
+  }
+}

@@ -1,42 +1,71 @@
 {
-  "stl-engineering-guards": {
+  "git-discipline": {
     "enabled": true,
-    "PreInvocation": [
+    "PreToolUse": [
       {
-        "type": "command",
-        "command": "node .agents/hooks/pre-invocation.mjs",
-        "timeout": 10
+        "matcher": "run_command",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/hooks/guard-git.mjs",
+            "timeout": 5
+          }
+        ]
       }
-    ],
+    ]
+  },
+  "graphify-enforcer": {
+    "enabled": true,
+    "PreToolUse": [
+      {
+        "matcher": "grep_search",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/hooks/guard-graphify.mjs",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  },
+  "circuit-guard": {
+    "enabled": true,
     "PreToolUse": [
       {
         "matcher": "*",
         "hooks": [
           {
             "type": "command",
-            "command": "node .agents/hooks/pre-tool-use.mjs",
-            "timeout": 10
+            "command": "node scripts/hooks/guard-circuit.mjs",
+            "timeout": 5
           }
         ]
       }
-    ],
-    "PostToolUse": [
+    ]
+  },
+  "production-guard": {
+    "enabled": true,
+    "PreToolUse": [
       {
-        "matcher": "*",
+        "matcher": "run_command",
         "hooks": [
           {
             "type": "command",
-            "command": "node .agents/hooks/post-tool-use.mjs",
-            "timeout": 10
+            "command": "node scripts/hooks/guard-production.mjs",
+            "timeout": 5
           }
         ]
-      }
-    ],
-    "Stop": [
+      },
       {
-        "type": "command",
-        "command": "node .agents/hooks/stop.mjs",
-        "timeout": 10
+        "matcher": "write_to_file",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/hooks/guard-production.mjs",
+            "timeout": 5
+          }
+        ]
       }
     ]
   }

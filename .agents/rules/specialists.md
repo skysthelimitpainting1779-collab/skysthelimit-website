@@ -1,5 +1,5 @@
 ---
-trigger: always_on
+trigger: model_decision
 description: Host-native specialists map for Antigravity (see specialists.json).
 ---
 

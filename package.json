@@ -48,6 +48,7 @@
     "ship:improve": "node scripts/ship-improve.mjs",
     "host:compile": "node scripts/compile-host-native.mjs",
     "agents:zero-theater": "node scripts/zero-theater.mjs",
+    "agents:certify": "node .agents/certification/run-certification.mjs",
     "smoke:site": "node scripts/smoke-site.mjs"
   },
   "dependencies": {

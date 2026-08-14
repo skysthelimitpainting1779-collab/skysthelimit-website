@@ -1,22 +1,19 @@
 ---
-trigger: always_on
-glob:
-description: development-ontology rule
+trigger: never
+description: Workspace integrity standards — process hygiene, workspace isolation, pathing, syntax validation, banned patterns.
 ---
 
 # Workspace Guidelines & Anomaly Ontology
-This rule is Always-On and enforces project integrity guidelines for all developer agents.
 
 ## Enforced Standards
-* **Process Handle Hygiene**: All background compilers, watchers, or test runners spawned in shared workspaces must be explicitly terminated using `manage_task` prior to subagent shutdown to prevent Windows directory lockups.
-* **Workspace Isolation**: Multi-step codebase refactors or experimental repairs must be performed inside isolated background branches using `invoke_subagent` with `Workspace: 'share'` mode (Native New Worktree Mode).
-* **Pathing Normalization**: Programmatically convert all backslashes (`\`) to forward slashes (`/`) in path strings prior to testing permissions, drive letters must be stripped during evaluation.
-* **Character Capacity Safeguard**: Never commit log dumps, compile warnings, or stack traces directly into rule files. Rule updates must use a rewrite-in-place compacting pattern to stay well below 12,000 characters.
-* **Syntax Validation**: Prior to committing any Javascript/Node.js changes, verify syntax validity (e.g., by running `node --check <file>`) to ensure no syntax errors or unclosed parentheses are introduced and prevent `ToolFailure` anomalies.
-* **PowerShell String Escaping**: When scaffolding configuration files via terminal commands (e.g., `echo '{"scripts": {"test": "..."}}' > package.json`) on Windows PowerShell, single-quote encapsulation does not preserve double quotes correctly. Always use the `write_to_file` tool directly to scaffold JSON config files instead of terminal echoing.
-* **No-Clone External Integrations**: When resolving external triggers (GitHub/Linear tickets), NEVER perform a full `git clone` of the repository. Instead, always execute inside the existing local repository using `invoke_subagent --workspace=share` to natively create a lightweight, isolated branch. This preserves disk space, bandwidth, and execution speed.
-* **Architectural Hierarchy (Hooks > MCP)**: Deterministic IDE hooks (`hooks.json`) are the primary, first-class mechanism for context injection, security enforcement, and workflow orchestration. They run proactively and deterministically. Model Context Protocol (MCP) servers are strictly second-class citizens, reserved for optional, reactive cross-team tool sharing. Never attempt to replace a proactive hook with a reactive MCP tool.
-* **Anomaly Resolution Flow**: For compilation/syntax errors (`ToolFailure`), locate the error via the healing state, perform diagnostic compilation and repair within a shared workspace, verify using the native `run_command` tool (sent to the background) and monitored via `manage_task`, use the native `manage_subagents` tool to kill the subagent (which cleanly tears down the shared workspace), and apply the validated fix back to the main repository.
-* **Vercel Build Log Extraction**: When a Vercel deployment shows `● Error`, run `vercel inspect <url> --logs` to get the actual error. The `[0ms]` build duration means a config-stage failure (not compile). Never guess the error from the status alone — the `--logs` flag reveals the exact failing line.
-* **next/dynamic + ssr:false Ban**: NEVER wrap `@vercel/analytics` or `@vercel/speed-insights` in `next/dynamic({ ssr: false })`. Import them directly as RSC-compatible components per Vercel docs. The pattern is banned by AGENTS.md, causes missed SSR-path page views, and violates the Vercel quickstart pattern.
-* **Next.js Middleware Export Name**: The file `src/middleware.ts` MUST export `export async function middleware(request)`. Any other export name (e.g., `proxy`, `handler`) is silently ignored by Next.js — leaving all matched routes completely unprotected. Always verify: `grep "export async function middleware" src/middleware.ts`.
+- **Process Hygiene**: Terminate all background compilers/watchers via `manage_task` before subagent shutdown (prevents Windows dir lockups).
+- **Workspace Isolation**: Multi-step refactors use `invoke_subagent` with `Workspace: 'share'` — never modify main branch directly.
+- **Path Normalization**: Convert `\` → `/` in all programmatic path strings; strip drive letters during permission evaluation.
+- **Syntax Validation**: Run `node --check <file>` before staging any `.js` file. Hard gate — do not declare done until exit 0.
+- **PowerShell Escaping**: Never `echo '{"key":"val"}' > file.json` in PowerShell — single quotes don't preserve double quotes. Use `write_to_file` tool instead.
+- **No-Clone Rule**: For GitHub/Linear triggers, run inside existing repo via `invoke_subagent --workspace=share`. Never `git clone`.
+- **Hooks > MCP**: `hooks.json` is the primary enforcement layer (proactive, deterministic). MCP is secondary (reactive, optional).
+- **Vercel Build Errors**: `[0ms]` build = config-stage failure. Run `vercel inspect <url> --logs` — never guess from status alone.
+- **next/dynamic + ssr:false Ban**: Never wrap `@vercel/analytics` or `@vercel/speed-insights` in `next/dynamic({ssr:false})`. Import as RSC components directly.
+- **Middleware Export Name**: `src/middleware.ts` MUST export `export async function middleware(request)`. Any other name is silently ignored.
+- **Character Limit**: Rule files must stay below 12,000 characters. Never commit log dumps or stack traces into rule files.

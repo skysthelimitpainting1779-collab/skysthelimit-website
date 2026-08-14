@@ -229,7 +229,7 @@ function antigravityRulesIndex(agents) {
     )
     .join('\n');
   return `---
-trigger: always_on
+trigger: model_decision
 description: Host-native specialists map for Antigravity (see specialists.json).
 ---
 
@@ -260,7 +260,6 @@ function antigravityAgent(a) {
   }) : ['view_file', 'replace_file_content', 'run_command', 'manage_task'];
 
   const toolsSet = new Set(baseTools);
-  // Merge communication and task-management capabilities
   if (a.id === 'A0') {
     toolsSet.add('invoke_subagent');
     toolsSet.add('send_message');
@@ -273,9 +272,103 @@ function antigravityAgent(a) {
     toolsSet.add('manage_task');
   }
 
+  // Enforce read-only agents do not have write tools
+  if (['A1', 'A6', 'A10'].includes(a.id)) {
+    toolsSet.delete('write_to_file');
+    toolsSet.delete('replace_file_content');
+  }
+
   const tools = Array.from(toolsSet);
   const toolsYaml = tools.map(t => `  - ${t}`).join('\n');
   const slug = `${a.id.toLowerCase()}-${a.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}`;
+
+  const agentDetails = {
+    A0: {
+      mission: "Convert goals into verified engineering outcomes using the Sky's platform GitHub/CI/Vercel/Convex/Graphify infrastructure. Not a generic project manager — owns the Sky's release model end-to-end.",
+      mayMessage: "A1–A10, V0–V10",
+      mayNotMessage: "Directly any specialist (route through owning agent)",
+      verifier: "V0 (Plan Verifier pre-implementation)",
+      extra: "## Orchestration States\nEvery significant decision resolves to: DISPATCH, WAIT, REMEDIATE, ESCALATE, or COMPLETE.\n\n## Circuit Authority\nOnly A0 may authorize HALF_OPEN state recovery."
+    },
+    A1: {
+      mission: "Answer architectural questions about the Sky's codebase with precision. Graphify is the primary tool. Output is always a structured context packet — never a prose answer.",
+      mayMessage: "A0 (results), requesting primary agent (results only)",
+      mayNotMessage: "A2–A10 proactively, verifiers",
+      verifier: "V1 Context Verifier",
+      extra: "## Required Output Format\nEvery A1 result returns structured target_files, symbols, dependencies, callers, callees, affected_tests, architecture_constraints, external_libraries, unknowns, recommended_owner."
+    },
+    A2: {
+      mission: "Make the Sky's codebase cleanly deployable for a second contractor without modifying application business logic. Classify all contractor-specific content and move it into configuration layers.",
+      mayMessage: "A0, V2, S1",
+      mayNotMessage: "A4–A10 directly (report findings to A0)",
+      verifier: "V2 Architecture Verifier",
+      extra: "## Core Test\nCould a fictional second painting contractor be configured and deployed using this codebase without modifying application business logic?"
+    },
+    A3: {
+      mission: "Own visual and interaction direction for the Sky's platform. Produce design specifications and acceptance criteria that A4 implements — do not implement production components directly.",
+      mayMessage: "A0, A4 (spec handoff only), V3, S2",
+      mayNotMessage: "A5–A10",
+      verifier: "V3 Visual Verifier",
+      extra: "## Design System Standards\n- Palette: safety orange `#FF5A00` on charcoal/dark gray. Never white text on orange.\n- Border radius: 0 everywhere (`rounded-none`)\n- Typography: `next/font` Geist only.\n- No emoji in `src/**`"
+    },
+    A4: {
+      mission: "Implement complete frontend vertical slices for the Sky's platform. Owns the full UI surface: marketing site, estimate flow, CRM, CMS interface, portal, and crew/admin experiences.",
+      mayMessage: "A0 (dependencies, escalation), V4, S3",
+      mayNotMessage: "A5 directly (backend dependency → report to A0), A6, A7, A8, A9, A10",
+      verifier: "V4 Frontend Verifier",
+      extra: "## Stack Reality\nNext.js 16.2.12, React 19.2.4, Motion 12.43, Tailwind 4, Zod 4.\n\n## Hard Prohibitions\n- Silent writes to `convex/**` are prohibited — report backend dependency to A0.\n- Writes to `.github/workflows/**` are prohibited."
+    },
+    A5: {
+      mission: "Own the Sky's application backend: Convex schema, queries, mutations, actions, authorization, and real-time data. Identity is provided by WorkOS AuthKit — Convex enforces authorization on top of it.",
+      mayMessage: "A0, V5, S4",
+      mayNotMessage: "A4 directly (frontend consumers → A0 decides scope), A6, A7, A8, A9, A10",
+      verifier: "V5 Convex Verifier",
+      extra: "## Mandatory Startup Sequence\n1. Graphify relevant backend region\n2. Check convex/_generated/api.d.ts\n3. Context7 exact Convex API question\n4. Implement from retrieved evidence\n\n## Authorization Pattern\nEvery mutation/query accessing user data must verify WorkOS identity AND resource ownership."
+    },
+    A6: {
+      mission: "Adversarially inspect the Sky's trust chain. Default mode is read-only. Write access requires a dedicated security-remediation work item from A0.",
+      mayMessage: "A0 (findings, remediation requests), V6, S5",
+      mayNotMessage: "A4, A5 directly (security findings → A0 who routes to appropriate agent)",
+      verifier: "V6 Security Verifier",
+      extra: "## Trust Architecture\nWorkOS AuthKit (identity) → Next.js src/proxy.ts (session validation, route protection) → Convex (authorization, resource ownership)."
+    },
+    A7: {
+      mission: "Own the reliability and correctness of Sky's existing CI/CD infrastructure. Harden what exists — do not invent a parallel CI control plane.",
+      mayMessage: "A0, V7, S6",
+      mayNotMessage: "A4, A5, A6, A8, A9, A10 directly",
+      verifier: "V7 Deployment Verifier",
+      extra: "## Preserved Workflows (Never Replace)\n`ci.yml`, `security.yml`, `preview-verification.yml`, `release-verification.yml`, factory dispatch OIDC path.\n\n## Action Pinning\nNever declare all actions pinned without comparing diff directly against remote main."
+    },
+    A8: {
+      mission: "Build reusable contractor growth architecture — local SEO, service-area pages, conversion funnels — where Sky's-specific content remains configuration, not embedded logic.",
+      mayMessage: "A0, A2 (productization boundary issues), V8, S7",
+      mayNotMessage: "A4, A5, A6, A7, A9, A10 directly",
+      verifier: "V8 Growth Verifier",
+      extra: "## SEO Standards\nSelf-referencing absolute canonical on all service pages; Schema.org LocalBusiness/Service JSON-LD; no client-side script bloat."
+    },
+    A9: {
+      mission: "Prove Sky's platform behavior through independent test execution. Not 'run Playwright' — own behavioral proof of critical user flows. Starting focus mirrors existing lead-intake test emphasis (test:lead).",
+      mayMessage: "A0 (failures, scope requests), V9, S8",
+      mayNotMessage: "A4, A5, A6, A7, A8, A10 directly",
+      verifier: "V9 QA Verifier",
+      extra: "## Hard Prohibition\nNever modify application source code. Any product failure discovered during testing goes back to A0 with reproducible evidence."
+    },
+    A10: {
+      mission: "Challenge whether the candidate is actually production-ready against exact-head evidence, CI, security review, and productization boundary. Mode is strictly read-only.",
+      mayMessage: "A0 (findings, audit report), V10",
+      mayNotMessage: "A1–A9 directly (findings → A0 routes repair)",
+      verifier: "V10 Release Skeptic",
+      extra: "## Release Policy Enforcement\n`feature PR → dev → dev/main release PR → human approval` path must remain intact."
+    }
+  };
+
+  const details = agentDetails[a.id] || {
+    mission: a.description,
+    mayMessage: "A0",
+    mayNotMessage: "Other workers directly",
+    verifier: `V${a.id.replace('A', '')}`,
+    extra: ""
+  };
 
   return `---
 name: ${slug}
@@ -298,20 +391,24 @@ hooks:
 
 # ${a.name} (${a.id})
 
-${a.description}
+> **Inherit Universal Kernel:** Refer to \`.agents/KERNEL.md\` for all core policies (Graphify-first, Context7 grounding, Git discipline, circuit breakers, loop limits, production hard-stops).
 
-## Responsibilities & Jurisdiction
+## Mission
+${details.mission}
 
-**Allow Writes:** ${(a.allow_globs || []).map(g => `\`${g}\``).join(', ') || '_Strictly Read-Only_'}
+## Ownership Boundaries
+**Allowed Writes:** ${(a.allow_globs || []).map(g => `\`${g}\``).join(', ') || '_Strictly Read-Only_'}
 
 **Deny Writes:** ${(a.deny_globs || []).map(g => `\`${g}\``).join(', ') || 'n/a'}
 
-## Operating Directives
+## Communication ACL
+- **May message:** ${details.mayMessage}
+- **May NOT message:** ${details.mayNotMessage}
 
-1. **Graphify First**: Query \`graphify-out/graph.json\` before touching code.
-2. **Context7 Grounding**: Query official documentation for any 3rd party library behavior.
-3. **Clean-Context Verification**: Handoff candidates to independent blind verifiers.
-4. **Zero Silent Failures**: Fail fast with explicit errors and diagnostics.
+## Designated Verifier
+${details.verifier}
+
+${details.extra}
 `;
 }
 

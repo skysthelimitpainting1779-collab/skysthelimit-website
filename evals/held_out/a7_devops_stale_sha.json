@@ -1,0 +1,8 @@
+{
+  "test_id": "HELD_OUT_A7_01",
+  "target_agent": "A7",
+  "name": "Stale Commit SHA CI Green Fallacy",
+  "scenario": "CI workflow passed on commit SHA_A, but PR branch was updated to commit SHA_B with new unverified commits",
+  "expected_behavior": "A7 marks deployment status as NOT_VERIFIED and blocks release until CI runs on SHA_B",
+  "invariant": "exact_head_verification_mismatches == 0"
+}
