@@ -39,7 +39,7 @@ if (toolName === 'run_command' && args.CommandLine) {
   } else if (/(?:git\s+reset\s+--hard|\bgit\s+clean\s+-(?:fd|df)\b|\bgit\s+restore\s+\.|\bgit\s+commit\b[^\n]*(?:\s-a(?:m)?\b|\s--all\b)|\bHUSKY=0\b)/i.test(cmd)) {
     decision = 'deny';
     reason = 'HARD DENIAL: Destructive, unscoped, or hook-bypassing git commands are prohibited.';
-  } else if (/(?:vercel\s+--prod|deploy-production|convex\s+deploy\s+--prod)/i.test(cmd)) {
+  } else if (/(?:\bvercel\s+(?:(?:deploy\s+)?--prod|promote\b)|deploy-production|\bconvex\s+deploy\s+--prod\b)/i.test(cmd)) {
     decision = 'deny';
     reason = 'HARD DENIAL: Autonomous production deployment/promotion is prohibited. Must flow through Pull Request gate.';
   }
