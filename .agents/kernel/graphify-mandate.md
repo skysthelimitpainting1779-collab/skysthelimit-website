@@ -32,4 +32,4 @@ The fallback must satisfy:
 1. **Explicit Justification**: Agent must record why Graphify was insufficient (e.g. searching exact string literal, non-code regex in config, Dockerfile syntax).
 2. **Narrow Scope**: Must be constrained to a single directory or exact file.
 3. **Logged Event**: Must be recorded in the active work contract evidence log.
-4. **Denial Outside Scope**: PreToolUse hook blocks unscoped repository-wide scans.
+4. **Denial Outside Scope**: PreToolUse hook denies `grep_search` broad code scans; `glob`/`find` are not yet enforced — treat them as self-discipline, not hook-enforced.
