@@ -111,9 +111,39 @@ test('Codex hooks understand native tool payloads', () => {
 
   const productionWrite = runHook('guard-production.mjs', {
     tool_name: 'apply_patch',
-    tool_input: { command: '*** Update File: .env.production' },
+    tool_input: {
+      command: [
+        '*** Begin Patch',
+        '*** Update File: .env.production',
+        '@@',
+        '-OLD_SECRET=value',
+        '+NEW_SECRET=value',
+        '*** End Patch',
+      ].join('\n'),
+    },
   });
   assert.equal(productionWrite.status, 2);
+
+  const structuredProductionWrite = runHook('guard-production.mjs', {
+    tool_name: 'write_file',
+    tool_input: { file_path: 'config/.env.production.local', content: 'SECRET=value' },
+  });
+  assert.equal(structuredProductionWrite.status, 2);
+
+  const ordinaryPatch = runHook('guard-production.mjs', {
+    tool_name: 'apply_patch',
+    tool_input: {
+      command: [
+        '*** Begin Patch',
+        '*** Update File: docs/architecture.md',
+        '@@',
+        '-old',
+        '+new',
+        '*** End Patch',
+      ].join('\n'),
+    },
+  });
+  assert.equal(ordinaryPatch.status, 0);
 
   const peerMessage = runHook('guard-communication.mjs', {
     tool_name: 'send_message',
@@ -167,4 +197,7 @@ test('Codex repository definitions are portable and use the authoritative backen
   assert.match(config, /^\[mcp_servers\.supabase\][\s\S]*?^enabled\s*=\s*false/m);
   assert.match(agentSources, /Convex/);
   assert.match(agentSources, /WorkOS/);
+
+  const goalRunner = readFileSync(join(root, 'scripts', 'goal.mjs'), 'utf8');
+  assert.match(goalRunner, /candidate_sha/, 'goal verification evidence must record the tested HEAD SHA');
 });

@@ -185,6 +185,11 @@ function cmdPhase(phase) {
 }
 
 function runVerify({ build = false } = {}) {
+  const head = spawnSync('git', ['rev-parse', 'HEAD'], {
+    cwd: ROOT,
+    encoding: 'utf8',
+  });
+  const candidate_sha = head.status === 0 ? head.stdout.trim() : null;
   const steps = [
     { name: 'lint', cmd: ['npm', 'run', 'lint'] },
     { name: 'test', cmd: ['npm', 'test'] },
@@ -209,7 +214,7 @@ function runVerify({ build = false } = {}) {
       tail: `${r.stdout || ''}${r.stderr || ''}`.slice(-1200),
     });
   }
-  return { ok, at: new Date().toISOString(), results };
+  return { ok, at: new Date().toISOString(), candidate_sha, results };
 }
 
 function cmdVerify(args) {
