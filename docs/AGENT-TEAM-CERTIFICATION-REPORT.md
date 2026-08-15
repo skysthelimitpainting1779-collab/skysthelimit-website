@@ -6,7 +6,9 @@ Branch: `feat/codex-antigravity-org`
 
 Base SHA: `869f03dbcedd4a45cab293934ac1d8df26101fdb`
 
-Candidate SHA: resolve with `git rev-parse HEAD` after the reviewed local commit; CI and preview evidence must match that exact value.
+Evaluated implementation SHA: `74a4c77c5cc222d8de68bcd79d7f238693b711e8`
+
+Evidence model: this report is committed in a metadata-only descendant of the evaluated implementation commit. The evidence commit cannot contain its own Git hash; reviewers must evaluate the implementation SHA above and verify that the attestation commit changes only evidence artifacts.
 
 ## Repository evidence
 
@@ -18,7 +20,7 @@ Candidate SHA: resolve with `git rev-parse HEAD` after the reviewed local commit
 | Verifier blindness | PASS | V-profiles reject parent conversation, accept only the evidence packet, and constrain verdicts to PASS/FAIL/UNCERTAIN. |
 | Communication ACL | PASS | Deterministic guard denies A4 → A5 and permits A4 → A0; specialists remain parent-bound. |
 | Graphify-first | PASS | Antigravity and Codex fixtures deny broad source discovery while allowing direct reads of known configuration files. |
-| Git and production boundaries | PASS | Dangerous Git and production fixtures are denied; existing Husky and Entire hooks remain installed. |
+| Git and production boundaries | PASS | Dangerous Git commands and realistic multi-line `apply_patch` writes to `.env.production` are denied; structured production paths are denied; an ordinary documentation patch remains allowed; existing Husky and Entire hooks remain installed. |
 | Antigravity hook protocol | PASS | Shared guards return official JSON `decision` responses for Antigravity and exit code 2 for Codex. |
 | Portable host wiring | PASS | No machine-specific path in canonical MCP/Codex configuration; unsupported aggregate sidecars retired; user-global Supabase MCP explicitly disabled at the project layer. |
 | Circuit state | PASS | Tracked default state and JSON Schema cover A0–A10; ignored runtime state overrides the default when present. |
@@ -26,7 +28,7 @@ Candidate SHA: resolve with `git rev-parse HEAD` after the reviewed local commit
 | Agent certification | PASS | `npm run agents:certify`: 16 passed, 0 failed. |
 | Repository tests | PASS | `npm test`: 318 passed, 0 failed across 22 suites. |
 | Static verification | PASS | `npm run lint`: Git standards, React version parity, and TypeScript passed. |
-| Goal verification | PASS | `npm run goal:verify` completed at `2026-08-14T23:54:36.726Z` with lint and test green. |
+| Goal verification | PASS | `npm run goal:verify` completed at `2026-08-15T00:08:12.691Z` against candidate `74a4c77c5cc222d8de68bcd79d7f238693b711e8`, with lint and 318 tests green. |
 
 ## Official contracts used
 
