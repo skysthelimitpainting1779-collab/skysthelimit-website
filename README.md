@@ -21,7 +21,7 @@ The site drives residential, commercial, and public-sector leads with estimate i
 | **AI crawl map** | [/llms.txt](https://www.skysthelimitpaintingllc.com/llms.txt) |
 | **GitHub** | [skysthelimitpainting1779-collab/skys-the-limit-painting-llc-website](https://github.com/skysthelimitpainting1779-collab/skys-the-limit-painting-llc-website) (target rename: `skysthelimit-website`) |
 | **Naming SSOT** | [`docs/NAMING.md`](./docs/NAMING.md) |
-| **Agent OS** | [`docs/AGENT_OS.md`](./docs/AGENT_OS.md) · kernel [`.agents/AGENTS.md`](./.agents/AGENTS.md) |
+| **Agent guidance** | Kernel [`.agents/AGENTS.md`](./.agents/AGENTS.md) |
 | **Design SSOT** | [`DESIGN.md`](./DESIGN.md) |
 | **Templates** | [`docs/templates/`](./docs/templates/) |
 
@@ -35,15 +35,15 @@ The site drives residential, commercial, and public-sector leads with estimate i
 - **Resend** (transactional email)
 - **Vercel** (hosting, Analytics, Speed Insights)
 - **Remotion** (brand video loops)
-- **Agent OS** (`.agents/` kernel + domain agents + graph + Turso memory — see [`docs/AGENT_OS.md`](./docs/AGENT_OS.md))
+- **Agent guidance** (`.agents/` kernel, skills, and host-native adapters)
 - **Linear** — tasks / milestones (`skysthelimit · Platform` · `Reliability`)
 
 **Node:** `24.x` (see `.nvmrc`)
 
 ```bash
-npm run agentos:health    # Agent OS checklist
-npm run domain:list       # specialist agents
-npm run graph:query -- "portal auth"
+npm run ci:contract                    # validate CI workflow commands and local references
+npm run learn:prevent:test             # self-test active prevention rules
+npm run smoke:site -- --base-url http://localhost:3000
 ```
 
 ---
@@ -59,8 +59,9 @@ npm run dev                  # http://localhost:3000
 ### Verify (matches CI)
 
 ```bash
-npm run lint:ci                              # react pins · tsc · md · knip
-node scripts/agent-os.js bootstrap && npm test
+npm run ci:contract
+npm run lint:ci                              # React-version verification · tsc --noEmit
+npm test
 npm run build
 # or:
 npm run ci
@@ -73,10 +74,12 @@ npm run ci
 | `npm run dev` | Local dev server |
 | `npm run build` | Production build + sitemap |
 | `npm run lint` | Git guard + react pins + TypeScript |
-| `npm run lint:ci` | Full quality lint (CI) |
+| `npm run lint:ci` | Verify React versions and run `tsc --noEmit` |
 | `npm test` | Test suite |
-| `npm run agentos:status` | Agent OS control plane |
-| `npm run agentos:entire-sync` | Codify Entire → skills/rules |
+| `npm run ci:contract` | Validate CI workflow commands and local references |
+| `npm run smoke:site -- --base-url <url>` | Smoke-test a local or deployed site |
+| `npm run learn:prevent:test` | Self-test active prevention rules |
+| `npm run learn:prevent:rebuild` | Rebuild active prevention context |
 
 ---
 
@@ -134,8 +137,8 @@ src/app/          Next.js App Router pages & API
 src/components/   UI & conversion components
 src/views/        Page bodies
 src/lib/          SEO, Supabase, env, analytics
-scripts/          CI, Agent OS, Entire, hooks, PR automation
-.agents/          Agent OS control plane
+scripts/          CI, automation, hooks, and maintenance tools
+.agents/          Agent guidance, skills, and host-native configuration
 .github/          Workflows, CODEOWNERS, templates
 public/           Static assets, llms.txt, sitemap
 supabase/         Migrations
