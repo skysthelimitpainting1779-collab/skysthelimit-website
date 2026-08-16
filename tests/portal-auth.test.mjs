@@ -49,6 +49,9 @@ test('isProtectedPortalPath protects /portal but not login', () => {
   assert.equal(isProtectedPortalPath('/portal/settings'), true);
   assert.equal(isProtectedPortalPath('/portal/login'), false);
   assert.equal(isProtectedPortalPath('/portal/login/extra'), false);
+  assert.equal(isProtectedPortalPath('/portals'), false);
+  assert.equal(isProtectedPortalPath('/portal-admin'), false);
+  assert.equal(isProtectedPortalPath('/portal-malicious'), false);
   assert.equal(isProtectedPortalPath('/admin'), false);
   assert.equal(isProtectedPortalPath('/'), false);
 });
@@ -56,6 +59,9 @@ test('isProtectedPortalPath protects /portal but not login', () => {
 test('portalLoginUrl encodes next path', () => {
   assert.equal(portalLoginUrl('/portal'), '/portal/login?next=%2Fportal');
   assert.equal(portalLoginUrl('/evil'), '/portal/login');
+  assert.equal(portalLoginUrl('/portals'), '/portal/login');
+  assert.equal(portalLoginUrl('/portal-admin'), '/portal/login');
+  assert.equal(portalLoginUrl('/portal-malicious'), '/portal/login');
 });
 
 test('mapLeadsForPortal filters by email and strips empty ids', () => {
@@ -75,4 +81,12 @@ test('buildPortalOAuthOptions builds callback redirect for Google', () => {
   assert.equal(o.provider, 'google');
   assert.match(o.options.redirectTo, /https:\/\/www\.example\.com\/auth\/callback\?next=/);
   assert.ok(o.options.redirectTo.includes(encodeURIComponent('/portal')));
+});
+
+test('buildPortalOAuthOptions rejects lookalike portal prefixes', () => {
+  for (const nextPath of ['/portals', '/portal-admin', '/portal-malicious']) {
+    const o = buildPortalOAuthOptions('https://www.example.com', 'github', nextPath);
+    const redirect = new URL(o.options.redirectTo);
+    assert.equal(redirect.searchParams.get('next'), '/portal');
+  }
 });
