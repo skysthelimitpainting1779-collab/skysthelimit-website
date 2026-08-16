@@ -124,7 +124,7 @@ export default function CapabilitiesPage() {
                     <div>
                       <h3 className="font-bold text-white text-xs mb-1">Owner-Operated Trade Execution</h3>
                       <p className="text-sm text-[#b9b2a6]">
-                        Direct trade oversight on every commercial project, ensuring transparent communication, project timeline tracking, and zero sub-contractor layers.
+                        Direct trade oversight on every commercial project, ensuring transparent communication, project timeline tracking, and zero subcontractor layers.
                       </p>
                     </div>
                   </div>
