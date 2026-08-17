@@ -50,6 +50,8 @@ jobs:
             site_url="https://www.skysthelimitpaintingllc.com"
           elif [[ "$GITHUB_EVENT_NAME" == "repository_dispatch" && "$DISPATCH_TYPE" == "vercel.deployment.promoted" ]]; then
             site_url="https://www.skysthelimitpaintingllc.com"
+          elif [[ "$GITHUB_EVENT_NAME" == "deployment_status" ]]; then
+            site_url="https://www.skysthelimitpaintingllc.com"
           elif [[ "$GITHUB_EVENT_NAME" == "repository_dispatch" ]]; then
             site_url="$DISPATCH_URL"
           else
@@ -69,6 +71,9 @@ jobs:
             echo "## Deployment verification"
             echo "- Event: $GITHUB_EVENT_NAME"
             echo "- Target: $site_url"
+            if [[ -n "${DEPLOYMENT_TARGET_URL:-}" ]]; then
+              echo "- Vercel deployment: $DEPLOYMENT_TARGET_URL"
+            fi
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Smoke-test customer routes
