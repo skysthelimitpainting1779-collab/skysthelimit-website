@@ -3,16 +3,18 @@
     "devhealer": {
       "command": "python",
       "args": [
-        "c:/Users/Johnny Cage/DEV/skysthelimit-collab/.agents/plugins/dev-healer/mcp/server.py"
+        ".agents/plugins/dev-healer/mcp/server.py"
       ]
     },
     "graphify": {
       "command": "uvx",
       "args": [
+        "--refresh",
         "--from",
         "graphifyy",
         "graphify-mcp",
-        "c:/Users/Johnny Cage/DEV/skysthelimit-collab/graphify-out/graph.json"
+        "--graph",
+        "graphify-out/graph.json"
       ]
     }
   }

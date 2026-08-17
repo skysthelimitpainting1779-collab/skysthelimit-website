@@ -1,3 +1,6 @@
+import { Field, FieldDescription, FieldLabel } from '@/components/ui/field';
+import { Slider } from '@/components/ui/slider';
+
 interface RangeSliderProps {
   id: string;
   label: string;
@@ -24,25 +27,24 @@ export default function RangeSlider({
   const displayValue = `${value}${suffix ? ` ${suffix}` : ''}`;
 
   return (
-    <div className="space-y-2">
-      <div className="flex justify-between text-xs font-black">
-        <span className="text-[#c9c1b4]">{label}</span>
-        <span className="text-white font-mono">{displayValue}</span>
+    <Field>
+      <div className="flex items-center justify-between gap-4">
+        <FieldLabel htmlFor={id}>{label}</FieldLabel>
+        <output htmlFor={id} className="font-mono text-sm font-bold text-foreground">{displayValue}</output>
       </div>
-      <input
+      <Slider
         id={id}
-        type="range"
         min={min}
         max={max}
         step={step}
         value={value}
-        onChange={(e) => onChange(Number(e.target.value))}
-        className="w-full accent-white bg-white/10 h-1 cursor-ew-resize focus-visible:outline-none"
+        onValueChange={(nextValue) => onChange(Array.isArray(nextValue) ? nextValue[0] : nextValue)}
+        aria-label={label}
       />
-      <div className="flex justify-between text-xs text-gray-400 font-mono">
+      <FieldDescription className="flex justify-between font-mono text-xs">
         <span>{minLabel}</span>
         <span>{maxLabel}</span>
-      </div>
-    </div>
+      </FieldDescription>
+    </Field>
   );
 }

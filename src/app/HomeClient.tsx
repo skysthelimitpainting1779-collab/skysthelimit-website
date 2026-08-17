@@ -1,179 +1,247 @@
 import Link from 'next/link';
-import { ArrowRight, Check, ClipboardCheck, HardHat, Ruler, ShieldCheck } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Check, ClipboardCheck, ShieldCheck } from 'lucide-react';
 import LeadForm from '../components/LeadForm';
 import PrepProtocolStage from '../components/PrepProtocolStage';
 import ResponsiveImage from '../components/ResponsiveImage';
-import ReviewCarousel from '../components/ReviewCarousel';
+import { PublicCtaLink, PublicPage } from '../components/public/PublicSystem';
 import { faqSchema } from '../lib/seo';
 
+const stageLedger = [
+  ['01', 'Protect', 'Cover, mask, and safeguard the property.'],
+  ['02', 'Repair', 'Patch, caulk, sand, and correct defects.'],
+  ['03', 'Prime', 'Match the primer to the surface and exposure.'],
+  ['04', 'Paint', 'Apply the specified coating system cleanly.'],
+  ['05', 'Finish', 'Detail, clean up, and walk the scope together.'],
+] as const;
+
 const scopeRows = [
-  ['INTERIOR', 'Walls · ceilings · trim · cabinets', 'Residential'],
-  ['EXTERIOR', 'Siding · trim · decks · fences', 'Residential'],
-  ['PROPERTY', 'Repaints · turnovers · common areas', 'Commercial'],
-  ['MARKING', 'Parking lots · curbs · safety striping', 'Public / commercial'],
-];
+  ['Interior', 'Walls, ceilings, trim, doors, and cabinets', '/residential'],
+  ['Exterior', 'Siding, trim, entries, decks, and fences', '/residential'],
+  ['Property', 'Repaints, turnovers, and common areas', '/commercial'],
+  ['Marking', 'Parking lots, curbs, and safety striping', '/commercial'],
+] as const;
 
 const faqItems = [
   {
     question: 'How is a painting project scoped?',
-    answer: 'The scope begins with surfaces, condition, access, preparation requirements, photos, and timeline. The result is a written estimate before work is scheduled.',
+    answer: 'The walkthrough records the surfaces, condition, access, protection, preparation, photos, and timing. Those details become the written estimate before work is scheduled.',
   },
   {
-    question: 'Who performs the walkthrough?',
-    answer: 'Anthony Briseno handles the project conversation and walkthrough directly, so the scope is not passed between a sales team and a crew.',
+    question: 'Who handles the walkthrough?',
+    answer: 'Anthony Briseno handles the project conversation and scope review directly, so the details are not passed from a sales desk to the person responsible for the work.',
   },
   {
-    question: 'Can documentation be provided for property or public work?',
-    answer: 'A certificate of insurance is available for qualified commercial and public-sector opportunities. Ask about documentation during the scope review.',
+    question: 'What happens before painting begins?',
+    answer: 'The scope identifies what must be covered, cleaned, repaired, sanded, caulked, and primed before the selected coating system is applied.',
   },
-];
+] as const;
 
 export default function HomeClient() {
   return (
-    <article className="bg-[#0A0A0A] text-zinc-100">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema(faqItems)) }} />
+    <PublicPage className="ledger-surface">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema([...faqItems])) }} />
 
-      <section aria-labelledby="home-title" className="border-b border-zinc-800">
-        <div className="mx-auto grid min-h-[calc(100svh-117px)] max-w-7xl lg:grid-cols-[minmax(0,1.1fr)_minmax(24rem,0.9fr)]">
-          <div className="flex flex-col justify-between px-6 py-10 sm:px-8 lg:px-12 lg:py-14">
+      <section aria-labelledby="home-title" className="border-b border-[#071321]/20">
+        <div className="mx-auto grid min-h-[calc(100svh-112px)] max-w-[94rem] lg:grid-cols-[58fr_42fr]">
+          <div className="ledger-grid flex min-h-[39rem] flex-col justify-between px-5 py-10 sm:px-8 sm:py-12 lg:min-h-0 lg:px-12 lg:py-14 xl:px-16">
             <div>
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF5A00]">Twin Cities / Residential painting scope desk</p>
-              <h1 id="home-title" className="mt-6 max-w-4xl text-5xl font-black uppercase leading-[0.9] tracking-[-0.06em] text-white sm:text-7xl lg:text-8xl">
-                Residential detail. Commercial discipline. <span className="text-[#FF5A00]">Preps</span> first.
+              <h1 id="home-title" className="ledger-display max-w-[11ch] text-[clamp(3.5rem,6.6vw,6rem)] leading-[0.9] text-[#071321]">
+                A finish that lasts starts before the first coat.
               </h1>
-              <p className="mt-8 max-w-2xl text-base leading-7 text-zinc-300 sm:text-lg">
-                Sky&apos;s the Limit Painting LLC scopes the protection, correction, coating system, and final walkthrough before a project reaches your home.
+              <p className="mt-7 max-w-[36rem] text-lg font-semibold leading-7 text-[#26384A] sm:text-xl sm:leading-8">
+                Anthony manages the walkthrough, written scope, preparation plan, and final detail—so your property stays protected and the work is clear before it starts.
               </p>
-              {/* Trust badge chips */}
-              <div className="mt-6 flex flex-wrap gap-2">
-                {['Twin Cities Metro', 'MN ID: IR816596', '100% Insured', 'Public-Sector Ready'].map((chip) => (
-                  <span key={chip} className="inline-flex items-center border border-white/10 bg-black/60 px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-zinc-300">
-                    {chip}
-                  </span>
-                ))}
-              </div>
             </div>
 
             <div className="mt-10">
-              <Link href="/estimate" className="inline-flex min-h-14 items-center gap-4 bg-[#FF5A00] px-6 py-4 text-sm font-black uppercase tracking-[0.12em] text-white transition-colors hover:bg-[#d94d00] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#FF5A00]">
-                Calculate room scope <ArrowRight aria-hidden="true" size={18} />
-              </Link>
-              <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.14em] text-[#2E7D32]">Typical response: same day &middot; Spring/summer slots filling now</p>
-              <div className="mt-5 grid max-w-2xl border border-zinc-700 sm:grid-cols-3">
-                {[['MN ID', 'IR816596'], ['EXEMPTION', '176.041 EXEMPT'], ['COVERAGE', '100% INSURED']].map(([label, value]) => <div key={label} className="border-b border-zinc-800 px-4 py-3 last:border-b-0 sm:border-b-0 sm:border-r sm:last:border-r-0"><p className="font-mono text-[9px] uppercase tracking-[0.14em] text-zinc-500">{label}</p><p className="mt-1 font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-white">{value}</p></div>)}
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                <PublicCtaLink
+                  href="#walkthrough"
+                  size="marketing-lg"
+                  track="hero_cta_click"
+                  trackPayload={{ source: 'homepage_hero', label: 'Start the Written Scope' }}
+                >
+                  Start the Written Scope
+                </PublicCtaLink>
+                <PublicCtaLink
+                  href="tel:+16514104196"
+                  variant="outline"
+                  size="marketing-lg"
+                  icon={null}
+                  track="call_click"
+                  trackPayload={{ source: 'homepage_hero' }}
+                >
+                  Call Anthony
+                </PublicCtaLink>
               </div>
-              <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.16em] text-zinc-500">Start with surfaces, condition, and dimensions. Contact details come last.</p>
+              <ul aria-label="Service commitments" className="mt-7 flex flex-wrap gap-x-6 gap-y-3 text-sm font-bold text-[#314457]">
+                {['Owner-led', 'Written scope', 'Twin Cities metro'].map((item) => (
+                  <li key={item} className="flex items-center gap-2">
+                    <Check aria-hidden="true" size={16} className="text-[#0254C3]" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
 
-          <div className="relative min-h-[24rem] border-t border-zinc-800 lg:min-h-0 lg:border-l lg:border-t-0">
-            <ResponsiveImage src="/images/site/marketing-hero-exterior-painting.webp" alt="Painter preparing an exterior trim surface with windows and landscaping protected" width={1600} height={900} sizes="(min-width: 1024px) 45vw, 100vw" priority fetchPriority="high" className="absolute inset-0 h-full w-full object-cover" />
-            <div className="absolute inset-x-0 bottom-0 border-t border-zinc-700 bg-[#0A0A0A]/95 p-5 backdrop-blur-sm">
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-400">Field image / exterior preparation</p>
-              <p className="mt-2 text-sm font-semibold text-white">Protection and surface correction are part of the work order—not an upgrade.</p>
+          <div className="relative min-h-[32rem] border-t border-[#071321]/20 lg:min-h-0 lg:border-l lg:border-t-0">
+            <span className="ledger-tape" aria-hidden="true" />
+            <ResponsiveImage
+              src="/images/site/marketing-hero-exterior-painting.webp"
+              alt="Painter preparing exterior trim while windows and landscaping are protected"
+              width={1600}
+              height={900}
+              sizes="(min-width: 1024px) 42vw, 100vw"
+              priority
+              fetchPriority="high"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+            <div className="absolute inset-x-0 top-0 flex items-center justify-between border-b border-white/55 bg-[#F6F3EB]/94 px-5 py-3 text-xs font-black uppercase tracking-[0.08em] text-[#071321]">
+              <span>Field record</span>
+              <span>Exterior preparation</span>
+            </div>
+            <div className="absolute inset-x-0 bottom-0 grid border-t border-[#071321]/20 bg-[#F6F3EB]/96 sm:grid-cols-[1fr_auto]">
+              <div className="p-5 sm:p-6">
+                <p className="text-base font-black text-[#071321]">Protection and correction belong in the work order.</p>
+                <p className="mt-2 max-w-[34rem] text-sm leading-6 text-[#3E4D5D]">The visible finish starts with the details that are easiest to skip and hardest to correct later.</p>
+              </div>
+              <div className="border-t border-[#071321]/20 p-5 sm:border-l sm:border-t-0 sm:p-6">
+                <p className="text-xs font-black uppercase tracking-[0.08em] text-[#0254C3]">Written scope</p>
+                <p className="mt-2 text-sm font-bold text-[#071321]">Before scheduling</p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Process path strip — overlapping dark cards */}
-      <section aria-label="How it works" className="relative z-10 -mt-12 border-b border-zinc-800">
-        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-px border border-zinc-700 bg-zinc-700 lg:grid-cols-4">
-          {[
-            ['01', 'Tell us', 'Property type, city, surfaces, and timeline'],
-            ['02', 'Scope + price', 'Written estimate from real site conditions'],
-            ['03', 'Reserve', 'Lock a start date that works for you'],
-            ['04', 'Transparency', 'Photos, walkthrough, and final detail check'],
-          ].map(([num, title, desc]) => (
-            <div key={num} className="bg-[#111111] px-5 py-6">
-              <p className="font-mono text-[10px] font-bold tracking-[0.2em] text-[#FF5A00]">{num}</p>
-              <p className="mt-2 text-sm font-black uppercase tracking-wide text-white">{title}</p>
-              <p className="mt-1.5 text-xs leading-5 text-zinc-400">{desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section aria-labelledby="scope-ledger" className="border-b border-zinc-800">
-        <div className="mx-auto max-w-7xl px-6 py-16 sm:px-8 lg:px-12">
-          <div className="grid gap-8 lg:grid-cols-[0.75fr_1.25fr] lg:gap-16">
-            <div>
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF5A00]">01 / Scope ledger</p>
-              <h2 id="scope-ledger" className="mt-4 text-4xl font-black uppercase leading-none tracking-[-0.05em] text-white sm:text-5xl">What gets priced.</h2>
-              <p className="mt-6 max-w-md text-sm leading-7 text-zinc-400">The estimate follows the actual site conditions. Each line item exists to make preparation and execution visible before scheduling.</p>
-            </div>
-            <dl className="border-t border-zinc-700">
-              {scopeRows.map(([code, work, market]) => (
-                <div key={code} className="grid grid-cols-[4rem_1fr] gap-4 border-b border-zinc-800 py-5 sm:grid-cols-[5rem_1fr_auto] sm:items-center">
-                  <dt className="font-mono text-xs font-bold tracking-widest text-[#FF5A00]">{code}</dt>
-                  <dd className="text-sm font-bold uppercase tracking-wide text-white">{work}</dd>
-                  <dd className="col-start-2 font-mono text-[10px] uppercase tracking-[0.16em] text-zinc-500 sm:col-start-auto">{market}</dd>
+      <section aria-labelledby="stage-ledger-title" className="border-b border-[#071321]/20 bg-[#F9F7F1]">
+        <h2 id="stage-ledger-title" className="sr-only">Preparation stage ledger</h2>
+        <div className="mx-auto max-w-[94rem] overflow-x-auto">
+          <ol className="grid min-w-[65rem] grid-cols-[repeat(5,minmax(0,1fr))_1.15fr]">
+            {stageLedger.map(([number, title, detail]) => (
+              <li key={number} className="border-r border-[#071321]/20 px-5 py-6 last:border-r-0">
+                <div className="flex items-center gap-3">
+                  <span className="text-sm font-black text-[#0254C3]">{number}</span>
+                  <span aria-hidden="true" className="h-px flex-1 bg-[#0254C3]/45" />
                 </div>
-              ))}
-            </dl>
+                <h3 className="ledger-display mt-3 text-3xl leading-none text-[#071321]">{title}</h3>
+                <p className="mt-3 text-sm leading-5 text-[#3E4D5D]">{detail}</p>
+              </li>
+            ))}
+            <li className="px-5 py-6">
+              <ClipboardCheck aria-hidden="true" size={22} className="text-[#0254C3]" />
+              <p className="mt-4 text-lg font-black text-[#071321]">One owner. One scope.</p>
+              <p className="mt-2 text-sm leading-5 text-[#3E4D5D]">Documented from the first conversation through final detail.</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section aria-labelledby="scope-title" className="border-b border-[#071321]/20 bg-[#F6F3EB]">
+        <div className="mx-auto grid max-w-[94rem] lg:grid-cols-[0.72fr_1.28fr]">
+          <div className="ledger-grid border-b border-[#071321]/20 px-5 py-16 sm:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-24 xl:px-16">
+            <h2 id="scope-title" className="ledger-display max-w-[8ch] text-[clamp(3.2rem,5vw,5.5rem)] leading-[0.92] text-[#071321]">
+              Everything priced before anything starts.
+            </h2>
+            <p className="mt-7 max-w-[34rem] text-lg leading-8 text-[#314457]">The estimate follows the property conditions—not a generic package. Each line makes preparation and execution visible before a date is reserved.</p>
           </div>
+
+          <dl className="divide-y divide-[#071321]/20">
+            {scopeRows.map(([service, surfaces, href]) => (
+              <div key={service} className="grid min-h-28 grid-cols-[6.5rem_1fr_auto] items-center gap-5 px-5 py-6 sm:px-8 lg:px-10">
+                <dt className="ledger-display text-3xl text-[#071321]">{service}</dt>
+                <dd className="text-base font-semibold leading-6 text-[#314457]">{surfaces}</dd>
+                <dd>
+                  <Link href={href} aria-label={`Explore ${service.toLowerCase()} painting`} className="grid h-12 w-12 place-items-center border border-[#071321]/25 text-[#071321] transition-colors hover:border-[#0254C3] hover:text-[#0254C3]">
+                    <ArrowUpRight aria-hidden="true" size={20} />
+                  </Link>
+                </dd>
+              </div>
+            ))}
+          </dl>
         </div>
       </section>
 
       <PrepProtocolStage />
 
-      <section aria-labelledby="proof" className="border-b border-zinc-800">
-        <div className="mx-auto grid max-w-7xl lg:grid-cols-2">
-          <div className="relative aspect-[4/3] border-b border-zinc-800 lg:aspect-auto lg:border-b-0 lg:border-r">
-            <ResponsiveImage src="/images/site/iphone-interior-painting-progress.webp" alt="Interior painting work in progress with room surfaces prepared for coating" width={1200} height={900} sizes="(min-width: 1024px) 50vw, 100vw" className="absolute inset-0 h-full w-full object-cover" />
-          </div>
-          <div className="px-6 py-16 sm:px-8 lg:px-12">
-            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF5A00]">03 / Operational controls</p>
-            <h2 id="proof" className="mt-4 text-4xl font-black uppercase leading-none tracking-[-0.05em] text-white sm:text-5xl">A contractor record you can inspect.</h2>
-            <ul className="mt-10 divide-y divide-zinc-800 border-y border-zinc-800">
-              {[
-                [ShieldCheck, 'MN ID: IR816596', 'registered Minnesota Specialty Contractor (Painting)'],
-                [HardHat, '176.041 Exempt', 'Owner-operator exemption record'],
-                [ClipboardCheck, '100% Insured', 'Certificate of insurance available for qualified opportunities'],
-                [Ruler, 'Direct scope review', 'Owner-led walkthrough through final detail'],
-              ].map(([Icon, title, detail]) => {
-                const Mark = Icon as typeof ShieldCheck;
-                return <li key={title as string} className="flex gap-4 py-5"><Mark aria-hidden="true" className="mt-1 shrink-0 text-[#FF5A00]" size={18} /><div><p className="text-sm font-bold uppercase tracking-wide text-white">{title as string}</p><p className="mt-1 font-mono text-[10px] uppercase tracking-[0.12em] text-zinc-500">{detail as string}</p></div></li>;
-              })}
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      {/* Social proof — customer reviews */}
-      <section aria-label="Customer reviews" className="border-b border-zinc-800">
-        <div className="mx-auto max-w-7xl px-6 py-16 sm:px-8 lg:px-12">
-          <div className="grid gap-8 lg:grid-cols-[0.6fr_1.4fr] lg:gap-16 lg:items-center">
-            <div>
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF5A00]">Client record</p>
-              <h2 className="mt-4 text-4xl font-black uppercase leading-none tracking-[-0.05em] text-white sm:text-5xl">Word from the field.</h2>
-              <a
-                href="https://g.page/r/skysthelimitpainting/review"
-                target="_blank"
-                rel="noopener noreferrer"
-                data-track="google_review_click"
-                data-track-payload='{"source":"homepage_reviews"}'
-                className="mt-6 inline-flex items-center gap-2 border border-zinc-600 px-4 py-3 text-xs font-black uppercase tracking-[0.1em] text-zinc-300 transition-colors hover:border-[#FF5A00] hover:text-[#FF5A00]"
-              >
-                Leave a Google Review <ArrowRight size={14} />
-              </a>
+      <section id="accountability" aria-labelledby="accountability-title" className="bg-[#071321] text-[#F6F3EB]">
+        <div className="mx-auto grid max-w-[94rem] lg:grid-cols-[1.08fr_0.92fr]">
+          <div className="relative min-h-[34rem] border-b border-white/20 lg:border-b-0 lg:border-r">
+            <ResponsiveImage
+              src="/images/site/iphone-interior-painting-progress.webp"
+              alt="Interior painting in progress with furniture and floors protected"
+              width={1200}
+              height={1600}
+              sizes="(min-width: 1024px) 54vw, 100vw"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+            <div className="absolute inset-x-0 bottom-0 flex items-center justify-between border-t border-white/40 bg-[#071321]/94 px-5 py-4 text-xs font-black uppercase tracking-[0.08em] text-[#F6F3EB] sm:px-8">
+              <span>Interior protection record</span>
+              <span>Preparation in progress</span>
             </div>
-            <ReviewCarousel />
+          </div>
+          <div className="px-5 py-16 sm:px-8 lg:px-12 lg:py-24 xl:px-16">
+            <h2 id="accountability-title" className="ledger-display max-w-[7ch] text-[clamp(3.2rem,5vw,5.5rem)] leading-[0.92] text-[#F6F3EB]">
+              The scope does not change hands.
+            </h2>
+            <p className="mt-7 max-w-[34rem] text-lg leading-8 text-[#D8E2EC]">Anthony handles the walkthrough and project conversation directly. The final detail is checked against the same written scope used to start the work.</p>
+            <ul className="mt-10 divide-y divide-white/20 border-y border-white/20">
+              {[
+                ['Minnesota registration', 'IR816596'],
+                ['Coverage', 'Fully insured'],
+                ['Communication', 'Owner-led scope review'],
+                ['Closeout', 'Final walkthrough'],
+              ].map(([label, value]) => (
+                <li key={label} className="grid grid-cols-[1fr_auto] gap-5 py-5">
+                  <span className="text-sm font-semibold text-[#BCD0E3]">{label}</span>
+                  <span className="text-right text-sm font-black text-[#F6F3EB]">{value}</span>
+                </li>
+              ))}
+            </ul>
+            <Link href="/about" className="mt-8 inline-flex min-h-12 items-center gap-3 border border-white/40 px-5 text-sm font-black text-[#F6F3EB] transition-colors hover:border-[#FF661C] hover:text-[#FF8A4B]">
+              Meet the owner <ArrowRight aria-hidden="true" size={17} />
+            </Link>
           </div>
         </div>
       </section>
 
-      <section aria-labelledby="request-scope" className="bg-[#0A0A0A]">
-        <div className="mx-auto grid max-w-7xl gap-10 px-6 py-16 sm:px-8 lg:grid-cols-[0.8fr_1.2fr] lg:px-12 lg:py-20">
-          <aside className="border-t-2 border-[#FF5A00] pt-6">
-            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF5A00]">04 / Request a written scope</p>
-            <h2 id="request-scope" className="mt-4 text-4xl font-black uppercase leading-none tracking-[-0.05em] text-white sm:text-5xl">Send the job data.</h2>
-            <p className="mt-6 max-w-md text-sm leading-7 text-zinc-400">Tell us the property type, city, surfaces, timeline, and preparation needs. The final step asks how Anthony should reach you.</p>
-            <p className="mt-8 font-mono text-[10px] uppercase tracking-[0.15em] text-zinc-500">Service area / Minneapolis · St. Paul · Twin Cities metro</p>
-          </aside>
-          <div className="border border-zinc-700 bg-[#111111] p-5 sm:p-8"><LeadForm source="homepage_scope_desk" defaultMarket="Residential" /></div>
+      <section aria-labelledby="questions-title" className="border-b border-[#071321]/20 bg-[#F6F3EB]">
+        <div className="mx-auto grid max-w-[94rem] lg:grid-cols-[0.7fr_1.3fr]">
+          <div className="ledger-grid border-b border-[#071321]/20 px-5 py-16 sm:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-24 xl:px-16">
+            <h2 id="questions-title" className="ledger-display max-w-[7ch] text-[clamp(3.2rem,5vw,5.5rem)] leading-[0.92] text-[#071321]">Questions before the walkthrough.</h2>
+          </div>
+          <div className="divide-y divide-[#071321]/20">
+            {faqItems.map((item) => (
+              <details key={item.question} className="group px-5 py-7 sm:px-8 lg:px-10">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-5 text-lg font-black text-[#071321] marker:content-none">
+                  {item.question}
+                  <span aria-hidden="true" className="text-2xl font-normal text-[#0254C3] transition-transform group-open:rotate-45">+</span>
+                </summary>
+                <p className="mt-5 max-w-[46rem] text-base leading-7 text-[#314457]">{item.answer}</p>
+              </details>
+            ))}
+          </div>
         </div>
       </section>
-    </article>
+
+      <section id="walkthrough" aria-labelledby="walkthrough-title" className="bg-[#0254C3] text-[#F6F3EB]">
+        <div className="mx-auto grid max-w-[94rem] lg:grid-cols-[0.72fr_1.28fr]">
+          <div className="border-b border-white/30 px-5 py-16 sm:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-24 xl:px-16">
+            <h2 id="walkthrough-title" className="ledger-display max-w-[7ch] text-[clamp(3.2rem,5vw,5.5rem)] leading-[0.92] text-white">Start the written scope.</h2>
+            <p className="mt-7 max-w-[32rem] text-lg leading-8 text-[#E6EFF8]">Share the property, city, surfaces, timing, and preparation concerns. Contact details come after the project information.</p>
+            <div className="mt-10 border-y border-white/30 py-5">
+              <p className="flex items-start gap-3 text-sm font-semibold leading-6 text-white">
+                <ShieldCheck aria-hidden="true" size={20} className="mt-0.5 shrink-0" />
+                Your information is used only to review and respond to this project request.
+              </p>
+            </div>
+          </div>
+          <div className="bg-[#F6F3EB] p-5 text-[#071321] sm:p-8 lg:p-12">
+            <LeadForm source="homepage_owner_finish_ledger" defaultMarket="Residential" theme="ledger" />
+          </div>
+        </div>
+      </section>
+    </PublicPage>
   );
 }

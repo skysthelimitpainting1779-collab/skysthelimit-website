@@ -18,15 +18,15 @@ describe('Tier 1: Feature Coverage', () => {
 
   test('T1.2 Routing & Navigation - Header navigation links exist', () => {
     const header = read('src/components/ConversionHeader.tsx');
-    assert.match(header, /to="\/residential"/);
-    assert.match(header, /to="\/commercial"/);
-    assert.match(header, /to="\/public-sector"/);
+    assert.match(header, /href: '\/residential'/);
+    assert.match(header, /href: '\/commercial'/);
+    assert.match(header, /href: '\/public-sector'/);
   });
 
   test('T1.3 Routing & Navigation - Micro-utility header bar displays warning/intake message', () => {
     const header = read('src/components/ConversionHeader.tsx');
-    assert.match(header, /Prep-first painting across the Twin Cities/);
-    assert.match(header, /Price range, scope review, and schedule conversation in one path/);
+    assert.match(header, /Twin Cities painting/);
+    assert.match(header, /Owner-led \/ Written scope \/ Prep first/);
   });
 
   test('T1.4 Routing & Navigation - Redirects for legacy routes redirect to new pages', () => {
@@ -43,7 +43,8 @@ describe('Tier 1: Feature Coverage', () => {
 
   test('T1.6 Three-Market Content - Home page renders the approved positioning statement', () => {
     const home = read('src/app/HomeClient.tsx');
-    assert.match(home, /Residential detail\. Commercial discipline\.[\s\S]*Preps[\s\S]*first\./i);
+    assert.match(home, /A finish that lasts starts before the first coat\./i);
+    assert.match(home, /walkthrough, written scope, preparation plan, and final detail/i);
   });
 
   test('T1.7 Three-Market Content - Residential page loads specific data fields', () => {
@@ -139,7 +140,7 @@ describe('Tier 1: Feature Coverage', () => {
   test('T1.26 Reputation Funnel - Rating 4 stars displays the Google Review redirect prompt', () => {
     const rev = read('src/views/Review.tsx');
     assert.match(rev, /rating >= 4/);
-    assert.match(rev, /Leave Us a Google Review/);
+    assert.match(rev, /Leave a Google Review/);
   });
 
   test('T1.27 Reputation Funnel - Google Review link opens in a new tab pointing to the GBP review page', () => {
@@ -152,7 +153,7 @@ describe('Tier 1: Feature Coverage', () => {
 
   test('T1.28 Reputation Funnel - Rating 1, 2, or 3 stars intercepts user and displays private feedback form', () => {
     const rev = read('src/views/Review.tsx');
-    assert.match(rev, /We want to make it right\./);
+    assert.match(rev, /We want to understand what needs attention\./);
     assert.match(rev, /handlePrivateSubmit/);
   });
 
@@ -203,14 +204,16 @@ describe('Tier 2: Boundary/Corner Cases', () => {
 
   test('T2.1 Routing & Navigation - Mobile menu toggle handles accessibility attributes', () => {
     const header = read('src/components/ConversionHeader.tsx');
-    assert.match(header, /aria-label=\{mobileMenuOpen \?/);
-    assert.match(header, /aria-expanded=\{mobileMenuOpen\}/);
+    assert.match(header, /mobileMenuOpen \? 'Close navigation menu' : 'Open navigation menu'/);
+    assert.match(header, /<SheetTitle/);
+    assert.match(header, /<SheetDescription/);
   });
 
   test('T2.2 Routing & Navigation - Sticky mobile call CTAs render on narrow layouts', () => {
-    const layout = read('src/app/layout.tsx');
-    assert.match(layout, /href="tel:\+16514104196"/);
-    assert.match(layout, /mobile_sticky/);
+    const rail = read('src/components/public/MobileConversionRail.tsx');
+    assert.match(rail, /href="tel:\+16514104196"/);
+    assert.match(rail, /mobile_sticky/);
+    assert.match(rail, /Get a Free Price Range/);
   });
 
   test('T2.3 Routing & Navigation - CSP and HTTP security headers are configured in vercel.json', () => {
@@ -231,8 +234,8 @@ describe('Tier 2: Boundary/Corner Cases', () => {
   test('T2.5 Routing & Navigation - E.164 phone numbers are format-compliant', () => {
     const header = read('src/components/ConversionHeader.tsx');
     assert.match(header, /tel:\+16514104196/);
-    const layout = read('src/app/layout.tsx');
-    assert.match(layout, /tel:\+16514104196/);
+    const rail = read('src/components/public/MobileConversionRail.tsx');
+    assert.match(rail, /tel:\+16514104196/);
   });
 
   test('T2.6 Three-Market Content - Emojis are 100% absent in code/components/markup', () => {
@@ -268,7 +271,7 @@ describe('Tier 2: Boundary/Corner Cases', () => {
   test('T2.9 Three-Market Content - Workers comp exemption statement is present near insurance references', () => {
     const capabilities = read('src/views/Capabilities.tsx');
     assert.match(capabilities, /Minnesota Statute 176\.041/);
-    assert.match(capabilities, /Workers' Compensation Exemption/);
+    assert.match(capabilities, /workers compensation exemption/i);
   });
 
   test('T2.10 Three-Market Content - SAM.gov active claims are absent on the Capabilities page', () => {
@@ -279,7 +282,7 @@ describe('Tier 2: Boundary/Corner Cases', () => {
 
   test('T2.11 Local SEO Pages - Invalid SEO slugs return 404', () => {
     const landing = read('src/views/LandingPage.tsx');
-    assert.match(landing, /if \(!pageData\)/);
+    assert.match(landing, /if \(!page\)/);
     assert.match(landing, /return <NotFound \/>/);
   });
 
@@ -356,11 +359,11 @@ describe('Tier 2: Boundary/Corner Cases', () => {
     assert.match(rev, /trackEvent\('review_rating_select'/);
   });
 
-  test('T2.29 Reputation Funnel - Hovering over star selection scales buttons and alters fill', () => {
+  test('T2.29 Reputation Funnel - Rating selection uses an accessible shadcn ToggleGroup', () => {
     const rev = read('src/views/Review.tsx');
-    assert.match(rev, /onMouseEnter/);
-    assert.match(rev, /onMouseLeave/);
-    assert.match(rev, /hoverRating/);
+    assert.match(rev, /<ToggleGroup/);
+    assert.match(rev, /aria-labelledby="rating-label"/);
+    assert.match(rev, /<ToggleGroupItem/);
   });
 
   test('T2.30 Reputation Funnel - Submitting a 0-star rating is blocked', () => {
@@ -408,7 +411,7 @@ describe('Tier 3: Cross-Feature Combinations', () => {
 
   test('T3.2 Offline + Review Funnel - Submitting negative reviews offline triggers fallback message', () => {
     const rev = read('src/views/Review.tsx');
-    assert.match(rev, /catch \(err\)/);
+    assert.match(rev, /catch \(error\)/);
     assert.match(rev, /The private feedback form did not respond\. Please call or text/);
   });
 
@@ -460,8 +463,8 @@ describe('Tier 4: Real-World Scenarios', () => {
 
   test('T4.2 Intercepted Review - Negative rating intercepts unhappy client to private feedback', () => {
     const rev = read('src/views/Review.tsx');
-    assert.match(rev, /rating < 4/);
-    assert.match(rev, /We want to make it right/);
+    assert.match(rev, /rating >= 4/);
+    assert.match(rev, /We want to understand what needs attention/);
     assert.match(rev, /formspree\.io/);
   });
 

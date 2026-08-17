@@ -1,3 +1,11 @@
 
 [features]
 hooks = true
+
+[mcp_servers.graphify_local]
+command = "uvx"
+args = ["--refresh", "--from", "graphifyy", "graphify-mcp", "--graph", "graphify-out/graph.json"]
+
+[mcp_servers.graphify]
+url = "https://api.graphify.com/mcp"
+auth = "oauth"

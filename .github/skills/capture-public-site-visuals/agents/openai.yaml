@@ -1,0 +1,4 @@
+interface:
+  display_name: "Capture Public Site Visuals"
+  short_description: "Capture repeatable public-route screenshots"
+  default_prompt: "Use $capture-public-site-visuals to capture the public website at its required desktop and mobile viewports."

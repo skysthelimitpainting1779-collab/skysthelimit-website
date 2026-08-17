@@ -30,7 +30,7 @@ export default function IconFeatureCard({
   return (
     <HoverLift>
       <Tag className={cn(className, "transition-colors duration-300 hover:bg-white/5 h-full")}>
-        <Icon className={iconClassName} size={iconSize} strokeWidth={1.5} />
+        <Icon aria-hidden="true" className={iconClassName} size={iconSize} strokeWidth={1.5} />
         <Heading className={titleClassName}>{title}</Heading>
         <p className={bodyClassName}>{body}</p>
       </Tag>

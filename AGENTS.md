@@ -64,6 +64,11 @@ Map: [`.agents/HOST_NATIVE.md`](.agents/HOST_NATIVE.md)
 3. **Surgical changes** — only what the task requires.
 4. **Goal-driven** — verifiable success; loop until `npm run goal:verify` passes.
 
+## Mandatory discovery and reuse
+
+- **Official Graphifyy MCP first:** Before navigating or searching code, query the official local Graphifyy MCP against this worktree so branch and uncommitted changes are represented. Use the hosted OAuth Graphify MCP only as fallback or corroboration because it indexes promoted/default-branch state. Fall back to `rg` only for literals/config/non-code or when both Graphify sources are insufficient. Keep the local server on the newest `graphifyy` package via `uvx --refresh --from graphifyy graphify-mcp --graph graphify-out/graph.json`.
+- **Context7 first:** Before implementing or changing behavior from an external library, framework, provider, or API, query its current official documentation through Context7. Record the selected library ID and the contract that affects the change.
+
 ---
 
 ## Ship loop (RPI)
@@ -136,3 +141,13 @@ Hard denials (hooks): emoji in `src/`, wiki dumps, soft-skips, next/dynamic+ssr:
 npm run ship:eval
 npm run ship:improve    # purge + hard purge + prevent + health + eval
 ```
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

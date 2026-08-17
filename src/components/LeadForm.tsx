@@ -6,11 +6,18 @@ import { motion, AnimatePresence } from 'motion/react';
 import { buildEstimateMailto } from '../lib/contact';
 import { readUtmParams, trackEvent } from '../lib/analytics';
 import { ENV } from '../lib/env';
+import { Button } from '@/components/ui/button';
+import { Field, FieldDescription, FieldLabel } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import { Progress, ProgressLabel, ProgressValue } from '@/components/ui/progress';
+import { Textarea } from '@/components/ui/textarea';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 
 interface LeadFormProps {
   source: string;
   defaultMarket?: 'Residential' | 'Commercial' | 'Public Sector';
   compact?: boolean;
+  theme?: 'dark' | 'ledger';
 }
 
 type Status = 'idle' | 'submitting' | 'sent' | 'fallback' | 'error';
@@ -21,11 +28,9 @@ const timelineOptions = ['ASAP', '1-4 weeks', '1-3 months', 'Planning ahead'];
 const budgetOptions = ['Under $2,500', '$2,500-$7,500', '$7,500-$20,000', '$20,000+', 'Not sure yet'];
 const contactMethods = ['Call', 'Text', 'Email'];
 
-const labelClass = 'block text-xs font-black text-white mb-2';
-const fieldClass = 'w-full border border-white/10 bg-white/5 p-4 text-white outline-none placeholder:text-white/40 transition-all focus:border-white focus-visible:ring-2 focus-visible:ring-[white]/20 text-base rounded-none';
-const selectButtonClass = 'border p-3.5 text-center text-xs font-black   transition-all duration-200 cursor-pointer rounded-none';
+const fieldClass = 'w-full border border-input bg-background p-4 text-foreground outline-none placeholder:text-muted-foreground transition-colors focus:border-ring text-base rounded-none';
 
-export default function LeadForm({ source, defaultMarket = 'Residential', compact = false }: LeadFormProps) {
+export default function LeadForm({ source, defaultMarket = 'Residential', compact = false, theme = 'dark' }: LeadFormProps) {
   const [status, setStatus] = useState<Status>('idle');
   const [message, setMessage] = useState('');
   const [currentStep, setCurrentStep] = useState(0);
@@ -387,11 +392,13 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
 
   if (status === 'sent') {
     return (
-      <div className="border border-white/30 bg-[#0B0B0D]/50 p-8 text-center space-y-6 rounded-none">
-        <h4 className="text-2xl font-black text-white">Inquiry Dispatched</h4>
-        <p className="text-sm leading-relaxed text-gray-300 max-w-md mx-auto">{message}</p>
+      <div data-lead-theme={theme} data-lead-panel className="flex flex-col gap-6 border border-border bg-card p-8 text-center text-card-foreground">
+        <h4 className="public-display text-3xl">Inquiry received</h4>
+        <p className="mx-auto max-w-md text-sm leading-relaxed text-muted-foreground">{message}</p>
         <div className="pt-2">
-          <button
+          <Button
+            type="button"
+            size="marketing"
             onClick={() => {
               setStatus('idle');
               setCurrentStep(0);
@@ -413,10 +420,9 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
                 website: '',
               });
             }}
-            className="bg-white px-6 py-3 text-xs font-black text-[#050505] hover:bg-white transition-colors rounded-none cursor-pointer"
           >
             Submit Another Request
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -443,26 +449,18 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
   };
 
   return (
-    <form className="space-y-6 relative rounded-none" onSubmit={handleSubmit} onKeyDown={handleKeyDown} aria-busy={status === 'submitting'}>
+    <form data-lead-theme={theme} className="relative flex flex-col gap-6 rounded-none" onSubmit={handleSubmit} onKeyDown={handleKeyDown} aria-busy={status === 'submitting'}>
       {/* Honeypots */}
       <input type="text" style={{ display: 'none' }} name="bot_honeypot" tabIndex={-1} autoComplete="off" aria-hidden="true" value={formData.bot_honeypot} onChange={(e) => updateField('bot_honeypot', e.target.value)} />
       <input name="website" className="hidden" tabIndex={-1} autoComplete="off" aria-hidden="true" value={formData.website} onChange={(e) => updateField('website', e.target.value)} />
 
-      {/* Modern Progress Line */}
-      <div>
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-xs font-semibold text-white">
-            Step {currentStep + 1} of 3 // {stepTitles[currentStep]}
-          </span>
-          <span className="text-xs font-bold text-gray-400">{progressPercent}%</span>
-        </div>
-        <div className="h-1 bg-white/10 w-full rounded-none">
-          <div className="h-full bg-white transition-all duration-300 rounded-none" style={{ width: `${progressPercent}%` }}></div>
-        </div>
-      </div>
+      <Progress value={progressPercent}>
+        <ProgressLabel>Step {currentStep + 1} of 3 / {stepTitles[currentStep]}</ProgressLabel>
+        <ProgressValue />
+      </Progress>
 
       {/* Dynamic Animated Core Panel */}
-      <motion.div layout className="overflow-hidden bg-white/[0.02] border border-white/5 p-6 space-y-6 relative">
+      <motion.div data-lead-panel layout className="relative overflow-hidden border border-border bg-card p-6 text-card-foreground">
         <AnimatePresence mode="popLayout" initial={false} custom={direction}>
           <motion.div
             key={currentStep}
@@ -472,64 +470,62 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
             animate="center"
             exit="exit"
             transition={slideTransition}
-            className="space-y-6"
+            className="flex flex-col gap-6"
           >
             {/* STEP 0: LOCATION & SEGMENT */}
             {currentStep === 0 && (
-              <div className="space-y-5">
-                <div className="space-y-2">
-                  <span className={labelClass}>Market Segment</span>
-                  <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-3">
+              <div className="flex flex-col gap-5">
+                <Field>
+                  <FieldLabel id="market-segment-label">Market segment</FieldLabel>
+                  <ToggleGroup
+                    aria-labelledby="market-segment-label"
+                    value={[formData.market]}
+                    onValueChange={(values) => values[0] && updateField('market', values[0] as typeof formData.market)}
+                    variant="outline"
+                    size="lg"
+                    spacing={2}
+                    className="grid w-full grid-cols-1 sm:grid-cols-3"
+                  >
                     {['Residential', 'Commercial', 'Public Sector'].map((option) => (
-                      <button
-                        key={option}
-                        type="button"
-                        onClick={() => updateField('market', option as any)}
-                        className={`${selectButtonClass} ${
-                          formData.market === option
-                            ? 'border-white bg-white/10 text-white'
-                            : 'border-white/10 bg-white/5 text-white hover:border-white/30'
-                        }`}
-                      >
+                      <ToggleGroupItem key={option} value={option} data-lead-choice className="h-auto min-h-12 whitespace-normal px-3 py-2">
                         {option}
-                      </button>
+                      </ToggleGroupItem>
                     ))}
-                  </div>
+                  </ToggleGroup>
                   {/* Select for tests & accessibility */}
                   <select name="market" aria-label="Market" value={formData.market} onChange={(e) => updateField('market', e.target.value as any)} className="hidden">
                     <option value="Residential">Residential</option>
                     <option value="Commercial">Commercial</option>
                     <option value="Public Sector">Public Sector</option>
                   </select>
-                </div>
+                </Field>
 
-                <div className="space-y-2">
-                  <span className={labelClass}>Property Type</span>
-                  <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
+                <Field>
+                  <FieldLabel id="property-type-label">Property type</FieldLabel>
+                  <ToggleGroup
+                    aria-labelledby="property-type-label"
+                    value={formData.propertyType ? [formData.propertyType] : []}
+                    onValueChange={(values) => values[0] && updateField('propertyType', values[0])}
+                    variant="outline"
+                    size="lg"
+                    spacing={2}
+                    className="grid w-full grid-cols-2 sm:grid-cols-3"
+                  >
                     {propertyOptions.map((option) => (
-                      <button
-                        key={option}
-                        type="button"
-                        onClick={() => updateField('propertyType', option)}
-                        className={`${selectButtonClass} ${
-                          formData.propertyType === option
-                            ? 'border-white bg-white/10 text-white'
-                            : 'border-white/10 bg-white/5 text-white hover:border-white/30'
-                        }`}
-                      >
+                      <ToggleGroupItem key={option} value={option} data-lead-choice className="h-auto min-h-12 whitespace-normal px-3 py-2">
                         {option.split(' / ')[0]}
-                      </button>
+                      </ToggleGroupItem>
                     ))}
-                  </div>
+                  </ToggleGroup>
                   <select name="propertyType" aria-label="Property type" value={formData.propertyType} onChange={(e) => updateField('propertyType', e.target.value)} className="hidden">
                     <option value="">Select Class</option>
                     {propertyOptions.map((option) => <option key={option} value={option}>{option}</option>)}
                   </select>
-                </div>
+                </Field>
 
-                <div className="space-y-2">
-                  <label htmlFor="city-input" className={labelClass}>Which city is the property in?</label>
-                  <input
+                <Field>
+                  <FieldLabel htmlFor="city-input">Which city is the property in?</FieldLabel>
+                  <Input
                     id="city-input"
                     name="city"
                     type="text"
@@ -539,19 +535,19 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
                     autoComplete="address-level2"
                     value={formData.city}
                     onChange={(e) => updateField('city', e.target.value)}
-                    className={fieldClass}
                   />
-                </div>
+                </Field>
               </div>
             )}
 
             {/* STEP 1: PROJECT SPECIFICATIONS */}
             {currentStep === 1 && (
-              <div className="space-y-5">
+              <div className="flex flex-col gap-5">
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                  <div className="space-y-2">
-                    <span className={labelClass}>Project Type</span>
+                  <Field>
+                    <FieldLabel htmlFor="lead-project-type">Project type</FieldLabel>
                     <select
+                      id="lead-project-type"
                       name="projectType"
                       aria-label="Project type"
                       value={formData.projectType}
@@ -561,11 +557,12 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
                       <option value="">Select Type</option>
                       {projectOptions.map((option) => <option key={option} value={option}>{option}</option>)}
                     </select>
-                  </div>
+                  </Field>
 
-                  <div className="space-y-2">
-                    <span className={labelClass}>Timeline</span>
+                  <Field>
+                    <FieldLabel htmlFor="lead-timeline">Timeline</FieldLabel>
                     <select
+                      id="lead-timeline"
                       name="timeline"
                       aria-label="Timeline"
                       value={formData.timeline}
@@ -575,11 +572,12 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
                       <option value="">Select Timeline</option>
                       {timelineOptions.map((option) => <option key={option} value={option}>{option}</option>)}
                     </select>
-                  </div>
+                  </Field>
 
-                  <div className="space-y-2">
-                    <span className={labelClass}>Budget range</span>
+                  <Field>
+                    <FieldLabel htmlFor="lead-budget">Budget range</FieldLabel>
                     <select
+                      id="lead-budget"
                       name="budget"
                       aria-label="Budget range"
                       value={formData.budget}
@@ -589,12 +587,12 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
                       <option value="">Select Budget</option>
                       {budgetOptions.map((option) => <option key={option} value={option}>{option}</option>)}
                     </select>
-                  </div>
+                  </Field>
                 </div>
 
-                <div className="space-y-2">
-                  <label htmlFor="notes-input" className={labelClass}>Project details</label>
-                  <textarea
+                <Field>
+                  <FieldLabel htmlFor="notes-input">Project details</FieldLabel>
+                  <Textarea
                     id="notes-input"
                     name="notes"
                     rows={3}
@@ -603,13 +601,13 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
                     aria-label="Project details"
                     value={formData.notes}
                     onChange={(e) => updateField('notes', e.target.value)}
-                    className={`${fieldClass} resize-none`}
                   />
-                </div>
+                  <FieldDescription>Include rooms, siding, trim, cabinets, access, or preparation concerns.</FieldDescription>
+                </Field>
 
-                <div className="space-y-2">
-                  <span className={labelClass}>Photo Documentation (Optional)</span>
-                  <div className="border border-dashed border-white/10 bg-white/5 p-4 text-center hover:border-white transition-colors relative cursor-pointer group rounded-none">
+                <Field>
+                  <FieldLabel htmlFor="file-uploader">Photo documentation (optional)</FieldLabel>
+                  <div className="group relative cursor-pointer border border-dashed border-input bg-background p-4 text-center transition-colors hover:border-ring">
                     <input
                       id="file-uploader"
                       type="file"
@@ -619,16 +617,16 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
                       disabled={uploading}
                       className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                     />
-                    <div className="flex flex-col items-center justify-center space-y-1">
-                      <Upload size={24} className="text-gray-400 group-hover:text-white transition-colors" />
-                      <p className="text-xs font-bold text-white">Drag photos here or tap to select</p>
-                      <p className="text-xs text-gray-400">Max size 10MB per image</p>
+                    <div className="flex flex-col items-center justify-center gap-1">
+                      <Upload aria-hidden="true" className="text-muted-foreground transition-colors group-hover:text-foreground" />
+                      <p className="text-xs font-bold text-foreground">Drag photos here or tap to select</p>
+                      <p className="text-xs text-muted-foreground">Max size 10MB per image</p>
                     </div>
                   </div>
 
                   {uploading && (
-                    <div className="flex items-center justify-center gap-2 p-2 bg-white/10 border border-white/20 text-xs font-bold text-white">
-                      <div className="animate-spin h-3 w-3 border-2 border-white border-t-transparent rounded-full" />
+                    <div className="flex items-center justify-center gap-2 border border-border bg-muted p-2 text-xs font-bold text-foreground">
+                      <div className="size-3 animate-spin border-2 border-foreground border-t-transparent" />
                       {uploadProgress}
                     </div>
                   )}
@@ -636,7 +634,7 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
                   {uploadedFiles.length > 0 && (
                     <div className="grid grid-cols-4 gap-2.5 pt-1">
                       {uploadedFiles.map((url, idx) => (
-                        <div key={url} className="relative aspect-square border border-white/10 bg-white/5 overflow-hidden rounded-none">
+                        <div key={url} className="relative aspect-square overflow-hidden border border-border bg-muted">
                           <img src={url} alt={`Uploaded project photo ${idx + 1}`} className="w-full h-full object-cover" />
                           <button
                             type="button"
@@ -651,10 +649,10 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
                   )}
 
                   <div className="pt-2">
-                    <label htmlFor="photos-input" className="block text-xs font-semibold text-[#c9c1b4] mb-1.5">
+                    <FieldLabel htmlFor="photos-input">
                       Or paste a cloud link (Google Drive, Dropbox, etc.)
-                    </label>
-                    <input
+                    </FieldLabel>
+                    <Input
                       id="photos-input"
                       name="photosUrl"
                       type="text"
@@ -662,20 +660,19 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
                       aria-label="Project photo link"
                       value={formData.photosUrl}
                       onChange={(e) => updateField('photosUrl', e.target.value)}
-                      className={fieldClass}
                     />
                   </div>
-                </div>
+                </Field>
               </div>
             )}
 
             {/* STEP 2: PERSONAL VERIFICATION */}
             {currentStep === 2 && (
-              <div className="space-y-4">
+              <div className="flex flex-col gap-4">
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <label htmlFor="name-input" className={labelClass}>Full name</label>
-                    <input
+                  <Field>
+                    <FieldLabel htmlFor="name-input">Full name</FieldLabel>
+                    <Input
                       id="name-input"
                       name="name"
                       type="text"
@@ -685,13 +682,12 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
                       autoComplete="name"
                       value={formData.name}
                       onChange={(e) => updateField('name', e.target.value)}
-                      className={fieldClass}
                     />
-                  </div>
+                  </Field>
 
-                  <div className="space-y-2">
-                    <label htmlFor="phone-input" className={labelClass}>Phone</label>
-                    <input
+                  <Field>
+                    <FieldLabel htmlFor="phone-input">Phone</FieldLabel>
+                    <Input
                       id="phone-input"
                       name="phone"
                       type="tel"
@@ -702,15 +698,14 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
                       inputMode="tel"
                       value={formData.phone}
                       onChange={(e) => updateField('phone', e.target.value)}
-                      className={fieldClass}
                     />
-                  </div>
+                  </Field>
                 </div>
 
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <label htmlFor="email-input" className={labelClass}>Email</label>
-                    <input
+                  <Field>
+                    <FieldLabel htmlFor="email-input">Email</FieldLabel>
+                    <Input
                       id="email-input"
                       name="email"
                       type="email"
@@ -720,13 +715,13 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
                       autoComplete="email"
                       value={formData.email}
                       onChange={(e) => updateField('email', e.target.value)}
-                      className={fieldClass}
                     />
-                  </div>
+                  </Field>
 
-                  <div className="space-y-2">
-                    <span className={labelClass}>Preferred contact method</span>
+                  <Field>
+                    <FieldLabel htmlFor="lead-contact-method">Preferred contact method</FieldLabel>
                     <select
+                      id="lead-contact-method"
                       name="contactMethod"
                       aria-label="Preferred contact method"
                       value={formData.contactMethod}
@@ -736,15 +731,15 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
                       <option value="">Select Method</option>
                       {contactMethods.map((option) => <option key={option} value={option}>{option}</option>)}
                     </select>
-                  </div>
+                  </Field>
                 </div>
 
-                <div className="space-y-2">
+                <Field>
                   <div className="flex justify-between items-baseline">
-                    <label htmlFor="address-input" className={labelClass}>Project address or cross streets</label>
-                    <span className="text-xs text-gray-400 font-bold">Optional</span>
+                    <FieldLabel htmlFor="address-input">Project address or cross streets</FieldLabel>
+                    <span className="text-xs font-bold text-muted-foreground">Optional</span>
                   </div>
-                  <input
+                  <Input
                     id="address-input"
                     name="projectAddress"
                     type="text"
@@ -753,9 +748,8 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
                     autoComplete="street-address"
                     value={formData.projectAddress}
                     onChange={(e) => updateField('projectAddress', e.target.value)}
-                    className={fieldClass}
                   />
-                </div>
+                </Field>
               </div>
             )}
           </motion.div>
@@ -764,7 +758,7 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
 
       {/* Validation Feedback */}
       {validationError && (
-        <p className="text-xs font-bold text-white border-l-2 border-white pl-3" role="alert">
+        <p className="border-l-2 border-destructive pl-3 text-xs font-bold text-destructive" role="alert">
           {validationError}
         </p>
       )}
@@ -772,37 +766,43 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
       {/* Action Buttons */}
       <div className="flex gap-3 pt-2">
         {currentStep > 0 && (
-          <button
+          <Button
             type="button"
             onClick={handleBack}
-            className="flex items-center justify-center border border-white/10 hover:border-white/30 bg-white/5 px-5 py-4 text-sm font-black text-white transition-colors cursor-pointer rounded-none"
+            data-lead-secondary
+            variant="outline"
+            size="marketing"
           >
-            <ArrowLeft size={16} className="mr-2" /> Back
-          </button>
+            <ArrowLeft data-icon="inline-start" /> Back
+          </Button>
         )}
 
         {currentStep < 2 ? (
-          <button
+          <Button
             type="button"
             onClick={handleNext}
-            className="flex-1 inline-flex items-center justify-center bg-white hover:bg-white text-[#050505] px-5 py-4 text-sm font-semibold transition-colors cursor-pointer rounded-none"
+            data-lead-primary
+            size="marketing"
+            className="flex-1"
           >
-            Next Section <ArrowRight size={16} className="ml-2" />
-          </button>
+            Next Section <ArrowRight data-icon="inline-end" />
+          </Button>
         ) : (
-          <button
+          <Button
             type="submit"
             disabled={status === 'submitting'}
-            className="flex-1 inline-flex items-center justify-center bg-white hover:bg-white text-[#050505] px-6 py-4 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer rounded-none"
+            data-lead-primary
+            size="marketing"
+            className="flex-1"
           >
-            {status === 'submitting' ? 'Sending...' : 'Request My Free Estimate'} <ArrowRight size={18} className="ml-2" />
-          </button>
+            {status === 'submitting' ? 'Sending Request' : 'Request My Free Estimate'} <ArrowRight data-icon="inline-end" />
+          </Button>
         )}
       </div>
 
       {/* Trust Badge Footer */}
-      <p className="flex items-start gap-2 text-xs font-semibold text-gray-400 leading-relaxed" aria-live="polite">
-        <ShieldCheck size={16} className="mt-0.5 shrink-0 text-white" />
+      <p className="flex items-start gap-2 text-xs font-semibold leading-relaxed text-muted-foreground" aria-live="polite">
+        <ShieldCheck aria-hidden="true" className="mt-0.5 shrink-0 text-trust" />
         {message || 'We respect your time and inbox. You\u2019ll only hear from us regarding your painting project.'}
       </p>
     </form>

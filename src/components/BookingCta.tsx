@@ -1,5 +1,10 @@
 import { CalendarClock, Phone } from 'lucide-react';
+
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+
 import { businessPhone } from '../lib/contact';
+import { ENV } from '../lib/env';
 
 interface BookingCtaProps {
   audience?: 'homeowner' | 'commercial' | 'public-sector';
@@ -11,8 +16,6 @@ const bookingLabels = {
   commercial: 'Schedule a Project Review',
   'public-sector': 'Request a Capability Conversation',
 };
-
-import { ENV } from '../lib/env';
 
 export default function BookingCta({ audience = 'homeowner', className = '' }: BookingCtaProps) {
   const bookingUrl = ENV.BOOKING_URL || '';
@@ -30,9 +33,9 @@ export default function BookingCta({ audience = 'homeowner', className = '' }: B
         rel="noreferrer"
         data-track="booking_click"
         data-track-payload={JSON.stringify({ audience })}
-        className={`inline-flex items-center justify-center gap-2 border border-[#d8c7aa]/30 bg-white/5 px-6 py-4 text-sm font-black text-white transition-colors hover:border-white hover:text-white ${className}`}
+        className={cn(buttonVariants({ variant: 'outline', size: 'marketing-lg' }), className)}
       >
-        <CalendarClock size={18} />
+        <CalendarClock aria-hidden="true" data-icon="inline-start" />
         {label}
       </a>
     );
@@ -43,10 +46,10 @@ export default function BookingCta({ audience = 'homeowner', className = '' }: B
       href={`tel:${businessPhone}`}
       data-track="booking_click"
       data-track-payload={JSON.stringify({ audience, fallback: 'phone' })}
-      className={`inline-flex items-center justify-center gap-2 border border-[#d8c7aa]/30 bg-white/5 px-6 py-4 text-sm font-black text-white transition-colors hover:border-white hover:text-white ${className}`}
+      className={cn(buttonVariants({ variant: 'outline', size: 'marketing-lg' }), className)}
     >
-      <Phone size={18} />
-      Call To Schedule
+      <Phone aria-hidden="true" data-icon="inline-start" />
+      Call to Schedule
     </a>
   );
 }

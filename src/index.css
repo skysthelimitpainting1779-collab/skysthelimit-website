@@ -7,16 +7,14 @@
   ─────────────────────────────────────────────────────────────────────────
   SKY'S THE LIMIT — DESIGN SYSTEM (single source of truth for visual tokens)
   ─────────────────────────────────────────────────────────────────────────
-  Aesthetic: prep-first, industrial-editorial. A deep charcoal foundation,
-  warm "paper" light sections, one restrained terracotta accent, and white
-  reserved for the primary conversion action. Radii are 0 (machined edges).
+  Aesthetic: prep-first, industrial-editorial. Warm paper is the public
+  acquisition surface, cobalt carries trust and navigation, and safety orange
+  is reserved for conversion actions. Radii are 0 (machined edges).
 
   CONSTRAINTS (do not violate — keeps every page coherent):
-    • Surfaces: use the `surface-*` (dark) / `paper-*` (light) tokens only.
-      Never introduce new one-off hex backgrounds.
-    • Ink: use `ink-*` on dark, `text-black`/`ink` on paper. Body copy is
-      never pure white — reserve `#FFFFFF` for headings + the primary CTA.
-    • Accent: exactly ONE accent (`brand`, terracotta). Never a second hue.
+    • Public surfaces inherit semantic shadcn tokens from `.public-surface`.
+      Never introduce one-off component colors.
+    • Cobalt communicates trust. Orange communicates action. Do not swap them.
     • Hairlines: `line` (cool white) on dark, `line-warm` on paper.
     • Motion: durations `--duration-*`, easing `--ease-premium`/`--ease-snap`.
       Always honor `prefers-reduced-motion` (handled globally below).
@@ -68,9 +66,9 @@
   --color-orange-deep: #D94D00;
 
   /* ── Typography ──────────────────────────────────────────────────── */
-  /* next/font Geist on --font-sans; industrial stack without blocking webfonts */
-  --font-display: var(--font-sans), "Arial Narrow", "Helvetica Neue", system-ui, sans-serif;
-  --font-body: var(--font-sans), system-ui, -apple-system, sans-serif;
+  /* next/font variables are declared in the App Router root layout. */
+  --font-display: var(--font-internal), system-ui, sans-serif;
+  --font-body: var(--font-internal), system-ui, -apple-system, sans-serif;
   --font-mono: ui-monospace, "Cascadia Code", "Segoe UI Mono", monospace;
 
   /* ── Radii (machined edges — intentionally square) ───────────────── */
@@ -143,7 +141,7 @@
   p,
   span,
   a {
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -177,16 +175,6 @@
 }
 
 @layer utilities {
-  .noise-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 40;
-    pointer-events: none;
-    opacity: 0.04;
-    mix-blend-mode: overlay;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  }
-
   .perspective-1000 {
     perspective: 1000px;
   }
@@ -455,8 +443,8 @@
 }
 
 @theme inline {
-  --font-heading: "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-internal), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-internal), ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Geist Mono", "Geist Mono Fallback", ui-monospace, monospace;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -483,6 +471,8 @@
   --color-secondary: var(--secondary);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
+  --color-trust-foreground: var(--trust-foreground);
+  --color-trust: var(--trust);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
@@ -499,6 +489,21 @@
 }
 
 :root {
+  /* Layer 1: primitive values. Change these only when the brand changes. */
+  --sky-paper-50: #fbfaf6;
+  --sky-paper-100: #f6f3eb;
+  --sky-paper-200: #e8e2d5;
+  --sky-ink-700: #314457;
+  --sky-ink-800: #26384a;
+  --sky-ink-950: #071321;
+  --sky-blue-600: #0254c3;
+  --sky-blue-700: #0147a6;
+  --sky-orange-500: #ff661c;
+  --sky-orange-600: #f2550a;
+  --sky-red-600: #c7372f;
+  --sky-space-section: clamp(4rem, 8vw, 7rem);
+  --sky-space-gutter: clamp(1.25rem, 4vw, 3rem);
+
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -507,6 +512,8 @@
   --popover-foreground: oklch(0.145 0 0);
   --primary: oklch(0.205 0 0);
   --primary-foreground: oklch(0.985 0 0);
+  --trust: oklch(0.53 0.18 255);
+  --trust-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
@@ -542,6 +549,8 @@
   --popover-foreground: oklch(0.985 0 0);
   --primary: oklch(0.922 0 0);
   --primary-foreground: oklch(0.205 0 0);
+  --trust: oklch(0.65 0.16 252);
+  --trust-foreground: oklch(0.145 0 0);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
@@ -565,4 +574,273 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+}
+
+/*
+  Layer 2: public semantic tokens.
+  The html element remains dark for authenticated/internal surfaces; public
+  compositions opt into this scoped light theme.
+*/
+.public-surface,
+.ledger-surface {
+  color-scheme: light;
+  --font-display: var(--font-ledger-display), "Arial Narrow", sans-serif;
+  --font-body: var(--font-ledger-body), system-ui, -apple-system, sans-serif;
+  --font-heading: var(--font-ledger-display), "Arial Narrow", sans-serif;
+  --font-sans: var(--font-ledger-body), ui-sans-serif, system-ui, sans-serif;
+  --background: var(--sky-paper-100);
+  --foreground: var(--sky-ink-950);
+  --card: var(--sky-paper-50);
+  --card-foreground: var(--sky-ink-950);
+  --popover: var(--sky-paper-50);
+  --popover-foreground: var(--sky-ink-950);
+  --primary: var(--sky-orange-500);
+  --primary-foreground: var(--sky-ink-950);
+  --trust: var(--sky-blue-600);
+  --trust-foreground: var(--sky-paper-50);
+  --secondary: var(--sky-paper-200);
+  --secondary-foreground: var(--sky-ink-950);
+  --muted: color-mix(in srgb, var(--sky-paper-200) 68%, white);
+  --muted-foreground: var(--sky-ink-700);
+  --accent: color-mix(in srgb, var(--sky-blue-600) 9%, var(--sky-paper-50));
+  --accent-foreground: var(--sky-ink-950);
+  --destructive: var(--sky-red-600);
+  --border: rgb(7 19 33 / 20%);
+  --input: rgb(7 19 33 / 27%);
+  --ring: var(--sky-blue-600);
+
+  /* Layer 3: component and composition tokens. */
+  --button-bg: var(--primary);
+  --button-fg: var(--primary-foreground);
+  --input-bg: color-mix(in srgb, var(--sky-paper-50) 72%, transparent);
+  --input-border: var(--input);
+  --card-shadow: 0 18px 50px rgb(7 19 33 / 8%);
+  --public-section-y: var(--sky-space-section);
+  --public-gutter: var(--sky-space-gutter);
+  --public-rule: var(--border);
+  font-family: var(--font-ledger-body), system-ui, -apple-system, sans-serif;
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.public-surface [data-tone="soft"] {
+  --background: var(--sky-paper-50);
+  --card: var(--sky-paper-100);
+}
+
+.public-surface [data-tone="ink"],
+.ledger-surface [data-tone="ink"] {
+  color-scheme: dark;
+  --background: var(--sky-ink-950);
+  --foreground: var(--sky-paper-50);
+  --card: var(--sky-ink-800);
+  --card-foreground: var(--sky-paper-50);
+  --muted: var(--sky-ink-800);
+  --muted-foreground: #c4d0dc;
+  --accent: var(--sky-ink-700);
+  --accent-foreground: var(--sky-paper-50);
+  --secondary: var(--sky-ink-800);
+  --secondary-foreground: var(--sky-paper-50);
+  --border: rgb(246 243 235 / 22%);
+  --input: rgb(246 243 235 / 30%);
+  --ring: var(--sky-orange-500);
+}
+
+.public-surface [data-tone="trust"],
+.ledger-surface [data-tone="trust"] {
+  color-scheme: dark;
+  --background: var(--sky-blue-600);
+  --foreground: var(--sky-paper-50);
+  --card: var(--sky-blue-700);
+  --card-foreground: var(--sky-paper-50);
+  --muted: var(--sky-blue-700);
+  --muted-foreground: #dbe9fa;
+  --accent: var(--sky-blue-700);
+  --accent-foreground: var(--sky-paper-50);
+  --secondary: var(--sky-blue-700);
+  --secondary-foreground: var(--sky-paper-50);
+  --border: rgb(246 243 235 / 28%);
+  --input: rgb(246 243 235 / 38%);
+  --ring: var(--sky-orange-500);
+}
+
+.public-surface [data-tone],
+.ledger-surface [data-tone] {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.public-surface ::selection,
+.ledger-surface ::selection {
+  background: var(--sky-blue-600);
+  color: var(--sky-paper-50);
+}
+
+.public-surface :is(input, select, textarea),
+.ledger-surface :is(input, select, textarea) {
+  caret-color: var(--sky-blue-600);
+}
+
+.public-surface [id],
+.ledger-surface [id] {
+  scroll-margin-top: 8rem;
+}
+
+.public-surface :is(a, button, input, select, textarea):focus-visible,
+.ledger-surface :is(a, button, input, select, textarea):focus-visible {
+  outline-color: var(--ring);
+}
+
+.public-grid,
+.ledger-grid {
+  background-color: var(--background);
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--trust) 10%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--trust) 8%, transparent) 1px, transparent 1px);
+  background-size: clamp(3.5rem, 7vw, 7rem) clamp(3.5rem, 7vw, 7rem);
+}
+
+.public-display,
+.ledger-display {
+  font-family: var(--font-ledger-display), "Arial Narrow", sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.public-surface [data-slot="input"],
+.public-surface [data-slot="textarea"] {
+  background: var(--input-bg);
+}
+
+.ledger-tape {
+  position: absolute;
+  z-index: 3;
+  width: clamp(2.4rem, 3.5vw, 3.8rem);
+  inset-block: -0.75rem;
+  left: 0;
+  translate: -50% 0;
+  background: #0254c3;
+  clip-path: polygon(7% 0, 94% 1%, 100% 3%, 96% 6%, 100% 9%, 95% 12%, 100% 15%, 95% 18%, 100% 21%, 95% 24%, 100% 27%, 96% 30%, 100% 33%, 95% 36%, 100% 39%, 96% 42%, 100% 45%, 95% 48%, 100% 51%, 96% 54%, 100% 57%, 95% 60%, 100% 63%, 96% 66%, 100% 69%, 95% 72%, 100% 75%, 96% 78%, 100% 81%, 95% 84%, 100% 87%, 96% 90%, 100% 93%, 94% 100%, 7% 99%, 0 96%, 5% 92%, 0 88%, 5% 84%, 0 80%, 5% 76%, 0 72%, 5% 68%, 0 64%, 5% 60%, 0 56%, 5% 52%, 0 48%, 5% 44%, 0 40%, 5% 36%, 0 32%, 5% 28%, 0 24%, 5% 20%, 0 16%, 5% 12%, 0 8%, 5% 4%);
+  transform-origin: top;
+  animation: ledger-tape-set 850ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes ledger-tape-set {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+[data-lead-theme="ledger"] {
+  color: #071321;
+}
+
+[data-lead-theme="ledger"] :is(.text-white, .text-gray-300, .text-gray-400, .text-\[\#c9c1b4\]) {
+  color: #26384a !important;
+}
+
+[data-lead-theme="ledger"] :is(input, select, textarea) {
+  border-color: rgb(7 19 33 / 24%) !important;
+  background: rgb(255 255 255 / 42%) !important;
+  color: #071321 !important;
+}
+
+[data-lead-theme="ledger"] :is(input, textarea)::placeholder {
+  color: #53616f !important;
+  opacity: 1;
+}
+
+[data-lead-theme="ledger"][data-lead-panel],
+[data-lead-theme="ledger"] [data-lead-panel] {
+  border-color: rgb(7 19 33 / 18%) !important;
+  background: rgb(255 255 255 / 26%) !important;
+}
+
+[data-lead-theme="ledger"] [data-lead-choice] {
+  min-height: 3.25rem;
+  border-color: rgb(7 19 33 / 24%) !important;
+  background: transparent !important;
+  color: #071321 !important;
+}
+
+[data-lead-theme="ledger"] [data-lead-choice][aria-pressed="true"] {
+  border-color: #0254c3 !important;
+  background: #0254c3 !important;
+  color: #f6f3eb !important;
+}
+
+[data-lead-theme="ledger"] [data-lead-primary] {
+  border-color: #ff661c !important;
+  background: #ff661c !important;
+  color: #071321 !important;
+}
+
+[data-lead-theme="ledger"] [data-lead-secondary] {
+  border-color: rgb(7 19 33 / 28%) !important;
+  background: transparent !important;
+  color: #071321 !important;
+}
+
+[data-lead-theme="ledger"] [data-lead-progress] {
+  background: #0254c3 !important;
+}
+
+@media (max-width: 767px) {
+  .ledger-tape {
+    inset: auto -0.75rem 0;
+    left: -0.75rem;
+    width: auto;
+    height: 2.5rem;
+    translate: 0 50%;
+    clip-path: polygon(0 8%, 4% 0, 8% 6%, 12% 0, 16% 6%, 20% 0, 24% 6%, 28% 0, 32% 6%, 36% 0, 40% 6%, 44% 0, 48% 6%, 52% 0, 56% 6%, 60% 0, 64% 6%, 68% 0, 72% 6%, 76% 0, 80% 6%, 84% 0, 88% 6%, 92% 0, 96% 6%, 100% 0, 99% 92%, 96% 100%, 92% 94%, 88% 100%, 84% 94%, 80% 100%, 76% 94%, 72% 100%, 68% 94%, 64% 100%, 60% 94%, 56% 100%, 52% 94%, 48% 100%, 44% 94%, 40% 100%, 36% 94%, 32% 100%, 28% 94%, 24% 100%, 20% 94%, 16% 100%, 12% 94%, 8% 100%, 4% 94%, 0 100%);
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ledger-tape {
+    animation: none;
+  }
+}
+
+[data-lead-theme="ledger"] :is(input, select, textarea):focus-visible {
+  border-color: #0254c3 !important;
+  outline: 3px solid #0254c3 !important;
+  outline-offset: 2px;
+}
+
+@media print {
+  .conversion-header {
+    position: static !important;
+    box-shadow: none !important;
+  }
+
+  #main-content {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  .mobile-conversion-rail {
+    display: none !important;
+  }
+}
+
+@supports selector(::-webkit-scrollbar) {
+  .ledger-surface ::-webkit-scrollbar {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+
+  .ledger-surface ::-webkit-scrollbar-track {
+    background: #f6f3eb;
+  }
+
+  .ledger-surface ::-webkit-scrollbar-thumb {
+    border: 0.25rem solid #f6f3eb;
+    background: #0254c3;
+  }
 }

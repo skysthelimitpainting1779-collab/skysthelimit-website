@@ -83,7 +83,7 @@ test('service area map is fast, routable, and accessible', () => {
   const sitemapGenerator = read('scripts/generate-sitemap.js');
 
   assert.match(page, /ServiceArea/);
-  assert.match(header, /href="\/service-area"/); // Header in Next.js uses HTML5 href (or Link with href)
+  assert.match(header, /href: '\/service-area'/);
   assert.match(sitemapGenerator, /'\/service-area'/);
   assert.match(map, /role="img"/);
   assert.match(map, /aria-describedby/);

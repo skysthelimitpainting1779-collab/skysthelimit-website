@@ -65,6 +65,7 @@ test('deployment verification consumes Vercel events and runs route smoke only',
   assert.match(verification, /vercel\.deployment\.success/);
   assert.match(verification, /vercel\.deployment\.promoted/);
   assert.match(verification, /deployment_status:/);
+  assert.match(verification, /github\.event\.deployment\.environment\s*==\s*'Production'/);
   assert.match(verification, /github\.event\.client_payload\.url/);
   assert.match(verification, /github\.event\.deployment_status\.(?:target_url|environment_url)/);
   assert.match(verification, /VERCEL_AUTOMATION_BYPASS_SECRET/);

@@ -34,8 +34,8 @@ test('primary navigation leads with residential, commercial, and public sector',
 test('homepage states the approved positioning and avoids forbidden claims', () => {
   const home = read('src/app/HomeClient.tsx');
 
-  assert.match(home, /Residential detail\. Commercial discipline\.[\s\S]*Preps[\s\S]*first\./i);
-  assert.match(home, /registered Minnesota Specialty Contractor \(Painting\)/);
+  assert.match(home, /A finish that lasts starts before the first coat\./i);
+  assert.match(home, /Minnesota registration[\s\S]*IR816596/);
   assert.doesNotMatch(home, /Public-work ambition/i);
   assert.doesNotMatch(home, /Licensed|Bonded|MnDOT-approved|Government-certified|DBE certified|TGB certified|Trusted by government agencies|Awarded public contracts|Workers comp/i);
 });
@@ -130,6 +130,7 @@ test('local SEO and service landing pages are routable and listed in the sitemap
 
 test('M2 compliance and contractor registration statements are correctly set', () => {
   const layout = read('src/app/layout.tsx');
+  const publicFooter = read('src/components/public/PublicFooter.tsx');
   const footerCta = read('src/components/ConversionFooterCta.tsx');
   const refer = read('src/views/Refer.tsx');
   const estimate = read('src/views/Estimate.tsx');
@@ -142,15 +143,16 @@ test('M2 compliance and contractor registration statements are correctly set', (
 
   // 2. Real root layout (App Router)
   assert.match(layout, /IR816596/);
-  assert.match(layout, /176\.041/);
-  assert.match(layout, /Fully Insured/);
+  assert.match(publicFooter, /176\.041/);
+  assert.match(publicFooter, /fully insured/i);
 
   // 3. ConversionFooterCta.tsx
-  assert.ok(footerCta.includes('MN ID: IR816596'));
+  assert.match(footerCta, /IR816596/);
 
   // 4. Refer.tsx
-  assert.match(refer, /Sky’s the Limit Painting LLC is an owner-operated registered MN specialty contractor \(Registration ID: IR816596\) based in Inver Grove Heights\. All referrals are subject to verification\. Owner is exempt from standard workers’ comp rules under MN Statute 176\.041\./);
+  assert.match(refer, /registered Minnesota Specialty Contractor, Registration ID IR816596/);
+  assert.match(refer, /Minnesota Statute 176\.041/);
 
   // 5. Estimate.tsx
-  assert.match(estimate, /reg: ir816596 \| painting/);
+  assert.match(estimate, /MN registration IR816596/);
 });
