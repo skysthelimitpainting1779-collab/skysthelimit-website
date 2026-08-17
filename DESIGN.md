@@ -15,17 +15,17 @@ colors:
   internal-orange: "#FF5A00"
 typography:
   display:
-    fontFamily: "League Gothic, Arial Narrow, sans-serif"
+    fontFamily: "Barlow Condensed, Arial Narrow, sans-serif"
     fontSize: "clamp(3.2rem, 5vw, 5.5rem)"
-    fontWeight: 400
-    lineHeight: 0.88
-    letterSpacing: "-0.025em"
+    fontWeight: 700
+    lineHeight: 0.92
+    letterSpacing: "-0.02em"
   display-hero:
-    fontFamily: "League Gothic, Arial Narrow, sans-serif"
+    fontFamily: "Barlow Condensed, Arial Narrow, sans-serif"
     fontSize: "clamp(3.5rem, 6.6vw, 6rem)"
-    fontWeight: 400
-    lineHeight: 0.84
-    letterSpacing: "-0.025em"
+    fontWeight: 700
+    lineHeight: 0.9
+    letterSpacing: "-0.02em"
   body:
     fontFamily: "Source Sans 3, system-ui, sans-serif"
     fontSize: "1rem"
@@ -90,9 +90,9 @@ components:
 
 The public marketing system is a working contractor's record: warm paper, dark ink, measured rules, jobsite photographs, and one cobalt tape seam holding the composition together. It makes preparation, written scope, and Anthony Briseno's direct accountability visible before it asks for contact details. The mode is **Persuade**, but the proof language remains plainspoken and evidence-bound.
 
-This system governs the shipped homepage and public marketing surfaces intentionally migrated into it. It does **not** replace the existing dark industrial language of `/portal`, `/admin`, CMS, maps, or other internal/operational product surfaces. Those remain near-black, compact, predictable, and shadcn-aligned; use this light ledger world there only after a separate product-surface decision.
+This system governs every public marketing and conversion route: homepage, market pages, service and area pages, about, projects, capabilities, service area, contact, estimator, referral, and review. It does **not** replace the existing dark industrial language of `/portal`, `/admin`, CMS, or other internal/operational product surfaces. Those remain near-black, compact, predictable, and shadcn-aligned; use this light ledger world there only after a separate product-surface decision.
 
-Implementation authority, in order: `PRODUCT.md`; approved comp `.impeccable/mocks/owners-finish-ledger-a.png`; passed review captures in `.impeccable/review/`; then the current homepage, header, form, preparation stage, layout, and global CSS. The screenshots are the rendered expression; the frontmatter above is the normative reusable token layer.
+Implementation authority, in order: `PRODUCT.md`; the normative token frontmatter in this document; then the current homepage, header, form, preparation stage, layout, and global CSS. Visual review artifacts are local working evidence, not required repository inputs.
 
 **Key characteristics:**
 
@@ -124,11 +124,11 @@ Portal/admin/internal product surfaces retain **Internal Canvas**, **Internal Su
 
 ## Typography
 
-**Display Font:** League Gothic with Arial Narrow fallback.
+**Display Font:** Barlow Condensed with Arial Narrow fallback.
 **Body Font:** Source Sans 3 with system sans-serif fallback.
 **Data Font:** System monospace for stage IDs and compact record metadata only.
 
-League Gothic gives public headings the compressed authority of a job ticket; Source Sans 3 keeps scopes, form labels, and homeowner guidance readable. Both are self-hosted through `next/font` with swap behavior.
+Barlow Condensed gives public headings the authority of a job ticket without the extreme narrowness that made longer headings feel distorted; Source Sans 3 keeps scopes, form labels, and homeowner guidance readable. Both are self-hosted through `next/font` with swap behavior.
 
 ### Hierarchy
 
@@ -138,7 +138,7 @@ League Gothic gives public headings the compressed authority of a job ticket; So
 - **Labels:** Bold, uppercase, and tracked for record captions, utility bars, and controls. Do not use label styling for paragraphs.
 - **Mono:** Reserve for stage numbers, progress, or machine-like record details; customer-facing explanations remain Source Sans 3.
 
-**The Compressed-Headline Rule.** League Gothic carries message hierarchy, not UI chrome everywhere. Navigation, forms, and explanatory copy stay in Source Sans 3.
+**The Compressed-Headline Rule.** Barlow Condensed carries message hierarchy, not UI chrome everywhere. Navigation, forms, and explanatory copy stay in Source Sans 3.
 
 Internal product surfaces may continue using the established dense sans/mono hierarchy. The ledger display face is not a dashboard default.
 
@@ -150,13 +150,13 @@ Public content is contained at approximately 92–94rem. Major sections use rule
 
 The five-stage ledger remains a single horizontal record on wide layouts and may horizontally scroll when preserving its sequence is clearer than wrapping. Preparation, accountability, FAQ, and conversion sections stack at narrow widths. Do not force desktop asymmetry into unreadably narrow columns.
 
-The fixed header is 112px tall: 32px utility row plus 80px primary row. Mobile reserves bottom space for a fixed three-column rail: Call and Text are equal smaller actions; Book a Walkthrough receives the largest orange column. Controls must remain at least 44px high; principal actions are 48–56px.
+The fixed header is 112px tall: 32px utility row plus 80px primary row. Mobile reserves bottom space for a fixed three-column rail: Call and Text are equal smaller actions; Get a Free Price Range receives the largest orange column. Controls must remain at least 44px high; principal actions are 48–56px.
 
 **The Shared-Rule Rule.** Adjacent blocks meet on one rule. Avoid card gaps, detached shadows, or rounded tiles when a ledger row or ruled split communicates the relationship better.
 
 ## Elevation & Depth
 
-The ledger system is flat by default. Hierarchy comes from paper tone, rules, grid, photography, and dark/light reversal—not floating cards. The fixed header may gain one soft navy-tinted shadow after scroll, and the open mobile navigation may use a restrained panel shadow. No other routine marketing element needs elevation.
+The ledger system is flat by default. Hierarchy comes from paper tone, rules, grid, photography, and dark/light reversal, not floating cards. The fixed header uses one restrained navy-tinted shadow and the open mobile navigation may use the same restrained panel depth. No other routine marketing element needs elevation.
 
 Photography supplies physical depth. Keep overlays functional and localized to caption legibility; do not wash the entire public system in gradients, glass, or ambient glow.
 
@@ -172,6 +172,26 @@ The approved illustrated badge at `public/brand/SkyLLP_BrandLogo.svg` is the can
 
 ## Components
 
+### shadcn architecture
+
+The public system uses three token layers in `src/index.css`:
+
+1. `--sky-*` primitives hold raw brand color and spacing values.
+2. Scoped shadcn semantic variables such as `--background`, `--primary`, `--trust`, `--border`, and `--ring` assign purpose within `.public-surface` and its paper, soft, ink, and trust tones.
+3. Component and composition variables such as `--button-bg`, `--input-bg`, `--card-shadow`, `--public-section-y`, and `--public-gutter` govern reusable UI behavior.
+
+Local primitives live in `src/components/ui/`. Public compositions live in `src/components/public/`. Route components compose these modules and pass layout-only `className` values; color, typography, state, and component appearance belong in primitive variants or semantic tokens.
+
+Forms use shadcn `Field`, `FieldGroup`, `Input`, `Textarea`, `ToggleGroup`, `Slider`, and `Progress`. Option sets of two through seven items use `ToggleGroup`. Labels remain visible and programmatically associated. Invalid state requires both `data-invalid` on `Field` and `aria-invalid` on the control.
+
+The project contract is Tailwind v4, Base UI, Nova style, lucide icons, CSS variables, and radius none. Base UI controlled single-value ToggleGroups wrap values in arrays; Base UI single-thumb Sliders accept scalar values.
+
+### Documentation contract
+
+- Context7 shadcn library: `/shadcn-ui/ui`. Contract used: Tailwind v4 `@theme inline` mappings, scoped semantic CSS variables, local primitive composition, CLI dry-run/diff safety, Base UI ToggleGroup arrays, scalar Slider values, and Field validation semantics.
+- Context7 Next.js library: `/vercel/next.js/v16.2.9`. Contract used: define each Google font once with `variable` and `display: 'swap'`, attach both variables to the root html element, reference those variables through global design tokens, and use the Next 16 `preload` image contract for genuine above-the-fold images instead of deprecated `priority`.
+- shadcn CLI project inspection: Next.js 16.3.1, Tailwind v4, `base-nova`, Base UI, lucide, and radius none. Added components were previewed with `--dry-run`; no existing component was overwritten.
+
 ### Conversion header and brand
 
 - Use the paper header with a thin ink rule, uppercase utility facts, the canonical illustrated badge, and a compact digital wordmark.
@@ -183,7 +203,7 @@ The approved illustrated badge at `public/brand/SkyLLP_BrandLogo.svg` is the can
 - Primary booking actions use Ledger Orange with Ledger Ink, square corners, bold type, and a 48–56px target.
 - Secondary direct-call actions use paper/transparent fill, a reduced-opacity ink border, and cobalt on hover/focus.
 - Cobalt-filled buttons indicate selected process/form state, not the primary conversion action.
-- Use direct, specific labels: “Book a free walkthrough,” “Call Anthony,” “Text,” or “Start the written scope.”
+- Use one label per intent: “Get a Free Price Range” for the estimator, “Call Anthony” for direct contact, and “Start the Written Scope” for a detailed project form.
 
 ### Hero and ledger records
 
@@ -211,8 +231,8 @@ The approved illustrated badge at `public/brand/SkyLLP_BrandLogo.svg` is the can
 
 ### Mobile conversion rail
 
-- Fix it to the viewport bottom below 768px with **Call / Text / Book a Walkthrough** in that order.
-- Use an 0.8 / 0.8 / 1.4 column ratio, paper for Call/Text, and orange for Book. Reserve page padding so content and controls are never obscured.
+- Fix it to the viewport bottom below 768px with **Call / Text / Get a Free Price Range** in that order.
+- Use a 0.75 / 0.75 / 1.5 column ratio, paper for Call/Text, and orange for the estimator. Reserve page padding so content and controls are never obscured.
 
 ### Contact, badge, and proof truth
 

@@ -3,6 +3,7 @@ import { ArrowRight, ArrowUpRight, Check, ClipboardCheck, ShieldCheck } from 'lu
 import LeadForm from '../components/LeadForm';
 import PrepProtocolStage from '../components/PrepProtocolStage';
 import ResponsiveImage from '../components/ResponsiveImage';
+import { PublicCtaLink, PublicPage } from '../components/public/PublicSystem';
 import { faqSchema } from '../lib/seo';
 
 const stageLedger = [
@@ -37,7 +38,7 @@ const faqItems = [
 
 export default function HomeClient() {
   return (
-    <article className="ledger-surface overflow-hidden">
+    <PublicPage className="ledger-surface">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema([...faqItems])) }} />
 
       <section aria-labelledby="home-title" className="border-b border-[#071321]/20">
@@ -54,22 +55,24 @@ export default function HomeClient() {
 
             <div className="mt-10">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                <a
+                <PublicCtaLink
                   href="#walkthrough"
-                  data-track="hero_cta_click"
-                  data-track-payload='{"source":"homepage_hero","label":"Book a free walkthrough"}'
-                  className="inline-flex min-h-14 items-center justify-center gap-4 bg-[#FF661C] px-6 text-sm font-black text-[#071321] transition-colors hover:bg-[#F2550A]"
+                  size="marketing-lg"
+                  track="hero_cta_click"
+                  trackPayload={{ source: 'homepage_hero', label: 'Get a Free Price Range' }}
                 >
-                  Book a free walkthrough <ArrowRight aria-hidden="true" size={18} />
-                </a>
-                <a
+                  Start the Written Scope
+                </PublicCtaLink>
+                <PublicCtaLink
                   href="tel:+16514104196"
-                  data-track="call_click"
-                  data-track-payload='{"source":"homepage_hero"}'
-                  className="inline-flex min-h-14 items-center justify-center border border-[#071321]/35 px-6 text-sm font-black text-[#071321] transition-colors hover:border-[#0254C3] hover:text-[#0254C3]"
+                  variant="outline"
+                  size="marketing-lg"
+                  icon={null}
+                  track="call_click"
+                  trackPayload={{ source: 'homepage_hero' }}
                 >
                   Call Anthony
-                </a>
+                </PublicCtaLink>
               </div>
               <ul aria-label="Service commitments" className="mt-7 flex flex-wrap gap-x-6 gap-y-3 text-sm font-bold text-[#314457]">
                 {['Owner-led', 'Written scope', 'Twin Cities metro'].map((item) => (
@@ -239,6 +242,6 @@ export default function HomeClient() {
           </div>
         </div>
       </section>
-    </article>
+    </PublicPage>
   );
 }

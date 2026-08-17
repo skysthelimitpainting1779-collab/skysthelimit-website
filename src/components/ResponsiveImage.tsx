@@ -26,10 +26,10 @@ export default function ResponsiveImage({
       alt={alt}
       width={width}
       height={height}
-      priority={priority}
+      preload={priority}
       loading={priority ? undefined : loading}
       decoding="async"
-      fetchPriority={priority ? 'high' : fetchPriority}
+      fetchPriority={priority ? undefined : fetchPriority}
       unoptimized={unoptimized}
     />
   );

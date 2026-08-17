@@ -4,7 +4,7 @@ hooks = true
 
 [mcp_servers.graphify_local]
 command = "uvx"
-args = ["--refresh", "--from", "graphifyy", "graphify-mcp", "--graph", "C:/Users/Johnny Cage/DEV/skysthelimit-collab/graphify-out/graph.json"]
+args = ["--refresh", "--from", "graphifyy", "graphify-mcp", "--graph", "graphify-out/graph.json"]
 
 [mcp_servers.graphify]
 url = "https://api.graphify.com/mcp"

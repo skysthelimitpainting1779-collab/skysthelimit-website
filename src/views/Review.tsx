@@ -1,17 +1,27 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Star, MessageSquare, ShieldAlert, ArrowRight, CheckCircle2 } from 'lucide-react';
-import PageTransition from '../components/PageTransition';
-import ResponsiveImage from '../components/ResponsiveImage';
-import HeroOverlays from '../components/HeroOverlays';
-import { trackEvent } from '../lib/analytics';
+import { type FormEvent, useState } from 'react';
+import { CheckCircle2, MessageSquare, ShieldAlert, Star } from 'lucide-react';
 
-import { ENV } from '../lib/env';
+import {
+  PublicContainer,
+  PublicPage,
+  PublicSection,
+  PublicSectionHeading,
+  PublicSplitCard,
+} from '@/components/public/PublicSystem';
+import { Button } from '@/components/ui/button';
+import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { ENV } from '@/lib/env';
+import { trackEvent } from '@/lib/analytics';
+
+const googleReviewUrl = 'https://search.google.com/local/writereview?placeid=ChIJ8d-Nq98d9kgR50-mR-K5k84';
 
 export default function ReviewPage() {
   const [rating, setRating] = useState<number | null>(null);
-  const [hoverRating, setHoverRating] = useState<number | null>(null);
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
   const [privateFeedback, setPrivateFeedback] = useState('');
   const [clientName, setClientName] = useState('');
@@ -19,16 +29,14 @@ export default function ReviewPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [privateError, setPrivateError] = useState('');
 
-  const googleReviewUrl = "https://search.google.com/local/writereview?placeid=ChIJ8d-Nq98d9kgR50-mR-K5k84";
-
   const handleRatingSelect = (selectedRating: number) => {
     setRating(selectedRating);
     setPrivateError('');
     trackEvent('review_rating_select', { rating: selectedRating });
   };
 
-  const handlePrivateSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handlePrivateSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     if (!privateFeedback.trim()) {
       setPrivateError('Please add a few details so we can understand what needs attention.');
       return;
@@ -42,25 +50,19 @@ export default function ReviewPage() {
       const formId = ENV.FORMSPREE_FORM_ID || 'xanybvkd';
       const response = await fetch(`https://formspree.io/f/${formId}`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          subject: `Negative Client Feedback Alert (${rating} Stars)`,
+          subject: `Client Feedback Alert (${rating} Stars)`,
           name: clientName,
           phone: clientPhone,
-          rating: rating,
+          rating,
           feedback: privateFeedback,
         }),
       });
-
-      if (response.ok) {
-        setFeedbackSubmitted(true);
-      } else {
-        setPrivateError('The private feedback form did not send. Please call or text 651-410-4196 so we can handle this directly.');
-      }
-    } catch (err) {
-      console.error('Error submitting feedback:', err);
+      if (response.ok) setFeedbackSubmitted(true);
+      else setPrivateError('The private feedback form did not send. Please call or text 651-410-4196 so we can handle this directly.');
+    } catch (error) {
+      console.error('Error submitting feedback:', error);
       setPrivateError('The private feedback form did not respond. Please call or text 651-410-4196 so we can handle this directly.');
     } finally {
       setIsSubmitting(false);
@@ -68,188 +70,108 @@ export default function ReviewPage() {
   };
 
   return (
-    <PageTransition>
-      <section className="relative overflow-hidden min-h-[calc(100svh-116px)] bg-[#070706] py-16 px-4 text-white sm:px-6 lg:px-8">
-        <HeroOverlays
-          imageSrc="/brand/generated/sky-service-proof.webp"
-          imageAlt="Premium painting service proof and trade detailing"
-          imageClassName="absolute inset-0 h-full w-full object-cover opacity-20"
-          gradients={[
-            'bg-gradient-to-r from-[#070706] via-[#070706]/94 to-transparent',
-            'bg-gradient-to-t from-[#070706] via-transparent to-transparent',
-          ]}
-          blueprintOpacity="opacity-18"
-        />
-        
-        <div className="relative z-10 mx-auto max-w-2xl border border-[#d8c7aa]/16 bg-[#11100d]/90 p-8 md:p-12 overflow-hidden shadow-xl transition duration-500 hover:border-white/45">
-          <div className="measurement-rules absolute inset-0 opacity-12 pointer-events-none"></div>
-          
-          {/* Header */}
-          <div className="text-center">
-            <span className="inline-block border border-white/30 bg-[#070706]/70 px-4 py-2 text-xs font-semibold text-white">
-              Client Care & Quality
-            </span>
-            <h1 className="mt-6 font-display text-4xl font-black leading-none text-white sm:text-5xl">
-              How did we do?
-            </h1>
-            <p className="mt-4 text-sm leading-relaxed text-[#c9c1b4]">
-              Anthony and the Sky's the Limit team hold themselves to an elite, industrial-luxury standard. Your feedback helps us maintain our craftsmanship and protect our commitment to you.
-            </p>
-          </div>
+    <PublicPage>
+      <PublicSection tone="soft" ruled>
+        <PublicContainer className="max-w-3xl">
+          <PublicSectionHeading
+            eyebrow="Client care"
+            title="How did we do?"
+            description="Rate the completed experience. Strong feedback can be shared publicly, while concerns go directly to Anthony for personal follow-up."
+            align="center"
+          />
 
-          <hr className="my-8 border-[#d8c7aa]/15" />
-
-          {/* Step 1: Star Rating Selection */}
-          {rating === null ? (
-            <div className="text-center">
-              <p className="text-sm font-semibold text-white mb-6">
-                Tap to rate your experience
-              </p>
-              <div className="flex justify-center gap-2">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <button
-                    key={star}
-                    type="button"
-                    className="p-1 transition-transform hover:scale-110 focus:outline-none"
-                    onClick={() => handleRatingSelect(star)}
-                    onMouseEnter={() => setHoverRating(star)}
-                    onMouseLeave={() => setHoverRating(null)}
+          <div className="mt-10">
+            <PublicSplitCard title="Rate the experience" description="Choose one to five stars.">
+              {rating === null ? (
+                <Field>
+                  <FieldLabel id="rating-label">Project rating</FieldLabel>
+                  <ToggleGroup
+                    aria-labelledby="rating-label"
+                    value={[]}
+                    onValueChange={(values) => {
+                      const selected = Number(values[0]);
+                      if (selected) handleRatingSelect(selected);
+                    }}
+                    spacing={2}
+                    className="w-full justify-center"
                   >
-                    <Star
-                      size={44}
-                      className={`transition-colors stroke-[1.5] ${
-                        star <= (hoverRating ?? 0) || star <= (rating ?? 0)
-                          ? 'fill-[white] text-white'
-                          : 'text-[#d8c7aa]/30'
-                      }`}
-                    />
-                  </button>
-                ))}
-              </div>
-            </div>
-          ) : (
-            /* Step 2: Funnel Flow - rating < 4 */
-            <div>
-              {/* Private feedback branch handles rating < 4 below. */}
-              {rating >= 4 ? (
-                /* Happy Client: Redirect to Google */
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <ToggleGroupItem key={star} value={String(star)} variant="outline" size="lg" aria-label={`${star} star${star === 1 ? '' : 's'}`}>
+                        <Star aria-hidden="true" className="group-data-[pressed]:fill-current" />
+                        <span className="sr-only">{star} star rating</span>
+                      </ToggleGroupItem>
+                    ))}
+                  </ToggleGroup>
+                </Field>
+              ) : rating >= 4 ? (
                 <div className="text-center">
-                  <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-white/10 text-white mb-6">
-                    <CheckCircle2 size={32} />
-                  </div>
-                  <h3 className="text-2xl font-black text-white">We love to hear that!</h3>
-                  <p className="mt-4 text-sm leading-relaxed text-[#c9c1b4]">
-                    Since you had a strong experience, would you take 15 seconds to support an owner-operated local business by leaving a brief review on Google? A short note helps the next homeowner feel confident before they reach out.
-                  </p>
-                  
-                  <a
-                    href={googleReviewUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <CheckCircle2 aria-hidden="true" className="mx-auto text-trust" />
+                  <h2 className="public-display mt-5 text-4xl">Thank you for the strong rating.</h2>
+                  <p className="mt-4 leading-7 text-muted-foreground">A short Google review helps the next homeowner verify a local owner-operated contractor before reaching out.</p>
+                  <Button
+                    render={<a href={googleReviewUrl} target="_blank" rel="noopener noreferrer" />}
+                    nativeButton={false}
+                    size="marketing-lg"
+                    className="mt-8 w-full"
                     onClick={() => trackEvent('google_review_redirect_click', { rating })}
-                    className="mt-8 inline-flex w-full items-center justify-center gap-3 bg-white px-7 py-4 text-sm font-semibold text-[#15110a] transition-colors hover:bg-white"
                   >
-                    Leave Us a Google Review <ArrowRight size={18} />
-                  </a>
-
-                  <button
-                    type="button"
-                    onClick={() => setRating(null)}
-                    className="mt-4 text-xs font-semibold text-[#b9b2a6] hover:text-white underline"
-                  >
-                    Change rating
-                  </button>
+                    Leave a Google Review
+                  </Button>
+                  <Button type="button" variant="link" onClick={() => setRating(null)} className="mt-3">Change rating</Button>
+                </div>
+              ) : feedbackSubmitted ? (
+                <div className="text-center">
+                  <CheckCircle2 aria-hidden="true" className="mx-auto text-trust" />
+                  <h2 className="public-display mt-5 text-4xl">Feedback received.</h2>
+                  <p className="mt-4 leading-7 text-muted-foreground">Thank you, {clientName}. Anthony will use the contact details you provided to follow up directly.</p>
                 </div>
               ) : (
-                /* Unhappy Client: Intercept Privately */
-                <div>
-                  {!feedbackSubmitted ? (
-                    <form onSubmit={handlePrivateSubmit} className="space-y-6">
-                      <div className="flex items-start gap-4 border-l border-white/35 bg-[#070706] p-5 mb-6">
-                        <ShieldAlert className="text-white shrink-0 mt-0.5" size={24} />
-                        <div>
-                          <h4 className="text-base font-black text-white">We want to make it right.</h4>
-                          <p className="mt-2 text-xs leading-relaxed text-[#b9b2a6]">
-                            Anthony personally reviews all feedback. Please share your phone and details below so we can contact you directly to resolve any concerns.
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="grid gap-4 sm:grid-cols-2">
-                        <div>
-                          <label className="block text-xs font-semibold text-[#c9c1b4] mb-2">
-                            Your Name
-                          </label>
-                          <input
-                            type="text"
-                            required
-                            placeholder="John Doe"
-                            value={clientName}
-                            onChange={(e) => setClientName(e.target.value)}
-                            className="w-full border border-[#d8c7aa]/20 bg-[#070706] p-4 text-sm text-white focus-visible:ring-2 focus-visible:ring-[white] focus:border-white focus:outline-none"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-xs font-semibold text-[#c9c1b4] mb-2">
-                            Phone Number
-                          </label>
-                          <input
-                            type="tel"
-                            required
-                            placeholder="651-555-0199"
-                            value={clientPhone}
-                            onChange={(e) => setClientPhone(e.target.value)}
-                            className="w-full border border-[#d8c7aa]/20 bg-[#070706] p-4 text-sm text-white focus-visible:ring-2 focus-visible:ring-[white] focus:border-white focus:outline-none"
-                          />
-                        </div>
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-semibold text-[#c9c1b4] mb-2">
-                          What could we have done better?
-                        </label>
-                        <textarea
-                          required
-                          rows={4}
-                          value={privateFeedback}
-                          onChange={(e) => setPrivateFeedback(e.target.value)}
-                          placeholder="Please let us know where our craftsmanship or service fell short..."
-                          className="w-full border border-[#d8c7aa]/20 bg-[#070706] p-4 text-sm text-white focus-visible:ring-2 focus-visible:ring-[white] focus:border-white focus:outline-none resize-none"
-                        ></textarea>
-                      </div>
-
-                      <button
-                        type="submit"
-                        disabled={isSubmitting}
-                        className="w-full inline-flex items-center justify-center gap-2 bg-white px-7 py-4 text-sm font-semibold text-[#15110a] transition-colors hover:bg-white disabled:opacity-55"
-                      >
-                        {isSubmitting ? 'Sending...' : 'Submit Feedback'} <MessageSquare size={18} />
-                      </button>
-                      {privateError && (
-                        <p className="border-l border-white/45 bg-[#070706] p-4 text-xs font-semibold leading-relaxed text-[#f2d6a8]" role="alert">
-                          {privateError}
-                        </p>
-                      )}
-                    </form>
-                  ) : (
-                    /* Feedback Submitted Successfully */
-                    <div className="text-center py-6">
-                      <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-white/10 text-white mb-6">
-                        <CheckCircle2 size={32} />
-                      </div>
-                      <h3 className="text-2xl font-black text-white">Feedback Received</h3>
-                      <p className="mt-4 text-sm leading-relaxed text-[#c9c1b4]">
-                        Thank you for your honesty, {clientName}. Anthony has been notified privately and will call you directly at {clientPhone} to address the details and make this right.
-                      </p>
+                <form onSubmit={handlePrivateSubmit}>
+                  <div className="mb-6 flex items-start gap-4 border-l-[3px] border-l-trust bg-muted p-5">
+                    <ShieldAlert aria-hidden="true" className="mt-0.5 shrink-0 text-trust" />
+                    <div>
+                      <h2 className="font-bold text-foreground">We want to understand what needs attention.</h2>
+                      <p className="mt-2 text-sm leading-6 text-muted-foreground">Anthony personally reviews this private feedback and follows up directly.</p>
                     </div>
-                  )}
-                </div>
+                  </div>
+                  <FieldGroup>
+                    <div className="grid gap-5 sm:grid-cols-2">
+                      <Field>
+                        <FieldLabel htmlFor="review-name">Your name</FieldLabel>
+                        <Input id="review-name" required value={clientName} onChange={(event) => setClientName(event.target.value)} autoComplete="name" />
+                      </Field>
+                      <Field>
+                        <FieldLabel htmlFor="review-phone">Phone number</FieldLabel>
+                        <Input id="review-phone" type="tel" required value={clientPhone} onChange={(event) => setClientPhone(event.target.value)} autoComplete="tel" />
+                      </Field>
+                    </div>
+                    <Field data-invalid={Boolean(privateError)}>
+                      <FieldLabel htmlFor="review-feedback">What could we have done better?</FieldLabel>
+                      <Textarea
+                        id="review-feedback"
+                        required
+                        rows={5}
+                        value={privateFeedback}
+                        onChange={(event) => setPrivateFeedback(event.target.value)}
+                        aria-invalid={Boolean(privateError)}
+                        aria-describedby={privateError ? 'review-feedback-error' : undefined}
+                      />
+                      <FieldDescription>Include the surface, room, or service detail that needs attention.</FieldDescription>
+                      <FieldError id="review-feedback-error">{privateError}</FieldError>
+                    </Field>
+                    <Field>
+                      <Button type="submit" size="marketing-lg" disabled={isSubmitting} aria-busy={isSubmitting}>
+                        <MessageSquare data-icon="inline-start" />
+                        {isSubmitting ? 'Sending Feedback' : 'Send Private Feedback'}
+                      </Button>
+                    </Field>
+                  </FieldGroup>
+                </form>
               )}
-            </div>
-          )}
-
-        </div>
-      </section>
-    </PageTransition>
+            </PublicSplitCard>
+          </div>
+        </PublicContainer>
+      </PublicSection>
+    </PublicPage>
   );
 }

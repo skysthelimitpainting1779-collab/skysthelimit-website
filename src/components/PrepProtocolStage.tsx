@@ -67,16 +67,16 @@ export default function PrepProtocolStage() {
                     aria-pressed={selected}
                     className={`grid min-h-20 grid-cols-[2.5rem_1fr_auto] items-center gap-3 border-b border-[#071321]/20 px-6 py-4 text-left transition-colors last:border-b-0 sm:px-8 ${
                       selected
-                        ? 'bg-[#0254C3] text-[#F6F3EB]'
+                        ? 'bg-white text-[#071321] shadow-[inset_4px_0_0_#0254C3]'
                         : 'bg-[#F6F3EB] text-[#071321] hover:bg-white'
                     }`}
                   >
-                    <span className={`font-mono text-xs font-bold tracking-[0.16em] ${selected ? 'text-[#F6F3EB]' : 'text-[#0254C3]'}`}>
+                    <span className="font-mono text-xs font-bold tracking-[0.16em] text-[#0254C3]">
                       {stage.id}
                     </span>
                     <span>
                       <span className="block text-lg font-black uppercase tracking-[-0.02em]">{stage.title}</span>
-                      <span className={`mt-1 block text-xs font-bold uppercase tracking-[0.08em] ${selected ? 'text-[#F6F3EB]/75' : 'text-[#53616F]'}`}>
+                      <span className={`mt-1 block text-xs font-bold uppercase tracking-[0.08em] ${selected ? 'text-[#334353]' : 'text-[#53616F]'}`}>
                         {stage.label}
                       </span>
                     </span>
@@ -115,7 +115,7 @@ export default function PrepProtocolStage() {
             </div>
             <div className="absolute inset-x-0 bottom-0 grid border-t border-white/30 bg-[#071321]/95 text-[#F6F3EB] sm:grid-cols-[1fr_auto]">
               <div className="p-6 sm:p-8">
-                <p className="text-xs font-black uppercase tracking-[0.08em] text-[#FF7A35]">{active.label}</p>
+                <p className="text-xs font-black uppercase tracking-[0.08em] text-brand">{active.label}</p>
                 <h3 className="ledger-display mt-2 text-5xl uppercase leading-none">{active.title}</h3>
                 <p className="mt-4 max-w-xl text-sm leading-7 text-[#F6F3EB]/78">{active.detail}</p>
               </div>

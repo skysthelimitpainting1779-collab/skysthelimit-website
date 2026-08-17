@@ -8,7 +8,7 @@ test('homepage hero keeps the Owner\'s Finish Ledger positioning and direct conv
   const home = read('src/app/HomeClient.tsx');
 
   assert.match(home, /A finish that lasts starts before the first coat\./i);
-  assert.match(home, /Book a free walkthrough/i);
+  assert.match(home, /Start the Written Scope/i);
   assert.match(home, /href="tel:\+16514104196"/);
   assert.match(home, /href="#walkthrough"/);
   assert.match(home, /homepage_owner_finish_ledger/);
@@ -34,16 +34,70 @@ test('prep interaction favors real work imagery and explicit touch targets', () 
   assert.match(prep, /aria-pressed=\{selected\}/);
   assert.match(prep, /role="group"/);
   assert.match(prep, /Preparation record \/ \{active\.id\}/);
+  assert.match(prep, /shadow-\[inset_4px_0_0_#0254C3\]/);
+  assert.match(prep, /text-brand/);
   assert.doesNotMatch(prep, /grayscale/);
 });
 
-test('shared conversion surfaces avoid duplicate homepage asks and keep mobile navigation accessible', () => {
+test('shared conversion surfaces avoid duplicate homepage asks and keep mobile navigation measurable', () => {
   const footer = read('src/components/ConversionFooterCta.tsx');
   const header = read('src/components/ConversionHeader.tsx');
 
   assert.match(footer, /if \(pathname === '\/'\) return null/);
-  assert.match(header, /aria-expanded=\{mobileMenuOpen\}/);
-  assert.match(header, /aria-controls="mobile-navigation"/);
+  assert.match(footer, /Get a Free Price Range/);
+  assert.match(footer, /PublicFeatureGrid/);
+  assert.match(header, /open=\{mobileMenuOpen\}/);
+  assert.match(header, /onOpenChange=\{setMobileMenuOpen\}/);
+  assert.match(header, /aria-label="Open navigation menu"/);
   assert.match(header, /aria-label="Mobile navigation"/);
-  assert.match(header, /Book a free walkthrough/);
+  assert.match(header, /source: 'mobile_header'/);
+  assert.match(header, /print:static/);
+  assert.match(header, /Get a Free Price Range/);
+});
+
+test('ledger success state, print behavior, and tape motion retain their contracts', () => {
+  const css = read('src/index.css');
+  const layout = read('src/app/layout.tsx');
+  const rail = read('src/components/public/MobileConversionRail.tsx');
+
+  assert.match(css, /\[data-lead-theme="ledger"\]\[data-lead-panel\]/);
+  assert.match(css, /@keyframes ledger-tape-set[\s\S]*transform: scaleY\(0\)[\s\S]*transform: scaleY\(1\)/);
+  assert.match(css, /\.mobile-conversion-rail[\s\S]*display: none !important/);
+  assert.doesNotMatch(css, /\.noise-overlay/);
+  assert.match(layout, /MobileConversionRail/);
+  assert.match(rail, /mobile-conversion-rail/);
+  assert.match(rail, /Get a Free Price Range/);
+  assert.doesNotMatch(layout, /directionContract|dangerouslySetInnerHTML=\{\{ __html: `<!--/);
+});
+
+test('public routes compose the modular shadcn design system', () => {
+  const system = read('src/components/public/PublicSystem.tsx');
+  const estimate = read('src/views/Estimate.tsx');
+  const leadForm = read('src/components/LeadForm.tsx');
+  const css = read('src/index.css');
+
+  assert.match(system, /from '@\/components\/ui\/button'/);
+  assert.match(system, /from '@\/components\/ui\/card'/);
+  assert.match(system, /PublicHero/);
+  assert.match(system, /PublicSection/);
+  assert.match(estimate, /<ToggleGroup/);
+  assert.match(estimate, /<Progress/);
+  assert.match(estimate, /<FieldLabel htmlFor="estimate-name"/);
+  assert.match(leadForm, /<FieldLabel htmlFor="name-input"/);
+  assert.match(css, /Layer 1: primitive values/);
+  assert.match(css, /Layer 2: public semantic tokens/);
+  assert.match(css, /Layer 3: component and composition tokens/);
+});
+
+test('release documentation and local Graphify configuration remain portable', () => {
+  const agentConfig = read('.agents/mcp_config.json');
+  const codexConfig = read('.codex/config.toml');
+  const design = read('DESIGN.md');
+  const agents = read('AGENTS.md');
+
+  assert.match(agentConfig, /graphify-out\/graph\.json/);
+  assert.match(codexConfig, /graphify-out\/graph\.json/);
+  assert.doesNotMatch(`${agentConfig}\n${codexConfig}`, /C:\/Users\//i);
+  assert.doesNotMatch(design, /\.impeccable\//);
+  assert.doesNotMatch(agents, /skills:validate|repeatable-workflow-capture/);
 });
