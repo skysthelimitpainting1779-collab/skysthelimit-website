@@ -168,7 +168,7 @@ export default function HomeClient() {
             <p className="mt-5 max-w-xl text-base leading-7 text-ink-4">Registration, insurance, documentation, and the person responsible for the walkthrough should be clear before the project begins.</p>
             <ul className="mt-8 divide-y divide-line border-y border-line">
               {[
-                [ShieldCheck, 'MN ID: IR816596', 'Registered Minnesota Specialty Contractor (Painting)'],
+                [ShieldCheck, 'MN ID: IR816596', 'registered Minnesota Specialty Contractor (Painting)'],
                 [HardHat, '176.041 Exempt', 'Owner-operator exemption record'],
                 [ClipboardCheck, 'Fully insured', 'Certificate of insurance available for qualified opportunities'],
                 [Ruler, 'Direct scope review', 'Owner-led walkthrough through final detail'],
