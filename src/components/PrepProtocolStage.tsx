@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import { ArrowRight, Check } from 'lucide-react';
 
 const stages = [
   {
@@ -10,15 +11,15 @@ const stages = [
     label: 'Containment / site control',
     image: '/images/site/marketing-hero-exterior-painting.webp',
     detail: 'Floors, furniture, landscaping, and adjacent surfaces are masked before prep begins.',
-    output: 'Protected work envelope',
+    output: 'Protected work area',
   },
   {
     id: '02',
     title: 'Correct',
-    label: 'Substrate / defect correction',
+    label: 'Surface / defect correction',
     image: '/images/site/iphone-exterior-prep-front-entry.webp',
-    detail: 'Failed coating, open seams, dents, and substrate issues are identified in the written scope.',
-    output: 'Sound, profile-ready surface',
+    detail: 'Failed coating, open seams, dents, and surface issues are identified in the written scope.',
+    output: 'Sound surface ready for coating',
   },
   {
     id: '03',
@@ -34,7 +35,7 @@ const stages = [
     label: 'Walkthrough / closeout',
     image: '/images/services/interior/sky-work-01-finished-kitchen.webp',
     detail: 'The job closes with a walkthrough against the agreed scope—not a rushed handoff.',
-    output: 'Documented final detail',
+    output: 'Final detail checked against scope',
   },
 ] as const;
 
@@ -43,16 +44,17 @@ export default function PrepProtocolStage() {
   const active = stages.find((stage) => stage.id === activeId) ?? stages[0];
 
   return (
-    <section aria-labelledby="prep-standard" className="border-b border-zinc-800 bg-[#0A0A0A]">
-      <div className="mx-auto max-w-7xl px-6 py-16 sm:px-8 lg:px-12">
-        <div className="grid border border-zinc-700 lg:grid-cols-[minmax(19rem,0.72fr)_minmax(0,1.28fr)]">
-          <div className="flex flex-col border-b border-zinc-700 lg:border-b-0 lg:border-r">
-            <header className="border-b border-zinc-800 p-6 sm:p-8">
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF5A00]">02 / Preparation protocol</p>
-              <h2 id="prep-standard" className="mt-5 text-4xl font-black uppercase leading-[0.85] tracking-[-0.065em] text-white sm:text-5xl">Select a work control.</h2>
-              <p className="mt-6 max-w-sm text-sm leading-7 text-zinc-400">Each stage changes the field canvas. This is the preparation work a written scope is designed to expose.</p>
+    <section aria-labelledby="prep-standard" className="border-b border-line bg-surface-void">
+      <div className="container-page section">
+        <div className="grid overflow-hidden border border-line-strong lg:grid-cols-[minmax(19rem,0.72fr)_minmax(0,1.28fr)]">
+          <div className="flex flex-col border-b border-line-strong bg-surface-base lg:border-b-0 lg:border-r">
+            <header className="border-b border-line p-6 sm:p-8">
+              <p className="text-sm font-semibold text-brand">Prep-first standard</p>
+              <h2 id="prep-standard" className="display-2 mt-3 max-w-[11ch] text-balance uppercase text-white">How we prep before painting.</h2>
+              <p className="mt-5 max-w-md text-base leading-7 text-ink-4">Four visible stages keep surface preparation from disappearing inside a vague labor line.</p>
             </header>
-            <div className="grid">
+
+            <div className="grid" role="group" aria-label="Preparation stages">
               {stages.map((stage) => {
                 const selected = active.id === stage.id;
                 return (
@@ -60,33 +62,47 @@ export default function PrepProtocolStage() {
                     key={stage.id}
                     type="button"
                     onClick={() => setActiveId(stage.id)}
-                    onMouseEnter={() => setActiveId(stage.id)}
                     aria-pressed={selected}
-                    className={`grid grid-cols-[3rem_1fr_auto] items-center gap-3 border-b border-zinc-800 px-6 py-5 text-left transition-colors last:border-b-0 sm:px-8 ${selected ? 'bg-[#FF5A00] text-white' : 'bg-[#0A0A0A] text-zinc-300 hover:bg-zinc-900'}`}
+                    className={`grid min-h-20 grid-cols-[2.5rem_1fr_auto] items-center gap-3 border-b border-line px-6 py-5 text-left transition-colors last:border-b-0 sm:px-8 ${selected ? 'bg-brand text-white' : 'bg-surface-base text-ink-2 hover:bg-surface-raised'}`}
                   >
-                    <span className={`font-mono text-xs font-bold tracking-widest ${selected ? 'text-white' : 'text-[#FF5A00]'}`}>{stage.id}</span>
-                    <span><span className="block text-lg font-black uppercase tracking-tight">{stage.title}</span><span className={`mt-1 block font-mono text-[9px] uppercase tracking-[0.14em] ${selected ? 'text-white/75' : 'text-zinc-500'}`}>{stage.label}</span></span>
-                    <span className="font-mono text-[10px] font-bold tracking-widest">{selected ? 'ACTIVE' : 'LOAD'}</span>
+                    <span className={`text-sm font-black ${selected ? 'text-white' : 'text-brand'}`}>{stage.id}</span>
+                    <span>
+                      <span className="block text-base font-black uppercase tracking-[0.02em]">{stage.title}</span>
+                      <span className={`mt-1 block text-sm ${selected ? 'text-white/80' : 'text-ink-4'}`}>{stage.label}</span>
+                    </span>
+                    {selected ? (
+                      <Check aria-hidden="true" size={18} className="text-white" />
+                    ) : (
+                      <ArrowRight aria-hidden="true" size={18} className="text-ink-4" />
+                    )}
                   </button>
                 );
               })}
             </div>
-            <div className="mt-auto grid grid-cols-2 border-t border-zinc-800">
-              <div className="p-5"><p className="font-mono text-[9px] uppercase tracking-[0.15em] text-zinc-500">Method</p><p className="mt-2 text-xs font-bold uppercase text-white">Prep-first scope</p></div>
-              <div className="border-l border-zinc-800 p-5"><p className="font-mono text-[9px] uppercase tracking-[0.15em] text-zinc-500">Status</p><p className="mt-2 text-xs font-bold uppercase text-[#FF5A00]">Field verified</p></div>
-            </div>
           </div>
 
-          <div className="relative min-h-[36rem] overflow-hidden bg-black">
-            <Image src={active.image} alt={`${active.title}: ${active.detail}`} fill sizes="(min-width: 1024px) 55vw, 100vw" className="object-cover grayscale contrast-125 transition-opacity duration-300" />
-            <div className="absolute inset-0 bg-black/35" aria-hidden="true" />
-            <div className="absolute inset-x-0 top-0 flex items-center justify-between border-b border-white/20 bg-black/65 px-5 py-4 sm:px-6">
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white">Field viewer / stage {active.id}</p>
-              <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-zinc-300">Live scope reference</p>
+          <div className="relative min-h-[30rem] overflow-hidden bg-black sm:min-h-[34rem] lg:min-h-[42rem]">
+            <Image
+              key={active.id}
+              src={active.image}
+              alt={`${active.title}: ${active.detail}`}
+              fill
+              sizes="(min-width: 1024px) 55vw, 100vw"
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-black/15" aria-hidden="true" />
+            <div className="absolute left-5 top-5 border border-white/20 bg-black/70 px-3 py-2 text-sm font-semibold text-white backdrop-blur-sm sm:left-6 sm:top-6">
+              Stage {active.id} of 04
             </div>
-            <div className="absolute inset-x-0 bottom-0 grid border-t border-white/20 bg-[#0A0A0A]/95 sm:grid-cols-[1fr_auto]">
-              <div className="p-6 sm:p-8"><p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#FF5A00]">{active.label}</p><h3 className="mt-3 text-4xl font-black uppercase leading-none tracking-[-0.05em] text-white">{active.title}</h3><p className="mt-4 max-w-xl text-sm leading-7 text-zinc-300">{active.detail}</p></div>
-              <div className="border-t border-white/15 p-6 sm:border-l sm:border-t-0 sm:p-8"><p className="font-mono text-[9px] uppercase tracking-[0.15em] text-zinc-500">Control output</p><p className="mt-3 max-w-[12rem] text-sm font-bold uppercase leading-5 text-white">{active.output}</p></div>
+
+            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/85 to-transparent px-6 pb-7 pt-28 sm:px-8 sm:pb-8" aria-live="polite">
+              <p className="text-sm font-semibold text-brand">{active.label}</p>
+              <h3 className="mt-2 text-4xl font-black uppercase leading-none tracking-[-0.03em] text-white sm:text-5xl">{active.title}</h3>
+              <p className="mt-4 max-w-2xl text-base leading-7 text-ink-2">{active.detail}</p>
+              <div className="mt-5 border-t border-white/20 pt-4 sm:flex sm:items-baseline sm:gap-3">
+                <p className="text-sm font-semibold text-ink-4">Result</p>
+                <p className="mt-1 text-sm font-bold text-white sm:mt-0">{active.output}</p>
+              </div>
             </div>
           </div>
         </div>
