@@ -77,6 +77,7 @@ export default function ConversionHeader() {
 
   return (
     <>
+      <style>{`@media print { #main-content { padding-top: 0 !important; padding-bottom: 0 !important; } [data-track-payload*="mobile_sticky"] { display: none !important; } }`}</style>
       <header
         className={`fixed left-0 top-0 z-50 w-full transition-all duration-300 print:static print:bg-surface-void print:shadow-none print:backdrop-blur-none ${
           scrolled ? 'border-b border-line bg-surface-void/85 shadow-sm backdrop-blur-md' : 'bg-surface-void/92 backdrop-blur-sm'
