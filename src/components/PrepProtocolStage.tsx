@@ -95,7 +95,7 @@ export default function PrepProtocolStage() {
               Stage {active.id} of 04
             </div>
 
-            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/85 to-transparent px-6 pb-7 pt-28 sm:px-8 sm:pb-8" aria-live="polite">
+            <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black via-black/85 to-transparent px-6 pb-7 pt-28 sm:px-8 sm:pb-8" aria-live="polite">
               <p className="text-sm font-semibold text-brand">{active.label}</p>
               <h3 className="mt-2 text-4xl font-black uppercase leading-none tracking-[-0.03em] text-white sm:text-5xl">{active.title}</h3>
               <p className="mt-4 max-w-2xl text-base leading-7 text-ink-2">{active.detail}</p>
