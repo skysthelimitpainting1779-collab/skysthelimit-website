@@ -69,6 +69,27 @@ async function waitForFile(path, timeout = 10_000) {
   throw new Error(`Timed out waiting for ${path}.`);
 }
 
+function waitForBrowserPort(chrome, devToolsPortFile) {
+  return new Promise((resolve, reject) => {
+    const handleError = (error) => {
+      chrome.off('error', handleError);
+      reject(error);
+    };
+
+    chrome.once('error', handleError);
+    waitForFile(devToolsPortFile).then(
+      (value) => {
+        chrome.off('error', handleError);
+        resolve(value);
+      },
+      (error) => {
+        chrome.off('error', handleError);
+        reject(error);
+      },
+    );
+  });
+}
+
 async function connectCdp(webSocketUrl) {
   const socket = new WebSocket(webSocketUrl);
   const pending = new Map();
@@ -142,7 +163,7 @@ async function waitForPageReady(cdp, expectedUrl, timeout = 15_000) {
 }
 
 const baseUrl = new URL(readArg('base-url', 'http://localhost:3000'));
-if (!['localhost', '127.0.0.1', '::1'].includes(baseUrl.hostname)) {
+if (!['localhost', '127.0.0.1', '[::1]'].includes(baseUrl.hostname)) {
   throw new Error('Safety stop: --base-url must use localhost or a loopback address.');
 }
 
@@ -161,6 +182,13 @@ const selectedRoutes = routes.length ? routes : defaultRoutes;
 if (selectedRoutes.some((route) => !route.startsWith('/') || route.startsWith('//'))) {
   throw new Error('Every route must be a root-relative public path.');
 }
+const captureTargets = selectedRoutes.map((route) => {
+  const resolvedUrl = new URL(route, baseUrl);
+  if (resolvedUrl.origin !== baseUrl.origin) {
+    throw new Error(`Safety stop: route ${JSON.stringify(route)} resolves outside the local site.`);
+  }
+  return { route, url: resolvedUrl.toString() };
+});
 
 const browser = findBrowser();
 if (!browser) throw new Error('Chrome or Edge was not found. Set CHROME_PATH and retry.');
@@ -179,9 +207,12 @@ mkdirSync(outputDirectory, { recursive: true });
 // stale fixed-position compositor layers when several routes share a target.
 for (const mode of modes) {
   const viewport = viewports[mode];
-  for (const route of selectedRoutes) {
+  for (const { route, url } of captureTargets) {
     const output = join(outputDirectory, `${fileSlug(route)}--${mode}.png`);
-    const url = new URL(route, baseUrl).toString();
+    const routeResponse = await fetch(url, { redirect: 'manual' });
+    if (!routeResponse.ok) {
+      throw new Error(`Capture route ${route} returned HTTP ${routeResponse.status}.`);
+    }
     const browserProfile = mkdtempSync(join(tmpdir(), 'skys-visual-audit-chrome-'));
     const devToolsPortFile = join(browserProfile, 'DevToolsActivePort');
     const chrome = spawn(browser, [
@@ -196,7 +227,7 @@ for (const mode of modes) {
     ], { stdio: 'ignore', windowsHide: true });
 
     try {
-      const [port] = (await waitForFile(devToolsPortFile)).trim().split(/\r?\n/);
+      const [port] = (await waitForBrowserPort(chrome, devToolsPortFile)).trim().split(/\r?\n/);
       const targets = await fetch(`http://127.0.0.1:${port}/json/list`).then((result) => result.json());
       const pageTarget = targets.find((target) => target.type === 'page');
       if (!pageTarget?.webSocketDebuggerUrl) throw new Error('Chrome did not expose a page target.');
@@ -218,6 +249,21 @@ for (const mode of modes) {
         await cdp.send('Page.navigate', { url });
         await waitForPageReady(cdp, url);
         await cdp.send('Page.bringToFront');
+        if (fullPage) {
+          await cdp.send('Runtime.evaluate', {
+            expression: `(async () => {
+              for (const image of document.images) image.loading = 'eager';
+              const step = Math.max(320, Math.floor(window.innerHeight * 0.75));
+              const limit = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+              for (let y = 0; y < limit; y += step) {
+                window.scrollTo(0, y);
+                await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+              }
+              window.scrollTo(0, 0);
+            })()`,
+            awaitPromise: true,
+          });
+        }
         await cdp.send('Runtime.evaluate', {
           expression: `(async () => {
             const images = [...document.images].map((image) => image.complete
@@ -260,9 +306,12 @@ for (const mode of modes) {
         cdp.close();
       }
     } finally {
-      if (chrome.exitCode === null) {
+      if (chrome.pid && chrome.exitCode === null && !chrome.killed) {
         chrome.kill();
-        await new Promise((resolve) => chrome.once('exit', resolve));
+        await Promise.race([
+          new Promise((resolve) => chrome.once('exit', resolve)),
+          wait(2_000),
+        ]);
       }
       await wait(250);
       try {

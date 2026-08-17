@@ -17,6 +17,7 @@ export interface Market {
   description: string;
   image: string;
   heroImage: string;
+  heroAlt: string;
   icon: LucideIcon;
   accent: string;
   proof: string[];
@@ -39,6 +40,7 @@ export const markets: Market[] = [
       'Residential work is personal. Sky’s the Limit Painting brings owner-led accountability, careful protection, clear communication, surface prep, and finish quality into homes across Inver Grove Heights and the Twin Cities Metro.',
     image: '/images/site/iphone-interior-painting-progress.webp',
     heroImage: '/images/site/marketing-hero-exterior-painting.webp',
+    heroAlt: 'Painter coating exterior trim beside masked windows and protected landscaping',
     icon: Home,
     accent: 'Warm detail',
     proof: ['Interior and exterior repainting', 'Protection, prep, and daily jobsite care', 'Final walkthrough with the owner'],
@@ -79,6 +81,7 @@ export const markets: Market[] = [
       'Commercial projects need more than paint on walls. Registered under NAICS Code 238320 (Painting and Wall Covering Contractors) and UNSPSC Code 72151300, we provide the documentation, safety protocols, and execution that retail, office, and industrial properties require.',
     image: '/images/site/iphone-commercial-door-frame.webp',
     heroImage: '/images/site/iphone-commercial-door-frame.webp',
+    heroAlt: 'Painter coating a protected commercial door frame',
     icon: Building2,
     accent: 'Commercial discipline',
     proof: ['Commercial interiors and exteriors', 'NAICS Code 238320 Registered', 'Schedule-aware communication'],
@@ -119,6 +122,7 @@ export const markets: Market[] = [
       'Sky’s the Limit Painting is building a documented path for public-sector painting, facility, and pavement-marking work across Minnesota. We are registered under NAICS Code 238320 (Painting and Wall Covering) and maintain the safety, insurance, and documentation discipline public-sector conversations require.',
     image: '/images/services/striping/SkyLLP_ParkingLot_Striping.webp',
     heroImage: '/brand/generated/sky-public-authority.webp',
+    heroAlt: 'Parking striping, elevated pole painting, and a branded work vehicle',
     icon: Landmark,
     accent: 'Public-sector ready',
     proof: ['NAICS Code 238320 readiness', 'General liability & auto coverage', 'Registered MN Specialty Contractor IR816596'],

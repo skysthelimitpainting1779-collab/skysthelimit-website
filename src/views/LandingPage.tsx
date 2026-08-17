@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { notFound, useParams } from 'next/navigation';
 import { Calculator, Camera, ClipboardCheck, MapPin, PaintRoller, Phone, Route } from 'lucide-react';
 
-import JsonLd from '@/components/JsonLd';
 import LeadForm from '@/components/LeadForm';
 import {
   PublicContainer,
@@ -29,7 +28,6 @@ import {
   type LandingPageKind,
 } from '@/data/landingPages';
 import { businessPhone } from '@/lib/contact';
-import { breadcrumbSchema, localBusinessSchema, serviceSchema } from '@/lib/seo';
 import NotFound from '@/views/NotFound';
 
 interface LandingPageRouteProps {
@@ -63,26 +61,14 @@ export default function LandingPageRoute({ kind, initialPageData }: LandingPageR
       (sibling) => sibling.slug !== page.slug && !relatedPages.some((related) => related.slug === sibling.slug),
     ),
   ].slice(0, 4);
-  const structuredData: unknown[] = [
-    serviceSchema(page.title, page.description, path),
-    breadcrumbSchema([
-      { name: 'Home', path: '/' },
-      { name: page.market, path: marketPath[page.market] },
-      { name: page.shortTitle, path },
-    ]),
-  ];
-  if (page.kind === 'area') structuredData.push(localBusinessSchema(page.shortTitle, page.slug));
-
   return (
     <PublicPage>
-      <JsonLd data={structuredData} />
-
       <PublicHero
         eyebrow={page.eyebrow}
         title={page.title}
         description={page.headline}
         image={page.image}
-        imageAlt={`${page.title} project proof`}
+        imageAlt={`Painting surface reference for ${page.shortTitle}`}
         proof={page.proof}
         badgeIcon={page.kind === 'area' ? MapPin : PaintRoller}
         actions={
@@ -203,7 +189,7 @@ export default function LandingPageRoute({ kind, initialPageData }: LandingPageR
                   <CardHeader>
                     <p className="text-xs font-bold uppercase tracking-[0.12em] text-trust">{related.eyebrow}</p>
                     <CardTitle>{related.shortTitle}</CardTitle>
-                    <CardDescription>Open the service scope</CardDescription>
+                    <CardDescription>{related.kind === 'area' ? 'Open the area scope' : 'Open the service scope'}</CardDescription>
                   </CardHeader>
                 </Card>
               </Link>

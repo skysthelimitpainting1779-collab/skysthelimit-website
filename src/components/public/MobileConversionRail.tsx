@@ -1,6 +1,17 @@
+'use client';
+
+import { usePathname } from 'next/navigation';
+
 import { PublicCtaLink } from '@/components/public/PublicSystem';
 
 export default function MobileConversionRail() {
+  const pathname = usePathname();
+  const isInternalRoute = ['/admin', '/manage', '/portal'].some(
+    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
+  );
+
+  if (isInternalRoute) return null;
+
   return (
     <div
       data-surface="public"

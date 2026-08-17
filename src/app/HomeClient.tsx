@@ -45,7 +45,7 @@ export default function HomeClient() {
         <div className="mx-auto grid min-h-[calc(100svh-112px)] max-w-[94rem] lg:grid-cols-[58fr_42fr]">
           <div className="ledger-grid flex min-h-[39rem] flex-col justify-between px-5 py-10 sm:px-8 sm:py-12 lg:min-h-0 lg:px-12 lg:py-14 xl:px-16">
             <div>
-              <h1 id="home-title" className="ledger-display max-w-[11ch] text-[clamp(3.5rem,6.6vw,6rem)] leading-[0.84] text-[#071321]">
+              <h1 id="home-title" className="ledger-display max-w-[11ch] text-[clamp(3.5rem,6.6vw,6rem)] leading-[0.9] text-[#071321]">
                 A finish that lasts starts before the first coat.
               </h1>
               <p className="mt-7 max-w-[36rem] text-lg font-semibold leading-7 text-[#26384A] sm:text-xl sm:leading-8">
@@ -59,7 +59,7 @@ export default function HomeClient() {
                   href="#walkthrough"
                   size="marketing-lg"
                   track="hero_cta_click"
-                  trackPayload={{ source: 'homepage_hero', label: 'Get a Free Price Range' }}
+                  trackPayload={{ source: 'homepage_hero', label: 'Start the Written Scope' }}
                 >
                   Start the Written Scope
                 </PublicCtaLink>
@@ -141,7 +141,7 @@ export default function HomeClient() {
       <section aria-labelledby="scope-title" className="border-b border-[#071321]/20 bg-[#F6F3EB]">
         <div className="mx-auto grid max-w-[94rem] lg:grid-cols-[0.72fr_1.28fr]">
           <div className="ledger-grid border-b border-[#071321]/20 px-5 py-16 sm:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-24 xl:px-16">
-            <h2 id="scope-title" className="ledger-display max-w-[8ch] text-[clamp(3.2rem,5vw,5.5rem)] leading-[0.88] text-[#071321]">
+            <h2 id="scope-title" className="ledger-display max-w-[8ch] text-[clamp(3.2rem,5vw,5.5rem)] leading-[0.92] text-[#071321]">
               Everything priced before anything starts.
             </h2>
             <p className="mt-7 max-w-[34rem] text-lg leading-8 text-[#314457]">The estimate follows the property conditions—not a generic package. Each line makes preparation and execution visible before a date is reserved.</p>
@@ -182,7 +182,7 @@ export default function HomeClient() {
             </div>
           </div>
           <div className="px-5 py-16 sm:px-8 lg:px-12 lg:py-24 xl:px-16">
-            <h2 id="accountability-title" className="ledger-display max-w-[7ch] text-[clamp(3.2rem,5vw,5.5rem)] leading-[0.88] text-[#F6F3EB]">
+            <h2 id="accountability-title" className="ledger-display max-w-[7ch] text-[clamp(3.2rem,5vw,5.5rem)] leading-[0.92] text-[#F6F3EB]">
               The scope does not change hands.
             </h2>
             <p className="mt-7 max-w-[34rem] text-lg leading-8 text-[#D8E2EC]">Anthony handles the walkthrough and project conversation directly. The final detail is checked against the same written scope used to start the work.</p>
@@ -209,7 +209,7 @@ export default function HomeClient() {
       <section aria-labelledby="questions-title" className="border-b border-[#071321]/20 bg-[#F6F3EB]">
         <div className="mx-auto grid max-w-[94rem] lg:grid-cols-[0.7fr_1.3fr]">
           <div className="ledger-grid border-b border-[#071321]/20 px-5 py-16 sm:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-24 xl:px-16">
-            <h2 id="questions-title" className="ledger-display max-w-[7ch] text-[clamp(3.2rem,5vw,5.5rem)] leading-[0.88] text-[#071321]">Questions before the walkthrough.</h2>
+            <h2 id="questions-title" className="ledger-display max-w-[7ch] text-[clamp(3.2rem,5vw,5.5rem)] leading-[0.92] text-[#071321]">Questions before the walkthrough.</h2>
           </div>
           <div className="divide-y divide-[#071321]/20">
             {faqItems.map((item) => (
@@ -228,7 +228,7 @@ export default function HomeClient() {
       <section id="walkthrough" aria-labelledby="walkthrough-title" className="bg-[#0254C3] text-[#F6F3EB]">
         <div className="mx-auto grid max-w-[94rem] lg:grid-cols-[0.72fr_1.28fr]">
           <div className="border-b border-white/30 px-5 py-16 sm:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-24 xl:px-16">
-            <h2 id="walkthrough-title" className="ledger-display max-w-[7ch] text-[clamp(3.2rem,5vw,5.5rem)] leading-[0.88] text-white">Start the written scope.</h2>
+            <h2 id="walkthrough-title" className="ledger-display max-w-[7ch] text-[clamp(3.2rem,5vw,5.5rem)] leading-[0.92] text-white">Start the written scope.</h2>
             <p className="mt-7 max-w-[32rem] text-lg leading-8 text-[#E6EFF8]">Share the property, city, surfaces, timing, and preparation concerns. Contact details come after the project information.</p>
             <div className="mt-10 border-y border-white/30 py-5">
               <p className="flex items-start gap-3 text-sm font-semibold leading-6 text-white">

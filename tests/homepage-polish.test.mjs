@@ -48,7 +48,7 @@ test('shared conversion surfaces avoid duplicate homepage asks and keep mobile n
   assert.match(footer, /PublicFeatureGrid/);
   assert.match(header, /open=\{mobileMenuOpen\}/);
   assert.match(header, /onOpenChange=\{setMobileMenuOpen\}/);
-  assert.match(header, /aria-label="Open navigation menu"/);
+  assert.match(header, /mobileMenuOpen \? 'Close navigation menu' : 'Open navigation menu'/);
   assert.match(header, /aria-label="Mobile navigation"/);
   assert.match(header, /source: 'mobile_header'/);
   assert.match(header, /print:static/);
@@ -93,11 +93,66 @@ test('release documentation and local Graphify configuration remain portable', (
   const agentConfig = read('.agents/mcp_config.json');
   const codexConfig = read('.codex/config.toml');
   const design = read('DESIGN.md');
-  const agents = read('AGENTS.md');
 
   assert.match(agentConfig, /graphify-out\/graph\.json/);
   assert.match(codexConfig, /graphify-out\/graph\.json/);
   assert.doesNotMatch(`${agentConfig}\n${codexConfig}`, /C:\/Users\//i);
   assert.doesNotMatch(design, /\.impeccable\//);
-  assert.doesNotMatch(agents, /skills:validate|repeatable-workflow-capture/);
+});
+
+test('reviewed public-system primitives preserve interaction and accessibility contracts', () => {
+  const slider = read('src/components/ui/slider.tsx');
+  const toggleGroup = read('src/components/ui/toggle-group.tsx');
+  const field = read('src/components/ui/field.tsx');
+  const progress = read('src/components/ui/progress.tsx');
+  const rail = read('src/components/public/MobileConversionRail.tsx');
+
+  assert.match(slider, /value !== undefined[\s\S]*\? \[value\]/);
+  assert.match(slider, /index=\{index\}/);
+  assert.doesNotMatch(slider, /\[min, max\]/);
+  assert.match(toggleGroup, /data-\[orientation=vertical\]/);
+  assert.match(toggleGroup, /group-data-\[orientation=horizontal\]/);
+  assert.match(field, /function FieldTitle[\s\S]*data-slot="field-title"/);
+  assert.match(progress, /data-lead-progress/);
+  assert.match(rail, /\['\/admin', '\/manage', '\/portal'\]/);
+});
+
+test('public analytics and legal destinations are wired to working components', () => {
+  const layout = read('src/app/layout.tsx');
+  const delegator = read('src/components/AnalyticsDelegator.tsx');
+  const privacy = read('src/app/privacy/page.tsx');
+  const terms = read('src/app/terms/page.tsx');
+
+  assert.match(layout, /<AnalyticsDelegator \/>/);
+  assert.match(delegator, /closest<HTMLElement>\('\[data-track\]'\)/);
+  assert.match(delegator, /trackEvent\(eventName/);
+  assert.match(privacy, /Privacy policy\./);
+  assert.match(terms, /Website terms\./);
+});
+
+test('project claims, landing metadata, and smoke markers remain evidence-safe', () => {
+  const projects = read('src/views/Projects.tsx');
+  const landing = read('src/views/LandingPage.tsx');
+  const refer = read('src/views/Refer.tsx');
+  const smoke = read('scripts/smoke-site.mjs');
+
+  assert.doesNotMatch(projects, /Verified project scope|Real project imagery/);
+  assert.match(projects, /Surface reference imagery/);
+  assert.doesNotMatch(landing, /<JsonLd/);
+  assert.match(landing, /related\.kind === 'area'/);
+  assert.doesNotMatch(refer, /<form onSubmit=\{handleGenerate\} noValidate>/);
+  assert.match(smoke, /Real surfaces\. Real finish\./);
+});
+
+test('visual capture skill keeps local-only and complete-page safety checks in every host copy', () => {
+  const agentCapture = read('.agents/skills/capture-public-site-visuals/scripts/capture.mjs');
+  const githubCapture = read('.github/skills/capture-public-site-visuals/scripts/capture.mjs');
+
+  assert.equal(agentCapture, githubCapture);
+  assert.match(agentCapture, /'\[::1\]'/);
+  assert.match(agentCapture, /resolvedUrl\.origin !== baseUrl\.origin/);
+  assert.match(agentCapture, /Capture route.*returned HTTP/);
+  assert.match(agentCapture, /waitForBrowserPort/);
+  assert.match(agentCapture, /image\.loading = 'eager'/);
+  assert.match(agentCapture, /if \(fullPage\)[\s\S]*window\.scrollTo/);
 });

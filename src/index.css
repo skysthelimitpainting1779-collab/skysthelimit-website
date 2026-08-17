@@ -67,8 +67,8 @@
 
   /* ── Typography ──────────────────────────────────────────────────── */
   /* next/font variables are declared in the App Router root layout. */
-  --font-display: var(--font-ledger-display), "Arial Narrow", sans-serif;
-  --font-body: var(--font-ledger-body), system-ui, -apple-system, sans-serif;
+  --font-display: var(--font-internal), system-ui, sans-serif;
+  --font-body: var(--font-internal), system-ui, -apple-system, sans-serif;
   --font-mono: ui-monospace, "Cascadia Code", "Segoe UI Mono", monospace;
 
   /* ── Radii (machined edges — intentionally square) ───────────────── */
@@ -443,8 +443,8 @@
 }
 
 @theme inline {
-  --font-heading: var(--font-ledger-display), "Arial Narrow", sans-serif;
-  --font-sans: var(--font-ledger-body), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-internal), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-internal), ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Geist Mono", "Geist Mono Fallback", ui-monospace, monospace;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -584,6 +584,10 @@
 .public-surface,
 .ledger-surface {
   color-scheme: light;
+  --font-display: var(--font-ledger-display), "Arial Narrow", sans-serif;
+  --font-body: var(--font-ledger-body), system-ui, -apple-system, sans-serif;
+  --font-heading: var(--font-ledger-display), "Arial Narrow", sans-serif;
+  --font-sans: var(--font-ledger-body), ui-sans-serif, system-ui, sans-serif;
   --background: var(--sky-paper-100);
   --foreground: var(--sky-ink-950);
   --card: var(--sky-paper-50);
@@ -614,6 +618,7 @@
   --public-section-y: var(--sky-space-section);
   --public-gutter: var(--sky-space-gutter);
   --public-rule: var(--border);
+  font-family: var(--font-ledger-body), system-ui, -apple-system, sans-serif;
   background: var(--background);
   color: var(--foreground);
 }
@@ -800,6 +805,12 @@
   .ledger-tape {
     animation: none;
   }
+}
+
+[data-lead-theme="ledger"] :is(input, select, textarea):focus-visible {
+  border-color: #0254c3 !important;
+  outline: 3px solid #0254c3 !important;
+  outline-offset: 2px;
 }
 
 @media print {

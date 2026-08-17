@@ -8,7 +8,7 @@ export const DEFAULT_ROUTES = [
   },
   { path: '/estimate' },
   { path: '/contact' },
-  { path: '/projects', contains: 'Real Surfaces.' },
+  { path: '/projects', contains: 'Real surfaces. Real finish.' },
   { path: '/robots.txt', contains: 'Sitemap:' },
   { path: '/sitemap.xml', contains: '<urlset' },
 ];

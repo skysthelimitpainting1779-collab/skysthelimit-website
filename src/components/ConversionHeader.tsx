@@ -122,7 +122,14 @@ export default function ConversionHeader() {
 
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
             <SheetTrigger
-              render={<Button variant="outline" size="icon-lg" className="lg:hidden" aria-label="Open navigation menu" />}
+              render={(
+                <Button
+                  variant="outline"
+                  size="icon-lg"
+                  className="lg:hidden"
+                  aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+                />
+              )}
             >
               <Menu />
             </SheetTrigger>

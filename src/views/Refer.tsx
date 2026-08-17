@@ -78,7 +78,7 @@ export default function ReferPage() {
             description="The email connects a completed qualifying project to the person who made the introduction."
           />
           <PublicSplitCard title="Referral link generator" description="Enter the email where you want referral follow-up sent.">
-            <form onSubmit={handleGenerate} noValidate>
+            <form onSubmit={handleGenerate}>
               <FieldGroup>
                 <Field>
                   <FieldLabel htmlFor="referrer-email">Your email address</FieldLabel>
@@ -151,7 +151,7 @@ export default function ReferPage() {
               ['What qualifies?', 'The referred person must be a new customer and the project must meet the current published minimum contract requirement.'],
             ].map(([question, answer]) => (
               <details key={question} className="group py-6">
-                <summary className="cursor-pointer list-none text-lg font-bold text-foreground marker:content-none">{question}</summary>
+                <summary className="cursor-pointer text-lg font-bold text-foreground">{question}</summary>
                 <p className="mt-4 leading-7 text-muted-foreground">{answer}</p>
               </details>
             ))}

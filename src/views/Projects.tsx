@@ -38,7 +38,7 @@ function CaseStudyCard({ type, location, problem, prep, result, image, beforeIma
         ) : image ? (
           <ResponsiveImage
             src={image}
-            alt={`${type} in ${location}`}
+            alt={`${type} finish reference in ${location}`}
             width={1200}
             height={800}
             sizes="(min-width: 1024px) 50vw, 100vw"
@@ -48,7 +48,7 @@ function CaseStudyCard({ type, location, problem, prep, result, image, beforeIma
         <Badge variant="eyebrow" className="absolute right-4 top-4">{location}</Badge>
       </div>
       <CardHeader>
-        <Badge variant="trust" className="mb-3">Verified project scope</Badge>
+        <Badge variant="trust" className="mb-3">Project scope</Badge>
         <CardTitle className="public-display text-4xl">{type}</CardTitle>
         <CardDescription>{problem}</CardDescription>
       </CardHeader>
@@ -163,8 +163,8 @@ export default async function ProjectsPage() {
         title="Real surfaces. Real finish."
         description="Interior, commercial, and pavement-marking scopes shown with the problem, preparation record, and result."
         image="/brand/generated/sky-service-proof.webp"
-        imageAlt="Sky's the Limit Painting project work"
-        proof={['Real project imagery', 'Preparation details', 'Visible outcomes']}
+        imageAlt="Painting surface and finish reference"
+        proof={['Surface reference imagery', 'Preparation examples', 'Finish details']}
         actions={<PublicCtaLink href="/estimate" size="marketing-lg">Get a Free Price Range</PublicCtaLink>}
       />
       <PublicSection tone="soft">

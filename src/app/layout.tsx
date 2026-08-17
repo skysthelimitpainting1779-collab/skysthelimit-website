@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
-import { Barlow_Condensed, Source_Sans_3 } from 'next/font/google';
+import { Barlow_Condensed, Inter, Source_Sans_3 } from 'next/font/google';
 import React, { Suspense } from 'react';
 
 import '../index.css';
+import AnalyticsDelegator from '../components/AnalyticsDelegator';
 import ConversionFooterCta from '../components/ConversionFooterCta';
 import ConversionHeader from '../components/ConversionHeader';
 import MobileConversionRail from '../components/public/MobileConversionRail';
@@ -20,6 +21,12 @@ const businessSameAs = [
 ].filter(Boolean);
 
 const siteUrl = ENV.SITE_URL.replace(/\/$/, '') || 'https://www.skysthelimitpaintingllc.com';
+
+const internalFont = Inter({
+  subsets: ['latin'],
+  variable: '--font-internal',
+  display: 'swap',
+});
 
 const bodyFont = Source_Sans_3({
   subsets: ['latin'],
@@ -83,7 +90,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const currentYear = '2026';
 
   return (
-    <html lang="en" className={cn(bodyFont.variable, displayFont.variable, 'dark antialiased')}>
+    <html lang="en" className={cn(internalFont.variable, bodyFont.variable, displayFont.variable, 'dark antialiased')}>
       <head>
         <link rel="llms" href={`${siteUrl}/llms.txt`} />
         <script
@@ -139,6 +146,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="antialiased">
+        <AnalyticsDelegator />
         <div className="flex min-h-[100dvh] flex-col bg-page-bg text-page-text">
           <a
             href="#main-content"
@@ -155,7 +163,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {children}
           </main>
 
-          <MobileConversionRail />
+          <Suspense fallback={null}>
+            <MobileConversionRail />
+          </Suspense>
           <Suspense fallback={null}>
             <ConversionFooterCta />
           </Suspense>

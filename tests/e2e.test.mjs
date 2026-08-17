@@ -204,7 +204,7 @@ describe('Tier 2: Boundary/Corner Cases', () => {
 
   test('T2.1 Routing & Navigation - Mobile menu toggle handles accessibility attributes', () => {
     const header = read('src/components/ConversionHeader.tsx');
-    assert.match(header, /aria-label="Open navigation menu"/);
+    assert.match(header, /mobileMenuOpen \? 'Close navigation menu' : 'Open navigation menu'/);
     assert.match(header, /<SheetTitle/);
     assert.match(header, /<SheetDescription/);
   });

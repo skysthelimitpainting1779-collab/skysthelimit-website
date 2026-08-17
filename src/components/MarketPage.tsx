@@ -11,7 +11,6 @@ import {
   PublicHero,
   PublicPage,
   PublicProcess,
-  PublicProofBand,
   PublicSection,
   PublicSectionHeading,
   PublicSplitCard,
@@ -46,7 +45,7 @@ export default function MarketPage({ slug }: MarketPageProps) {
         title={market.title}
         description={market.headline}
         image={market.heroImage}
-        imageAlt={`${market.title} work by Sky's the Limit Painting`}
+        imageAlt={market.heroAlt}
         proof={market.proof}
         badgeIcon={market.icon}
         actions={
@@ -75,8 +74,6 @@ export default function MarketPage({ slug }: MarketPageProps) {
           </>
         }
       />
-
-      <PublicProofBand items={market.proof} />
 
       <PublicSection tone="soft">
         <PublicContainer className="grid gap-12 lg:grid-cols-[0.72fr_1.28fr] lg:items-start">
