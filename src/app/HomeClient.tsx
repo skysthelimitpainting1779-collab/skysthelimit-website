@@ -56,7 +56,7 @@ export default function HomeClient() {
           />
         </div>
         <div className="absolute inset-0 -z-10 bg-black/20" aria-hidden="true" />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-black via-black/80 to-black/10" aria-hidden="true" />
+        <div className="absolute inset-0 -z-10 bg-linear-to-r from-black via-black/80 to-black/10" aria-hidden="true" />
 
         <div className="container-page flex min-h-[calc(100svh-117px)] items-center py-16 pb-28 sm:py-20 sm:pb-32 lg:min-h-[720px] lg:py-24 lg:pb-32">
           <div className="max-w-3xl">
