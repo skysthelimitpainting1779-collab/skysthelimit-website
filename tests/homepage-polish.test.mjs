@@ -7,7 +7,7 @@ const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), 'utf
 test('homepage hero keeps the approved positioning and three clear conversion paths', () => {
   const home = read('src/app/HomeClient.tsx');
 
-  assert.match(home, /Residential detail\. Commercial discipline\.[\s\S]*Preps[\s\S]*first\./i);
+  assert.match(home, /Residential detail\. Commercial discipline\.\s*<span[^>]*>Preps<\/span>\s*first\./i);
   assert.match(home, /Get My Free Price Range/);
   assert.match(home, /href="tel:\+16514104196"/);
   assert.match(home, /href="\/projects"/);
@@ -35,7 +35,7 @@ test('prep interaction favors real work imagery and explicit touch targets', () 
   assert.doesNotMatch(prep, /grayscale/);
 });
 
-test('shared conversion surfaces use the same price-range language', () => {
+test('shared conversion surfaces use the same price-range language and print safely', () => {
   const footer = read('src/components/ConversionFooterCta.tsx');
   const header = read('src/components/ConversionHeader.tsx');
 
@@ -43,4 +43,7 @@ test('shared conversion surfaces use the same price-range language', () => {
   assert.doesNotMatch(footer, /IconFeatureCard/);
   assert.match(header, /top-\[120px\]/);
   assert.match(header, /print:hidden/);
+  assert.match(header, /#main-content/);
+  assert.match(header, /padding-top: 0 !important/);
+  assert.match(header, /mobile_sticky/);
 });
