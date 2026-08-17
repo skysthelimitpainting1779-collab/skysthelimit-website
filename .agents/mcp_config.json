@@ -9,9 +9,11 @@
     "graphify": {
       "command": "uvx",
       "args": [
+        "--refresh",
         "--from",
         "graphifyy",
         "graphify-mcp",
+        "--graph",
         "c:/Users/Johnny Cage/DEV/skysthelimit-collab/graphify-out/graph.json"
       ]
     }

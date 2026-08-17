@@ -4,13 +4,14 @@ import { test } from 'node:test';
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
 
-test('homepage hero keeps the approved positioning and three clear conversion paths', () => {
+test('homepage hero keeps the Owner\'s Finish Ledger positioning and direct conversion paths', () => {
   const home = read('src/app/HomeClient.tsx');
 
-  assert.match(home, /Residential detail\. Commercial discipline\.\s*<span[^>]*>Preps<\/span>\s*first\./i);
-  assert.match(home, /Get My Free Price Range/);
+  assert.match(home, /A finish that lasts starts before the first coat\./i);
+  assert.match(home, /Book a free walkthrough/i);
   assert.match(home, /href="tel:\+16514104196"/);
-  assert.match(home, /href="\/projects"/);
+  assert.match(home, /href="#walkthrough"/);
+  assert.match(home, /homepage_owner_finish_ledger/);
   assert.match(home, /marketing-hero-exterior-painting\.webp/);
 });
 
@@ -31,19 +32,18 @@ test('prep interaction favors real work imagery and explicit touch targets', () 
 
   assert.match(prep, /min-h-20/);
   assert.match(prep, /aria-pressed=\{selected\}/);
-  assert.match(prep, /aria-live="polite"/);
+  assert.match(prep, /role="group"/);
+  assert.match(prep, /Preparation record \/ \{active\.id\}/);
   assert.doesNotMatch(prep, /grayscale/);
 });
 
-test('shared conversion surfaces use the same price-range language and print safely', () => {
+test('shared conversion surfaces avoid duplicate homepage asks and keep mobile navigation accessible', () => {
   const footer = read('src/components/ConversionFooterCta.tsx');
   const header = read('src/components/ConversionHeader.tsx');
 
-  assert.match(footer, /Get My Free Price Range/);
-  assert.doesNotMatch(footer, /IconFeatureCard/);
-  assert.match(header, /top-\[120px\]/);
-  assert.match(header, /print:hidden/);
-  assert.match(header, /#main-content/);
-  assert.match(header, /padding-top: 0 !important/);
-  assert.match(header, /mobile_sticky/);
+  assert.match(footer, /if \(pathname === '\/'\) return null/);
+  assert.match(header, /aria-expanded=\{mobileMenuOpen\}/);
+  assert.match(header, /aria-controls="mobile-navigation"/);
+  assert.match(header, /aria-label="Mobile navigation"/);
+  assert.match(header, /Book a free walkthrough/);
 });

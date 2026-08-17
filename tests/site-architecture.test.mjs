@@ -34,8 +34,8 @@ test('primary navigation leads with residential, commercial, and public sector',
 test('homepage states the approved positioning and avoids forbidden claims', () => {
   const home = read('src/app/HomeClient.tsx');
 
-  assert.match(home, /Residential detail\. Commercial discipline\.[\s\S]*Preps[\s\S]*first\./i);
-  assert.match(home, /registered Minnesota Specialty Contractor \(Painting\)/);
+  assert.match(home, /A finish that lasts starts before the first coat\./i);
+  assert.match(home, /Minnesota registration[\s\S]*IR816596/);
   assert.doesNotMatch(home, /Public-work ambition/i);
   assert.doesNotMatch(home, /Licensed|Bonded|MnDOT-approved|Government-certified|DBE certified|TGB certified|Trusted by government agencies|Awarded public contracts|Workers comp/i);
 });

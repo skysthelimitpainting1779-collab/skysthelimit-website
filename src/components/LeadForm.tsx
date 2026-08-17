@@ -11,6 +11,7 @@ interface LeadFormProps {
   source: string;
   defaultMarket?: 'Residential' | 'Commercial' | 'Public Sector';
   compact?: boolean;
+  theme?: 'dark' | 'ledger';
 }
 
 type Status = 'idle' | 'submitting' | 'sent' | 'fallback' | 'error';
@@ -25,7 +26,7 @@ const labelClass = 'block text-xs font-black text-white mb-2';
 const fieldClass = 'w-full border border-white/10 bg-white/5 p-4 text-white outline-none placeholder:text-white/40 transition-all focus:border-white focus-visible:ring-2 focus-visible:ring-[white]/20 text-base rounded-none';
 const selectButtonClass = 'border p-3.5 text-center text-xs font-black   transition-all duration-200 cursor-pointer rounded-none';
 
-export default function LeadForm({ source, defaultMarket = 'Residential', compact = false }: LeadFormProps) {
+export default function LeadForm({ source, defaultMarket = 'Residential', compact = false, theme = 'dark' }: LeadFormProps) {
   const [status, setStatus] = useState<Status>('idle');
   const [message, setMessage] = useState('');
   const [currentStep, setCurrentStep] = useState(0);
@@ -387,7 +388,7 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
 
   if (status === 'sent') {
     return (
-      <div className="border border-white/30 bg-[#0B0B0D]/50 p-8 text-center space-y-6 rounded-none">
+      <div data-lead-theme={theme} data-lead-panel className="border border-white/30 bg-[#0B0B0D]/50 p-8 text-center space-y-6 rounded-none">
         <h4 className="text-2xl font-black text-white">Inquiry Dispatched</h4>
         <p className="text-sm leading-relaxed text-gray-300 max-w-md mx-auto">{message}</p>
         <div className="pt-2">
@@ -443,7 +444,7 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
   };
 
   return (
-    <form className="space-y-6 relative rounded-none" onSubmit={handleSubmit} onKeyDown={handleKeyDown} aria-busy={status === 'submitting'}>
+    <form data-lead-theme={theme} className="space-y-6 relative rounded-none" onSubmit={handleSubmit} onKeyDown={handleKeyDown} aria-busy={status === 'submitting'}>
       {/* Honeypots */}
       <input type="text" style={{ display: 'none' }} name="bot_honeypot" tabIndex={-1} autoComplete="off" aria-hidden="true" value={formData.bot_honeypot} onChange={(e) => updateField('bot_honeypot', e.target.value)} />
       <input name="website" className="hidden" tabIndex={-1} autoComplete="off" aria-hidden="true" value={formData.website} onChange={(e) => updateField('website', e.target.value)} />
@@ -457,12 +458,12 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
           <span className="text-xs font-bold text-gray-400">{progressPercent}%</span>
         </div>
         <div className="h-1 bg-white/10 w-full rounded-none">
-          <div className="h-full bg-white transition-all duration-300 rounded-none" style={{ width: `${progressPercent}%` }}></div>
+          <div data-lead-progress className="h-full bg-white transition-all duration-300 rounded-none" style={{ width: `${progressPercent}%` }}></div>
         </div>
       </div>
 
       {/* Dynamic Animated Core Panel */}
-      <motion.div layout className="overflow-hidden bg-white/[0.02] border border-white/5 p-6 space-y-6 relative">
+      <motion.div data-lead-panel layout className="overflow-hidden bg-white/[0.02] border border-white/5 p-6 space-y-6 relative">
         <AnimatePresence mode="popLayout" initial={false} custom={direction}>
           <motion.div
             key={currentStep}
@@ -485,6 +486,8 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
                         key={option}
                         type="button"
                         onClick={() => updateField('market', option as any)}
+                        data-lead-choice
+                        aria-pressed={formData.market === option}
                         className={`${selectButtonClass} ${
                           formData.market === option
                             ? 'border-white bg-white/10 text-white'
@@ -511,6 +514,8 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
                         key={option}
                         type="button"
                         onClick={() => updateField('propertyType', option)}
+                        data-lead-choice
+                        aria-pressed={formData.propertyType === option}
                         className={`${selectButtonClass} ${
                           formData.propertyType === option
                             ? 'border-white bg-white/10 text-white'
@@ -775,6 +780,7 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
           <button
             type="button"
             onClick={handleBack}
+            data-lead-secondary
             className="flex items-center justify-center border border-white/10 hover:border-white/30 bg-white/5 px-5 py-4 text-sm font-black text-white transition-colors cursor-pointer rounded-none"
           >
             <ArrowLeft size={16} className="mr-2" /> Back
@@ -785,6 +791,7 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
           <button
             type="button"
             onClick={handleNext}
+            data-lead-primary
             className="flex-1 inline-flex items-center justify-center bg-white hover:bg-white text-[#050505] px-5 py-4 text-sm font-semibold transition-colors cursor-pointer rounded-none"
           >
             Next Section <ArrowRight size={16} className="ml-2" />
@@ -793,6 +800,7 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
           <button
             type="submit"
             disabled={status === 'submitting'}
+            data-lead-primary
             className="flex-1 inline-flex items-center justify-center bg-white hover:bg-white text-[#050505] px-6 py-4 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer rounded-none"
           >
             {status === 'submitting' ? 'Sending...' : 'Request My Free Estimate'} <ArrowRight size={18} className="ml-2" />

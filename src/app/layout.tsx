@@ -6,7 +6,7 @@ import ConversionFooterCta from '../components/ConversionFooterCta';
 import SocialLinks from '../components/SocialLinks';
 import VercelInsights from '../components/VercelInsights';
 import Link from 'next/link';
-import { Inter } from 'next/font/google';
+import { League_Gothic, Source_Sans_3 } from 'next/font/google';
 import { cn } from '../lib/utils';
 import { ENV } from '../lib/env';
 
@@ -20,11 +20,26 @@ const businessSameAs = [
 
 const siteUrl = ENV.SITE_URL.replace(/\/$/, '') || 'https://www.skysthelimitpaintingllc.com';
 
-const inter = Inter({
+const bodyFont = Source_Sans_3({
   subsets: ['latin'],
-  variable: '--font-sans',
+  variable: '--font-ledger-body',
   display: 'swap',
 });
+
+const displayFont = League_Gothic({
+  subsets: ['latin'],
+  variable: '--font-ledger-display',
+  display: 'swap',
+});
+
+const directionContract = `
+THESIS: A lasting finish is the visible result of accountable preparation; the homepage refuses the dark contractor photo-overlay and service-card grid.
+OWN-WORLD: Plaster paper, ledger ink, cobalt masking tape, safety-orange action, visible construction rules, sharp controls, and full-scale jobsite photography.
+STORY: The visitor sees the offer, understands the preparation sequence, verifies owner involvement, and books a walkthrough.
+FIRST VIEWPORT: A 58/42 paper-and-photo split carries the monumental promise, primary action, tape seam, and the beginning of the five-stage ledger.
+FORM: Owner's Finish Ledger, grounded direction 1, user-pinned over seed 14f4dd46.
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+`.trim();
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -80,13 +95,13 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const currentYear = 2026;
+  const currentYear = '2026';
 
   return (
-    <html lang="en" className={cn(inter.variable, 'dark antialiased')}>
+    <html lang="en" className={cn(bodyFont.variable, displayFont.variable, 'dark antialiased')}>
       <head>
         <link rel="llms" href={`${siteUrl}/llms.txt`} />
-        {/* next/font (Inter) only — no blocking multi-family Google Fonts CSS */}
+        {/* next/font self-hosts both ledger faces with display: swap. */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -113,9 +128,10 @@ export default function RootLayout({
               ],
               address: {
                 '@type': 'PostalAddress',
+                streetAddress: '1445 56th St E',
                 addressLocality: 'Inver Grove Heights',
                 addressRegion: 'MN',
-                postalCode: '55076',
+                postalCode: '55077',
                 addressCountry: 'US',
               },
               areaServed: [
@@ -130,7 +146,7 @@ export default function RootLayout({
               sameAs: businessSameAs,
               hasCredential: {
                 '@type': 'EducationalOccupationalCredential',
-                credentialCategory: 'license',
+                credentialCategory: 'registration',
                 name: 'Minnesota Specialty Contractor Registration',
                 identifier: 'IR816596',
               },
@@ -139,12 +155,15 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased">
+        <div
+          aria-hidden="true"
+          className="contents"
+          dangerouslySetInnerHTML={{ __html: `<!-- ${directionContract} -->` }}
+        />
         <div className="min-h-[100dvh] flex flex-col bg-page-bg text-page-text">
-          <div className="noise-overlay" aria-hidden="true"></div>
-
           <a
             href="#main-content"
-            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:bg-[#FF5A00] focus:px-4 focus:py-3 focus:text-sm focus:font-black focus:text-white"
+            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:bg-[#FF661C] focus:px-4 focus:py-3 focus:text-sm focus:font-black focus:text-[#071321]"
           >
             Skip to content
           </a>
@@ -153,23 +172,41 @@ export default function RootLayout({
             <ConversionHeader />
           </Suspense>
 
-          <main id="main-content" className="flex-grow pt-[117px] pb-20 md:pb-0">
+          <main id="main-content" className="flex-grow pt-[112px] pb-24 md:pb-0">
             {children}
           </main>
 
-          {/* Mobile Sticky Bottom CTA */}
-          <div className="md:hidden fixed bottom-4 left-4 right-4 z-50 max-w-[calc(100vw-2rem)]">
+          {/* Mobile conversion rail */}
+          <div className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-[0.8fr_0.8fr_1.4fr] border-t border-[#071321]/20 bg-[#F6F3EB] md:hidden">
+            <a
+              href="tel:+16514104196"
+              data-track="call_click"
+              data-track-payload='{"source":"mobile_sticky"}'
+              className="flex min-h-14 items-center justify-center border-r border-[#071321]/20 px-2 text-xs font-black uppercase tracking-[0.08em] text-[#071321]"
+            >
+              Call
+            </a>
+            <a
+              href="sms:+16514104196"
+              data-track="text_click"
+              data-track-payload='{"source":"mobile_sticky"}'
+              className="flex min-h-14 items-center justify-center border-r border-[#071321]/20 px-2 text-xs font-black uppercase tracking-[0.08em] text-[#071321]"
+            >
+              Text
+            </a>
             <Link
               href="/estimate"
               data-track="hero_cta_click"
-              data-track-payload='{"source":"mobile_sticky","label":"Price Range"}'
-              className="flex w-full items-center justify-center bg-[#FF5A00] px-2 py-4 text-center text-xs font-black uppercase tracking-[0.12em] text-white shadow-[0_0_20px_rgba(0,0,0,0.8)]"
+              data-track-payload='{"source":"mobile_sticky","label":"Book a walkthrough"}'
+              className="flex min-h-14 items-center justify-center bg-[#FF661C] px-3 text-center text-xs font-black uppercase tracking-[0.08em] text-[#071321]"
             >
-              Get My Free Price Range
+              Book a walkthrough
             </Link>
           </div>
 
-          <ConversionFooterCta />
+          <Suspense fallback={null}>
+            <ConversionFooterCta />
+          </Suspense>
 
           {/* Footer */}
           <footer className="relative mt-12 overflow-hidden bg-[#0A0A0A] px-6 py-20 text-white">
@@ -194,12 +231,11 @@ export default function RootLayout({
                   </a>
                   <a
                     href="mailto:skysthelimitpainting1779@gmail.com"
-                    data-track="lead_mailto_fallback_opened"
-                    data-track-payload='{"source":"footer"}'
-                    className="text-gray-400 hover:text-white transition-colors"
+                    className="block break-all text-gray-400 transition-colors hover:text-white"
                   >
                     skysthelimitpainting1779@gmail.com
                   </a>
+                  <p className="mt-2 text-gray-400">Call or text Anthony to start a written scope.</p>
                 </div>
                 <SocialLinks />
               </div>
@@ -231,14 +267,14 @@ export default function RootLayout({
                   <Link href="/painting-services/exterior-painting" className="hover:text-white transition-colors">
                     Exterior Painting
                   </Link>
-                  <Link href="/painting-services/cabinet-refinishing" className="hover:text-white transition-colors">
-                    Cabinet Refinishing
+                  <Link href="/painting-services/cabinet-painting" className="hover:text-white transition-colors">
+                    Cabinet Painting
                   </Link>
                   <Link href="/painting-services/deck-fence-staining" className="hover:text-white transition-colors">
                     Deck &amp; Fence Staining
                   </Link>
-                  <Link href="/painting-services/commercial-repaints" className="hover:text-white transition-colors">
-                    Commercial Repaints
+                  <Link href="/painting-services/commercial-painting" className="hover:text-white transition-colors">
+                    Commercial Painting
                   </Link>
                 </nav>
               </div>

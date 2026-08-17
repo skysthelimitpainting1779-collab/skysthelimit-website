@@ -68,9 +68,9 @@
   --color-orange-deep: #D94D00;
 
   /* ── Typography ──────────────────────────────────────────────────── */
-  /* next/font Geist on --font-sans; industrial stack without blocking webfonts */
-  --font-display: var(--font-sans), "Arial Narrow", "Helvetica Neue", system-ui, sans-serif;
-  --font-body: var(--font-sans), system-ui, -apple-system, sans-serif;
+  /* next/font variables are declared in the App Router root layout. */
+  --font-display: var(--font-ledger-display), "Arial Narrow", sans-serif;
+  --font-body: var(--font-ledger-body), system-ui, -apple-system, sans-serif;
   --font-mono: ui-monospace, "Cascadia Code", "Segoe UI Mono", monospace;
 
   /* ── Radii (machined edges — intentionally square) ───────────────── */
@@ -455,8 +455,8 @@
 }
 
 @theme inline {
-  --font-heading: "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-ledger-display), "Arial Narrow", sans-serif;
+  --font-sans: var(--font-ledger-body), ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Geist Mono", "Geist Mono Fallback", ui-monospace, monospace;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -565,4 +565,157 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+}
+
+/* Owner's Finish Ledger — approved Split Ledger composition. */
+.ledger-surface {
+  color-scheme: light;
+  background: #f6f3eb;
+  color: #071321;
+  --ledger-paper: #f6f3eb;
+  --ledger-ink: #071321;
+  --ledger-blue: #0254c3;
+  --ledger-orange: #ff661c;
+  --ledger-rule: rgb(7 19 33 / 18%);
+}
+
+.ledger-surface ::selection {
+  background: #0254c3;
+  color: #f6f3eb;
+}
+
+.ledger-surface :is(input, select, textarea) {
+  caret-color: #0254c3;
+}
+
+.ledger-surface [id] {
+  scroll-margin-top: 8rem;
+}
+
+.ledger-surface :is(a, button, input, select, textarea):focus-visible {
+  outline-color: #0254c3;
+}
+
+.ledger-grid {
+  background-color: #f6f3eb;
+  background-image:
+    linear-gradient(to right, rgb(2 84 195 / 10%) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(2 84 195 / 8%) 1px, transparent 1px);
+  background-size: clamp(3.5rem, 7vw, 7rem) clamp(3.5rem, 7vw, 7rem);
+}
+
+.ledger-display {
+  font-family: var(--font-ledger-display), "Arial Narrow", sans-serif;
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.ledger-tape {
+  position: absolute;
+  z-index: 3;
+  width: clamp(2.4rem, 3.5vw, 3.8rem);
+  inset-block: -0.75rem;
+  left: 0;
+  translate: -50% 0;
+  background: #0254c3;
+  clip-path: polygon(7% 0, 94% 1%, 100% 3%, 96% 6%, 100% 9%, 95% 12%, 100% 15%, 95% 18%, 100% 21%, 95% 24%, 100% 27%, 96% 30%, 100% 33%, 95% 36%, 100% 39%, 96% 42%, 100% 45%, 95% 48%, 100% 51%, 96% 54%, 100% 57%, 95% 60%, 100% 63%, 96% 66%, 100% 69%, 95% 72%, 100% 75%, 96% 78%, 100% 81%, 95% 84%, 100% 87%, 96% 90%, 100% 93%, 94% 100%, 7% 99%, 0 96%, 5% 92%, 0 88%, 5% 84%, 0 80%, 5% 76%, 0 72%, 5% 68%, 0 64%, 5% 60%, 0 56%, 5% 52%, 0 48%, 5% 44%, 0 40%, 5% 36%, 0 32%, 5% 28%, 0 24%, 5% 20%, 0 16%, 5% 12%, 0 8%, 5% 4%);
+  transform-origin: top;
+  animation: ledger-tape-set 850ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes ledger-tape-set {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: polygon(7% 0, 94% 1%, 100% 3%, 96% 6%, 100% 9%, 95% 12%, 100% 15%, 95% 18%, 100% 21%, 95% 24%, 100% 27%, 96% 30%, 100% 33%, 95% 36%, 100% 39%, 96% 42%, 100% 45%, 95% 48%, 100% 51%, 96% 54%, 100% 57%, 95% 60%, 100% 63%, 96% 66%, 100% 69%, 95% 72%, 100% 75%, 96% 78%, 100% 81%, 95% 84%, 100% 87%, 96% 90%, 100% 93%, 94% 100%, 7% 99%, 0 96%, 5% 92%, 0 88%, 5% 84%, 0 80%, 5% 76%, 0 72%, 5% 68%, 0 64%, 5% 60%, 0 56%, 5% 52%, 0 48%, 5% 44%, 0 40%, 5% 36%, 0 32%, 5% 28%, 0 24%, 5% 20%, 0 16%, 5% 12%, 0 8%, 5% 4%);
+  }
+}
+
+[data-lead-theme="ledger"] {
+  color: #071321;
+}
+
+[data-lead-theme="ledger"] :is(.text-white, .text-gray-300, .text-gray-400, .text-\[\#c9c1b4\]) {
+  color: #26384a !important;
+}
+
+[data-lead-theme="ledger"] :is(input, select, textarea) {
+  border-color: rgb(7 19 33 / 24%) !important;
+  background: rgb(255 255 255 / 42%) !important;
+  color: #071321 !important;
+}
+
+[data-lead-theme="ledger"] :is(input, textarea)::placeholder {
+  color: #53616f !important;
+  opacity: 1;
+}
+
+[data-lead-theme="ledger"] [data-lead-panel] {
+  border-color: rgb(7 19 33 / 18%) !important;
+  background: rgb(255 255 255 / 26%) !important;
+}
+
+[data-lead-theme="ledger"] [data-lead-choice] {
+  min-height: 3.25rem;
+  border-color: rgb(7 19 33 / 24%) !important;
+  background: transparent !important;
+  color: #071321 !important;
+}
+
+[data-lead-theme="ledger"] [data-lead-choice][aria-pressed="true"] {
+  border-color: #0254c3 !important;
+  background: #0254c3 !important;
+  color: #f6f3eb !important;
+}
+
+[data-lead-theme="ledger"] [data-lead-primary] {
+  border-color: #ff661c !important;
+  background: #ff661c !important;
+  color: #071321 !important;
+}
+
+[data-lead-theme="ledger"] [data-lead-secondary] {
+  border-color: rgb(7 19 33 / 28%) !important;
+  background: transparent !important;
+  color: #071321 !important;
+}
+
+[data-lead-theme="ledger"] [data-lead-progress] {
+  background: #0254c3 !important;
+}
+
+@media (max-width: 767px) {
+  .ledger-tape {
+    inset: auto -0.75rem 0;
+    left: -0.75rem;
+    width: auto;
+    height: 2.5rem;
+    translate: 0 50%;
+    clip-path: polygon(0 8%, 4% 0, 8% 6%, 12% 0, 16% 6%, 20% 0, 24% 6%, 28% 0, 32% 6%, 36% 0, 40% 6%, 44% 0, 48% 6%, 52% 0, 56% 6%, 60% 0, 64% 6%, 68% 0, 72% 6%, 76% 0, 80% 6%, 84% 0, 88% 6%, 92% 0, 96% 6%, 100% 0, 99% 92%, 96% 100%, 92% 94%, 88% 100%, 84% 94%, 80% 100%, 76% 94%, 72% 100%, 68% 94%, 64% 100%, 60% 94%, 56% 100%, 52% 94%, 48% 100%, 44% 94%, 40% 100%, 36% 94%, 32% 100%, 28% 94%, 24% 100%, 20% 94%, 16% 100%, 12% 94%, 8% 100%, 4% 94%, 0 100%);
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ledger-tape {
+    animation: none;
+  }
+}
+
+@supports selector(::-webkit-scrollbar) {
+  .ledger-surface ::-webkit-scrollbar {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+
+  .ledger-surface ::-webkit-scrollbar-track {
+    background: #f6f3eb;
+  }
+
+  .ledger-surface ::-webkit-scrollbar-thumb {
+    border: 0.25rem solid #f6f3eb;
+    background: #0254c3;
+  }
 }
