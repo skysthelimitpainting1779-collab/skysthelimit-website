@@ -33,7 +33,8 @@ export { getEnv };
 
 export const ENV = {
   SITE_URL: getEnv('SITE_URL') || 'https://www.skysthelimitpaintingllc.com',
-  GA_MEASUREMENT_ID: getEnv('GA_MEASUREMENT_ID'),
+  // GA4 Measurement IDs are public identifiers. Keep the environment override for deployments, and retain the verified property ID as a production fallback.
+  GA_MEASUREMENT_ID: getEnv('GA_MEASUREMENT_ID') || 'G-QHTQ7YBDSF',
   FORMSPREE_FORM_ID: getEnv('FORMSPREE_FORM_ID') || 'xanybvkd',
   GOOGLE_SITE_VERIFICATION: getEnv('GOOGLE_SITE_VERIFICATION'),
   // Facebook & Instagram profiles are not live yet; leave empty until created so
