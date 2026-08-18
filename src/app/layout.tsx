@@ -21,6 +21,25 @@ const businessSameAs = [
   ENV.GOOGLE_BUSINESS_URL,
 ].filter(Boolean);
 
+const unsafeJsCharMap: Record<string, string> = {
+  '<': '\\u003C',
+  '>': '\\u003E',
+  '/': '\\u002F',
+  '\\': '\\\\',
+  '\b': '\\b',
+  '\f': '\\f',
+  '\n': '\\n',
+  '\r': '\\r',
+  '\t': '\\t',
+  '\0': '\\0',
+  '\u2028': '\\u2028',
+  '\u2029': '\\u2029',
+};
+
+function escapeUnsafeJsChars(str: string): string {
+  return str.replace(/[<>\/\\\b\f\n\r\t\0\u2028\u2029]/g, (ch) => unsafeJsCharMap[ch] ?? ch);
+}
+
 const siteUrl = ENV.SITE_URL.replace(/\/$/, '') || 'https://www.skysthelimitpaintingllc.com';
 const gaMeasurementId = ENV.GA_MEASUREMENT_ID;
 
@@ -102,7 +121,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               id="google-analytics"
               strategy="afterInteractive"
               dangerouslySetInnerHTML={{
-                __html: `window.dataLayer = window.dataLayer || []; function gtag(){window.dataLayer.push(arguments);} window.gtag = gtag; gtag('js', new Date()); gtag('config', ${JSON.stringify(gaMeasurementId)}, { send_page_view: true });`,
+                __html: `window.dataLayer = window.dataLayer || []; function gtag(){window.dataLayer.push(arguments);} window.gtag = gtag; gtag('js', new Date()); gtag('config', ${escapeUnsafeJsChars(JSON.stringify(gaMeasurementId))}, { send_page_view: true });`,
               }}
             />
           </>
