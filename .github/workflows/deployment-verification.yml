@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: deployment-verification-${{ github.event.client_payload.url || github.event.deployment_status.target_url || github.ref }}
+  group: deployment-verification-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -38,45 +38,17 @@ jobs:
         with:
           node-version-file: '.nvmrc'
 
-      - name: Resolve verification target
+      - name: Resolve approved production target
         id: target
         shell: bash
-        env:
-          DISPATCH_URL: ${{ github.event.client_payload.url }}
-          DEPLOYMENT_TARGET_URL: ${{ github.event.deployment_status.target_url }}
-          DEPLOYMENT_ENVIRONMENT_URL: ${{ github.event.deployment_status.environment_url }}
-          DISPATCH_TYPE: ${{ github.event.action }}
         run: |
           set -euo pipefail
-
-          if [[ "$GITHUB_EVENT_NAME" == "schedule" || "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
-            site_url="https://www.skysthelimitpaintingllc.com"
-          elif [[ "$GITHUB_EVENT_NAME" == "repository_dispatch" && "$DISPATCH_TYPE" == "vercel.deployment.promoted" ]]; then
-            site_url="https://www.skysthelimitpaintingllc.com"
-          elif [[ "$GITHUB_EVENT_NAME" == "deployment_status" ]]; then
-            site_url="https://www.skysthelimitpaintingllc.com"
-          elif [[ "$GITHUB_EVENT_NAME" == "repository_dispatch" ]]; then
-            site_url="$DISPATCH_URL"
-          else
-            site_url="${DEPLOYMENT_TARGET_URL:-$DEPLOYMENT_ENVIRONMENT_URL}"
-          fi
-
-          case "$site_url" in
-            https://*) ;;
-            *)
-              echo "::error::Vercel did not provide a valid HTTPS deployment URL"
-              exit 1
-              ;;
-          esac
-
+          site_url='https://www.skysthelimitpaintingllc.com'
           echo "url=$site_url" >> "$GITHUB_OUTPUT"
           {
             echo "## Deployment verification"
             echo "- Event: $GITHUB_EVENT_NAME"
             echo "- Target: $site_url"
-            if [[ -n "${DEPLOYMENT_TARGET_URL:-}" ]]; then
-              echo "- Vercel deployment: $DEPLOYMENT_TARGET_URL"
-            fi
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Smoke-test customer routes
