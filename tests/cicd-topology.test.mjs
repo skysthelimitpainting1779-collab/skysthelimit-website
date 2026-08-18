@@ -44,6 +44,8 @@ test('CI owns repository standards, typechecking, and tests', () => {
   assert.match(ci, /npm run ci:contract/);
   assert.match(ci, /node scripts\/enforce-git\.js/);
   assert.match(ci, /npm run lint:ci/);
+  assert.match(ci, /npm run lint:md/);
+  assert.match(ci, /npm ci --ignore-scripts/);
   assert.match(ci, /npm test/);
 });
 
@@ -54,7 +56,8 @@ test('security workflow consolidates CodeQL, dependency review, and npm audit', 
   assert.match(security, /github\/codeql-action\/analyze@/);
   assert.match(security, /actions\/dependency-review-action@/);
   assert.match(security, /fail-on-severity:\s*moderate/);
-  assert.match(security, /npm audit --audit-level=critical --omit=dev/);
+  assert.match(security, /npm ci --ignore-scripts/);
+  assert.match(security, /npm audit --audit-level=high/);
   assert.match(security, /schedule:/);
 });
 
@@ -66,12 +69,9 @@ test('deployment verification consumes Vercel events and runs route smoke only',
   assert.doesNotMatch(verification, /vercel\.deployment\.success/);
   assert.match(verification, /deployment_status:/);
   assert.match(verification, /github\.event\.deployment\.environment\s*==\s*'Production'/);
-  assert.match(verification, /github\.event\.client_payload\.url/);
-  assert.match(verification, /github\.event\.deployment_status\.(?:target_url|environment_url)/);
-  assert.match(
-    verification,
-    /elif \[\[ "\$GITHUB_EVENT_NAME" == "deployment_status" \]\]; then\s+site_url="https:\/\/www\.skysthelimitpaintingllc\.com"/,
-  );
+  assert.match(verification, /site_url='https:\/\/www\.skysthelimitpaintingllc\.com'/);
+  assert.doesNotMatch(verification, /github\.event\.client_payload\.url/);
+  assert.doesNotMatch(verification, /github\.event\.deployment_status\.(?:target_url|environment_url)/);
   assert.match(verification, /VERCEL_AUTOMATION_BYPASS_SECRET/);
   assert.match(verification, /npm run smoke:site/);
   assert.match(verification, /https:\/\/www\.skysthelimitpaintingllc\.com/);
