@@ -327,7 +327,7 @@ export const serviceLandingPages: LandingPage[] = [
     headline: 'Deck and fence staining conversations built around condition, cleaning, prep, and weather.',
     description:
       'Deck and fence staining inquiries for Twin Cities homeowners who need exterior wood reviewed for prep, timing, coating approach, and finish goals.',
-    metaTitle: 'Deck and Fence Staining Painting',
+    metaTitle: 'Deck and Fence Staining',
     metaDescription:
       'Deck and fence staining inquiry path for Twin Cities homeowners, with condition review, prep planning, weather timing, and finish expectations.',
     image: '/brand/generated/sky-service-proof.webp',
