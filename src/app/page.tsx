@@ -2,17 +2,17 @@ import type { Metadata } from 'next';
 import HomeClient from './HomeClient';
 
 export const metadata: Metadata = {
-  title: "Prep-First Painting Contractor Twin Cities | Sky's the Limit Painting LLC",
+  title: 'Twin Cities Painting Contractor',
   description:
-    "Owner-operated Twin Cities painting contractor for homes, businesses, and public facilities. Interior, exterior, and striping work with meticulous prep, insured coverage, and fast free estimates.",
+    'Owner-operated Twin Cities painter for interior, exterior, cabinet, commercial, and pavement-marking projects. Prep-first scopes and free estimates.',
   alternates: {
     canonical: "https://www.skysthelimitpaintingllc.com",
   },
   openGraph: {
-    type: "website",
-    title: "Prep-First Painting Contractor Twin Cities | Sky's the Limit Painting LLC",
+    type: 'website',
+    title: "Twin Cities Painting Contractor | Sky's the Limit Painting",
     description:
-      "Owner-operated Twin Cities painting contractor for homes, businesses, and public facilities. Meticulous prep, insured coverage, and fast free estimates.",
+      'Owner-operated Twin Cities painter for homes, businesses, facilities, and pavement-marking projects. Prep-first scopes and free estimates.',
     url: "https://www.skysthelimitpaintingllc.com",
     images: [{ url: "/brand/generated/sky-local-authority.webp", width: 1200, height: 630 }],
   },

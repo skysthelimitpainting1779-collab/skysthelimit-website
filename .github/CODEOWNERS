@@ -1,26 +1,25 @@
 # Code ownership — GitHub requests review from these accounts on PRs.
 # Requires: Settings → Branches → require review from Code Owners (recommended).
 #
-# Accounts:
+# Account:
 #   @skysthelimitpainting1779-collab  — Sky's the Limit Painting LLC website account
-#   @johnnycsv232                     — primary collaborator
 
 # Default owner for the entire repository
-* @skysthelimitpainting1779-collab @johnnycsv232
+* @skysthelimitpainting1779-collab
 
 # Website product surface
-/src/ @skysthelimitpainting1779-collab @johnnycsv232
-/public/ @skysthelimitpainting1779-collab @johnnycsv232
+/src/ @skysthelimitpainting1779-collab
+/public/ @skysthelimitpainting1779-collab
 
 # Infra / CI / deploy
-/.github/ @skysthelimitpainting1779-collab @johnnycsv232
-/scripts/ @skysthelimitpainting1779-collab @johnnycsv232
-/vercel.json @skysthelimitpainting1779-collab @johnnycsv232
-/package.json @skysthelimitpainting1779-collab @johnnycsv232
-/package-lock.json @skysthelimitpainting1779-collab @johnnycsv232
+/.github/ @skysthelimitpainting1779-collab
+/scripts/ @skysthelimitpainting1779-collab
+/vercel.json @skysthelimitpainting1779-collab
+/package.json @skysthelimitpainting1779-collab
+/package-lock.json @skysthelimitpainting1779-collab
 
 # Data & backend
-/supabase/ @skysthelimitpainting1779-collab @johnnycsv232
+/supabase/ @skysthelimitpainting1779-collab
 
 # Agent OS control plane
-/.agents/ @skysthelimitpainting1779-collab @johnnycsv232
+/.agents/ @skysthelimitpainting1779-collab

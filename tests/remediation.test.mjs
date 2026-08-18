@@ -53,7 +53,8 @@ test('build pipeline prerenders public routes and static 404 metadata', () => {
   assert.equal(packageJson.scripts.build, 'next build');
 
   const layout = read('src/app/layout.tsx');
-  assert.match(layout, /application\/ld\+json/);
+  assert.match(layout, /JsonLd/);
+  assert.match(read('src/components/JsonLd.tsx'), /application\/ld\+json/);
   assert.match(layout, /canonical/);
 
   // Assert that App Router directories exist for core pages

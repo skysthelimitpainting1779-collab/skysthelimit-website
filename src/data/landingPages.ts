@@ -30,7 +30,7 @@ export const areaLandingPages: LandingPage[] = [
     headline: 'Owner-operated painting based in Inver Grove Heights, built for homes, properties, and facility work.',
     description:
       'Sky’s the Limit Painting LLC serves Inver Grove Heights with residential painting, commercial repainting, public-sector readiness, and prep-first project communication.',
-    metaTitle: 'Inver Grove Heights Painting Contractor | Sky’s the Limit',
+    metaTitle: 'Inver Grove Heights Painting Contractor',
     metaDescription:
       'Owner-operated painting contractor based in Inver Grove Heights, MN for residential painting, commercial repainting, and qualified facility opportunities.',
     image: '/brand/generated/sky-local-authority.webp',
@@ -55,7 +55,7 @@ export const areaLandingPages: LandingPage[] = [
     headline: 'Careful painting for South St. Paul homes, shops, rentals, and small facilities.',
     description:
       'Residential and commercial painting support near South St. Paul with clear scope, careful protection, surface prep, and owner-operated communication.',
-    metaTitle: 'South St. Paul Painting Contractor | Sky’s the Limit',
+    metaTitle: 'South St. Paul Painting Contractor',
     metaDescription:
       'Painting contractor near South St. Paul for residential interiors, exterior refreshes, commercial repainting, and facility painting inquiries.',
     image: '/brand/generated/sky-service-proof.webp',
@@ -80,7 +80,7 @@ export const areaLandingPages: LandingPage[] = [
     headline: 'Structured painting support for St. Paul homes, storefronts, offices, and property refreshes.',
     description:
       'Sky’s the Limit Painting LLC supports St. Paul painting inquiries with owner-led scoping, careful prep, and service paths for homes and commercial properties.',
-    metaTitle: 'St. Paul Painting Contractor | Sky’s the Limit',
+    metaTitle: 'St. Paul Painting Contractor',
     metaDescription:
       'St. Paul painting contractor for interior painting, commercial refreshes, exterior painting conversations, and prep-first project scopes.',
     image: '/brand/generated/sky-commercial-authority.webp',
@@ -105,7 +105,7 @@ export const areaLandingPages: LandingPage[] = [
     headline: 'Prep-first painting for Eagan homeowners, property managers, and commercial spaces.',
     description:
       'Painting services near Eagan focused on careful prep, protected spaces, organized scheduling, and a clean finish for residential and commercial work.',
-    metaTitle: 'Eagan Painting Contractor | Sky’s the Limit',
+    metaTitle: 'Eagan Painting Contractor',
     metaDescription:
       'Eagan painting contractor for residential painting, commercial interiors, exterior refreshes, and owner-operated project communication.',
     image: '/brand/generated/sky-residential-authority.webp',
@@ -130,7 +130,7 @@ export const areaLandingPages: LandingPage[] = [
     headline: 'Clean residential and commercial painting for Woodbury projects that need a sharper finish.',
     description:
       'Sky’s the Limit Painting LLC supports Woodbury painting inquiries with detailed prep, owner communication, and estimate paths for homes and properties.',
-    metaTitle: 'Woodbury Painting Contractor | Sky’s the Limit',
+    metaTitle: 'Woodbury Painting Contractor',
     metaDescription:
       'Woodbury painting contractor for residential painting, commercial refreshes, trim work, exterior painting conversations, and project scoping.',
     image: '/brand/generated/sky-residential-authority.webp',
@@ -155,7 +155,7 @@ export const areaLandingPages: LandingPage[] = [
     headline: 'A serious painting partner for Minneapolis homes, commercial interiors, and facility refreshes.',
     description:
       'Minneapolis painting inquiries can be scoped for residential interiors, commercial presentation work, facility surfaces, and prep-heavy repainting.',
-    metaTitle: 'Minneapolis Painting Contractor | Sky’s the Limit',
+    metaTitle: 'Minneapolis Painting Contractor',
     metaDescription:
       'Minneapolis painting contractor for commercial painting, residential interiors, facility refreshes, and prep-first repainting conversations.',
     image: '/brand/generated/sky-commercial-authority.webp',
@@ -168,7 +168,7 @@ export const areaLandingPages: LandingPage[] = [
       { title: 'Confirm Constraints', body: 'Plan for access, schedules, cleanup, surface prep, and work around occupied spaces.' },
       { title: 'Deliver A Record', body: 'Use notes and photos to keep the job accountable after the first conversation.' },
     ],
-    related: ['commercial-painting', 'twin-cities', 'st-paul', 'public-sector'],
+    related: ['commercial-painting', 'pavement-marking', 'twin-cities', 'st-paul'],
     neighborhoods: ['Linden Hills', 'North Loop', 'Uptown', 'Downtown', 'Northeast'],
   },
   {
@@ -180,7 +180,7 @@ export const areaLandingPages: LandingPage[] = [
     headline: 'Residential detail, commercial discipline, and public-sector readiness across the Twin Cities.',
     description:
       'Sky’s the Limit Painting LLC serves Twin Cities painting inquiries with market-specific paths for homeowners, businesses, facilities, and qualified opportunities.',
-    metaTitle: 'Twin Cities Painting Contractor | Sky’s the Limit',
+    metaTitle: 'Twin Cities Painting Contractor',
     metaDescription:
       'Twin Cities painting contractor for residential painting, commercial repainting, facility work, pavement marking, and project scoping.',
     image: '/brand/generated/sky-local-authority.webp',
@@ -193,7 +193,7 @@ export const areaLandingPages: LandingPage[] = [
       { title: 'Verify Details', body: 'Evaluate surface conditions, square footage, specific timelines, and your preferred access methods.' },
       { title: 'Deliver Proposals', body: 'Provide highly itemized estimates specifying exact preparation methods, paint specs, and linear measurements.' },
     ],
-    related: ['residential', 'commercial', 'public-sector', 'inver-grove-heights'],
+    related: ['residential', 'commercial', 'pavement-marking', 'inver-grove-heights'],
   },
 ];
 
@@ -207,7 +207,7 @@ export const serviceLandingPages: LandingPage[] = [
     headline: 'Interior painting with careful prep, cleaner lines, and respect for the space.',
     description:
       'Interior painting for bedrooms, living spaces, trim, doors, ceilings, and commercial rooms where protection and finish quality matter.',
-    metaTitle: 'Interior Painting in the Twin Cities | Sky’s the Limit',
+    metaTitle: 'Interior Painters in Twin Cities',
     metaDescription:
       'Interior painting for Twin Cities homes and properties with clean prep, careful masking, trim detail, owner communication, and final walkthroughs.',
     image: '/brand/generated/sky-residential-authority.webp',
@@ -231,7 +231,7 @@ export const serviceLandingPages: LandingPage[] = [
     headline: 'Exterior painting conversations built around prep, timing, weather, and lasting presentation.',
     description:
       'Exterior painting and refresh inquiries for Minnesota homes and properties, scoped around surface prep, access, weather windows, and curb appeal.',
-    metaTitle: 'Exterior Painting in the Twin Cities | Sky’s the Limit',
+    metaTitle: 'Exterior Painters in Twin Cities',
     metaDescription:
       'Exterior painting contractor for Twin Cities homes and properties with prep-first scoping, weather-aware scheduling, and owner communication.',
     image: '/brand/generated/sky-service-proof.webp',
@@ -255,7 +255,7 @@ export const serviceLandingPages: LandingPage[] = [
     headline: 'Commercial painting for spaces where presentation, schedule, and cleanup matter.',
     description:
       'Commercial painting for Twin Cities shops, offices, facilities, storefronts, workrooms, and occupied spaces that need reliable communication.',
-    metaTitle: 'Commercial Painting in the Twin Cities | Sky’s the Limit',
+    metaTitle: 'Commercial Painters in Twin Cities',
     metaDescription:
       'Commercial painting for Twin Cities shops, offices, facilities, and properties with organized scope, clean execution, and owner-led follow-through.',
     image: '/brand/generated/sky-commercial-authority.webp',
@@ -279,7 +279,7 @@ export const serviceLandingPages: LandingPage[] = [
     headline: 'Cabinet painting inquiries scoped around prep, adhesion, finish expectations, and durability.',
     description:
       'Cabinet painting conversations for homeowners who want a cleaner finish path with surface prep, masking, product selection, and clear expectations.',
-    metaTitle: 'Cabinet Painting in the Twin Cities | Sky’s the Limit',
+    metaTitle: 'Cabinet Painting in the Twin Cities',
     metaDescription:
       'Cabinet painting inquiry path for Twin Cities homeowners, with prep-first scoping around adhesion, masking, finish expectations, and durability.',
     image: '/brand/generated/sky-residential-authority.webp',
@@ -303,7 +303,7 @@ export const serviceLandingPages: LandingPage[] = [
     headline: 'Paint-ready drywall repair for projects where the finish depends on the prep.',
     description:
       'Paint-ready drywall repair and surface prep conversations for holes, dents, stains, patches, and problem areas before repainting.',
-    metaTitle: 'Paint-Ready Drywall Repair | Sky’s the Limit',
+    metaTitle: 'Paint-Ready Drywall Repair',
     metaDescription:
       'Paint-ready drywall repair for Twin Cities repainting projects, including patching, sanding, stain-blocking primer, and finish preparation.',
     image: '/brand/generated/sky-service-proof.webp',
@@ -327,7 +327,7 @@ export const serviceLandingPages: LandingPage[] = [
     headline: 'Deck and fence staining conversations built around condition, cleaning, prep, and weather.',
     description:
       'Deck and fence staining inquiries for Twin Cities homeowners who need exterior wood reviewed for prep, timing, coating approach, and finish goals.',
-    metaTitle: 'Deck and Fence Staining | Sky’s the Limit Painting',
+    metaTitle: 'Deck and Fence Staining',
     metaDescription:
       'Deck and fence staining inquiry path for Twin Cities homeowners, with condition review, prep planning, weather timing, and finish expectations.',
     image: '/brand/generated/sky-service-proof.webp',
@@ -351,9 +351,9 @@ export const serviceLandingPages: LandingPage[] = [
     headline: 'Parking lot striping for clearer traffic flow, cleaner presentation, and stronger property arrival.',
     description:
       'Parking lot striping inquiries for small lots, commercial properties, facilities, and public-facing spaces that need clearer markings.',
-    metaTitle: 'Parking Lot Striping in Minnesota | Sky’s the Limit',
+    metaTitle: 'Twin Cities Parking Lot Striping',
     metaDescription:
-      'Parking lot striping inquiries for Twin Cities properties, small lots, facilities, and public-facing spaces needing clearer markings and presentation.',
+      'Parking lot striping for Twin Cities properties, including layout refreshes, visible line markings, and project-specific preparation.',
     image: '/brand/generated/sky-public-authority.webp',
     accent: 'Clearer property flow',
     market: 'Public Sector',
@@ -364,7 +364,7 @@ export const serviceLandingPages: LandingPage[] = [
       { title: 'Prepare The Surface', body: 'Plan cleaning, debris removal, chalk lines, and access timing.' },
       { title: 'Stripe For Clarity', body: 'Focus on visibility, flow, property presentation, and closeout photos.' },
     ],
-    related: ['public-sector', 'pavement-marking', 'commercial-painting', 'twin-cities'],
+    related: ['commercial-painting', 'pavement-marking', 'public-sector', 'twin-cities'],
   },
   {
     kind: 'service',
@@ -375,9 +375,9 @@ export const serviceLandingPages: LandingPage[] = [
     headline: 'Pavement marking inquiries for properties and qualified opportunities that need clear surface communication.',
     description:
       'Pavement marking and surface-visibility inquiries for commercial properties, facilities, parking areas, and qualified public-sector opportunities.',
-    metaTitle: 'Pavement Marking in Minnesota | Sky’s the Limit',
+    metaTitle: 'Twin Cities Pavement Marking',
     metaDescription:
-      'Pavement marking inquiries for Minnesota commercial properties, facilities, parking areas, and qualified public-sector opportunities.',
+      'Pavement marking for Twin Cities properties with preparation-first planning, clear layouts, and owner-led commercial coordination.',
     image: '/brand/generated/sky-public-authority.webp',
     accent: 'Surface visibility',
     market: 'Public Sector',
@@ -388,7 +388,7 @@ export const serviceLandingPages: LandingPage[] = [
       { title: 'Plan Execution', body: 'Clarify layout, surface condition, cleaning needs, materials, and work windows.' },
       { title: 'Close With Proof', body: 'Use photos and notes to record the completed surface work.' },
     ],
-    related: ['public-sector', 'parking-lot-striping', 'commercial', 'minneapolis'],
+    related: ['parking-lot-striping', 'commercial-painting', 'public-sector', 'minneapolis'],
   },
 ];
 
