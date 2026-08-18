@@ -107,6 +107,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return {};
   }
   const imageUrl = `https://www.skysthelimitpaintingllc.com${page.image}`;
+  const socialTitle = `${page.metaTitle} | Sky's the Limit Painting LLC`;
   return {
     title: page.metaTitle,
     description: page.metaDescription,
@@ -114,7 +115,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       canonical: `https://www.skysthelimitpaintingllc.com/service-areas/${slug}`,
     },
     openGraph: {
-      title: page.metaTitle,
+      title: socialTitle,
       description: page.metaDescription,
       url: `https://www.skysthelimitpaintingllc.com/service-areas/${slug}`,
       images: [
@@ -129,7 +130,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     },
     twitter: {
       card: 'summary_large_image',
-      title: page.metaTitle,
+      title: socialTitle,
       description: page.metaDescription,
       images: [imageUrl],
     },

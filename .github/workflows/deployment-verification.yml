@@ -3,7 +3,6 @@ name: Deployment Verification
 on:
   repository_dispatch:
     types:
-      - vercel.deployment.success
       - vercel.deployment.promoted
   deployment_status:
   schedule:
@@ -21,8 +20,12 @@ jobs:
   smoke:
     name: Verify Vercel Routes
     if: >-
-      github.event_name != 'deployment_status' ||
-      (github.event.deployment_status.state == 'success' &&
+      github.event_name == 'schedule' ||
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'repository_dispatch' &&
+      github.event.action == 'vercel.deployment.promoted') ||
+      (github.event_name == 'deployment_status' &&
+      github.event.deployment_status.state == 'success' &&
       github.event.deployment.environment == 'Production')
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -50,6 +53,8 @@ jobs:
             site_url="https://www.skysthelimitpaintingllc.com"
           elif [[ "$GITHUB_EVENT_NAME" == "repository_dispatch" && "$DISPATCH_TYPE" == "vercel.deployment.promoted" ]]; then
             site_url="https://www.skysthelimitpaintingllc.com"
+          elif [[ "$GITHUB_EVENT_NAME" == "deployment_status" ]]; then
+            site_url="https://www.skysthelimitpaintingllc.com"
           elif [[ "$GITHUB_EVENT_NAME" == "repository_dispatch" ]]; then
             site_url="$DISPATCH_URL"
           else
@@ -69,6 +74,9 @@ jobs:
             echo "## Deployment verification"
             echo "- Event: $GITHUB_EVENT_NAME"
             echo "- Target: $site_url"
+            if [[ -n "${DEPLOYMENT_TARGET_URL:-}" ]]; then
+              echo "- Vercel deployment: $DEPLOYMENT_TARGET_URL"
+            fi
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Smoke-test customer routes

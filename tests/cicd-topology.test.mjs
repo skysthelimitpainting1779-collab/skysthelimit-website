@@ -62,12 +62,16 @@ test('deployment verification consumes Vercel events and runs route smoke only',
   const verification = read('.github/workflows/deployment-verification.yml');
 
   assert.match(verification, /repository_dispatch:/);
-  assert.match(verification, /vercel\.deployment\.success/);
   assert.match(verification, /vercel\.deployment\.promoted/);
+  assert.doesNotMatch(verification, /vercel\.deployment\.success/);
   assert.match(verification, /deployment_status:/);
   assert.match(verification, /github\.event\.deployment\.environment\s*==\s*'Production'/);
   assert.match(verification, /github\.event\.client_payload\.url/);
   assert.match(verification, /github\.event\.deployment_status\.(?:target_url|environment_url)/);
+  assert.match(
+    verification,
+    /elif \[\[ "\$GITHUB_EVENT_NAME" == "deployment_status" \]\]; then\s+site_url="https:\/\/www\.skysthelimitpaintingllc\.com"/,
+  );
   assert.match(verification, /VERCEL_AUTOMATION_BYPASS_SECRET/);
   assert.match(verification, /npm run smoke:site/);
   assert.match(verification, /https:\/\/www\.skysthelimitpaintingllc\.com/);

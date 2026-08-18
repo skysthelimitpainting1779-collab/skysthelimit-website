@@ -169,13 +169,14 @@ interface PublicSectionHeadingProps {
   title: string;
   description?: string;
   align?: 'left' | 'center';
+  as?: 'h1' | 'h2';
 }
 
-export function PublicSectionHeading({ eyebrow, title, description, align = 'left' }: PublicSectionHeadingProps) {
+export function PublicSectionHeading({ eyebrow, title, description, align = 'left', as: Heading = 'h2' }: PublicSectionHeadingProps) {
   return (
     <div className={cn('max-w-3xl', align === 'center' && 'mx-auto text-center')}>
       {eyebrow ? <Badge variant="eyebrow" className="mb-5">{eyebrow}</Badge> : null}
-      <h2 className="public-display text-[clamp(2.75rem,5vw,5.5rem)] leading-[0.92] text-foreground">{title}</h2>
+      <Heading className="public-display text-[clamp(2.75rem,5vw,5.5rem)] leading-[0.92] text-foreground">{title}</Heading>
       {description ? <p className="mt-6 max-w-[62ch] text-lg leading-8 text-muted-foreground">{description}</p> : null}
     </div>
   );
