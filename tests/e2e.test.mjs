@@ -484,7 +484,8 @@ describe('Tier 4: Real-World Scenarios', () => {
   test('T4.5 Static SEO Crawler - Indexation, sitemaps validation, and schema markup checks', () => {
     const layout = read('src/app/layout.tsx');
     const sitemap = read('scripts/generate-sitemap.js');
-    assert.match(layout, /application\/ld\+json/);
+    assert.match(layout, /JsonLd/);
+    assert.match(read('src/components/JsonLd.tsx'), /application\/ld\+json/);
     assert.match(sitemap, /generateSitemap/);
   });
 

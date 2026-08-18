@@ -76,7 +76,8 @@ test('remediation guardrails cover secrets, headers, App Router SEO, and accessi
   for (const route of ['residential', 'commercial', 'public-sector', 'projects', 'about', 'contact', 'capabilities', 'service-area']) {
     assert.ok(existsSync(new URL(`../src/app/${route}/page.tsx`, import.meta.url)), `src/app/${route}/page.tsx missing`);
   }
-  assert.match(rootLayout, /application\/ld\+json/);
+  assert.match(rootLayout, /JsonLd/);
+  assert.match(read('src/components/JsonLd.tsx'), /application\/ld\+json/);
   assert.doesNotMatch(rootLayout, /ssr:\s*false/);
   assert.ok(!existsSync(new URL('../scripts/prerender.mjs', import.meta.url)));
   assert.ok(!existsSync(new URL('../src/components/Layout.tsx', import.meta.url)));
