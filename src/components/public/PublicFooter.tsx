@@ -22,6 +22,8 @@ const columns = [
       ['/painting-services/cabinet-painting', 'Cabinet Painting'],
       ['/painting-services/deck-fence-staining', 'Deck & Fence Staining'],
       ['/painting-services/commercial-painting', 'Commercial Painting'],
+      ['/painting-services/parking-lot-striping', 'Parking Lot Striping'],
+      ['/painting-services/pavement-marking', 'Pavement Marking'],
     ],
   },
   {
