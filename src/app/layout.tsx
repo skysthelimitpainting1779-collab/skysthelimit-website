@@ -7,6 +7,7 @@ import '../index.css';
 import AnalyticsDelegator from '../components/AnalyticsDelegator';
 import ConversionFooterCta from '../components/ConversionFooterCta';
 import ConversionHeader from '../components/ConversionHeader';
+import JsonLd from '../components/JsonLd';
 import MobileConversionRail from '../components/public/MobileConversionRail';
 import PublicFooter from '../components/public/PublicFooter';
 import VercelInsights from '../components/VercelInsights';
@@ -126,10 +127,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             />
           </>
         ) : null}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
+        <JsonLd data={{
               '@context': 'https://schema.org',
               '@type': 'HousePainter',
               '@id': `${siteUrl}/#business`,
@@ -174,9 +172,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 name: 'Minnesota Specialty Contractor Registration',
                 identifier: 'IR816596',
               },
-            }),
-          }}
-        />
+            }}
+          />
       </head>
       <body className="antialiased">
         <AnalyticsDelegator />

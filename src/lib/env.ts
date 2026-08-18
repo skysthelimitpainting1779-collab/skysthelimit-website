@@ -32,11 +32,13 @@ function getEnv(key: string): string | undefined {
 export { getEnv };
 
 const gaMeasurementDisabled = ['0', 'false', 'off'].includes((getEnv('GA_MEASUREMENT_ENABLED') || '').toLowerCase());
+const gaMeasurementId = getEnv('GA_MEASUREMENT_ID');
+const isVercelProduction = getEnv('VERCEL_ENV') === 'production';
 
 export const ENV = {
   SITE_URL: getEnv('SITE_URL') || 'https://www.skysthelimitpaintingllc.com',
-  // GA4 Measurement IDs are public identifiers. Keep the environment override for deployments and the verified property ID as the production default; set GA_MEASUREMENT_ENABLED=0 to disable loading deliberately.
-  GA_MEASUREMENT_ID: gaMeasurementDisabled ? undefined : getEnv('GA_MEASUREMENT_ID') || 'G-QHTQ7YBDSF',
+  // GA4 Measurement IDs are public identifiers. An explicitly configured ID works in any environment; the verified property is used only on Vercel production. Set GA_MEASUREMENT_ENABLED=0 to disable loading deliberately.
+  GA_MEASUREMENT_ID: gaMeasurementDisabled ? undefined : gaMeasurementId || (isVercelProduction ? 'G-QHTQ7YBDSF' : undefined),
   FORMSPREE_FORM_ID: getEnv('FORMSPREE_FORM_ID') || 'xanybvkd',
   GOOGLE_SITE_VERIFICATION: getEnv('GOOGLE_SITE_VERIFICATION'),
   // Facebook & Instagram profiles are not live yet; leave empty until created so
