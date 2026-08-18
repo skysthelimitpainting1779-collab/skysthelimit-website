@@ -3,7 +3,6 @@ name: Deployment Verification
 on:
   repository_dispatch:
     types:
-      - vercel.deployment.success
       - vercel.deployment.promoted
   deployment_status:
   schedule:

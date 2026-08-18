@@ -62,8 +62,8 @@ test('deployment verification consumes Vercel events and runs route smoke only',
   const verification = read('.github/workflows/deployment-verification.yml');
 
   assert.match(verification, /repository_dispatch:/);
-  assert.match(verification, /vercel\.deployment\.success/);
   assert.match(verification, /vercel\.deployment\.promoted/);
+  assert.doesNotMatch(verification, /vercel\.deployment\.success/);
   assert.match(verification, /deployment_status:/);
   assert.match(verification, /github\.event\.deployment\.environment\s*==\s*'Production'/);
   assert.match(verification, /github\.event\.client_payload\.url/);
