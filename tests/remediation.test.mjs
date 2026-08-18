@@ -46,6 +46,19 @@ test('Vercel config has security headers and no blanket SPA rewrite', () => {
       ({ source, destination }) => source === '/services' && destination === '/residential'
     )
   );
+  assert.ok(
+    vercel.redirects.some(
+      ({ source, destination, has, permanent }) =>
+        source === '/:path*' &&
+        destination === 'https://www.skysthelimitpaintingllc.com/:path*' &&
+        permanent === true &&
+        has?.some(
+          (condition) =>
+            condition.type === 'host' && condition.value === 'skysthelimitpaintingllc.com'
+        )
+    ),
+    'the apex domain must redirect permanently to the canonical www host'
+  );
 });
 
 test('build pipeline prerenders public routes and static 404 metadata', () => {
