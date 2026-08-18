@@ -18,7 +18,7 @@ const scopeRows = [
   ['Interior', 'Walls, ceilings, trim, doors, and cabinets', '/residential'],
   ['Exterior', 'Siding, trim, entries, decks, and fences', '/residential'],
   ['Property', 'Repaints, turnovers, and common areas', '/commercial'],
-  ['Marking', 'Parking lots, curbs, and safety striping', '/commercial'],
+  ['Parking Lot Striping', 'Parking lots, curbs, and safety striping', '/painting-services/parking-lot-striping'],
 ] as const;
 
 const faqItems = [

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import { Barlow_Condensed, Inter, Source_Sans_3 } from 'next/font/google';
 import React, { Suspense } from 'react';
 
@@ -21,6 +22,7 @@ const businessSameAs = [
 ].filter(Boolean);
 
 const siteUrl = ENV.SITE_URL.replace(/\/$/, '') || 'https://www.skysthelimitpaintingllc.com';
+const gaMeasurementId = ENV.GA_MEASUREMENT_ID;
 
 const internalFont = Inter({
   subsets: ['latin'],
@@ -45,7 +47,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
     default: "Twin Cities Painting Contractor | Sky's the Limit Painting LLC",
-    template: "%s | Sky's the Limit Painting LLC",
+    template: "%s | Sky's the Limit Painting",
   },
   description:
     'Owner-operated painting contractor serving Twin Cities homes and businesses. Interior and exterior painting, prep-first standards, fully insured. Get a free estimate today.',
@@ -93,12 +95,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={cn(internalFont.variable, bodyFont.variable, displayFont.variable, 'dark antialiased')}>
       <head>
         <link rel="llms" href={`${siteUrl}/llms.txt`} />
+        {gaMeasurementId ? (
+          <>
+            <Script src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`} strategy="afterInteractive" />
+            <Script
+              id="google-analytics"
+              strategy="afterInteractive"
+              dangerouslySetInnerHTML={{
+                __html: `window.dataLayer = window.dataLayer || []; function gtag(){window.dataLayer.push(arguments);} window.gtag = gtag; gtag('js', new Date()); gtag('config', ${JSON.stringify(gaMeasurementId)}, { send_page_view: true });`,
+              }}
+            />
+          </>
+        ) : null}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               '@context': 'https://schema.org',
-              '@type': 'PaintingContractor',
+              '@type': 'HousePainter',
               '@id': `${siteUrl}/#business`,
               name: "Sky's the Limit Painting LLC",
               founder: 'Anthony Briseno',

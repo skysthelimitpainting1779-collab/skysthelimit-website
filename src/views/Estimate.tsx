@@ -193,9 +193,10 @@ export default function EstimatePage() {
       <PublicSection tone="soft" ruled>
         <PublicContainer className="max-w-6xl">
           <PublicSectionHeading
+            as="h1"
             eyebrow="Guided project estimator"
-            title="A useful price range in about one minute."
-            description="Answer the surface questions first. Contact details are requested only after the planning range is visible."
+            title="Twin Cities Room Painting Cost Calculator"
+            description="Get a useful price range in about one minute. Answer the surface questions first; contact details are requested only after the planning range is visible."
           />
 
           <Card variant="panel" className="mt-10 overflow-hidden">
