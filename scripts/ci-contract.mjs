@@ -73,6 +73,20 @@ function collectActionRefs(workflowText) {
   return refsByRepository;
 }
 
+function collectMutableActions(workflowText) {
+  const mutableActions = [];
+  const usesPattern = /^\s*(?:-\s*)?uses:\s*['"]?([^@\s'"]+)@([^\s'"]+)['"]?(?:\s+#.*)?$/gm;
+
+  for (const match of workflowText.matchAll(usesPattern)) {
+    const action = match[1];
+    const ref = match[2];
+    if (action.startsWith('./') || action.startsWith('docker://')) continue;
+    if (!/^[0-9a-f]{40}$/i.test(ref)) mutableActions.push(`${action}@${ref}`);
+  }
+
+  return mutableActions;
+}
+
 export function findWorkflowContractErrors({ root = process.cwd() } = {}) {
   const packagePath = resolve(root, 'package.json');
   const workflowsDir = resolve(root, '.github', 'workflows');
@@ -102,6 +116,10 @@ export function findWorkflowContractErrors({ root = process.cwd() } = {}) {
       if (!existsSync(resolve(root, normalized))) {
         errors.push(`${displayPath}: missing local file ${normalized}`);
       }
+    }
+
+    for (const action of collectMutableActions(workflowText)) {
+      errors.push(`${displayPath}: action must be pinned to a 40-character commit SHA: ${action}`);
     }
 
     for (const [repository, refs] of collectActionRefs(workflowText)) {
