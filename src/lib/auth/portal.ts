@@ -28,6 +28,11 @@ export type PortalLead = {
 
 const DEFAULT_LOGIN = '/portal/login';
 
+/** Whether a path belongs to the /portal segment rather than a lookalike prefix. */
+function isPortalPath(path: string): boolean {
+  return path === '/portal' || path.startsWith('/portal/');
+}
+
 /**
  * Pure gate: decides if a session may access /portal (excluding login itself).
  * Production middleware and unit tests both call this — no “always true” bypass.
@@ -55,13 +60,13 @@ export function gatePortalAccess(
 /** Whether a pathname is a protected portal surface (not the login page). */
 export function isProtectedPortalPath(pathname: string): boolean {
   const p = pathname.split('?')[0] || '';
-  if (!p.startsWith('/portal')) return false;
+  if (!isPortalPath(p)) return false;
   if (p === '/portal/login' || p.startsWith('/portal/login/')) return false;
   return true;
 }
 
 export function portalLoginUrl(nextPath?: string): string {
-  if (!nextPath || !nextPath.startsWith('/portal')) return DEFAULT_LOGIN;
+  if (!nextPath || !isPortalPath(nextPath)) return DEFAULT_LOGIN;
   return `${DEFAULT_LOGIN}?next=${encodeURIComponent(nextPath)}`;
 }
 
@@ -98,7 +103,7 @@ export function buildPortalOAuthOptions(
   provider: OAuthProvider,
   nextPath = '/portal'
 ): { provider: OAuthProvider; options: { redirectTo: string; queryParams?: Record<string, string> } } {
-  const next = nextPath.startsWith('/portal') ? nextPath : '/portal';
+  const next = isPortalPath(nextPath) ? nextPath : '/portal';
   const redirectTo = `${origin.replace(/\/$/, '')}/auth/callback?next=${encodeURIComponent(next)}`;
   return {
     provider,
