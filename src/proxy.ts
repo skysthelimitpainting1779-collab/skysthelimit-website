@@ -3,6 +3,10 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { updateSession } from './lib/supabase/middleware';
 import { gatePortalAccess, isProtectedPortalPath, portalLoginUrl } from './lib/auth/portal';
 
+function isRetiredManagePath(pathname: string) {
+  return pathname === '/manage' || pathname.startsWith('/manage/');
+}
+
 /**
  * Next.js proxy (session refresh + portal/admin route protection).
  * Public marketing pages are NOT matched — see config.matcher below.
@@ -13,6 +17,10 @@ export async function proxy(request: NextRequest) {
   let response = await updateSession(request);
 
   const pathname = request.nextUrl.pathname;
+
+  if (isRetiredManagePath(pathname)) {
+    return NextResponse.redirect(new URL('/contact', request.url), 308);
+  }
 
   if (!isProtectedPortalPath(pathname)) {
     return response;
@@ -74,6 +82,8 @@ export const config = {
     // Exclude Payload admin routes — Payload handles its own auth internally
     '/portal',
     '/portal/:path*',
+    '/manage',
+    '/manage/:path*',
     '/auth/callback',
   ],
 };
