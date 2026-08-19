@@ -18,6 +18,27 @@ function workflowText() {
     .join('\n');
 }
 
+test('README npm run commands reference scripts defined in package.json', () => {
+  const readme = read('README.md');
+  const scripts = JSON.parse(read('package.json')).scripts ?? {};
+  const referencedScripts = [
+    ...new Set(
+      [...readme.matchAll(/\bnpm\s+run\s+([A-Za-z0-9:_-]+)/g)].map(
+        ([, scriptName]) => scriptName,
+      ),
+    ),
+  ].sort();
+  const missingScripts = referencedScripts.filter(
+    (scriptName) => !Object.hasOwn(scripts, scriptName),
+  );
+
+  assert.deepEqual(
+    missingScripts,
+    [],
+    `README.md references npm scripts missing from package.json: ${missingScripts.join(', ')}`,
+  );
+});
+
 test('repository has exactly the three Vercel-native workflows', () => {
   assert.deepEqual(workflowNames(), [
     'ci.yml',
