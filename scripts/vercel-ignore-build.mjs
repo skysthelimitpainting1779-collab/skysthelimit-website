@@ -2,8 +2,10 @@
 
 import { pathToFileURL } from 'node:url';
 
-export const CANONICAL_VERCEL_PROJECT_ID =
-  'prj_L3ZMoQ79YLx9G2o6Lg9OubqO9H8m';
+export const ALLOWED_VERCEL_PROJECT_IDS = new Set([
+  'prj_L3ZMoQ79YLx9G2o6Lg9OubqO9H8m',
+  'prj_7kEe71sifWRNz7gGL4q2eYwsRibU',
+]);
 
 export function shouldIgnoreVercelBuild({ projectId, branch }) {
   const candidateProject = String(projectId || '').trim();
@@ -11,7 +13,7 @@ export function shouldIgnoreVercelBuild({ projectId, branch }) {
 
   if (candidateBranch.startsWith('entire/')) return true;
   if (!candidateProject) return false;
-  return candidateProject !== CANONICAL_VERCEL_PROJECT_ID;
+  return !ALLOWED_VERCEL_PROJECT_IDS.has(candidateProject);
 }
 
 function main() {

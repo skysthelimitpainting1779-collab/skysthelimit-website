@@ -15,9 +15,16 @@ import { Media } from './collections/payload/Media';
 import { Leads } from './collections/payload/crm/Leads';
 import { CrmTasks } from './collections/payload/crm/CrmTasks';
 import { SiteSettings } from './globals/payload/SiteSettings';
+import { requireEnvironmentVariable } from './lib/config/required-env';
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
+const payloadSecret = requireEnvironmentVariable('PAYLOAD_SECRET');
+const supabaseDatabaseUrl = requireEnvironmentVariable('SUPABASE_DB_URL');
+const s3Bucket = requireEnvironmentVariable('S3_BUCKET');
+const s3AccessKeyId = requireEnvironmentVariable('S3_ACCESS_KEY_ID');
+const s3SecretAccessKey = requireEnvironmentVariable('S3_SECRET_ACCESS_KEY');
+const s3Region = requireEnvironmentVariable('S3_REGION');
 
 export default buildConfig({
   admin: {
@@ -41,9 +48,8 @@ export default buildConfig({
 
   db: postgresAdapter({
     pool: {
-      // Direct Postgres connection (not the anon REST API)
-      // Must be the pooler connection string from Supabase: Settings > Database > Connection String
-      connectionString: process.env.SUPABASE_DB_URL || 'postgres://localhost:5432/payload_placeholder',
+      // Direct Postgres connection (not the anon REST API).
+      connectionString: supabaseDatabaseUrl,
     },
     // Dedicated schema — never touches the existing public CRM/content tables
     schemaName: 'payload',
@@ -72,18 +78,18 @@ export default buildConfig({
       collections: {
         media: true,
       },
-      bucket: process.env.S3_BUCKET ?? '',
+      bucket: s3Bucket,
       config: {
         credentials: {
-          accessKeyId: process.env.S3_ACCESS_KEY_ID ?? '',
-          secretAccessKey: process.env.S3_SECRET_ACCESS_KEY ?? '',
+          accessKeyId: s3AccessKeyId,
+          secretAccessKey: s3SecretAccessKey,
         },
-        region: process.env.S3_REGION ?? 'us-east-1',
+        region: s3Region,
       },
     }),
   ],
 
-  secret: process.env.PAYLOAD_SECRET ?? 'CHANGE_ME_IN_ENV',
+  secret: payloadSecret,
 
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
