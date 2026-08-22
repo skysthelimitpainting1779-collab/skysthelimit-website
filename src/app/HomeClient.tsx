@@ -117,10 +117,15 @@ export default function HomeClient() {
 
       <section aria-labelledby="stage-ledger-title" className="border-b border-[#071321]/20 bg-[#F9F7F1]">
         <h2 id="stage-ledger-title" className="sr-only">Preparation stage ledger</h2>
-        <div className="mx-auto max-w-[94rem] overflow-x-auto">
-          <ol className="grid min-w-[65rem] grid-cols-[repeat(5,minmax(0,1fr))_1.15fr]">
-            {stageLedger.map(([number, title, detail]) => (
-              <li key={number} className="border-r border-[#071321]/20 px-5 py-6 last:border-r-0">
+        <div className="mx-auto max-w-[94rem]">
+          <div className="flex items-center justify-between border-b border-[#071321]/20 px-5 py-3 text-xs font-black uppercase tracking-[0.08em] text-[#314457] sm:px-8 md:hidden">
+            <span>Five-stage prep record</span>
+            <span className="text-[#0254C3]">Swipe to review</span>
+          </div>
+          <div className="overflow-x-auto overscroll-x-contain scroll-smooth">
+            <ol className="grid min-w-[65rem] snap-x snap-mandatory scroll-px-5 grid-cols-[repeat(5,minmax(0,1fr))_1.15fr] sm:scroll-px-8">
+              {stageLedger.map(([number, title, detail]) => (
+                <li key={number} className="snap-start border-r border-[#071321]/20 px-5 py-6 last:border-r-0">
                 <div className="flex items-center gap-3">
                   <span className="text-sm font-black text-[#0254C3]">{number}</span>
                   <span aria-hidden="true" className="h-px flex-1 bg-[#0254C3]/45" />
@@ -129,12 +134,13 @@ export default function HomeClient() {
                 <p className="mt-3 text-sm leading-5 text-[#3E4D5D]">{detail}</p>
               </li>
             ))}
-            <li className="px-5 py-6">
-              <ClipboardCheck aria-hidden="true" size={22} className="text-[#0254C3]" />
-              <p className="mt-4 text-lg font-black text-[#071321]">One owner. One scope.</p>
-              <p className="mt-2 text-sm leading-5 text-[#3E4D5D]">Documented from the first conversation through final detail.</p>
-            </li>
-          </ol>
+              <li className="snap-start px-5 py-6">
+                <ClipboardCheck aria-hidden="true" size={22} className="text-[#0254C3]" />
+                <p className="mt-4 text-lg font-black text-[#071321]">One owner. One scope.</p>
+                <p className="mt-2 text-sm leading-5 text-[#3E4D5D]">Documented from the first conversation through final detail.</p>
+              </li>
+            </ol>
+          </div>
         </div>
       </section>
 
@@ -149,11 +155,11 @@ export default function HomeClient() {
 
           <dl className="divide-y divide-[#071321]/20">
             {scopeRows.map(([service, surfaces, href]) => (
-              <div key={service} className="grid min-h-28 grid-cols-[6.5rem_1fr_auto] items-center gap-5 px-5 py-6 sm:px-8 lg:px-10">
+              <div key={service} className="grid min-h-28 grid-cols-[minmax(0,1fr)_3rem] items-center gap-x-5 gap-y-3 px-5 py-6 sm:grid-cols-[6.5rem_minmax(0,1fr)_3rem] sm:px-8 lg:px-10">
                 <dt className="ledger-display text-3xl text-[#071321]">{service}</dt>
-                <dd className="text-base font-semibold leading-6 text-[#314457]">{surfaces}</dd>
-                <dd>
-                  <Link href={href} aria-label={`Explore ${service.toLowerCase()} painting`} className="grid h-12 w-12 place-items-center border border-[#071321]/25 text-[#071321] transition-colors hover:border-[#0254C3] hover:text-[#0254C3]">
+                <dd className="col-span-2 row-start-2 max-w-[46rem] text-base font-semibold leading-6 text-[#314457] sm:col-auto sm:row-auto">{surfaces}</dd>
+                <dd className="col-start-2 row-start-1 sm:col-auto sm:row-auto">
+                  <Link href={href} aria-label={`Explore ${service.toLowerCase()} painting`} className="grid h-12 w-12 place-items-center border border-[#071321]/25 text-[#071321] transition-[color,border-color,transform] duration-200 hover:-translate-y-0.5 hover:border-[#0254C3] hover:text-[#0254C3] active:translate-y-px">
                     <ArrowUpRight aria-hidden="true" size={20} />
                   </Link>
                 </dd>
@@ -214,7 +220,7 @@ export default function HomeClient() {
           <div className="divide-y divide-[#071321]/20">
             {faqItems.map((item) => (
               <details key={item.question} className="group px-5 py-7 sm:px-8 lg:px-10">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-5 text-lg font-black text-[#071321] marker:content-none">
+                <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-5 text-lg font-black text-[#071321] marker:content-none transition-colors hover:text-[#0254C3] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0254C3]">
                   {item.question}
                   <span aria-hidden="true" className="text-2xl font-normal text-[#0254C3] transition-transform group-open:rotate-45">+</span>
                 </summary>
