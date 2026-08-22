@@ -1,6 +1,12 @@
 {
   "version": 1,
   "skills": {
+    "channel3-api": {
+      "source": "channel3-ai/skills",
+      "sourceType": "github",
+      "skillPath": "skills/channel3-api/SKILL.md",
+      "computedHash": "f1e566c827017d263b195f442b57923e0a13c75a5e030483327b8404cdd8fa5d"
+    },
     "supabase": {
       "source": "supabase/agent-skills",
       "sourceType": "github",

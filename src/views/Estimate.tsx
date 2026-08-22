@@ -25,6 +25,24 @@ import { buildEstimateMailto } from '@/lib/contact';
 type ProjectType = 'interior' | 'exterior' | 'cabinets';
 type PrepLevel = 'standard' | 'premium';
 type SubmitStatus = 'idle' | 'submitting' | 'sent' | 'fallback';
+type MaterialPricingStatus = 'idle' | 'loading' | 'ready' | 'error';
+
+type MaterialPriceResult = {
+  id: string;
+  title: string;
+  brand?: string;
+  lowestOffer?: {
+    domain: string;
+    url: string;
+    price: number;
+    currency: string;
+  };
+};
+
+type MaterialPricingResponse = {
+  products?: MaterialPriceResult[];
+  error?: string;
+};
 
 const projectOptions = [
   ['interior', 'Interior rooms'],
@@ -84,6 +102,9 @@ export default function EstimatePage() {
   const [email, setEmail] = useState('');
   const [city, setCity] = useState('');
   const [status, setStatus] = useState<SubmitStatus>('idle');
+  const [materialPricingStatus, setMaterialPricingStatus] = useState<MaterialPricingStatus>('idle');
+  const [materialResults, setMaterialResults] = useState<MaterialPriceResult[]>([]);
+  const [materialPricingMessage, setMaterialPricingMessage] = useState('');
 
   const planningRange = useMemo(() => {
     if (!projectType || !prepLevel) return null;
@@ -114,6 +135,12 @@ export default function EstimatePage() {
       high: Math.round(high / 100) * 100,
     };
   }, [cabinetCount, height, length, prepLevel, projectType, siding, stories, width]);
+
+  const defaultMaterialQuery = projectType === 'cabinets'
+    ? 'cabinet paint primer'
+    : projectType === 'exterior'
+      ? 'exterior house paint'
+      : 'interior wall paint';
 
   const projectDetail = projectType === 'interior'
     ? `${roomType}, ${width} × ${length} × ${height} ft`
@@ -150,6 +177,31 @@ export default function EstimatePage() {
     if (!prepLevel) return;
     setStep(4);
     trackEvent('estimate_range_view', { projectType, prepLevel });
+  };
+
+  const checkMaterialPricing = async () => {
+    setMaterialPricingStatus('loading');
+    setMaterialPricingMessage('');
+
+    try {
+      const response = await fetch(`/api/material-pricing/search?q=${encodeURIComponent(defaultMaterialQuery)}&limit=3`);
+      const result = (await response.json()) as MaterialPricingResponse;
+      if (!response.ok) {
+        throw new Error(result.error || 'Live material pricing is unavailable.');
+      }
+
+      const products = result.products ?? [];
+      setMaterialResults(products);
+      setMaterialPricingStatus('ready');
+      if (products.length === 0) {
+        setMaterialPricingMessage('No usable live prices were found. Use a confirmed supplier or manual price when preparing the final scope.');
+      }
+      trackEvent('estimate_material_pricing_check', { projectType, query: defaultMaterialQuery, productCount: products.length });
+    } catch (error) {
+      setMaterialResults([]);
+      setMaterialPricingStatus('error');
+      setMaterialPricingMessage(error instanceof Error ? error.message : 'Live material pricing is unavailable.');
+    }
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -301,6 +353,34 @@ export default function EstimatePage() {
                         </CardTitle>
                         <CardDescription>This is a planning range, not a proposal. Surface condition, access, repairs, product, and final scope can change it.</CardDescription>
                       </CardHeader>
+                    </Card>
+
+                    <Card variant="panel">
+                      <CardHeader>
+                        <p className="text-xs font-bold uppercase tracking-[0.12em] text-trust">Live material pricing</p>
+                        <CardTitle>Check current material options</CardTitle>
+                        <CardDescription>Searches are handled securely on the server. Confirm product specifications and supplier availability before using any price in a proposal.</CardDescription>
+                      </CardHeader>
+                      <CardContent className="grid gap-4">
+                        <Button type="button" variant="outline" onClick={checkMaterialPricing} disabled={materialPricingStatus === 'loading'} aria-busy={materialPricingStatus === 'loading'}>
+                          {materialPricingStatus === 'loading' ? <Loader2 data-icon="inline-start" className="animate-spin" /> : <Calculator data-icon="inline-start" />}
+                          {materialPricingStatus === 'loading' ? 'Checking Material Prices' : 'Check Material Prices'}
+                        </Button>
+                        {materialPricingMessage ? <FieldDescription>{materialPricingMessage}</FieldDescription> : null}
+                        {materialResults.map((product) => (
+                          <div key={product.id} className="rounded-lg border border-border bg-background p-4">
+                            <p className="font-semibold text-foreground">{product.title}</p>
+                            {product.brand ? <p className="mt-1 text-sm text-muted-foreground">{product.brand}</p> : null}
+                            {product.lowestOffer ? (
+                              <p className="mt-2 text-sm text-muted-foreground">
+                                Lowest in-stock offer: <span className="font-semibold text-foreground">{new Intl.NumberFormat('en-US', { style: 'currency', currency: product.lowestOffer.currency }).format(product.lowestOffer.price)}</span> from {product.lowestOffer.domain}
+                              </p>
+                            ) : (
+                              <p className="mt-2 text-sm text-muted-foreground">No current in-stock offer was returned. Use a saved or manual supplier price.</p>
+                            )}
+                          </div>
+                        ))}
+                      </CardContent>
                     </Card>
 
                     {status === 'sent' ? (
