@@ -1,6 +1,10 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
+  "alias": [
+    "skysthelimitpaintingllc.com",
+    "www.skysthelimitpaintingllc.com"
+  ],
   "buildCommand": "npm run build",
   "installCommand": "npm ci",
   "headers": [
