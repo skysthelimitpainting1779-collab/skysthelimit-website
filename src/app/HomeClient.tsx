@@ -1,5 +1,7 @@
-import Link from 'next/link';
-import { ArrowRight, ArrowUpRight, Check, ClipboardCheck, ShieldCheck } from 'lucide-react';
+'use client';
+
+import { ArrowDownRight, ArrowRight, ArrowUpRight, Check, ShieldCheck } from 'lucide-react';
+
 import LeadForm from '../components/LeadForm';
 import PrepProtocolStage from '../components/PrepProtocolStage';
 import ResponsiveImage from '../components/ResponsiveImage';
@@ -7,11 +9,11 @@ import { PublicCtaLink, PublicPage } from '../components/public/PublicSystem';
 import { faqSchema } from '../lib/seo';
 
 const stageLedger = [
-  ['01', 'Protect', 'Cover, mask, and safeguard the property.'],
-  ['02', 'Repair', 'Patch, caulk, sand, and correct defects.'],
-  ['03', 'Prime', 'Match the primer to the surface and exposure.'],
-  ['04', 'Paint', 'Apply the specified coating system cleanly.'],
-  ['05', 'Finish', 'Detail, clean up, and walk the scope together.'],
+  ['01', 'Protect', 'Cover, mask, and safeguard the property before preparation begins.'],
+  ['02', 'Repair', 'Patch, caulk, sand, and correct the surface conditions that matter.'],
+  ['03', 'Prime', 'Match the primer to the surface, exposure, and coating plan.'],
+  ['04', 'Paint', 'Apply the selected coating system with the preparation still intact.'],
+  ['05', 'Finish', 'Detail, clean up, and walk the agreed scope together.'],
 ] as const;
 
 const scopeRows = [
@@ -38,130 +40,147 @@ const faqItems = [
 
 export default function HomeClient() {
   return (
-    <PublicPage className="ledger-surface">
+    <PublicPage className="proof-surface overflow-hidden bg-[#071321]">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema([...faqItems])) }} />
 
-      <section aria-labelledby="home-title" className="border-b border-[#071321]/20">
-        <div className="mx-auto grid min-h-[calc(100svh-112px)] max-w-[94rem] lg:grid-cols-[58fr_42fr]">
-          <div className="ledger-grid flex min-h-[39rem] flex-col justify-between px-5 py-10 sm:px-8 sm:py-12 lg:min-h-0 lg:px-12 lg:py-14 xl:px-16">
-            <div>
-              <h1 id="home-title" className="ledger-display max-w-[11ch] text-[clamp(3.5rem,6.6vw,6rem)] leading-[0.9] text-[#071321]">
-                A finish that lasts starts before the first coat.
-              </h1>
-              <p className="mt-7 max-w-[36rem] text-lg font-semibold leading-7 text-[#26384A] sm:text-xl sm:leading-8">
-                Anthony manages the walkthrough, written scope, preparation plan, and final detail—so your property stays protected and the work is clear before it starts.
-              </p>
-            </div>
+      <section aria-labelledby="home-title" className="proof-hero relative isolate min-h-[calc(100svh-7rem)] overflow-hidden bg-[#071321] text-[#F6F3EB]">
+        <ResponsiveImage
+          src="/images/site/proof-in-the-prep-tape-material.jpg"
+          alt=""
+          width={2560}
+          height={1440}
+          sizes="100vw"
+          priority
+          fetchPriority="high"
+          className="absolute inset-0 h-full w-full object-cover object-center"
+        />
+        <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(90deg,rgba(7,19,33,0.98)_0%,rgba(7,19,33,0.9)_45%,rgba(7,19,33,0.38)_76%,rgba(7,19,33,0.12)_100%)]" />
+        <div aria-hidden="true" className="proof-hero-grain absolute inset-0" />
+        <div aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-white/30" />
 
-            <div className="mt-10">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                <PublicCtaLink
-                  href="#walkthrough"
-                  size="marketing-lg"
-                  track="hero_cta_click"
-                  trackPayload={{ source: 'homepage_hero', label: 'Start the Written Scope' }}
-                >
-                  Start the Written Scope
-                </PublicCtaLink>
-                <PublicCtaLink
-                  href="tel:+16514104196"
-                  variant="outline"
-                  size="marketing-lg"
-                  icon={null}
-                  track="call_click"
-                  trackPayload={{ source: 'homepage_hero' }}
-                >
-                  Call Anthony
-                </PublicCtaLink>
-              </div>
-              <ul aria-label="Service commitments" className="mt-7 flex flex-wrap gap-x-6 gap-y-3 text-sm font-bold text-[#314457]">
-                {['Owner-led', 'Written scope', 'Twin Cities metro'].map((item) => (
-                  <li key={item} className="flex items-center gap-2">
-                    <Check aria-hidden="true" size={16} className="text-[#0254C3]" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
+        <div className="relative mx-auto flex min-h-[calc(100svh-7rem)] max-w-[96rem] flex-col justify-between px-5 py-8 sm:px-8 sm:py-10 lg:px-12 lg:py-12 xl:px-16">
+          <div className="flex items-center justify-between gap-6 text-[0.7rem] font-black uppercase tracking-[0.18em] text-[#DDEBFA]">
+            <span>Twin Cities painting</span>
+            <span className="hidden sm:block">Owner-led from walkthrough to final detail</span>
+          </div>
+
+          <div className="max-w-[56rem] py-12 sm:py-16 lg:py-20">
+            <h1 id="home-title" className="proof-display max-w-[10ch] text-[clamp(4.2rem,10vw,10.5rem)] leading-[0.78] tracking-[-0.06em] text-[#F6F3EB]">
+              Paint is the last thing we do.
+            </h1>
+            <p className="mt-8 max-w-[39rem] text-lg font-semibold leading-8 text-[#DDEBFA] sm:text-xl sm:leading-9">
+              A finish that lasts starts before the first coat. It begins with what gets covered, corrected, specified, and checked—before the first coat ever reaches the wall.
+            </p>
+            <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <PublicCtaLink
+                href="#walkthrough"
+                size="marketing-lg"
+                track="hero_cta_click"
+                trackPayload={{ source: 'homepage_owner_finish_ledger', label: 'Start the Written Scope' }}
+                className="proof-cta-primary"
+              >
+                Start the Written Scope
+              </PublicCtaLink>
+              <PublicCtaLink
+                href="tel:+16514104196"
+                variant="outline"
+                size="marketing-lg"
+                icon={null}
+                track="call_click"
+                trackPayload={{ source: 'homepage_proof_hero' }}
+                className="border-white/45 bg-transparent text-[#F6F3EB] hover:border-[#FF661C] hover:bg-[#FF661C] hover:text-[#071321]"
+              >
+                Call Anthony
+              </PublicCtaLink>
             </div>
           </div>
 
-          <div className="relative min-h-[32rem] border-t border-[#071321]/20 lg:min-h-0 lg:border-l lg:border-t-0">
-            <span className="ledger-tape" aria-hidden="true" />
-            <ResponsiveImage
-              src="/images/site/marketing-hero-exterior-painting.webp"
-              alt="Painter preparing exterior trim while windows and landscaping are protected"
-              width={1600}
-              height={900}
-              sizes="(min-width: 1024px) 42vw, 100vw"
-              priority
-              fetchPriority="high"
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-            <div className="absolute inset-x-0 top-0 flex items-center justify-between border-b border-white/55 bg-[#F6F3EB]/94 px-5 py-3 text-xs font-black uppercase tracking-[0.08em] text-[#071321]">
-              <span>Field record</span>
-              <span>Exterior preparation</span>
-            </div>
-            <div className="absolute inset-x-0 bottom-0 grid border-t border-[#071321]/20 bg-[#F6F3EB]/96 sm:grid-cols-[1fr_auto]">
-              <div className="p-5 sm:p-6">
-                <p className="text-base font-black text-[#071321]">Protection and correction belong in the work order.</p>
-                <p className="mt-2 max-w-[34rem] text-sm leading-6 text-[#3E4D5D]">The visible finish starts with the details that are easiest to skip and hardest to correct later.</p>
-              </div>
-              <div className="border-t border-[#071321]/20 p-5 sm:border-l sm:border-t-0 sm:p-6">
-                <p className="text-xs font-black uppercase tracking-[0.08em] text-[#0254C3]">Written scope</p>
-                <p className="mt-2 text-sm font-bold text-[#071321]">Before scheduling</p>
-              </div>
+          <div className="grid gap-5 border-t border-white/25 pt-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
+            <p className="max-w-[44rem] text-base font-semibold leading-6 text-[#DDEBFA]">
+              Anthony manages the walkthrough, written scope, preparation plan, and final detail—so the work stays clear before a date is reserved.
+            </p>
+            <ul aria-label="Service commitments" className="flex flex-wrap gap-x-5 gap-y-2 text-xs font-black uppercase tracking-[0.1em] text-[#F6F3EB]">
+              {['Owner-led', 'Written scope', 'Prep first'].map((item) => (
+                <li key={item} className="flex items-center gap-2">
+                  <Check aria-hidden="true" size={15} className="text-[#FF661C]" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="mechanism-title" className="relative overflow-hidden bg-[#F6F3EB] text-[#071321]">
+        <div aria-hidden="true" className="absolute inset-y-0 right-0 hidden w-[42%] bg-[#0254C3] lg:block" />
+        <div className="relative mx-auto grid max-w-[96rem] lg:grid-cols-[1.15fr_0.85fr]">
+          <div className="px-5 py-20 sm:px-8 lg:px-12 lg:py-28 xl:px-16">
+            <h2 id="mechanism-title" className="proof-display max-w-[11ch] text-[clamp(3.4rem,7vw,7.5rem)] leading-[0.82] tracking-[-0.055em]">
+              The work you see rests on the work you do not.
+            </h2>
+            <p className="mt-8 max-w-[38rem] text-lg leading-8 text-[#314457] sm:text-xl">
+              The written scope makes preparation visible before the day begins. It gives the homeowner a clear path from walkthrough to closeout instead of a generic painting package.
+            </p>
+            <a href="#proof-record" className="group mt-10 inline-flex min-h-12 items-center gap-3 border-b-2 border-[#071321] text-sm font-black uppercase tracking-[0.08em] text-[#071321] transition-colors hover:border-[#FF661C] hover:text-[#FF661C]">
+              See the preparation record <ArrowDownRight aria-hidden="true" size={19} className="transition-transform duration-300 group-hover:translate-y-1" />
+            </a>
+          </div>
+          <div className="relative flex min-h-[22rem] flex-col justify-end overflow-hidden bg-[#0254C3] p-6 text-[#F6F3EB] sm:p-8 lg:min-h-full lg:p-12">
+            <span aria-hidden="true" className="proof-vertical-word pointer-events-none absolute -right-5 top-8 select-none text-[clamp(5rem,15vw,14rem)] font-black leading-none text-white/15">PREP</span>
+            <div className="relative max-w-[24rem] border-t border-white/40 pt-5">
+              <p className="text-sm font-bold uppercase tracking-[0.12em] text-[#DDEBFA]">A written field plan</p>
+              <p className="mt-5 text-3xl font-black leading-tight sm:text-4xl">No guessing about what happens before the finish.</p>
+              <p className="mt-6 text-base leading-7 text-[#E6EFF8]">Protection, repair, primer, coating, and closeout belong to the same documented conversation.</p>
             </div>
           </div>
         </div>
       </section>
 
-      <section aria-labelledby="stage-ledger-title" className="border-b border-[#071321]/20 bg-[#F9F7F1]">
-        <h2 id="stage-ledger-title" className="sr-only">Preparation stage ledger</h2>
-        <div className="mx-auto max-w-[94rem]">
-          <div className="flex items-center justify-between border-b border-[#071321]/20 px-5 py-3 text-xs font-black uppercase tracking-[0.08em] text-[#314457] sm:px-8 md:hidden">
-            <span>Five-stage prep record</span>
-            <span className="text-[#0254C3]">Swipe to review</span>
+      <section id="proof-record" aria-labelledby="stage-ledger-title" className="overflow-hidden bg-[#0254C3] py-20 text-[#F6F3EB] sm:py-24 lg:py-32">
+        <div className="mx-auto max-w-[96rem] px-5 sm:px-8 lg:px-12 xl:px-16">
+          <div className="grid gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-16">
+            <h2 id="stage-ledger-title" className="proof-display max-w-[8ch] text-[clamp(3.4rem,6vw,6.75rem)] leading-[0.82] tracking-[-0.055em]">
+              Before color, there is control.
+            </h2>
+            <p className="max-w-[34rem] self-end text-lg leading-8 text-[#E6EFF8] sm:text-xl">Every stage protects the next one. The order is simple enough to understand and specific enough to put in writing.</p>
           </div>
-          <div className="overflow-x-auto overscroll-x-contain scroll-smooth">
-            <ol className="grid min-w-[65rem] snap-x snap-mandatory scroll-px-5 grid-cols-[repeat(5,minmax(0,1fr))_1.15fr] sm:scroll-px-8">
-              {stageLedger.map(([number, title, detail]) => (
-                <li key={number} className="snap-start border-r border-[#071321]/20 px-5 py-6 last:border-r-0">
-                <div className="flex items-center gap-3">
-                  <span className="text-sm font-black text-[#0254C3]">{number}</span>
-                  <span aria-hidden="true" className="h-px flex-1 bg-[#0254C3]/45" />
-                </div>
-                <h3 className="ledger-display mt-3 text-3xl leading-none text-[#071321]">{title}</h3>
-                <p className="mt-3 text-sm leading-5 text-[#3E4D5D]">{detail}</p>
+
+          <ol className="mt-16 grid border-y border-white/35 md:grid-cols-5">
+            {stageLedger.map(([number, title, detail], index) => (
+              <li key={number} className="proof-stage group relative min-h-[20rem] border-b border-white/25 p-5 last:border-b-0 md:border-b-0 md:border-r md:last:border-r-0 md:p-6 lg:min-h-[24rem] lg:p-8">
+                <span className="text-sm font-black tracking-[0.14em] text-[#DDEBFA]">{number}</span>
+                <h3 className="proof-display mt-10 max-w-[6ch] text-4xl leading-[0.86] tracking-[-0.045em] sm:text-5xl">{title}</h3>
+                <p className="absolute inset-x-5 bottom-6 max-w-[18rem] text-sm leading-6 text-[#E6EFF8] md:inset-x-6 lg:inset-x-8 lg:bottom-8">{detail}</p>
+                <span aria-hidden="true" className="absolute bottom-0 left-0 h-2 w-0 bg-[#FF661C] transition-[width] duration-500 group-hover:w-full group-focus-within:w-full" />
+                <span aria-hidden="true" className="absolute right-5 top-6 text-[8rem] font-black leading-none text-white/10 md:right-4">{index + 1}</span>
               </li>
             ))}
-              <li className="snap-start px-5 py-6">
-                <ClipboardCheck aria-hidden="true" size={22} className="text-[#0254C3]" />
-                <p className="mt-4 text-lg font-black text-[#071321]">One owner. One scope.</p>
-                <p className="mt-2 text-sm leading-5 text-[#3E4D5D]">Documented from the first conversation through final detail.</p>
-              </li>
-            </ol>
-          </div>
+          </ol>
         </div>
       </section>
 
-      <section aria-labelledby="scope-title" className="border-b border-[#071321]/20 bg-[#F6F3EB]">
-        <div className="mx-auto grid max-w-[94rem] lg:grid-cols-[0.72fr_1.28fr]">
-          <div className="ledger-grid border-b border-[#071321]/20 px-5 py-16 sm:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-24 xl:px-16">
-            <h2 id="scope-title" className="ledger-display max-w-[8ch] text-[clamp(3.2rem,5vw,5.5rem)] leading-[0.92] text-[#071321]">
-              Everything priced before anything starts.
-            </h2>
-            <p className="mt-7 max-w-[34rem] text-lg leading-8 text-[#314457]">The estimate follows the property conditions—not a generic package. Each line makes preparation and execution visible before a date is reserved.</p>
-          </div>
+      <PrepProtocolStage />
 
-          <dl className="divide-y divide-[#071321]/20">
-            {scopeRows.map(([service, surfaces, href]) => (
-              <div key={service} className="grid min-h-28 grid-cols-[minmax(0,1fr)_3rem] items-center gap-x-5 gap-y-3 px-5 py-6 sm:grid-cols-[6.5rem_minmax(0,1fr)_3rem] sm:px-8 lg:px-10">
-                <dt className="ledger-display text-3xl text-[#071321]">{service}</dt>
-                <dd className="col-span-2 row-start-2 max-w-[46rem] text-base font-semibold leading-6 text-[#314457] sm:col-auto sm:row-auto">{surfaces}</dd>
-                <dd className="col-start-2 row-start-1 sm:col-auto sm:row-auto">
-                  <Link href={href} aria-label={`Explore ${service.toLowerCase()} painting`} className="grid h-12 w-12 place-items-center border border-[#071321]/25 text-[#071321] transition-[color,border-color,transform] duration-200 hover:-translate-y-0.5 hover:border-[#0254C3] hover:text-[#0254C3] active:translate-y-px">
+      <section aria-labelledby="scope-title" className="bg-[#071321] text-[#F6F3EB]">
+        <div className="mx-auto grid max-w-[96rem] lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="px-5 py-20 sm:px-8 lg:px-12 lg:py-28 xl:px-16">
+            <h2 id="scope-title" className="proof-display max-w-[8ch] text-[clamp(3.4rem,6vw,6.75rem)] leading-[0.82] tracking-[-0.055em]">
+              One scope, different surfaces.
+            </h2>
+            <p className="mt-8 max-w-[31rem] text-lg leading-8 text-[#C8D7E6]">Residential, property, commercial, and striping work all start with the same question: what must be protected and corrected before the finish begins?</p>
+          </div>
+          <dl className="border-t border-white/20 lg:border-l lg:border-t-0">
+            {scopeRows.map(([service, surfaces, href], index) => (
+              <div key={service} className="group grid min-h-36 grid-cols-[auto_minmax(0,1fr)_3rem] items-center gap-4 border-b border-white/20 px-5 py-7 transition-colors hover:bg-white hover:text-[#071321] sm:grid-cols-[3.5rem_minmax(0,1fr)_3rem] sm:px-8 lg:px-10">
+                <dt className="text-sm font-black tracking-[0.12em] text-[#70A9F0] group-hover:text-[#0254C3]">0{index + 1}</dt>
+                <dd>
+                  <p className="proof-display text-[clamp(2.2rem,3.5vw,4rem)] leading-[0.86] tracking-[-0.045em]">{service}</p>
+                  <p className="mt-3 max-w-[34rem] text-sm font-semibold leading-6 text-[#C8D7E6] group-hover:text-[#314457]">{surfaces}</p>
+                </dd>
+                <dd>
+                  <a href={href} aria-label={`Explore ${service.toLowerCase()} painting`} className="grid h-12 w-12 place-items-center border border-white/40 text-[#F6F3EB] transition-all duration-300 hover:-translate-y-1 hover:border-[#FF661C] hover:bg-[#FF661C] hover:text-[#071321] group-hover:border-[#071321]/30 group-hover:text-[#071321]">
                     <ArrowUpRight aria-hidden="true" size={20} />
-                  </Link>
+                  </a>
                 </dd>
               </div>
             ))}
@@ -169,30 +188,27 @@ export default function HomeClient() {
         </div>
       </section>
 
-      <PrepProtocolStage />
-
-      <section id="accountability" aria-labelledby="accountability-title" className="bg-[#071321] text-[#F6F3EB]">
-        <div className="mx-auto grid max-w-[94rem] lg:grid-cols-[1.08fr_0.92fr]">
-          <div className="relative min-h-[34rem] border-b border-white/20 lg:border-b-0 lg:border-r">
+      <section id="accountability" aria-labelledby="accountability-title" className="relative overflow-hidden bg-[#F6F3EB] text-[#071321]">
+        <div className="mx-auto grid max-w-[96rem] lg:grid-cols-[1.08fr_0.92fr]">
+          <div className="relative min-h-[34rem] overflow-hidden lg:min-h-[48rem]">
             <ResponsiveImage
-              src="/images/site/iphone-interior-painting-progress.webp"
-              alt="Interior painting in progress with furniture and floors protected"
+              src="/images/site/marketing-hero-exterior-painting.webp"
+              alt="Exterior painting work in progress"
               width={1200}
               height={1600}
               sizes="(min-width: 1024px) 54vw, 100vw"
               className="absolute inset-0 h-full w-full object-cover"
             />
-            <div className="absolute inset-x-0 bottom-0 flex items-center justify-between border-t border-white/40 bg-[#071321]/94 px-5 py-4 text-xs font-black uppercase tracking-[0.08em] text-[#F6F3EB] sm:px-8">
-              <span>Interior protection record</span>
-              <span>Preparation in progress</span>
+            <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(0deg,rgba(7,19,33,0.88)_0%,transparent_56%)]" />
+            <div className="absolute inset-x-0 bottom-0 px-5 pb-7 sm:px-8 sm:pb-10">
+              <p className="max-w-[28rem] text-2xl font-black leading-tight text-[#F6F3EB] sm:text-3xl">The person who hears the scope is still there at the final walkthrough.</p>
             </div>
           </div>
-          <div className="px-5 py-16 sm:px-8 lg:px-12 lg:py-24 xl:px-16">
-            <h2 id="accountability-title" className="ledger-display max-w-[7ch] text-[clamp(3.2rem,5vw,5.5rem)] leading-[0.92] text-[#F6F3EB]">
-              The scope does not change hands.
-            </h2>
-            <p className="mt-7 max-w-[34rem] text-lg leading-8 text-[#D8E2EC]">Anthony handles the walkthrough and project conversation directly. The final detail is checked against the same written scope used to start the work.</p>
-            <ul className="mt-10 divide-y divide-white/20 border-y border-white/20">
+          <div className="relative bg-[#FF661C] px-5 py-20 text-[#071321] sm:px-8 lg:px-12 lg:py-28 xl:px-16">
+            <span aria-hidden="true" className="absolute right-6 top-5 text-[7rem] font-black leading-none text-[#071321]/10">A</span>
+            <h2 id="accountability-title" className="proof-display relative max-w-[7ch] text-[clamp(3.4rem,5.2vw,6rem)] leading-[0.82] tracking-[-0.055em]">The scope does not change hands.</h2>
+            <p className="relative mt-8 max-w-[31rem] text-lg font-semibold leading-8 text-[#2D180D]">Anthony handles the walkthrough and project conversation directly. The final detail is checked against the same written scope used to start the work.</p>
+            <ul className="relative mt-12 divide-y divide-[#071321]/25 border-y border-[#071321]/25">
               {[
                 ['Minnesota registration', 'IR816596'],
                 ['Coverage', 'Fully insured'],
@@ -200,43 +216,44 @@ export default function HomeClient() {
                 ['Closeout', 'Final walkthrough'],
               ].map(([label, value]) => (
                 <li key={label} className="grid grid-cols-[1fr_auto] gap-5 py-5">
-                  <span className="text-sm font-semibold text-[#BCD0E3]">{label}</span>
-                  <span className="text-right text-sm font-black text-[#F6F3EB]">{value}</span>
+                  <span className="text-sm font-semibold text-[#3C2416]">{label}</span>
+                  <span className="text-right text-sm font-black">{value}</span>
                 </li>
               ))}
             </ul>
-            <Link href="/about" className="mt-8 inline-flex min-h-12 items-center gap-3 border border-white/40 px-5 text-sm font-black text-[#F6F3EB] transition-colors hover:border-[#FF661C] hover:text-[#FF8A4B]">
+            <a href="/about" className="relative mt-10 inline-flex min-h-12 items-center gap-3 border-b-2 border-[#071321] text-sm font-black uppercase tracking-[0.08em] transition-colors hover:border-white hover:text-white">
               Meet the owner <ArrowRight aria-hidden="true" size={17} />
-            </Link>
+            </a>
           </div>
         </div>
       </section>
 
-      <section aria-labelledby="questions-title" className="border-b border-[#071321]/20 bg-[#F6F3EB]">
-        <div className="mx-auto grid max-w-[94rem] lg:grid-cols-[0.7fr_1.3fr]">
-          <div className="ledger-grid border-b border-[#071321]/20 px-5 py-16 sm:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-24 xl:px-16">
-            <h2 id="questions-title" className="ledger-display max-w-[7ch] text-[clamp(3.2rem,5vw,5.5rem)] leading-[0.92] text-[#071321]">Questions before the walkthrough.</h2>
+      <section aria-labelledby="questions-title" className="bg-[#F6F3EB] text-[#071321]">
+        <div className="mx-auto grid max-w-[96rem] lg:grid-cols-[0.78fr_1.22fr]">
+          <div className="px-5 py-20 sm:px-8 lg:px-12 lg:py-28 xl:px-16">
+            <h2 id="questions-title" className="proof-display max-w-[7ch] text-[clamp(3.4rem,5.4vw,6rem)] leading-[0.82] tracking-[-0.055em]">The questions worth asking first.</h2>
           </div>
-          <div className="divide-y divide-[#071321]/20">
+          <div className="border-t border-[#071321]/20 lg:border-l lg:border-t-0">
             {faqItems.map((item) => (
-              <details key={item.question} className="group px-5 py-7 sm:px-8 lg:px-10">
-                <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-5 text-lg font-black text-[#071321] marker:content-none transition-colors hover:text-[#0254C3] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0254C3]">
+              <details key={item.question} className="group border-b border-[#071321]/20 px-5 py-7 transition-colors open:bg-[#071321] open:text-[#F6F3EB] sm:px-8 lg:px-10">
+                <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-5 text-xl font-black leading-tight marker:content-none transition-colors hover:text-[#0254C3] group-open:hover:text-[#FF8A4B] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0254C3]">
                   {item.question}
-                  <span aria-hidden="true" className="text-2xl font-normal text-[#0254C3] transition-transform group-open:rotate-45">+</span>
+                  <span aria-hidden="true" className="text-3xl font-normal text-[#0254C3] transition-transform duration-300 group-open:rotate-45 group-open:text-[#FF661C]">+</span>
                 </summary>
-                <p className="mt-5 max-w-[46rem] text-base leading-7 text-[#314457]">{item.answer}</p>
+                <p className="mt-5 max-w-[46rem] text-base leading-7 text-[#314457] group-open:text-[#DDEBFA]">{item.answer}</p>
               </details>
             ))}
           </div>
         </div>
       </section>
 
-      <section id="walkthrough" aria-labelledby="walkthrough-title" className="bg-[#0254C3] text-[#F6F3EB]">
-        <div className="mx-auto grid max-w-[94rem] lg:grid-cols-[0.72fr_1.28fr]">
-          <div className="border-b border-white/30 px-5 py-16 sm:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-24 xl:px-16">
-            <h2 id="walkthrough-title" className="ledger-display max-w-[7ch] text-[clamp(3.2rem,5vw,5.5rem)] leading-[0.92] text-white">Start the written scope.</h2>
-            <p className="mt-7 max-w-[32rem] text-lg leading-8 text-[#E6EFF8]">Share the property, city, surfaces, timing, and preparation concerns. Contact details come after the project information.</p>
-            <div className="mt-10 border-y border-white/30 py-5">
+      <section id="walkthrough" aria-labelledby="walkthrough-title" className="relative overflow-hidden bg-[#0254C3] text-[#F6F3EB]">
+        <div aria-hidden="true" className="proof-walkthrough-lines absolute inset-0" />
+        <div className="relative mx-auto grid max-w-[96rem] lg:grid-cols-[0.8fr_1.2fr]">
+          <div className="px-5 py-20 sm:px-8 lg:px-12 lg:py-28 xl:px-16">
+            <h2 id="walkthrough-title" className="proof-display max-w-[7ch] text-[clamp(3.4rem,5.6vw,6.25rem)] leading-[0.82] tracking-[-0.055em]">Start with the surface in front of you.</h2>
+            <p className="mt-8 max-w-[32rem] text-lg leading-8 text-[#E6EFF8]">Share the property, city, surfaces, timing, and preparation concerns. Contact details come after the project information.</p>
+            <div className="mt-12 border-y border-white/30 py-5">
               <p className="flex items-start gap-3 text-sm font-semibold leading-6 text-white">
                 <ShieldCheck aria-hidden="true" size={20} className="mt-0.5 shrink-0" />
                 Your information is used only to review and respond to this project request.
@@ -244,7 +261,7 @@ export default function HomeClient() {
             </div>
           </div>
           <div className="bg-[#F6F3EB] p-5 text-[#071321] sm:p-8 lg:p-12">
-            <LeadForm source="homepage_owner_finish_ledger" defaultMarket="Residential" theme="ledger" />
+            <LeadForm source="homepage_proof_in_prep" defaultMarket="Residential" theme="ledger" />
           </div>
         </div>
       </section>
