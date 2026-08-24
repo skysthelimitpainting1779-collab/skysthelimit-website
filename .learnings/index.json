@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated_at": "2026-07-24T18:33:15.372Z",
+  "updated_at": "2026-08-15T00:08:10.960Z",
   "incidents": {
     "d58a0248d6022326": {
       "id": "ERR-20260720-9b47",
@@ -217,12 +217,92 @@
       "healed_at": null,
       "archive": null,
       "last_title": "Synthetic failure dedupe-test-1784917995150"
+    },
+    "4099865acff97b21": {
+      "id": "ERR-20260814-55e3",
+      "fingerprint": "4099865acff97b21",
+      "title": "Synthetic failure dedupe-test-1786751643818",
+      "category": "general",
+      "severity": "medium",
+      "healable": false,
+      "prevention": "Reproduce with the exact command, fix root cause (see .agents/governance/ROOT_CAUSE.md), add a regression test when durable, then re-run verify chain.",
+      "area": "test",
+      "command": "node -e \"process.exit(1)\"",
+      "snippet": "unique-marker-dedupe-test-1786751643818 boom",
+      "count": 2,
+      "status": "open",
+      "first_seen": "2026-08-14T23:54:03.911Z",
+      "last_seen": "2026-08-14T23:54:04.041Z",
+      "heal_attempts": 0,
+      "healed_at": null,
+      "archive": null,
+      "last_title": "Synthetic failure dedupe-test-1786751643818"
+    },
+    "7529fe21d0af4e86": {
+      "id": "ERR-20260814-1ee7",
+      "fingerprint": "7529fe21d0af4e86",
+      "title": "Synthetic failure dedupe-test-1786751674714",
+      "category": "general",
+      "severity": "medium",
+      "healable": false,
+      "prevention": "Reproduce with the exact command, fix root cause (see .agents/governance/ROOT_CAUSE.md), add a regression test when durable, then re-run verify chain.",
+      "area": "test",
+      "command": "node -e \"process.exit(1)\"",
+      "snippet": "unique-marker-dedupe-test-1786751674714 boom",
+      "count": 2,
+      "status": "open",
+      "first_seen": "2026-08-14T23:54:34.816Z",
+      "last_seen": "2026-08-14T23:54:34.930Z",
+      "heal_attempts": 0,
+      "healed_at": null,
+      "archive": null,
+      "last_title": "Synthetic failure dedupe-test-1786751674714"
+    },
+    "f94af9ee72d11b9d": {
+      "id": "ERR-20260814-b0fc",
+      "fingerprint": "f94af9ee72d11b9d",
+      "title": "Synthetic failure dedupe-test-1786751853945",
+      "category": "general",
+      "severity": "medium",
+      "healable": false,
+      "prevention": "Reproduce with the exact command, fix root cause (see .agents/governance/ROOT_CAUSE.md), add a regression test when durable, then re-run verify chain.",
+      "area": "test",
+      "command": "node -e \"process.exit(1)\"",
+      "snippet": "unique-marker-dedupe-test-1786751853945 boom",
+      "count": 2,
+      "status": "open",
+      "first_seen": "2026-08-14T23:57:34.044Z",
+      "last_seen": "2026-08-14T23:57:34.172Z",
+      "heal_attempts": 0,
+      "healed_at": null,
+      "archive": null,
+      "last_title": "Synthetic failure dedupe-test-1786751853945"
+    },
+    "66727c7dda1ffcfb": {
+      "id": "ERR-20260815-ef25",
+      "fingerprint": "66727c7dda1ffcfb",
+      "title": "Synthetic failure dedupe-test-1786752490738",
+      "category": "general",
+      "severity": "medium",
+      "healable": false,
+      "prevention": "Reproduce with the exact command, fix root cause (see .agents/governance/ROOT_CAUSE.md), add a regression test when durable, then re-run verify chain.",
+      "area": "test",
+      "command": "node -e \"process.exit(1)\"",
+      "snippet": "unique-marker-dedupe-test-1786752490738 boom",
+      "count": 2,
+      "status": "open",
+      "first_seen": "2026-08-15T00:08:10.826Z",
+      "last_seen": "2026-08-15T00:08:10.958Z",
+      "heal_attempts": 0,
+      "healed_at": null,
+      "archive": null,
+      "last_title": "Synthetic failure dedupe-test-1786752490738"
     }
   },
   "stats": {
-    "total_records": 18,
-    "unique_fingerprints": 10,
+    "total_records": 26,
+    "unique_fingerprints": 14,
     "auto_heals": 0,
-    "duplicates_suppressed": 8
+    "duplicates_suppressed": 12
   }
 }
