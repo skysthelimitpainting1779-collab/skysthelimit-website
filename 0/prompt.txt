@@ -1,0 +1,37 @@
+docs/HANDOFF-PR-202.md
+
+---
+
+I approve but use the GitHub and Vercel [@Vercel](plugin://vercel@openai-curated-remote/) [@GitHub](plugin://github@openai-curated-remote/)
+
+---
+
+fix that
+
+---
+
+Fix the Johnnycsv232
+
+---
+
+Environments
+You can configure environments with protection rules, variables, and secrets. [Learn more about configuring environments.](https://docs.github.com/actions/reference/environments)
+
+[Preview – website](https://github.com/skysthelimitpainting1779-collab/skysthelimit-website/settings/environments/18982183665/edit)
+[Production – website](https://github.com/skysthelimitpainting1779-collab/skysthelimit-website/settings/environments/18974502262/edit)
+[Preview – skys-the-limit-painting-llc-website](https://github.com/skysthelimitpainting1779-collab/skysthelimit-website/settings/environments/18968798435/edit)
+[Production – skys-the-limit-painting-llc-website](https://github.com/skysthelimitpainting1779-collab/skysthelimit-website/settings/environments/18968477137/edit)
+[Preview](https://github.com/skysthelimitpainting1779-collab/skysthelimit-website/settings/environments/15451894718/edit)
+[Production](https://github.com/skysthelimitpainting1779-collab/skysthelimit-website/settings/environments/15451730316/edit)     is this part of the problem and try again
+
+---
+
+please do whatever you have to do
+
+---
+
+wait look it passed for preview and it passed for a production just not to the correct production
+
+---
+
+Upgrade the ui [$design:design-critique](C:\\Users\\Johnny Cage\\.codex\\plugins\\cache\\claude-cowork\\design\\1.2.0\\skills\\design-critique\\SKILL.md) [$ui-ux-pro-max:design](C:\\Users\\Johnny Cage\\DEV\\skysthelimit-collab\\.agents\\skills\\ui-ux-pro-max-skill\\cli\\assets\\skills\\design\\SKILL.md) [$design-taste-frontend](C:\\Users\\Johnny Cage\\.codex\\skills\\design-taste-frontend\\SKILL.md)  use image gen and upgrade the site wayyyy morrre
