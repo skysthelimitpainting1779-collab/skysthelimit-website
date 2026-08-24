@@ -2,7 +2,7 @@
   "$schema": "./provider-access-ledger.schema.json",
   "schemaVersion": "1.0.0",
   "programId": "stl-post-g20-sequential-tdd-v1",
-  "capturedAt": "2026-07-30T19:45:35.645Z",
+  "capturedAt": "2026-07-30T20:40:19.494Z",
   "productionMutationAuthorized": false,
   "providers": [
     {
@@ -604,7 +604,7 @@
       "evidence": [
         {
           "kind": "provider-api",
-          "reference": "Vercel read-only connector: list_teams/get_project/list_deployments @ 2026-07-30T19:45:35.645Z",
+          "reference": "Vercel read-only connector: list_teams/get_project/list_deployments @ 2026-07-30T20:40:19.494Z",
           "verificationStatus": "verified"
         },
         {
