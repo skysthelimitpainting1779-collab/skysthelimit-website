@@ -1,0 +1,4 @@
+interface:
+  display_name: "Maintain Host Adapters"
+  short_description: "Regenerate and verify host-native agent adapters"
+  default_prompt: "Use $maintain-host-adapters to update and verify generated host-native agent configuration."

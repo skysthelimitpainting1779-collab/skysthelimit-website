@@ -15,4 +15,7 @@ Before performing a workflow for the second time, create or update a skill under
 6. Run `npm run skills:validate` and `npm run host:compile`.
 7. Execute the recurring workflow through the skill from then on.
 
+For host-native specialist adapter maintenance, follow
+[`references/host-native-adapters.md`](references/host-native-adapters.md).
+
 Do not create skills for isolated facts or trivial one-line edits. A planned repeated operation, a second execution, or a reusable failure-recovery sequence always crosses the capture threshold.

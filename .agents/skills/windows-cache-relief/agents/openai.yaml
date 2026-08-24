@@ -1,4 +1,0 @@
-interface:
-  display_name: "Windows Cache Relief"
-  short_description: "Safely reclaim C drive cache space"
-  default_prompt: "Use $windows-cache-relief to audit and safely relocate rebuildable Windows caches."

@@ -1,10 +1,4 @@
 #!/bin/sh
-_entire_stdin="$(mktemp "${TMPDIR:-/tmp}/entire-post-rewrite.XXXXXX")"
-cat > "$_entire_stdin"
-trap 'rm -f "$_entire_stdin"' EXIT
-# Entire CLI hooks
-# Post-rewrite hook: remap session linkage after amend/rebase rewrites
-if command -v entire >/dev/null 2>&1; then entire hooks git post-rewrite "$1" < "$_entire_stdin" 2>/dev/null || true; else :; fi
 
 # agentgraph-graphify-db-sync-start
 # Keeps C:/Users/Johnny Cage/DEV/dev/graphify.db current with Graphify output.

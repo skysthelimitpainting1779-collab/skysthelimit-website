@@ -206,3 +206,19 @@ else:
     subprocess.Popen(_cmd, start_new_session=True, **_kw)
 "
 # graphify-hook-end
+
+# agentgraph-graphify-db-sync-start
+# Keeps C:/Users/Johnny Cage/DEV/dev/graphify.db current with Graphify output.
+# Installed by dev/install-graphify-maintenance.ps1.
+if [ "${AGENTGRAPH_GRAPHIFY_DB_SKIP:-0}" != "1" ]; then
+  _ag_refresh="C:/Users/Johnny Cage/DEV/dev/refresh-graphify-worktree.ps1"
+  _ag_workspace="C:/Users/Johnny Cage/DEV"
+  _ag_repo="C:/Users/Johnny Cage/DEV/skys-limit-worktrees/agent-skys-limit-convex-os"
+  if command -v pwsh >/dev/null 2>&1; then
+    (pwsh -NoProfile -ExecutionPolicy Bypass -File "$_ag_refresh" -Root "$_ag_repo" -WorkspaceRoot "$_ag_workspace") >/dev/null 2>&1 &
+  elif command -v powershell.exe >/dev/null 2>&1; then
+    (powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$_ag_refresh" -Root "$_ag_repo" -WorkspaceRoot "$_ag_workspace") >/dev/null 2>&1 &
+  fi
+fi
+# agentgraph-graphify-db-sync-end
+

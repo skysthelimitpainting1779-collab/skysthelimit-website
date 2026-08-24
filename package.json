@@ -61,6 +61,7 @@
     "lint:slop": "node scripts/lint-ui-slop.mjs --changed",
     "lint:slop:all": "node scripts/lint-ui-slop.mjs --all",
     "verify:ui-design-evidence": "node scripts/verify-ui-design-evidence.mjs",
+    "test:ui-baseline": "playwright test tests/ui-baseline.spec.ts",
     "design:gate": "npm run lint:design && npm run lint:design:changed && npm run lint:slop && npm run verify:ui-design-evidence"
   },
   "dependencies": {
@@ -101,6 +102,8 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
+    "@playwright/test": "^1.61.0",
     "@remotion/cli": "4.0.489",
     "@tailwindcss/postcss": "4.3.2",
     "@types/express": "5.0.6",

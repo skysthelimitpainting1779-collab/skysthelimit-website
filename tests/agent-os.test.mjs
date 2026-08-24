@@ -62,12 +62,27 @@ test('zero-theater kernel: only real host-native paths', () => {
 });
 
 test('host-native specialists compiled for Claude Cursor Codex', () => {
+  const compiler = read('scripts/compile-host-native.mjs');
+  assert.match(compiler, /process\.argv\.includes\('--mirror-skills'\)/);
+  assert.match(compiler, /mirrorSkillAdapters \? mirrorSkills\(\) : \[\]/);
+
   const specs = JSON.parse(read('.agents/specialists.json'));
   assert.ok((specs.agents || []).length >= 5);
   for (const a of specs.agents) {
     assert.ok(exists(`.claude/agents/${a.id}.md`), `claude agent ${a.id}`);
     assert.ok(exists(`.cursor/agents/${a.id}.md`), `cursor agent ${a.id}`);
     assert.ok(exists(`.codex/agents/${a.id}.toml`), `codex agent ${a.id}`);
+    const codexAgent = read(`.codex/agents/${a.id}.toml`);
+    assert.match(
+      codexAgent,
+      /^developer_instructions = """/m,
+      `codex agent ${a.id} should use the current role schema`,
+    );
+    assert.doesNotMatch(
+      codexAgent,
+      /^instructions =/m,
+      `codex agent ${a.id} should not use the retired role field`,
+    );
   }
   assert.ok(exists('CLAUDE.md'));
   assert.ok(exists('GEMINI.md'));
