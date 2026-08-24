@@ -270,3 +270,81 @@ Reproduce with the exact command, fix root cause (see .agents/governance/ROOT_CA
 - Archive: n/a
 - Healable: false
 
+
+## [ERR-20260817-5f1d] Synthetic failure dedupe-test-1786968317882
+
+**Logged**: 2026-08-17T12:05:18.000Z
+**Fingerprint**: `71468f1c167cdc03`
+**Category**: general
+**Severity**: medium
+**Status**: open
+**Area**: test
+**Count**: 1
+
+### Summary
+Synthetic failure dedupe-test-1786968317882 — `node -e "process.exit(1)"`
+
+### Error (snippet)
+```text
+unique-marker-dedupe-test-1786968317882 boom
+```
+
+### Prevention
+Reproduce with the exact command, fix root cause (see .agents/governance/ROOT_CAUSE.md), add a regression test when durable, then re-run verify chain.
+
+### Metadata
+- Archive: n/a
+- Healable: false
+
+
+## [ERR-20260817-5f81] Synthetic failure dedupe-test-1786968344976
+
+**Logged**: 2026-08-17T12:05:45.174Z
+**Fingerprint**: `31bdbb99ab701664`
+**Category**: general
+**Severity**: medium
+**Status**: open
+**Area**: test
+**Count**: 1
+
+### Summary
+Synthetic failure dedupe-test-1786968344976 — `node -e "process.exit(1)"`
+
+### Error (snippet)
+```text
+unique-marker-dedupe-test-1786968344976 boom
+```
+
+### Prevention
+Reproduce with the exact command, fix root cause (see .agents/governance/ROOT_CAUSE.md), add a regression test when durable, then re-run verify chain.
+
+### Metadata
+- Archive: n/a
+- Healable: false
+
+
+## [ERR-20260817-b75e] Synthetic failure dedupe-test-1786969177974
+
+**Logged**: 2026-08-17T12:19:38.374Z
+**Fingerprint**: `3a6d03b5acaf3740`
+**Category**: general
+**Severity**: medium
+**Status**: open
+**Area**: test
+**Count**: 1
+
+### Summary
+Synthetic failure dedupe-test-1786969177974 — `node -e "process.exit(1)"`
+
+### Error (snippet)
+```text
+unique-marker-dedupe-test-1786969177974 boom
+```
+
+### Prevention
+Reproduce with the exact command, fix root cause (see .agents/governance/ROOT_CAUSE.md), add a regression test when durable, then re-run verify chain.
+
+### Metadata
+- Archive: n/a
+- Healable: false
+

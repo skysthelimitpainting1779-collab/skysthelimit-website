@@ -8,16 +8,22 @@ tags: [errors, learning, index, self-heal]
 # Error Learning Index
 
 > **Agent cold-start:** read THIS file only (not full `ERRORS.md`).
-> Updated: 2026-07-24T18:33:15.372Z | Unique: 10 | Records: 18 | Dupes suppressed: 8 | Auto-heals: 0
+> Updated: 2026-08-17T12:19:39.505Z | Unique: 13 | Records: 24 | Dupes suppressed: 11 | Auto-heals: 0
 
 ## Open / needs attention
 
+- **ERR-20260817-b75e** [general/medium] Synthetic failure dedupe-test-1786969177974 (2x) — Reproduce with the exact command, fix root cause (see .agents/governance/ROOT_CAUSE.md), add a regression test when durable, then re-run ver
+- **ERR-20260817-5f81** [general/medium] Synthetic failure dedupe-test-1786968344976 (2x) — Reproduce with the exact command, fix root cause (see .agents/governance/ROOT_CAUSE.md), add a regression test when durable, then re-run ver
+- **ERR-20260817-5f1d** [general/medium] Synthetic failure dedupe-test-1786968317882 (2x) — Reproduce with the exact command, fix root cause (see .agents/governance/ROOT_CAUSE.md), add a regression test when durable, then re-run ver
 - **ERR-20260724-bd35** [general/medium] Synthetic failure dedupe-test-1784917995150 (2x) — Reproduce with the exact command, fix root cause (see .agents/governance/ROOT_CAUSE.md), add a regression test when durable, then re-run ver
 
 ## Top lessons (deduped)
 
 | ID | Cat | Status | × | Lesson |
 |----|-----|--------|---|--------|
+| ERR-20260817-b75e | general | open | 2 | Reproduce with the exact command, fix root cause (see .agents/governance/ROOT_CAUSE.md), add a regre |
+| ERR-20260817-5f81 | general | open | 2 | Reproduce with the exact command, fix root cause (see .agents/governance/ROOT_CAUSE.md), add a regre |
+| ERR-20260817-5f1d | general | open | 2 | Reproduce with the exact command, fix root cause (see .agents/governance/ROOT_CAUSE.md), add a regre |
 | ERR-20260724-bd35 | general | open | 2 | Reproduce with the exact command, fix root cause (see .agents/governance/ROOT_CAUSE.md), add a regre |
 | ERR-20260720-9b47 | general | resolved | 2 | Reproduce with the exact command, fix root cause (see .agents/governance/ROOT_CAUSE.md), add a regre |
 | ERR-20260720-2567 | general | resolved | 2 | Reproduce with the exact command, fix root cause (see .agents/governance/ROOT_CAUSE.md), add a regre |
