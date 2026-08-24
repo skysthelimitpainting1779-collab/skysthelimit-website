@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
-import { checksum, contentChecksum } from './inventory.mjs';
+import { checksum, contentChecksum, sanitizedReportDataSensitivity } from './inventory.mjs';
 
 function readJson(path, label) {
   if (!path || !existsSync(path)) throw new Error(`${label} is required and must exist.`);
@@ -24,6 +24,15 @@ function entityMap(report) {
 }
 
 const opaqueCanonicalId = /^mig_[a-z0-9_-]+_[a-f0-9]{24}$/;
+const safeEntityName = /^[a-z][a-z0-9_-]{0,63}$/;
+const supportedReportSources = new Set(['supabase', 'payload', 'directus', 'convex']);
+
+function requireSafeEntityName(value, label) {
+  if (typeof value !== 'string' || !safeEntityName.test(value)) {
+    throw new Error(`${label} must use a safe entity name.`);
+  }
+  return value;
+}
 
 function opaqueIds(entity, label) {
   const ids = entity.canonicalIds ?? [];
@@ -45,11 +54,22 @@ function safeExceptions(exceptions, label) {
 }
 
 function normalizeReport(report, label) {
-  if (report?.kind === 'legacy-inventory' && Array.isArray(report.entities)) return report;
+  if (report?.kind === 'legacy-inventory' && Array.isArray(report.entities)) {
+    if (!supportedReportSources.has(report.source)) throw new Error(`${label} contains an invalid source.`);
+    return {
+      ...report,
+      entities: report.entities.map((entity) => ({
+        ...entity,
+        entity: requireSafeEntityName(entity?.entity, label),
+      })),
+    };
+  }
   if (report?.kind === 'convex-target-inventory' && Array.isArray(report.entities)) {
+    if (report.source !== 'convex') throw new Error(`${label} contains an invalid source.`);
     return {
       ...report,
       entities: report.entities.map((entity) => {
+        const entityName = requireSafeEntityName(entity?.entity, label);
         const records = Array.isArray(entity.records) ? entity.records.map((record) => {
           if (!opaqueCanonicalId.test(record?.canonicalId)) throw new Error(`${label} contains a non-opaque canonical ID.`);
           if (!(record.checksum === null || /^sha256:[a-f0-9]{64}$/.test(record.checksum))) throw new Error(`${label} contains an invalid record checksum.`);
@@ -59,6 +79,7 @@ function normalizeReport(report, label) {
         if (entity.checksum !== contentChecksum(records)) throw new Error(`${label} entity checksum mismatch.`);
         return {
           ...entity,
+          entity: entityName,
           canonicalIds: opaqueIds(entity, label),
           records,
         };
@@ -105,7 +126,10 @@ export function reconcileReports(source, target, mapping = {}) {
   const targets = entityMap(normalizedTarget);
   const entities = [];
   for (const sourceEntity of normalizedSource.entities) {
-    const targetName = mapping[sourceEntity.entity] ?? sourceEntity.entity;
+    const targetName = requireSafeEntityName(
+      mapping[sourceEntity.entity] ?? sourceEntity.entity,
+      'Reconciliation mapping target',
+    );
     const targetEntity = targets.get(targetName);
     const sourceIds = new Set(opaqueIds(sourceEntity, 'Source report'));
     const targetIds = new Set(targetEntity ? opaqueIds(targetEntity, 'Target report') : []);
@@ -151,6 +175,7 @@ export function reconcileReports(source, target, mapping = {}) {
     dryRun: true,
     source: normalizedSource.source,
     target: normalizedTarget.source,
+    dataSensitivity: sanitizedReportDataSensitivity,
     entities,
     summary: {
       matchedEntities: entities.filter((entity) => entity.matched).length,

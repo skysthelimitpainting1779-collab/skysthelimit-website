@@ -21,6 +21,24 @@ const selection = {
   confirmDeployment: 'preview-migration-123',
 };
 
+test('Clerk Preview issuer derivation uses exclusive non-reparse scratch paths', () => {
+  const agentScript = readFileSync(join(
+    process.cwd(),
+    '.agents/skills/convex-migration-operator/scripts/derive-clerk-preview-issuer.ps1',
+  ), 'utf8');
+  const githubScript = readFileSync(join(
+    process.cwd(),
+    '.github/skills/convex-migration-operator/scripts/derive-clerk-preview-issuer.ps1',
+  ), 'utf8');
+  assert.equal(agentScript, githubScript);
+  assert.match(agentScript, /\[Guid\]::NewGuid\(\)/);
+  assert.match(agentScript, /\[IO\.FileAttributes\]::ReparsePoint/);
+  assert.match(agentScript, /\$scratchCreated/);
+  assert.match(agentScript, /\$uri\.UserInfo/);
+  assert.doesNotMatch(agentScript, /Get-Date -Format/);
+  assert.doesNotMatch(agentScript, /New-Item -ItemType Directory -Force -Path \$scratch/);
+});
+
 function createMigrationContext() {
   const tables = new Map();
   let nextId = 0;

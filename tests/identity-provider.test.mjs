@@ -147,6 +147,32 @@ test('Convex Clerk auth validates the canonical tier and issuer domain shape', (
   }));
 });
 
+test('Convex Clerk auth rejects development and preview issuer domain collisions', () => {
+  assert.deepEqual(parseConvexClerkAuthEnv({
+    NEXT_PUBLIC_APP_ENV: 'development',
+    CLERK_JWT_ISSUER_ENV: 'development',
+    CLERK_JWT_ISSUER_DOMAIN: 'https://sky-development.clerk.accounts.dev',
+  }), {
+    NEXT_PUBLIC_APP_ENV: 'development',
+    CLERK_JWT_ISSUER_DOMAIN: 'https://sky-development.clerk.accounts.dev',
+  });
+  assert.throws(() => parseConvexClerkAuthEnv({
+    NEXT_PUBLIC_APP_ENV: 'development',
+    CLERK_JWT_ISSUER_ENV: 'development',
+    CLERK_JWT_ISSUER_DOMAIN: 'https://sky-preview.clerk.accounts.dev',
+  }), /environment/i);
+  assert.throws(() => parseConvexClerkAuthEnv({
+    NEXT_PUBLIC_APP_ENV: 'preview',
+    CLERK_JWT_ISSUER_ENV: 'preview',
+    CLERK_JWT_ISSUER_DOMAIN: 'https://sky-development.clerk.accounts.dev',
+  }), /environment/i);
+  assert.throws(() => parseConvexClerkAuthEnv({
+    NEXT_PUBLIC_APP_ENV: 'preview',
+    CLERK_JWT_ISSUER_ENV: 'preview',
+    CLERK_JWT_ISSUER_DOMAIN: 'https://sky-development-preview.clerk.accounts.dev',
+  }), /environment/i);
+});
+
 test('identity mapping denies anonymous and malformed Clerk subjects', () => {
   assert.deepEqual(mapClerkIdentity(null), { allowed: false, reason: 'anonymous' });
   assert.deepEqual(mapClerkIdentity({ userId: ' ' }), { allowed: false, reason: 'invalid_subject' });

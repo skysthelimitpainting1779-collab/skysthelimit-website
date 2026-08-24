@@ -4,9 +4,35 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$stamp = Get-Date -Format "yyyyMMddTHHmmssfff"
+
+function Assert-NoReparsePoint {
+  param([Parameter(Mandatory = $true)][string]$Path)
+
+  $fullPath = [IO.Path]::GetFullPath($Path)
+  $pathRoot = [IO.Path]::GetPathRoot($fullPath)
+  $current = $pathRoot
+  $relative = $fullPath.Substring($pathRoot.Length)
+  foreach ($segment in $relative.Split([IO.Path]::DirectorySeparatorChar, [StringSplitOptions]::RemoveEmptyEntries)) {
+    $current = Join-Path $current $segment
+    if (Test-Path -LiteralPath $current) {
+      $item = Get-Item -LiteralPath $current -Force
+      if (($item.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) {
+        throw "Scratch paths must not contain reparse points."
+      }
+    }
+  }
+  return $fullPath
+}
+
 $root = [IO.Path]::GetFullPath($ScratchRoot)
-$scratch = [IO.Path]::GetFullPath((Join-Path $root "g20-clerk-$stamp"))
+if (-not (Test-Path -LiteralPath $root)) {
+  New-Item -ItemType Directory -Path $root -ErrorAction Stop | Out-Null
+}
+if (-not (Test-Path -LiteralPath $root -PathType Container)) {
+  throw "Scratch root must be a directory."
+}
+$root = Assert-NoReparsePoint -Path $root
+$scratch = [IO.Path]::GetFullPath((Join-Path $root "g20-clerk-$([Guid]::NewGuid().ToString('N'))"))
 if (-not $scratch.StartsWith($root + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase)) {
   throw "Unsafe scratch path."
 }
@@ -14,9 +40,14 @@ if (-not $scratch.StartsWith($root + [IO.Path]::DirectorySeparatorChar, [StringC
 $createdAt = (Get-Date).ToUniversalTime().ToString("o")
 $envFile = Join-Path $scratch "preview.env"
 $issuerDomain = $null
+$scratchCreated = $false
 
 try {
-  New-Item -ItemType Directory -Force -Path $scratch | Out-Null
+  Assert-NoReparsePoint -Path $root | Out-Null
+  New-Item -ItemType Directory -Path $scratch -ErrorAction Stop | Out-Null
+  $scratchCreated = $true
+  Assert-NoReparsePoint -Path $root | Out-Null
+  Assert-NoReparsePoint -Path $scratch | Out-Null
   $identity = [Security.Principal.WindowsIdentity]::GetCurrent().Name
   & icacls $scratch /inheritance:r /grant:r "${identity}:(OI)(CI)F" | Out-Null
   if ($LASTEXITCODE -ne 0) { throw "Scratch ACL hardening failed." }
@@ -39,7 +70,7 @@ try {
   while (($encoded.Length % 4) -ne 0) { $encoded += "=" }
   $decoded = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($encoded)).TrimEnd('$')
   $uri = [Uri]("https://$decoded")
-  if ($uri.Scheme -ne "https" -or -not $uri.IsDefaultPort -or $uri.AbsolutePath -ne "/" -or
+  if ($uri.Scheme -ne "https" -or $uri.UserInfo -or -not $uri.IsDefaultPort -or $uri.AbsolutePath -ne "/" -or
       $uri.Query -or $uri.Fragment -or $uri.HostNameType -ne [UriHostNameType]::Dns) {
     throw "Decoded Clerk issuer is not a safe HTTPS origin."
   }
@@ -49,7 +80,9 @@ finally {
   $key = $null
   $encoded = $null
   $decoded = $null
-  if (Test-Path -LiteralPath $scratch) {
+  if ($scratchCreated -and (Test-Path -LiteralPath $scratch)) {
+    Assert-NoReparsePoint -Path $root | Out-Null
+    Assert-NoReparsePoint -Path $scratch | Out-Null
     Remove-Item -LiteralPath $scratch -Recurse -Force
   }
 }

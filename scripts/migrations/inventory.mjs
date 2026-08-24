@@ -9,6 +9,13 @@ const supportedSources = new Set(['supabase', 'payload', 'directus']);
 const sensitiveKey = /(?:secret|token|password|credential|api[_-]?key|service.*key|key$)/i;
 const safeEntityName = /^[a-z][a-z0-9_-]{0,63}$/;
 
+export const sanitizedReportDataSensitivity = Object.freeze({
+  sourceClassification: 'restricted-personal-data',
+  reportClassification: 'internal-opaque-metadata',
+  rawRecordsIncluded: false,
+  personalDataIncluded: false,
+});
+
 export function sha256(value) {
   return createHash('sha256').update(value).digest('hex');
 }
@@ -225,6 +232,7 @@ export function createInventoryReport({ sourceConfigPath, root = repositoryRoot,
     dryRun: true,
     generatedAt: now,
     access: { liveNetworkAttempted: false, credentialsAccepted: false, status: 'blocked-until-authorized-offline-snapshot-is-provided' },
+    dataSensitivity: sanitizedReportDataSensitivity,
     capabilities: sourceSchema(root, config.source),
     entities: [],
     blockedEvidence: [],

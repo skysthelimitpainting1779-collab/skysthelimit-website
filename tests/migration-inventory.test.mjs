@@ -68,6 +68,12 @@ test('snapshot inventory emits stable opaque IDs, checksums, duplicates, and ret
     assert.equal(entity.canonicalIds[0], canonicalId('payload', 'services', 'legacy-1'));
     assert.equal(entity.duplicateRecords.length, 1);
     assert.equal(entity.retryCandidates.length, 2);
+    assert.deepEqual(report.dataSensitivity, {
+      sourceClassification: 'restricted-personal-data',
+      reportClassification: 'internal-opaque-metadata',
+      rawRecordsIncluded: false,
+      personalDataIncluded: false,
+    });
     assert.doesNotMatch(JSON.stringify(report), /private@example|Private Name|555-555/);
   } finally { rmSync(directory, { recursive: true, force: true }); }
 });
@@ -112,6 +118,41 @@ test('reconciliation rejects non-opaque IDs instead of copying possible PII into
   const source = { kind: 'legacy-inventory', source: 'directus', entities: [{ entity: 'case_studies', canonicalIds: ['person@example.com'] }] };
   const target = { kind: 'legacy-inventory', source: 'convex', entities: [] };
   assert.throws(() => reconcileReports(source, target), /non-opaque canonical ID/i);
+});
+
+test('reconciliation classifies sanitized output and rejects PII-bearing report metadata', () => {
+  const sourceId = canonicalId('directus', 'contacts', 7);
+  const source = { kind: 'legacy-inventory', source: 'directus', entities: [{ entity: 'contacts', canonicalIds: [sourceId] }] };
+  const target = { kind: 'legacy-inventory', source: 'convex', entities: [] };
+  const report = reconcileReports(source, target);
+  assert.deepEqual(report.dataSensitivity, {
+    sourceClassification: 'restricted-personal-data',
+    reportClassification: 'internal-opaque-metadata',
+    rawRecordsIncluded: false,
+    personalDataIncluded: false,
+  });
+  assert.doesNotMatch(JSON.stringify(report), /private@example|Private Name|555-555/);
+  assert.throws(
+    () => reconcileReports({
+      ...source,
+      entities: [{ entity: 'person@example.com', canonicalIds: [sourceId] }],
+    }, target),
+    /safe entity name/i,
+  );
+  assert.throws(
+    () => reconcileReports(source, target, { contacts: 'person@example.com' }),
+    /safe entity name/i,
+  );
+});
+
+test('legacy reconciliation skills classify sensitive data and prohibit repository PII', () => {
+  const agentSkill = readFileSync(join(root, '.agents/skills/legacy-data-reconciliation/SKILL.md'), 'utf8');
+  const githubSkill = readFileSync(join(root, '.github/skills/legacy-data-reconciliation/SKILL.md'), 'utf8');
+  assert.equal(agentSkill, githubSkill);
+  assert.match(agentSkill, /restricted personal data/i);
+  assert.match(agentSkill, /raw exports, credentials, or PII/i);
+  assert.match(agentSkill, /outside the repository/i);
+  assert.match(agentSkill, /opaque IDs, checksums, counts, and classifications/i);
 });
 
 test('Convex reconciliation mutation uses the reserved idempotency table and compound index', () => {

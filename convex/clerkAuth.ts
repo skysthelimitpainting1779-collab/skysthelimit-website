@@ -15,6 +15,13 @@ function isClerkDevelopmentHost(hostname: string): boolean {
   return hostname.endsWith('.clerk.accounts.dev') || hostname.endsWith('.lcl.dev');
 }
 
+function hostnameEnvironmentLabels(hostname: string): AppEnvironment[] {
+  const labels = hostname
+    .split('.')
+    .flatMap((label) => label.split('-'));
+  return (['development', 'preview'] as const).filter((environment) => labels.includes(environment));
+}
+
 /**
  * Pure Convex-safe validation for Clerk's issuer configuration. The issuer
  * deployment tier must use the canonical app label shared with the Next app.
@@ -61,6 +68,12 @@ export function parseConvexClerkAuthEnv(input: unknown): Omit<ConvexClerkAuthEnv
   }
   if (appEnvironment !== 'production' && !developmentHost) {
     throw new Error('Development and preview require a recognized Clerk development issuer.');
+  }
+  if (appEnvironment !== 'production') {
+    const hostnameEnvironments = hostnameEnvironmentLabels(issuer.hostname);
+    if (hostnameEnvironments.length !== 1 || hostnameEnvironments[0] !== appEnvironment) {
+      throw new Error('CLERK_JWT_ISSUER_DOMAIN must identify exactly one matching non-production environment.');
+    }
   }
 
   return {

@@ -7,6 +7,12 @@ description: Use when inventorying, exporting, transforming, dual-reading, dual-
 
 Use read-only inventory first. Record source version, counts, checksums, IDs, files, and unmapped records.
 
+Classify raw legacy exports and import handoffs as restricted personal data.
+Keep raw exports, credentials, or PII outside the repository and approved
+sanitized evidence.
+Reports may contain only opaque IDs, checksums, counts, and classifications;
+never copy source payloads or personal identifiers into them.
+
 Migration phases:
 1. Export and normalize.
 2. Dry-run transform.
