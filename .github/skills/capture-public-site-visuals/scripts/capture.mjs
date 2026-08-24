@@ -154,7 +154,7 @@ async function waitForPageReady(cdp, expectedUrl, timeout = 15_000) {
       state?.href === expectedUrl
       && state.navigationUrl === expectedUrl
       && state.readyState === 'complete'
-      && state.headerHeight >= 100
+      && state.headerHeight >= 64
       && state.mainHeight >= 300
     ) return;
     await wait(100);
@@ -252,14 +252,8 @@ for (const mode of modes) {
         if (fullPage) {
           await cdp.send('Runtime.evaluate', {
             expression: `(async () => {
+              await new Promise((resolve) => setTimeout(resolve, 1500));
               for (const image of document.images) image.loading = 'eager';
-              const step = Math.max(320, Math.floor(window.innerHeight * 0.75));
-              const limit = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
-              for (let y = 0; y < limit; y += step) {
-                window.scrollTo(0, y);
-                await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-              }
-              window.scrollTo(0, 0);
             })()`,
             awaitPromise: true,
           });

@@ -23,10 +23,12 @@ describe('Tier 1: Feature Coverage', () => {
     assert.match(header, /href: '\/public-sector'/);
   });
 
-  test('T1.3 Routing & Navigation - Micro-utility header bar displays warning/intake message', () => {
+  test('T1.3 Routing & Navigation - Single-row header keeps the scope cue and direct conversion path', () => {
     const header = read('src/components/ConversionHeader.tsx');
-    assert.match(header, /Twin Cities painting/);
+    assert.match(header, /h-\[76px\]/);
     assert.match(header, /Owner-led \/ Written scope \/ Prep first/);
+    assert.match(header, /Start the Written Scope/);
+    assert.doesNotMatch(header, /h-8 border-b border-border/);
   });
 
   test('T1.4 Routing & Navigation - Redirects for legacy routes redirect to new pages', () => {

@@ -49,36 +49,19 @@ export default function ConversionHeader() {
   return (
     <header
       data-surface="public"
-      className="conversion-header public-surface fixed inset-x-0 top-0 z-50 h-28 border-b border-border bg-background text-foreground shadow-[0_14px_32px_rgb(7_19_33_/_0.08)] print:static print:shadow-none"
+      className="conversion-header public-surface fixed inset-x-0 top-0 z-50 h-[76px] border-b border-border bg-background text-foreground shadow-[0_10px_28px_rgb(7_19_33_/_0.07)] print:static print:shadow-none"
     >
-      <div className="h-8 border-b border-border px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto flex h-full max-w-[90rem] items-center justify-between gap-4 text-[11px] font-bold uppercase tracking-[0.09em]">
-          <span>Twin Cities painting</span>
-          <div className="flex items-center gap-4">
-            <span className="hidden text-muted-foreground sm:inline">Owner-led / Written scope / Prep first</span>
-            <a
-              href="tel:+16514104196"
-              data-track="call_click"
-              data-track-payload='{"source":"utility_header"}'
-              className="underline decoration-trust decoration-2 underline-offset-4"
-            >
-              Call / Text 651-410-4196
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div className="h-20 px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto flex h-full max-w-[90rem] items-center justify-between gap-5">
+      <div className="h-full px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex h-full max-w-[94rem] items-center justify-between gap-5">
           <Link href="/" className="flex shrink-0 items-center gap-3 leading-none" aria-label="Sky's the Limit Painting LLC home">
-            <Image src="/brand/SkyLLP_BrandLogo.svg" alt="" width={44} height={40} className="h-10 w-11 object-contain" preload />
+            <Image src="/brand/SkyLLP_BrandLogo.svg" alt="" width={40} height={36} className="h-9 w-10 object-contain" preload />
             <span>
-              <span className="block text-lg font-black uppercase tracking-[-0.025em] sm:text-2xl">Sky&apos;s the Limit</span>
-              <span className="mt-1 block text-[9px] font-bold uppercase tracking-[0.24em] text-muted-foreground sm:text-[10px]">Painting LLC</span>
+              <span className="block text-lg font-black uppercase tracking-[-0.025em] sm:text-xl">Sky&apos;s the Limit</span>
+              <span className="mt-1 block text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">Painting LLC</span>
             </span>
           </Link>
 
-          <nav aria-label="Primary navigation" className="hidden items-center gap-5 lg:flex xl:gap-8">
+          <nav aria-label="Primary navigation" className="hidden items-center gap-5 xl:flex 2xl:gap-7">
             {navigation.map((item) => {
               const current = isCurrentPath(pathname, item.href);
               return (
@@ -100,23 +83,25 @@ export default function ConversionHeader() {
             })}
           </nav>
 
-          <div className="hidden items-center gap-3 lg:flex">
-            <PublicCtaLink
+          <div className="hidden items-center gap-3 xl:flex">
+            <span aria-hidden="true" className="hidden text-xs font-bold text-muted-foreground 2xl:inline">
+              Owner-led / Written scope / Prep first
+            </span>
+            <a
               href="tel:+16514104196"
-              variant="outline"
-              icon={Phone}
-              iconPosition="start"
-              track="call_click"
-              trackPayload={{ source: 'primary_header' }}
+              data-track="call_click"
+              data-track-payload='{"source":"primary_header"}'
+              className="hidden min-h-11 items-center gap-2 border border-border px-4 text-sm font-black text-foreground transition-colors hover:border-trust hover:text-trust 2xl:inline-flex"
             >
-              Call Anthony
-            </PublicCtaLink>
+              <Phone aria-hidden="true" size={16} />
+              651-410-4196
+            </a>
             <PublicCtaLink
-              href="/estimate"
+              href={pathname === '/' ? '#walkthrough' : '/estimate'}
               track="hero_cta_click"
               trackPayload={{ source: 'primary_header', label: 'Get a Free Price Range' }}
             >
-              Get a Free Price Range
+              Start the Written Scope
             </PublicCtaLink>
           </div>
 
@@ -126,7 +111,7 @@ export default function ConversionHeader() {
                 <Button
                   variant="outline"
                   size="icon-lg"
-                  className="lg:hidden"
+                  className="xl:hidden"
                   aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
                 />
               )}
@@ -160,13 +145,13 @@ export default function ConversionHeader() {
               </nav>
               <SheetFooter>
                 <PublicCtaLink
-                  href="/estimate"
+                  href={pathname === '/' ? '#walkthrough' : '/estimate'}
                   size="marketing-lg"
                   track="hero_cta_click"
                   trackPayload={{ source: 'mobile_header', label: 'Get a Free Price Range' }}
                   className="w-full"
                 >
-                  Get a Free Price Range
+                  Start the Written Scope
                 </PublicCtaLink>
               </SheetFooter>
             </SheetContent>

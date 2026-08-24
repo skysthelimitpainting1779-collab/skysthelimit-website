@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { test } from 'node:test';
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
@@ -12,7 +12,11 @@ test('homepage hero keeps the Owner\'s Finish Ledger positioning and direct conv
   assert.match(home, /href="tel:\+16514104196"/);
   assert.match(home, /href="#walkthrough"/);
   assert.match(home, /homepage_owner_finish_ledger/);
-  assert.match(home, /marketing-hero-exterior-painting\.webp/);
+  assert.match(home, /sky-prep-material-study\.webp/);
+  assert.match(home, /sky-surface-preparation-study\.webp/);
+  assert.match(home, /Preparation material study/);
+  assert.ok(existsSync(new URL('../public/brand/generated/sky-prep-material-study.webp', import.meta.url)));
+  assert.ok(existsSync(new URL('../public/brand/generated/sky-surface-preparation-study.webp', import.meta.url)));
 });
 
 test('homepage copy removes terminal-style marketing scaffolding', () => {
@@ -30,13 +34,23 @@ test('homepage copy removes terminal-style marketing scaffolding', () => {
 test('prep interaction favors real work imagery and explicit touch targets', () => {
   const prep = read('src/components/PrepProtocolStage.tsx');
 
-  assert.match(prep, /min-h-20/);
+  assert.match(prep, /min-h-24/);
   assert.match(prep, /aria-pressed=\{selected\}/);
   assert.match(prep, /role="group"/);
-  assert.match(prep, /Preparation record \/ \{active\.id\}/);
-  assert.match(prep, /shadow-\[inset_4px_0_0_#0254C3\]/);
-  assert.match(prep, /text-brand/);
+  assert.match(prep, /<figcaption/);
+  assert.match(prep, /Expected control/);
+  assert.match(prep, /bg-\[#0254C3\] text-white/);
+  assert.doesNotMatch(prep, /Preparation record \/ \{active\.id\}/);
   assert.doesNotMatch(prep, /grayscale/);
+});
+
+test('editorial motion stays isolated and respects reduced-motion preferences', () => {
+  const reveal = read('src/components/EditorialReveal.tsx');
+
+  assert.match(reveal, /from 'motion\/react'/);
+  assert.match(reveal, /useReducedMotion\(\)/);
+  assert.match(reveal, /viewport=\{\{ once: true, amount: 0\.18 \}\}/);
+  assert.match(reveal, /initial=\{reduceMotion \? false : \{ opacity: 1/);
 });
 
 test('shared conversion surfaces avoid duplicate homepage asks and keep mobile navigation measurable', () => {
@@ -153,6 +167,6 @@ test('visual capture skill keeps local-only and complete-page safety checks in e
   assert.match(agentCapture, /resolvedUrl\.origin !== baseUrl\.origin/);
   assert.match(agentCapture, /Capture route.*returned HTTP/);
   assert.match(agentCapture, /waitForBrowserPort/);
-  assert.match(agentCapture, /image\.loading = 'eager'/);
-  assert.match(agentCapture, /if \(fullPage\)[\s\S]*window\.scrollTo/);
+  assert.match(agentCapture, /if \(fullPage\)[\s\S]*setTimeout\(resolve, 1500\)[\s\S]*image\.loading = 'eager'/);
+  assert.doesNotMatch(agentCapture, /window\.scrollTo/);
 });

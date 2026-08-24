@@ -21,6 +21,10 @@ Use the bundled script to capture the public acquisition journey at the two cano
 5. Inspect every generated image. Treat blank content, clipped controls, missing assets, illegible type, inconsistent themes, and hidden conversion actions as failures.
 6. Re-run the same route set after changes and compare like-for-like viewports.
 
+The readiness check validates a rendered public header of at least 64px and meaningful main content. Keep that check tolerant of intentional header redesigns; it is a blank-shell guard, not an exact design snapshot.
+
+Full-page mode waits for hydration to settle, then promotes lazy images to eager loading without scrolling sticky or fixed UI through the capture surface.
+
 ## Guardrails
 
 - Capture public routes only. Do not log in or enter admin, portal, or management surfaces.

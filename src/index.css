@@ -498,8 +498,8 @@
   --sky-ink-950: #071321;
   --sky-blue-600: #0254c3;
   --sky-blue-700: #0147a6;
-  --sky-orange-500: #ff661c;
-  --sky-orange-600: #f2550a;
+  --sky-orange-500: #ff5a00;
+  --sky-orange-600: #dd4e00;
   --sky-red-600: #c7372f;
   --sky-space-section: clamp(4rem, 8vw, 7rem);
   --sky-space-gutter: clamp(1.25rem, 4vw, 3rem);
@@ -683,7 +683,7 @@
 
 .public-surface [id],
 .ledger-surface [id] {
-  scroll-margin-top: 8rem;
+  scroll-margin-top: 6rem;
 }
 
 .public-surface :is(a, button, input, select, textarea):focus-visible,

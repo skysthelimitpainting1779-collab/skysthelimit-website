@@ -5,7 +5,8 @@ colors:
   ledger-paper: "#F6F3EB"
   ledger-ink: "#071321"
   ledger-cobalt: "#0254C3"
-  ledger-orange: "#FF661C"
+  ledger-orange: "#FF5A00"
+  ledger-orange-hover: "#DD4E00"
   ledger-body: "#314457"
   ledger-muted: "#53616F"
   internal-canvas: "#050505"
@@ -144,13 +145,13 @@ Internal product surfaces may continue using the established dense sans/mono hie
 
 ## Layout
 
-The homepage hero is a desktop **58/42 paper/photo split** at the large breakpoint. The copy panel uses a faint cobalt ledger grid; the photo panel carries top and bottom record captions. A torn cobalt tape strip marks the seam. On mobile, the split stacks copy above photo and the tape rotates into a horizontal seam.
+The homepage hero is a desktop **44/56 paper/material-study split** at the extra-large breakpoint. Copy stays on an unruled paper field while the visual sits inside an ink frame with its caption outside the image. The generated preparation study is never presented as project proof; real project photography appears later in the preparation and owner sections. On mobile, copy leads and the visual follows at a reserved, stable aspect ratio.
 
 Public content is contained at approximately 92–94rem. Major sections use ruled split grids rather than floating cards: 72/128 or 70/130 text/content relationships, edge-to-edge rows, and shared borders. Desktop section rhythm is typically 80–112px; mobile is approximately 64px. Paper rules use Ledger Ink around 18–25% opacity; grid lines use Cobalt around 8–10% opacity.
 
-The five-stage ledger remains a single horizontal record on wide layouts and may horizontally scroll when preserving its sequence is clearer than wrapping. Preparation, accountability, FAQ, and conversion sections stack at narrow widths. Do not force desktop asymmetry into unreadably narrow columns.
+The preparation sequence pairs a tactile surface study with five plain-language controls. It becomes a single column on narrow screens instead of forcing horizontal scrolling. Scope categories use a four-cell asymmetric atlas with distinct spans and semantic surfaces. The homepage changes theme once, moving from paper into the ink accountability, FAQ, and conversion close. Do not force desktop asymmetry into unreadably narrow columns.
 
-The fixed header is 112px tall: 32px utility row plus 80px primary row. Mobile reserves bottom space for a fixed three-column rail: Call and Text are equal smaller actions; Get a Free Price Range receives the largest orange column. Controls must remain at least 44px high; principal actions are 48–56px.
+The fixed header is a single 76px row. Full navigation appears at the extra-large breakpoint; narrower viewports use the accessible sheet menu. The owner-led scope cue and direct phone action appear only when there is enough width to keep the row unbroken. Mobile reserves bottom space for a fixed three-column rail: Call and Text are equal smaller actions; Get a Free Price Range receives the largest orange column. Controls must remain at least 44px high; principal actions are 48–56px.
 
 **The Shared-Rule Rule.** Adjacent blocks meet on one rule. Avoid card gaps, detached shadows, or rounded tiles when a ledger row or ruled split communicates the relationship better.
 
@@ -207,7 +208,7 @@ The project contract is Tailwind v4, Base UI, Nova style, lucide icons, CSS vari
 
 ### Hero and ledger records
 
-- Preserve the 58/42 composition, grid, tape seam, field-record captions, two-action hierarchy, and three short commitments.
+- Preserve the 44/56 composition, grid, tape seam, field-record captions, two-action hierarchy, and three short commitments.
 - Stage ledgers use numbered rows, connecting rules, compressed titles, and short scope language. They are operational proof of process, not generic feature cards.
 - Use real jobsite imagery whenever verified and available. Alt text describes visible work and protection; it does not claim a customer, location, result, or company authorship that the evidence does not establish.
 
@@ -248,7 +249,7 @@ The project contract is Tailwind v4, Base UI, Nova style, lucide icons, CSS vari
 
 - **Do** lead public conversion with owner involvement, written scope, preparation, and the walkthrough.
 - **Do** use Ledger Orange for the primary next action and Cobalt for process, selection, focus, and record structure.
-- **Do** keep the 58/42 paper/photo hero, ledger grid/rules, and single tape seam recognizable across responsive layouts.
+- **Do** keep the 44/56 paper/photo hero, ledger grid/rules, and single tape seam recognizable across responsive layouts.
 - **Do** preserve the canonical illustrated badge and the exact contact truth above.
 - **Do** meet WCAG 2.2 AA: readable contrast and type, visible focus, logical headings and labels, keyboard operation, 200% zoom/reflow, descriptive errors, and appropriately sized touch targets.
 - **Do** honor `prefers-reduced-motion`; the tape-set animation and all nonessential motion must stop or collapse to an immediate state.
