@@ -140,7 +140,12 @@ function lifecycleResumeReceipt(binding) {
 }
 
 async function activateAttachedTask(args) {
-  return { activationId: args.activationId, status: 'activated' };
+  return {
+    activationId: args.activationId,
+    activationMarker: `agentgraph-activation:${args.activationId}`,
+    baselineTurnId: `turn:${args.activationId}`,
+    status: 'activated',
+  };
 }
 
 function directLifecycleBinding(nodeId = 'A', nextNode = 'B') {
@@ -156,6 +161,7 @@ function directLifecycleBinding(nodeId = 'A', nextNode = 'B') {
       next_stage: `stage:${nextNode}:plan`,
       summary: `${nodeId} verified.`,
       blockers: [],
+      to_role: nextNode ? 'executor' : null,
     },
   };
 }
@@ -163,17 +169,25 @@ function directLifecycleBinding(nodeId = 'A', nextNode = 'B') {
 function completionReceiptFor(finalization) {
   const lifecycle = finalization.lifecycle;
   const spec = lifecycle.completionSpec;
+  const evidence = [
+    ...(spec.evidence || []),
+    {
+      kind: 'agentgraph-verification',
+      assignmentId: finalization.verifierAssignment.id,
+      artifactId: finalization.verification.artifactId,
+      evidence: structuredClone(finalization.verification.evidence || []),
+    },
+    { kind: 'agentgraph-finalization', sha256: finalization.sha256 },
+  ];
   return {
     checkpoint: {
       event_type: 'checkpoint_completed',
       program_id: lifecycle.programId,
       checkpoint_id: lifecycle.checkpointId,
       node_id: lifecycle.nodeId,
+      stage_id: spec.completed_stage,
       payload: {
-        evidence: [
-          ...(spec.evidence || []),
-          { kind: 'agentgraph-finalization', sha256: finalization.sha256 },
-        ],
+        evidence,
       },
     },
     handoff: {
@@ -181,9 +195,30 @@ function completionReceiptFor(finalization) {
       program_id: lifecycle.programId,
       checkpoint_id: lifecycle.checkpointId,
       node_id: lifecycle.nodeId,
+      stage_id: spec.completed_stage,
       next_node: spec.next_node,
       next_stage: spec.next_stage,
+      summary: spec.summary,
+      blockers_json: JSON.stringify(spec.blockers || []),
+      evidence_json: JSON.stringify(evidence),
+      to_role: spec.to_role ?? null,
     },
+  };
+}
+
+function emptyAppLaunchPersistence() {
+  return {
+    loadLaunchMapping: async () => null,
+    saveLaunchMapping: async () => {},
+  };
+}
+
+function cliJobPersistence(store = new Map()) {
+  return {
+    store,
+    loadJobState: async (key) => store.get(key) || null,
+    saveJobState: async (key, value) =>
+      store.set(key, structuredClone(value)),
   };
 }
 
@@ -349,6 +384,9 @@ test('wave skill carries the privileged lifecycle supervisor contract', () => {
   assert.match(skill, /send_message_to_thread.*idempotency/i);
   assert.match(skill, /baselineTurnId.*exact turn.*completed/i);
   assert.match(skill, /merely prepared journal is not close-safe/i);
+  assert.match(skill, /launch intent.*before.*create_thread/i);
+  assert.match(skill, /resume.*clean.*persist.*receipt.*before.*activation/i);
+  assert.match(skill, /loadJobState.*saveJobState.*fail closed/i);
 });
 
 test('governed wave controller retains one bridge until recovery state is durably preserved', async () => {
@@ -465,24 +503,23 @@ test('retained controller refuses incomplete prepared close and finalizes exact 
   );
 });
 
-test('Codex app bridge maps create_thread and wait_threads results to assignment callbacks', async () => {
+test('Codex app bridge maps create_thread and read_thread results to assignment callbacks', async () => {
   const calls = [];
   const bridge = createCodexAppTaskBridge({
+    ...emptyAppLaunchPersistence(),
     createThread: async (request) => {
       calls.push(['create', request]);
       return JSON.stringify({ threadId: 'thread-live-1', hostId: 'local' });
     },
-    waitThreads: async (request) => {
-      calls.push(['wait', request]);
+    readThread: async (request) => {
+      calls.push(['read', request]);
       return {
-        timedOut: false,
-        wake: { reason: 'turnCompleted', threadId: 'thread-live-1', hostId: 'local' },
-        polls: [
+        thread: { id: 'thread-live-1', projectId: 'project-1', status: { type: 'idle' } },
+        turns: [
           {
-            cursor: 'cursor-1',
-            thread: { id: 'thread-live-1', hostId: 'local', status: { type: 'idle' } },
-            latestTurn: { status: 'completed', error: null },
-            latestAssistantMessage: { text: '{"kind":"completion"}' },
+            id: 'turn-1',
+            status: 'completed',
+            items: [{ type: 'agentMessage', text: '{"kind":"completion"}' }],
           },
         ],
       };
@@ -510,11 +547,23 @@ test('Codex app bridge maps create_thread and wait_threads results to assignment
     assignmentId: 'assignment:A:1:executor',
     status: 'completed',
     final: '{"kind":"completion"}',
-    cursor: 'cursor-1',
+    cursor: null,
   });
   assert.equal(calls[0][0], 'create');
   assert.equal('idempotencyKey' in calls[0][1], false);
-  assert.equal(calls[1][0], 'wait');
+  assert.equal(calls[1][0], 'read');
+});
+
+test('Codex app bridge requires read_thread even when wait_threads exists', () => {
+  assert.throws(
+    () =>
+      createCodexAppTaskBridge({
+        ...emptyAppLaunchPersistence(),
+        async createThread() {},
+        async waitThreads() {},
+      }),
+    /read.*required/i,
+  );
 });
 
 test('Codex app bridge falls back to bounded recent threads and validates the exact bootstrap marker', async () => {
@@ -524,6 +573,7 @@ test('Codex app bridge falls back to bounded recent threads and validates the ex
   const bootstrapTag =
     'agentgraph-assignment:assignment:SAFE:1:executor';
   const bridge = createCodexAppTaskBridge({
+    ...emptyAppLaunchPersistence(),
     async createThread() {
       creates += 1;
       throw new Error('existing tagged thread must be reused');
@@ -544,7 +594,11 @@ test('Codex app bridge falls back to bounded recent threads and validates the ex
     },
     async readThread() {
       return {
-        thread: { id: 'thread-existing', status: { type: 'idle' } },
+        thread: {
+          id: 'thread-existing',
+          projectId: 'project-safe',
+          status: { type: 'idle' },
+        },
         turns: [
           {
             id: 'turn-bootstrap',
@@ -581,6 +635,7 @@ test('Codex app bridge reconciles setup-only create responses and rejects ambigu
     'agentgraph-assignment:assignment:SAFE:1:executor';
   let listed = 0;
   const bridge = createCodexAppTaskBridge({
+    ...emptyAppLaunchPersistence(),
     async createThread(request) {
       assert.equal('idempotencyKey' in request, false);
       return { clientThreadId: 'client-setup-only' };
@@ -597,6 +652,7 @@ test('Codex app bridge reconciles setup-only create responses and rejects ambigu
     },
     async readThread() {
       return {
+        thread: { id: 'thread-reconciled', projectId: 'project-safe' },
         turns: [
           {
             id: 'turn-bootstrap',
@@ -617,6 +673,7 @@ test('Codex app bridge reconciles setup-only create responses and rejects ambigu
   assert.equal(task.threadId, 'thread-reconciled');
 
   const ambiguous = createCodexAppTaskBridge({
+    ...emptyAppLaunchPersistence(),
     async createThread() {
       throw new Error('must not create');
     },
@@ -631,6 +688,7 @@ test('Codex app bridge reconciles setup-only create responses and rejects ambigu
     },
     async readThread({ threadId }) {
       return {
+        thread: { id: threadId, projectId: 'project-safe' },
         turns: [
           {
             id: `turn-${threadId}`,
@@ -650,6 +708,113 @@ test('Codex app bridge reconciles setup-only create responses and rejects ambigu
         idempotencyKey: 'assignment:SAFE:1:executor',
       }),
     /ambiguous.*bootstrap tag/i,
+  );
+});
+
+test('Codex app bridge never recreates an unreconciled durable launch intent', async () => {
+  const durable = new Map();
+  let creates = 0;
+  const persistence = {
+    async loadLaunchMapping(key) {
+      return durable.get(key) || null;
+    },
+    async saveLaunchMapping(key, value) {
+      durable.set(key, structuredClone(value));
+    },
+  };
+  const makeBridge = () =>
+    createCodexAppTaskBridge({
+      ...persistence,
+      async createThread() {
+        creates += 1;
+        throw new Error('create response lost after launch');
+      },
+      async listThreads() {
+        return { threads: [] };
+      },
+      async readThread() {
+        throw new Error('no candidate thread should be read');
+      },
+      timeoutMs: 1,
+      pollIntervalMs: 0,
+    });
+  const request = {
+    prompt: 'work',
+    target: { projectId: 'project-safe' },
+    idempotencyKey: 'assignment:SAFE:1:executor',
+  };
+  await assert.rejects(
+    () => makeBridge().createTask(request),
+    /create response lost after launch/i,
+  );
+  assert.equal(
+    durable.get(request.idempotencyKey).status,
+    'launching',
+  );
+  await assert.rejects(
+    () => makeBridge().createTask(request),
+    /unreconciled.*launch intent/i,
+  );
+  assert.equal(creates, 1);
+});
+
+test('Codex app durable mapping requires the exact immutable scope and project-bound marked thread', async () => {
+  const key = 'agentgraph-scope:scope-safe';
+  const marker = `agentgraph-assignment:${key}`;
+  const makeBridge = (durable, readThread) =>
+    createCodexAppTaskBridge({
+      async loadLaunchMapping() {
+        return durable;
+      },
+      async saveLaunchMapping() {},
+      async createThread() {
+        throw new Error('durable mapping must not create');
+      },
+      readThread,
+    });
+  await assert.rejects(
+    () =>
+      makeBridge(
+        {
+          status: 'mapped',
+          threadId: 'thread-safe',
+          bootstrapTag: marker,
+          scopeHash: 'scope-old',
+        },
+        async () => ({}),
+      ).createTask({
+        prompt: 'work',
+        target: { projectId: 'project-safe' },
+        idempotencyKey: key,
+        scopeHash: 'scope-new',
+      }),
+    /scope does not match/i,
+  );
+  await assert.rejects(
+    () =>
+      makeBridge(
+        {
+          status: 'mapped',
+          threadId: 'thread-safe',
+          bootstrapTag: marker,
+          scopeHash: 'scope-safe',
+        },
+        async () => ({
+          thread: { id: 'thread-safe' },
+          turns: [
+            {
+              id: 'turn-bootstrap',
+              items: [{ type: 'userMessage', text: `${marker}\nwork` }],
+            },
+          ],
+        }),
+      ).createTask({
+        prompt: 'work',
+        target: { projectId: 'project-safe' },
+        idempotencyKey: key,
+        scopeHash: 'scope-safe',
+      }),
+    /project does not match/i,
   );
 });
 
@@ -691,7 +856,12 @@ test('Codex app activation waits for the marked turn to complete and ignores the
         {
           id: 'turn-activation',
           status: 'inProgress',
-          items: [{ type: 'userMessage', text: 'activation prompt' }],
+          items: [
+            {
+              type: 'userMessage',
+              text: 'agentgraph-activation:activation-safe\nactivation prompt',
+            },
+          ],
         },
         {
           id: 'turn-old',
@@ -707,8 +877,16 @@ test('Codex app activation waits for the marked turn to complete and ignores the
           id: 'turn-activation',
           status: 'completed',
           items: [
-            { type: 'userMessage', text: 'activation prompt' },
-            { type: 'agentMessage', text: '{"fresh":true}' },
+            {
+              type: 'userMessage',
+              text: 'agentgraph-activation:activation-safe\nactivation prompt',
+            },
+            { type: 'agentMessage', phase: 'commentary', text: 'still working' },
+            {
+              type: 'agentMessage',
+              phase: 'final_answer',
+              text: '{"fresh":true}',
+            },
           ],
         },
         {
@@ -720,6 +898,7 @@ test('Codex app activation waits for the marked turn to complete and ignores the
     },
   ];
   const bridge = createCodexAppTaskBridge({
+    ...emptyAppLaunchPersistence(),
     async createThread() {
       throw new Error('not used');
     },
@@ -751,6 +930,7 @@ test('Codex app activation waits for the marked turn to complete and ignores the
       threadId: 'thread-existing',
       hostId: 'local',
       baselineTurnId: activation.baselineTurnId,
+      activationMarker: activation.activationMarker,
     },
   ]);
   assert.equal(reads.length, 4);
@@ -766,6 +946,7 @@ test('Codex app activation recovery never resends an existing marker', async () 
   let sends = 0;
   const marker = 'agentgraph-activation:activation-safe';
   const bridge = createCodexAppTaskBridge({
+    ...emptyAppLaunchPersistence(),
     async createThread() {
       throw new Error('not used');
     },
@@ -794,6 +975,85 @@ test('Codex app activation recovery never resends an existing marker', async () 
   assert.equal(sends, 0);
 });
 
+test('Codex app activation is reconcile-only after an attempted send and rejects duplicate marker occurrences', async () => {
+  let sends = 0;
+  const marker = 'agentgraph-activation:activation-safe';
+  const bridge = createCodexAppTaskBridge({
+    ...emptyAppLaunchPersistence(),
+    async createThread() {
+      throw new Error('not used');
+    },
+    async readThread() {
+      return {
+        turns: [
+          {
+            id: 'turn-activation',
+            items: [
+              {
+                type: 'userMessage',
+                text: `${marker}\nwork\n${marker}`,
+              },
+            ],
+          },
+        ],
+      };
+    },
+    async sendMessageToThread() {
+      sends += 1;
+    },
+  });
+  await assert.rejects(
+    () =>
+      bridge.activateTask({
+        threadId: 'thread-existing',
+        prompt: 'work',
+        activationId: 'activation-safe',
+        allowSend: false,
+      }),
+    /ambiguous.*activation marker/i,
+  );
+  assert.equal(sends, 0);
+});
+
+test('Codex app marked completion requires exactly one final_answer item on the baseline turn', async () => {
+  const marker = 'agentgraph-activation:activation-safe';
+  const responses = [
+    {
+      turns: [
+        {
+          id: 'turn-activation',
+          status: 'completed',
+          items: [
+            { type: 'userMessage', text: `${marker}\nwork` },
+            { type: 'agentMessage', phase: 'commentary', text: 'commentary' },
+            { type: 'agentMessage', phase: 'final_answer', text: '{"ok":true}' },
+            { type: 'agentMessage', phase: 'final_answer', text: '{"duplicate":true}' },
+          ],
+        },
+      ],
+    },
+  ];
+  const bridge = createCodexAppTaskBridge({
+    ...emptyAppLaunchPersistence(),
+    async createThread() {
+      throw new Error('not used');
+    },
+    async readThread() {
+      return responses.shift();
+    },
+  });
+  const outcome = await bridge.waitForAny([
+    {
+      assignmentId: 'assignment:SAFE:1:executor',
+      threadId: 'thread-existing',
+      baselineTurnId: 'turn-activation',
+      activationMarker: marker,
+    },
+  ]);
+  assert.equal(outcome.status, 'failed');
+  assert.match(outcome.error, /exactly one.*final/i);
+});
+
 test('Codex CLI bridge reuses one stable assignment process and cached outcome', async () => {
   let spawns = 0;
   let outputPath;
@@ -802,7 +1062,9 @@ test('Codex CLI bridge reuses one stable assignment process and cached outcome',
   child.stderr = new PassThrough();
   child.stdin = { end() {} };
   child.kill = () => true;
+  const persistence = cliJobPersistence();
   const bridge = createCodexCliTaskBridge({
+    ...persistence,
     cwd: 'C:\\repo',
     command: 'codex',
     commandPrefix: [],
@@ -834,6 +1096,55 @@ test('Codex CLI bridge reuses one stable assignment process and cached outcome',
     { assignmentId: assignment.id, threadId: first.threadId },
   ]);
   assert.deepEqual(outcome2, outcome1);
+});
+
+test('fresh Codex CLI bridge refuses to duplicate a durably running assignment', async () => {
+  const persistence = cliJobPersistence();
+  let firstSpawns = 0;
+  const child = new EventEmitter();
+  child.stdout = new PassThrough();
+  child.stderr = new PassThrough();
+  child.stdin = { end() {} };
+  child.kill = () => true;
+  const first = createCodexCliTaskBridge({
+    ...persistence,
+    cwd: 'C:\\repo',
+    command: 'codex',
+    commandPrefix: [],
+    spawnProcess() {
+      firstSpawns += 1;
+      return child;
+    },
+  });
+  const assignment = { id: 'assignment:SAFE:1:executor' };
+  await first.createTask({
+    assignment,
+    prompt: 'work',
+    idempotencyKey: assignment.id,
+  });
+  assert.equal(firstSpawns, 1);
+
+  let duplicateSpawns = 0;
+  const restarted = createCodexCliTaskBridge({
+    ...persistence,
+    cwd: 'C:\\repo',
+    command: 'codex',
+    commandPrefix: [],
+    spawnProcess() {
+      duplicateSpawns += 1;
+      throw new Error('duplicate process must not spawn');
+    },
+  });
+  await assert.rejects(
+    () =>
+      restarted.createTask({
+        assignment,
+        prompt: 'work',
+        idempotencyKey: assignment.id,
+      }),
+    /durably running.*not locally owned/i,
+  );
+  assert.equal(duplicateSpawns, 0);
 });
 
 test('Python lifecycle bridge uses one long-lived supervisor process for all operations', async () => {
@@ -959,7 +1270,7 @@ test('concrete Python lifecycle wave wrapper owns one bridge until terminal stat
         assert.match(args.prompt, /assignment:SAFE:1:executor/);
         assert.ok(events.at(-1).startsWith('save:'));
         events.push(`activate:${args.activationId}`);
-        return { activationId: args.activationId, status: 'activated' };
+        return activateAttachedTask(args);
       },
       async waitForAny() {
         return {
@@ -1012,8 +1323,8 @@ test('concrete Python lifecycle wave wrapper owns one bridge until terminal stat
   assert.equal(result.status, 'halted');
   assert.equal(bridgeCreates, 1);
   assert.ok(
-    events.findIndex((event) => event.startsWith('activate:')) <
-      events.indexOf('resume'),
+    events.indexOf('resume') <
+      events.findIndex((event) => event.startsWith('activate:')),
   );
   assert.equal(events.includes('close'), false);
   await assert.rejects(
@@ -1096,6 +1407,176 @@ test('runner fans out, independently verifies, and completes two ready nodes', a
   assert.equal(snapshots.at(-1).completedTasks.length, 4);
 });
 
+test('runner reattaches a durable executor after a controller crash without redispatching it', async () => {
+  const graph = { nodes: [proofGraph().nodes[0]] };
+  let snapshot;
+  let executorCreates = 0;
+  await assert.rejects(
+    () =>
+      runAgentGraphWithCodex({
+        graph,
+        initialState: createAgentGraphExecutionState(graph),
+        workers: workers(),
+        codex: {
+          async createTask({ assignment }) {
+            executorCreates += 1;
+            return { threadId: `thread:${assignment.id}` };
+          },
+          async waitForAny() {
+            throw new Error('simulated executor controller crash');
+          },
+        },
+        saveState: async (value) => {
+          snapshot = structuredClone(value);
+        },
+      }),
+    /simulated executor controller crash/,
+  );
+  assert.equal(executorCreates, 1);
+  let reattachments = 0;
+  let verifierCreates = 0;
+  const result = await runAgentGraphWithCodex({
+    graph,
+    initialState: createAgentGraphExecutionState(graph),
+    workers: workers(),
+    resumeSnapshot: snapshot,
+    codex: {
+      async reattachTask({ assignment }) {
+        reattachments += 1;
+        return { threadId: `thread:${assignment.id}` };
+      },
+      async createTask({ assignment }) {
+        verifierCreates += 1;
+        return { threadId: `thread:${assignment.id}` };
+      },
+      async waitForAny(tasks) {
+        const task = tasks[0];
+        return task.assignmentId.endsWith(':executor')
+          ? {
+              assignmentId: task.assignmentId,
+              status: 'completed',
+              final: JSON.stringify({
+                kind: 'completion',
+                nodeId: 'READ-PACKAGE',
+                assignmentId: task.assignmentId,
+                workerId: 'codex-executor-1',
+                artifact: {
+                  id: 'artifact:READ-PACKAGE:1',
+                  evidence: ['read'],
+                  summary: 'done',
+                  productionSideEffects: false,
+                  providerMutations: false,
+                },
+              }),
+            }
+          : {
+              assignmentId: task.assignmentId,
+              status: 'completed',
+              final: JSON.stringify({
+                kind: 'verification',
+                nodeId: 'READ-PACKAGE',
+                assignmentId: task.assignmentId,
+                workerId: 'codex-verifier-1',
+                artifactId: 'artifact:READ-PACKAGE:1',
+                passed: true,
+                evidence: ['checked'],
+                errors: [],
+              }),
+            };
+      },
+    },
+  });
+  assert.equal(result.status, 'complete');
+  assert.equal(reattachments, 1);
+  assert.equal(verifierCreates, 1);
+  assert.equal(executorCreates, 1);
+});
+
+test('runner reattaches a durable verifier after a controller crash without replaying executor completion', async () => {
+  const graph = { nodes: [proofGraph().nodes[0]] };
+  let snapshot;
+  let creates = 0;
+  let waits = 0;
+  await assert.rejects(
+    () =>
+      runAgentGraphWithCodex({
+        graph,
+        initialState: createAgentGraphExecutionState(graph),
+        workers: workers(),
+        codex: {
+          async createTask({ assignment }) {
+            creates += 1;
+            return { threadId: `thread:${assignment.id}` };
+          },
+          async waitForAny(tasks) {
+            waits += 1;
+            if (waits > 1) throw new Error('simulated verifier controller crash');
+            const task = tasks[0];
+            return {
+              assignmentId: task.assignmentId,
+              status: 'completed',
+              final: JSON.stringify({
+                kind: 'completion',
+                nodeId: 'READ-PACKAGE',
+                assignmentId: task.assignmentId,
+                workerId: 'codex-executor-1',
+                artifact: {
+                  id: 'artifact:READ-PACKAGE:1',
+                  evidence: ['read'],
+                  summary: 'done',
+                  productionSideEffects: false,
+                  providerMutations: false,
+                },
+              }),
+            };
+          },
+        },
+        saveState: async (value) => {
+          snapshot = structuredClone(value);
+        },
+      }),
+    /simulated verifier controller crash/,
+  );
+  assert.equal(creates, 2);
+  let reattachments = 0;
+  const result = await runAgentGraphWithCodex({
+    graph,
+    initialState: createAgentGraphExecutionState(graph),
+    workers: workers(),
+    resumeSnapshot: snapshot,
+    codex: {
+      async reattachTask({ assignment }) {
+        reattachments += 1;
+        assert.equal(assignment.role, 'verifier');
+        return { threadId: `thread:${assignment.id}` };
+      },
+      async createTask() {
+        throw new Error('resume must not create another executor or verifier');
+      },
+      async waitForAny(tasks) {
+        const task = tasks[0];
+        return {
+          assignmentId: task.assignmentId,
+          status: 'completed',
+          final: JSON.stringify({
+            kind: 'verification',
+            nodeId: 'READ-PACKAGE',
+            assignmentId: task.assignmentId,
+            workerId: 'codex-verifier-1',
+            artifactId: 'artifact:READ-PACKAGE:1',
+            passed: true,
+            evidence: ['checked'],
+            errors: [],
+          }),
+        };
+      },
+    },
+  });
+  assert.equal(result.status, 'complete');
+  assert.equal(reattachments, 1);
+  assert.equal(result.completedTasks.length, 2);
+});
+
 test('parallel launch persists each assignment mapping before the next create and retry reuses it', async () => {
   const graph = proofGraph();
   const physicalCreates = new Map();
@@ -1154,6 +1635,46 @@ test('parallel launch persists each assignment mapping before the next create an
   assert.equal(retried.status, 'halted');
   assert.equal(physicalCreates.size, 2);
   assert.equal([...physicalCreates.values()].every((count) => count === 1), true);
+});
+
+test('runner derives different task keys for the same assignment in different immutable scopes', async () => {
+  const graph = { nodes: [proofGraph().nodes[0]] };
+  const keys = [];
+  for (const revision of ['revision-a', 'revision-b']) {
+    await runAgentGraphWithCodex({
+      graph,
+      initialState: createAgentGraphExecutionState(graph),
+      workers: workers(),
+      executionScope: {
+        source: {
+          kind: 'authoritative-lifecycle-ledger',
+          ledgerId: 'ledger-safe',
+          revision,
+        },
+      },
+      target: {
+        projectId: `project-${revision}`,
+        worktreePath: 'C:\\repo\\safe',
+      },
+      codex: {
+        async createTask({ assignment, idempotencyKey, scopeHash }) {
+          keys.push({ idempotencyKey, scopeHash });
+          return { threadId: `thread:${assignment.id}:${revision}` };
+        },
+        async waitForAny(tasks) {
+          return {
+            assignmentId: tasks[0].assignmentId,
+            status: 'needs_attention',
+            error: 'bounded scope proof',
+          };
+        },
+      },
+    });
+  }
+  assert.equal(keys.length, 2);
+  assert.notEqual(keys[0].scopeHash, keys[1].scopeHash);
+  assert.notEqual(keys[0].idempotencyKey, keys[1].idempotencyKey);
+  assert.match(keys[0].idempotencyKey, /^agentgraph-scope:[0-9a-f]{64}$/);
 });
 
 test('attaches an existing executor and durably advances its cursor before launching a verifier', async () => {
@@ -1223,7 +1744,14 @@ test('attaches an existing executor and durably advances its cursor before launc
   assert.equal(result.status, 'complete');
   assert.equal(created.length, 1);
   assert.equal(created[0].role, 'verifier');
-  assert.deepEqual(snapshots[0].taskRegistry['assignment:SAFE:1:executor'], {
+  assert.deepEqual(
+    {
+      ...snapshots[0].taskRegistry['assignment:SAFE:1:executor'],
+      assignment: undefined,
+      scope: undefined,
+      scopeHash: undefined,
+    },
+    {
     assignmentId: 'assignment:SAFE:1:executor',
     threadId: 'thread-existing-executor',
     hostId: 'local',
@@ -1231,6 +1759,9 @@ test('attaches an existing executor and durably advances its cursor before launc
     role: 'executor',
     nodeId: 'SAFE',
     status: 'running',
+    assignment: undefined,
+    scope: undefined,
+    scopeHash: undefined,
   });
   assert.equal(
     snapshots.at(-1).taskRegistry['assignment:SAFE:1:executor'].cursor,
@@ -1311,14 +1842,24 @@ test('resumes one needs-attention attachment through the privileged supervisor w
     prompt: 'unused',
     target: {},
   });
+  await assert.rejects(
+    () =>
+      adapter.activateTask({
+        assignmentId: 'assignment:SAFE:1:executor',
+        activationId: task.activation.activationId,
+        threadId: task.threadId,
+        prompt: 'exact prompt',
+      }),
+    /live lifecycle supervisor ownership/i,
+  );
+  task.lifecycleResume = await adapter.resumeTaskLifecycle({
+    assignmentId: 'assignment:SAFE:1:executor',
+  });
   await adapter.activateTask({
     assignmentId: 'assignment:SAFE:1:executor',
     activationId: task.activation.activationId,
     threadId: task.threadId,
     prompt: 'exact prompt',
-  });
-  task.lifecycleResume = await adapter.resumeTaskLifecycle({
-    assignmentId: 'assignment:SAFE:1:executor',
   });
 
   assert.equal(creates, 0);
@@ -1385,7 +1926,178 @@ test('refuses lifecycle resume when the idle attached host cannot be activated',
   assert.equal(resumes, 0);
 });
 
-test('activation failure persists pending and restart activates once without resending activated', async () => {
+test('lifecycle resume failure sends no activation message', async () => {
+  const root = mkdtempSync(join(tmpdir(), 'agentgraph-resume-before-activation-'));
+  const registryPath = join(root, 'registry.json');
+  const recoveryAuditPath = join(root, 'recovery-audit.json');
+  writeFileSync(registryPath, '{}');
+  writeFileSync(recoveryAuditPath, '{}');
+  let activations = 0;
+  const snapshots = [];
+  await assert.rejects(
+    () =>
+      runAuthoritativeLedgerWaveWithAttachedHostTasks({
+        ledgerInput: attachedLedgerInput(),
+        attachedTasks: [{ ...attachedExecutor(), status: 'needs-attention' }],
+        taskControl: {
+          async createTask() {
+            throw new Error('duplicate executor must not be created');
+          },
+          async activateTask() {
+            activations += 1;
+          },
+          async waitForAny() {
+            throw new Error('must not wait');
+          },
+        },
+        lifecycleSupervisor: {
+          async resumeAttachedCheckpoint() {
+            throw new Error('private resume failed');
+          },
+        },
+        lifecycleRecovery: {
+          assignmentId: 'assignment:SAFE:1:executor',
+          programId: 'program-safe',
+          checkpointId: 'checkpoint-safe-1',
+          registryPath,
+          recoveryAuditPath,
+          recoveryId: 'recovery-safe-generation-1',
+          generation: 1,
+        },
+        saveState: async (snapshot) =>
+          snapshots.push(structuredClone(snapshot)),
+      }),
+    /private resume failed/i,
+  );
+  assert.equal(activations, 0);
+  assert.equal(
+    snapshots.at(-1).taskRegistry['assignment:SAFE:1:executor'].activation.status,
+    'pending',
+  );
+});
+
+test('failed persistence of the public resume receipt sends no activation message', async () => {
+  const root = mkdtempSync(join(tmpdir(), 'agentgraph-resume-save-before-activation-'));
+  const registryPath = join(root, 'registry.json');
+  const recoveryAuditPath = join(root, 'recovery-audit.json');
+  writeFileSync(registryPath, '{}');
+  writeFileSync(recoveryAuditPath, '{}');
+  let activations = 0;
+  let savedPending = false;
+  await assert.rejects(
+    () =>
+      runAuthoritativeLedgerWaveWithAttachedHostTasks({
+        ledgerInput: attachedLedgerInput(),
+        attachedTasks: [{ ...attachedExecutor(), status: 'needs-attention' }],
+        taskControl: {
+          async createTask() {
+            throw new Error('duplicate executor must not be created');
+          },
+          async activateTask() {
+            activations += 1;
+          },
+          async waitForAny() {
+            throw new Error('must not wait');
+          },
+        },
+        lifecycleSupervisor: {
+          async resumeAttachedCheckpoint(binding) {
+            return lifecycleResumeReceipt(binding);
+          },
+        },
+        lifecycleRecovery: {
+          assignmentId: 'assignment:SAFE:1:executor',
+          programId: 'program-safe',
+          checkpointId: 'checkpoint-safe-1',
+          registryPath,
+          recoveryAuditPath,
+          recoveryId: 'recovery-safe-generation-1',
+          generation: 1,
+        },
+        saveState: async (snapshot) => {
+          const record =
+            snapshot.taskRegistry['assignment:SAFE:1:executor'];
+          if (record.lifecycleResume) {
+            throw new Error('resume receipt persistence failed');
+          }
+          savedPending = record.activation.status === 'pending';
+        },
+      }),
+    /resume receipt persistence failed/i,
+  );
+  assert.equal(savedPending, true);
+  assert.equal(activations, 0);
+});
+
+test('background heartbeat covers resume receipt persistence and activation before host wait', async () => {
+  const root = mkdtempSync(join(tmpdir(), 'agentgraph-background-heartbeat-'));
+  const registryPath = join(root, 'registry.json');
+  const recoveryAuditPath = join(root, 'recovery-audit.json');
+  writeFileSync(registryPath, '{}');
+  writeFileSync(recoveryAuditPath, '{}');
+  let renewals = 0;
+  let renewalsBeforeActivation = 0;
+  let failRenewal = false;
+  let activations = 0;
+  const result = await runAuthoritativeLedgerWaveWithAttachedHostTasks({
+    ledgerInput: attachedLedgerInput(),
+    attachedTasks: [{ ...attachedExecutor(), status: 'needs-attention' }],
+    taskControl: {
+      async createTask() {
+        throw new Error('duplicate executor must not be created');
+      },
+      async activateTask(args) {
+        activations += 1;
+        renewalsBeforeActivation = renewals;
+        await new Promise((resolve) => setTimeout(resolve, 15));
+        failRenewal = true;
+        return activateAttachedTask(args);
+      },
+      async waitForAny() {
+        return new Promise(() => {});
+      },
+      async steerTask() {
+        return { stopped: true };
+      },
+    },
+    lifecycleSupervisor: {
+      async resumeAttachedCheckpoint(binding) {
+        return lifecycleResumeReceipt(binding);
+      },
+      async renewAttachedCheckpoint() {
+        renewals += 1;
+        if (failRenewal) throw new Error('simulated background renewal failure');
+        return { event: { event_type: 'writer_lease_renewed' } };
+      },
+    },
+    lifecycleRecovery: {
+      assignmentId: 'assignment:SAFE:1:executor',
+      programId: 'program-safe',
+      checkpointId: 'checkpoint-safe-1',
+      registryPath,
+      recoveryAuditPath,
+      recoveryId: 'recovery-safe-generation-1',
+      generation: 1,
+      heartbeatIntervalMs: 2,
+      leaseTtlSeconds: 60,
+    },
+    saveState: async (snapshot) => {
+      if (
+        snapshot.taskRegistry['assignment:SAFE:1:executor']?.lifecycleResume &&
+        snapshot.taskRegistry['assignment:SAFE:1:executor']?.activation?.status ===
+          'pending'
+      ) {
+        await new Promise((resolve) => setTimeout(resolve, 15));
+      }
+    },
+  });
+  assert.equal(result.status, 'halted');
+  assert.match(JSON.stringify(result.report), /background renewal failure/i);
+  assert.equal(activations, 1);
+  assert.ok(renewalsBeforeActivation > 0);
+});
+
+test('activation failure persists attempted and restart reconciles without resending', async () => {
   const root = mkdtempSync(join(tmpdir(), 'agentgraph-activation-restart-'));
   const registryPath = join(root, 'registry.json');
   const recoveryAuditPath = join(root, 'recovery-audit.json');
@@ -1400,7 +2112,8 @@ test('activation failure persists pending and restart activates once without res
     recoveryId: 'recovery-safe-generation-1',
     generation: 1,
   };
-  let activations = 0;
+  let activationCalls = 0;
+  let activationSends = 0;
   const supervisor = {
     async resumeAttachedCheckpoint(binding) {
       return lifecycleResumeReceipt(binding);
@@ -1414,9 +2127,12 @@ test('activation failure persists pending and restart activates once without res
       throw new Error('duplicate executor must not be created');
     },
     async activateTask(args) {
-      activations += 1;
-      if (activations === 1) throw new Error('activation transport failed');
-      return { activationId: args.activationId, status: 'activated' };
+      activationCalls += 1;
+      if (args.allowSend === true) {
+        activationSends += 1;
+        throw new Error('activation transport failed after send');
+      }
+      return activateAttachedTask(args);
     },
     async waitForAny() {
       return {
@@ -1437,11 +2153,15 @@ test('activation failure persists pending and restart activates once without res
         lifecycleRecovery: recovery,
         saveState: async (snapshot) => firstSnapshots.push(structuredClone(snapshot)),
       }),
-    /activation transport failed/,
+    /activation transport failed after send/,
   );
   assert.equal(
     firstSnapshots.at(-1).taskRegistry['assignment:SAFE:1:executor'].activation.status,
-    'pending',
+    'attempted',
+  );
+  assert.ok(
+    firstSnapshots.at(-1).taskRegistry['assignment:SAFE:1:executor']
+      .lifecycleResume,
   );
 
   const secondSnapshots = [];
@@ -1454,7 +2174,8 @@ test('activation failure persists pending and restart activates once without res
     resumeSnapshot: firstSnapshots.at(-1),
     saveState: async (snapshot) => secondSnapshots.push(structuredClone(snapshot)),
   });
-  assert.equal(activations, 2);
+  assert.equal(activationCalls, 2);
+  assert.equal(activationSends, 1);
   const activatedSnapshot = secondSnapshots.at(-1);
   assert.equal(
     activatedSnapshot.taskRegistry['assignment:SAFE:1:executor'].activation.status,
@@ -1470,7 +2191,8 @@ test('activation failure persists pending and restart activates once without res
     resumeSnapshot: activatedSnapshot,
     saveState: async () => {},
   });
-  assert.equal(activations, 2);
+  assert.equal(activationCalls, 2);
+  assert.equal(activationSends, 1);
 });
 
 test('periodically serializes lifecycle heartbeats while an attached host task is still waiting', async () => {
@@ -1541,14 +2263,14 @@ test('periodically serializes lifecycle heartbeats while an attached host task i
     prompt: 'unused',
     target: {},
   });
+  await adapter.resumeTaskLifecycle({
+    assignmentId: 'assignment:SAFE:1:executor',
+  });
   await adapter.activateTask({
     assignmentId: 'assignment:SAFE:1:executor',
     activationId: task.activation.activationId,
     threadId: task.threadId,
     prompt: 'exact prompt',
-  });
-  await adapter.resumeTaskLifecycle({
-    assignmentId: 'assignment:SAFE:1:executor',
   });
   const safety = setTimeout(
     () =>
@@ -1627,14 +2349,14 @@ test('heartbeat failure stops the same attached task and returns one terminal fa
     prompt: 'unused',
     target: {},
   });
+  await adapter.resumeTaskLifecycle({
+    assignmentId: 'assignment:SAFE:1:executor',
+  });
   await adapter.activateTask({
     assignmentId: 'assignment:SAFE:1:executor',
     activationId: task.activation.activationId,
     threadId: task.threadId,
     prompt: 'exact prompt',
-  });
-  await adapter.resumeTaskLifecycle({
-    assignmentId: 'assignment:SAFE:1:executor',
   });
 
   const outcome = await adapter.waitForAny([
@@ -1700,12 +2422,6 @@ test('rejects private material from the lifecycle supervisor before reusing or c
         prompt: 'unused',
         target: {},
       });
-  await adapter.activateTask({
-    assignmentId: 'assignment:SAFE:1:executor',
-    activationId: task.activation.activationId,
-    threadId: task.threadId,
-    prompt: 'exact prompt',
-  });
   await assert.rejects(
     () =>
       adapter.resumeTaskLifecycle({
@@ -1774,6 +2490,7 @@ test('attached-task controller drives resume heartbeat telemetry and completion 
           program_id: binding.program_id,
           checkpoint_id: binding.checkpoint_id,
           node_id: binding.node_id,
+          stage_id: completion.completed_stage,
           payload: { evidence: completion.evidence },
         },
         handoff: {
@@ -1781,8 +2498,13 @@ test('attached-task controller drives resume heartbeat telemetry and completion 
           program_id: binding.program_id,
           checkpoint_id: binding.checkpoint_id,
           node_id: binding.node_id,
+          stage_id: completion.completed_stage,
           next_node: completion.next_node,
           next_stage: completion.next_stage,
+          summary: completion.summary,
+          blockers_json: JSON.stringify(completion.blockers),
+          evidence_json: JSON.stringify(completion.evidence),
+          to_role: completion.to_role ?? null,
         },
         finalization,
       };
@@ -1888,10 +2610,10 @@ test('attached-task controller drives resume heartbeat telemetry and completion 
   assert.equal(verifierCreates, 1);
   assert.equal(operations.at(-1)[2], 'handoff-safe-1');
   assert.equal(result.lifecycleFinalization.completionReceipt.handoff.next_node, 'NEXT');
-  assert.deepEqual(
-    operations.map((operation) => operation[0]),
-    ['resume', 'heartbeat', 'telemetry', 'heartbeat', 'completion'],
-  );
+  const operationKinds = operations.map((operation) => operation[0]);
+  assert.equal(operationKinds[0], 'resume');
+  assert.ok(operationKinds.indexOf('telemetry') > operationKinds.indexOf('resume'));
+  assert.ok(operationKinds.indexOf('completion') > operationKinds.indexOf('telemetry'));
   assert.deepEqual(
     operations
       .at(-1)[3].find((item) => item.kind === 'agentgraph-verification'),
@@ -2584,7 +3306,7 @@ test('reconciles a durable prepared journal after DB completion before launching
               'saved:finalized',
               'successor creation must follow the durable finalized snapshot',
             );
-            assert.equal(idempotencyKey, assignment.id);
+            assert.match(idempotencyKey, /^agentgraph-scope:[0-9a-f]{64}$/);
             restartEvents.push(`created:${assignment.id}`);
             throw new Error('bounded stop after successor creation');
           },
@@ -2697,6 +3419,7 @@ test('real injected adapter reconciles the same checkpoint and prepared journal 
                 program_id: binding.program_id,
                 checkpoint_id: binding.checkpoint_id,
                 node_id: binding.node_id,
+                stage_id: payload.completed_stage,
                 payload: { evidence: payload.evidence },
               },
               handoff: {
@@ -2704,8 +3427,13 @@ test('real injected adapter reconciles the same checkpoint and prepared journal 
                 program_id: binding.program_id,
                 checkpoint_id: binding.checkpoint_id,
                 node_id: binding.node_id,
+                stage_id: payload.completed_stage,
                 next_node: payload.next_node,
                 next_stage: payload.next_stage,
+                summary: payload.summary,
+                blockers_json: JSON.stringify(payload.blockers),
+                evidence_json: JSON.stringify(payload.evidence),
+                to_role: payload.to_role ?? null,
               },
             };
           },
@@ -2886,7 +3614,12 @@ test('halts once when an attached executor needs attention and does not launch a
   assert.equal(waits, 1);
   assert.equal(creates, 0);
   assert.deepEqual(
-    snapshots.at(-1).taskRegistry['assignment:SAFE:1:executor'],
+    {
+      ...snapshots.at(-1).taskRegistry['assignment:SAFE:1:executor'],
+      assignment: undefined,
+      scope: undefined,
+      scopeHash: undefined,
+    },
     {
       assignmentId: 'assignment:SAFE:1:executor',
       threadId: 'thread-existing-executor',
@@ -2896,6 +3629,9 @@ test('halts once when an attached executor needs attention and does not launch a
       nodeId: 'SAFE',
       status: 'needs_attention',
       error: 'official lifecycle writer lease is unavailable',
+      assignment: undefined,
+      scope: undefined,
+      scopeHash: undefined,
     },
   );
 });

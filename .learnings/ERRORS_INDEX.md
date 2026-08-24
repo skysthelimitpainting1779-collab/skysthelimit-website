@@ -8,16 +8,18 @@ tags: [errors, learning, index, self-heal]
 # Error Learning Index
 
 > **Agent cold-start:** read THIS file only (not full `ERRORS.md`).
-> Updated: 2026-07-24T18:33:15.372Z | Unique: 10 | Records: 18 | Dupes suppressed: 8 | Auto-heals: 0
+> Updated: 2026-07-30T09:33:49.464Z | Unique: 11 | Records: 20 | Dupes suppressed: 9 | Auto-heals: 0
 
 ## Open / needs attention
 
+- **ERR-20260730-f254** [general/medium] Synthetic failure dedupe-test-1785404029172 (2x) — Reproduce with the exact command, fix root cause (see .agents/governance/ROOT_CAUSE.md), add a regression test when durable, then re-run ver
 - **ERR-20260724-bd35** [general/medium] Synthetic failure dedupe-test-1784917995150 (2x) — Reproduce with the exact command, fix root cause (see .agents/governance/ROOT_CAUSE.md), add a regression test when durable, then re-run ver
 
 ## Top lessons (deduped)
 
 | ID | Cat | Status | × | Lesson |
 |----|-----|--------|---|--------|
+| ERR-20260730-f254 | general | open | 2 | Reproduce with the exact command, fix root cause (see .agents/governance/ROOT_CAUSE.md), add a regre |
 | ERR-20260724-bd35 | general | open | 2 | Reproduce with the exact command, fix root cause (see .agents/governance/ROOT_CAUSE.md), add a regre |
 | ERR-20260720-9b47 | general | resolved | 2 | Reproduce with the exact command, fix root cause (see .agents/governance/ROOT_CAUSE.md), add a regre |
 | ERR-20260720-2567 | general | resolved | 2 | Reproduce with the exact command, fix root cause (see .agents/governance/ROOT_CAUSE.md), add a regre |

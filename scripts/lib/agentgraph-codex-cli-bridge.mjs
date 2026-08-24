@@ -28,20 +28,66 @@ export function createCodexCliTaskBridge({
   sandbox = 'read-only',
   approval = 'never',
   spawnProcess = spawn,
+  loadJobState,
+  saveJobState,
 }) {
-  if (typeof cwd !== 'string' || !cwd) throw new Error('Codex CLI bridge requires cwd');
+  if (
+    typeof cwd !== 'string' ||
+    !cwd ||
+    typeof loadJobState !== 'function' ||
+    typeof saveJobState !== 'function'
+  ) {
+    throw new Error(
+      'Codex CLI bridge requires cwd and durable loadJobState/saveJobState callbacks',
+    );
+  }
   const jobs = new Map();
 
   return {
-    async createTask({ assignment, prompt, idempotencyKey }) {
+    async createTask({ assignment, prompt, idempotencyKey, scopeHash }) {
       const stableKey = idempotencyKey || assignment.id;
       if (typeof stableKey !== 'string' || !stableKey) {
         throw new Error('Codex CLI task requires an assignment idempotency key');
       }
       const taskId = `codex-cli:${stableKey}`;
+      const requestedScopeHash = scopeHash || stableKey;
       if (jobs.has(taskId)) {
+        if (jobs.get(taskId).scopeHash !== requestedScopeHash) {
+          throw new Error(`local Codex CLI job scope does not match: ${taskId}`);
+        }
         return { threadId: taskId, hostId: 'codex-cli' };
       }
+      const durable = await loadJobState(taskId);
+      if (durable && durable.scopeHash !== requestedScopeHash) {
+        throw new Error(`durable Codex CLI job scope does not match: ${taskId}`);
+      }
+      if (
+        durable?.status === 'terminal' &&
+        durable?.outcome &&
+        durable.assignmentId === assignment.id
+      ) {
+        jobs.set(taskId, {
+          assignmentId: assignment.id,
+          child: null,
+          done: Promise.resolve(durable.outcome),
+          scopeHash: requestedScopeHash,
+        });
+        return { threadId: taskId, hostId: 'codex-cli' };
+      }
+      if (['launching', 'running'].includes(durable?.status)) {
+        throw new Error(
+          `Codex CLI assignment is durably running but not locally owned: ${taskId}`,
+        );
+      }
+      if (durable) {
+        throw new Error(`invalid durable Codex CLI job state: ${taskId}`);
+      }
+      await saveJobState(taskId, {
+        schemaVersion: '1.0.0',
+        status: 'launching',
+        assignmentId: assignment.id,
+        scopeHash: requestedScopeHash,
+      });
       const outputPath = join(tmpdir(), `${taskId.replaceAll(':', '-')}.json`);
       const args = [
         '--sandbox',
@@ -75,8 +121,26 @@ export function createCodexCliTaskBridge({
       child.stdin.end(prompt);
 
       const done = new Promise((resolve) => {
+        let settled = false;
+        const finish = async (outcome) => {
+          if (settled) return;
+          settled = true;
+          try {
+            await saveJobState(taskId, {
+              schemaVersion: '1.0.0',
+              status: 'terminal',
+              assignmentId: assignment.id,
+              scopeHash: requestedScopeHash,
+              outcome,
+            });
+          } catch {
+            // A stale running record fails closed after restart.
+          } finally {
+            resolve(outcome);
+          }
+        };
         child.on('error', (error) => {
-          resolve({
+          void finish({
             assignmentId: assignment.id,
             status: 'failed',
             error: error.message,
@@ -91,7 +155,7 @@ export function createCodexCliTaskBridge({
           } finally {
             await unlink(outputPath).catch(() => {});
           }
-          resolve({
+          await finish({
             assignmentId: assignment.id,
             status: code === 0 && final.trim() ? 'completed' : 'failed',
             final: final.trim(),
@@ -103,8 +167,22 @@ export function createCodexCliTaskBridge({
           });
         });
       });
-      jobs.set(taskId, { assignmentId: assignment.id, child, done });
+      jobs.set(taskId, {
+        assignmentId: assignment.id,
+        child,
+        done,
+        scopeHash: requestedScopeHash,
+      });
+      await saveJobState(taskId, {
+        schemaVersion: '1.0.0',
+        status: 'running',
+        assignmentId: assignment.id,
+        scopeHash: requestedScopeHash,
+      });
       return { threadId: taskId, hostId: 'codex-cli' };
+    },
+    async reattachTask(args) {
+      return this.createTask(args);
     },
 
     async waitForAny(tasks) {
@@ -119,7 +197,7 @@ export function createCodexCliTaskBridge({
 
     async steerTask({ threadId }) {
       const job = jobs.get(threadId);
-      if (!job) return { stopped: false };
+      if (!job?.child) return { stopped: false };
       const stopped = job.child.kill();
       return { stopped };
     },

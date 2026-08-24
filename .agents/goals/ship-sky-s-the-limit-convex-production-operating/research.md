@@ -44,3 +44,11 @@ npm run graph:query -- "B00 control plane goal scripts architecture guard host c
 - Existing tests intentionally preserve unsafe review gating, browser PII persistence, and email ownership; those tests must be replaced rather than accommodated.
 - Missing external credentials block only their dependent preview nodes.
 - High-risk boundaries require independent verification evidence; no production approval is implied by this goal.
+
+## AgentGraph dispatcher delta
+
+- Graph discovery did not expose an AgentGraph dispatcher symbol. Repository fallback search found policy primitives in `scripts/lib/orchestration-policy.mjs`, evidence validation in `scripts/lib/trusted-evidence-receipts.mjs`, and dependency readiness in `scripts/lib/active-state-reconciliation.mjs`.
+- Failure mode: the repository can rank ready nodes and audit lifecycle state, but it has no state transition that turns ready nodes into worker assignments, waits for a completion artifact, verifies that artifact, and only then unlocks dependents.
+- Primary files: `scripts/lib/agentgraph-execution-dispatcher.mjs` and `tests/agentgraph-execution-dispatcher.test.mjs`.
+- Risk: accepting a stale/mismatched artifact or verifier result could falsely complete a node. Bind both to the current assignment and require independent verification when the node contract requests it.
+- Non-goals: provider calls, production mutation, worker transport, retries, and changes to the compiled graph.
