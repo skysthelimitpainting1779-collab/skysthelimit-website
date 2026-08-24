@@ -5,6 +5,7 @@ import {
   MAX_TASK_ATTEMPTS,
   assertPhaseEntry,
   bumpMetric,
+  getAgentCheckpointDir,
   hasCheckpointForTask,
   idempotencyKey,
   isTaskRunnable,
@@ -12,8 +13,11 @@ import {
   pickNextTask,
   safePhaseResumeIndex,
   shouldQuarantineTask,
+  writePhaseCheckpoint,
 } from '../scripts/agent-os-core.mjs';
-import { readFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 
 test('exports a versioned bulletproof core', () => {
   assert.match(AGENT_OS_VERSION, /^\d+\.\d+\.\d+$/);
@@ -76,6 +80,33 @@ test('assertPhaseEntry auto-seeds when checkpoint missing', () => {
   assert.equal(entry.ok, true);
   assert.equal(entry.seeded, true);
   assert.equal(hasCheckpointForTask(db, task.id), true);
+});
+
+test('phase checkpoints use executable data storage, never the repository', () => {
+  const repoRoot = mkdtempSync(join(tmpdir(), 'agent-os-repo-'));
+  const executableDataRoot = mkdtempSync(join(tmpdir(), 'agent-os-state-'));
+  const dataDir = getAgentCheckpointDir({
+    ANTIGRAVITY_EXECUTABLE_DATA_DIR: executableDataRoot,
+  });
+
+  try {
+    const db = { checkpoints: [] };
+    const record = writePhaseCheckpoint(db, {
+      taskId: 'TEST-EXTERNAL-STATE',
+      sessionId: 'SESS-1',
+      phase: 'PLAN',
+      root: repoRoot,
+      dataDir,
+    });
+
+    assert.equal(existsSync(join(repoRoot, '.agents', 'goals', '_harness')), false);
+    assert.equal(existsSync(join(dataDir, `${record.id}.json`)), true);
+    assert.equal(hasCheckpointForTask({ checkpoints: [] }, record.task_id, repoRoot, dataDir), true);
+    assert.match(db.checkpoints[0].evidence, /agent-os[\\/]checkpoints/);
+  } finally {
+    rmSync(repoRoot, { recursive: true, force: true });
+    rmSync(executableDataRoot, { recursive: true, force: true });
+  }
 });
 
 test('idempotencyKey is stable', () => {

@@ -52,7 +52,17 @@ function readActive() {
 
 function writeActive(data) {
   ensureGoalsDir();
+  data.heartbeat = new Date().toISOString();
   writeFileSync(ACTIVE, JSON.stringify(data, null, 2) + '\n');
+}
+
+/** Hours without heartbeat before a goal is considered stale. */
+const STALE_HOURS = 2;
+
+function isStale(active) {
+  if (!active?.heartbeat) return false;
+  const age = Date.now() - new Date(active.heartbeat).getTime();
+  return age > STALE_HOURS * 3600_000;
 }
 
 function goalDir(slug) {
@@ -169,6 +179,8 @@ function cmdPhase(phase) {
     t = t.replace(/^phase:.*$/m, `phase: ${phase}`);
     writeFileSync(gp, t);
   }
+  // Best-effort: sync goal lifecycle to Turso
+  syncGoalToTurso(active, null).catch(() => {});
   console.log(
     JSON.stringify(
       {
@@ -212,7 +224,7 @@ function runVerify({ build = false } = {}) {
   return { ok, at: new Date().toISOString(), results };
 }
 
-function cmdVerify(args) {
+async function cmdVerify(args) {
   const build = args.includes('--build');
   const active = readActive();
   console.error(`[goal] verify${build ? ' + build' : ''}…`);
@@ -227,17 +239,32 @@ function cmdVerify(args) {
     note: 'Anthropic: prefer code graders over self-assessment',
   };
   writeFileSync(join(evalDir, 'last.json'), JSON.stringify(payload, null, 2) + '\n');
+  // Durable append-only local history (mirrors ship_loop_evals)
+  try {
+    const histLine = JSON.stringify({
+      at: payload.at,
+      ok: payload.ok,
+      pass_rate: (payload.results || []).filter((r) => r.pass).length / Math.max((payload.results || []).length, 1),
+      graders: (payload.results || []).map((r) => ({ name: r.name, pass: r.pass, status: r.status })),
+    });
+    writeFileSync(join(evalDir, 'history.jsonl'), (existsSync(join(evalDir, 'history.jsonl')) ? readFileSync(join(evalDir, 'history.jsonl'), 'utf8') : '') + histLine + '\n');
+  } catch {
+    /* non-fatal */
+  }
   if (active?.slug) {
     const dir = goalDir(active.slug);
     if (existsSync(dir)) {
       writeFileSync(join(dir, 'verify-last.json'), JSON.stringify(payload, null, 2) + '\n');
     }
   }
-  console.log(JSON.stringify(payload, null, 2));
+  // Sync eval result + goal state to Turso; MUST await before process.exit
+  // or the write is killed mid-flight (durableExecute is timeout-capped).
+  const turso = await syncEvalToTurso(payload, active).catch(() => ({ synced: false }));
+  console.log(JSON.stringify({ ...payload, turso }, null, 2));
   process.exit(out.ok ? 0 : 1);
 }
 
-function cmdDone() {
+async function cmdDone() {
   const active = readActive();
   if (!active?.slug) {
     console.error('[goal] No active goal.');
@@ -256,6 +283,10 @@ function cmdDone() {
   const dir = goalDir(active.slug);
   writeFileSync(join(dir, 'meta.json'), JSON.stringify(active, null, 2) + '\n');
   if (existsSync(ACTIVE)) rmSync(ACTIVE);
+
+  // Best-effort Turso sync (non-blocking to the user)
+  const turso = await syncGoalToTurso(active, out);
+
   console.log(
     JSON.stringify(
       {
@@ -264,6 +295,7 @@ function cmdDone() {
         slug: active.slug,
         title: active.title,
         verify: out,
+        turso,
         path: active.path,
       },
       null,
@@ -288,12 +320,56 @@ function cmdAbort() {
   console.log(JSON.stringify({ ok: true, action: 'abort', slug: active.slug }));
 }
 
+function cmdResume() {
+  const active = readActive();
+  if (!active?.slug) {
+    console.log(JSON.stringify({ ok: true, action: 'resume', note: 'nothing to resume', hint: 'npm run goal -- start "title"' }));
+    return;
+  }
+  if (!isStale(active)) {
+    console.log(JSON.stringify({ ok: true, action: 'resume', note: 'goal still fresh, continuing', slug: active.slug, phase: active.phase, heartbeat: active.heartbeat }));
+    writeActive(active); // refresh heartbeat
+    return;
+  }
+  // Stale goal detected — refresh heartbeat and report recovery
+  const staleSince = active.heartbeat;
+  writeActive(active);
+  const dir = goalDir(active.slug);
+  const files = existsSync(dir)
+    ? readdirSync(dir).filter((f) => f.endsWith('.md') || f.endsWith('.json'))
+    : [];
+  console.log(
+    JSON.stringify(
+      {
+        ok: true,
+        action: 'resume',
+        slug: active.slug,
+        title: active.title,
+        phase: active.phase,
+        stale_since: staleSince,
+        recovered_at: active.heartbeat,
+        files,
+        next:
+          active.phase === 'research'
+            ? 'Fill research.md; then npm run goal -- phase plan'
+            : active.phase === 'plan'
+              ? 'Fill plan.md; then npm run goal -- phase implement'
+              : 'Implement; npm run goal:verify until green; npm run goal -- done',
+      },
+      null,
+      2,
+    ),
+  );
+}
+
 function cmdStatus() {
   const active = readActive();
   if (!active) {
     console.log(JSON.stringify({ ok: true, active: null, hint: 'npm run goal -- start "title"' }, null, 2));
     return;
   }
+  const stale = isStale(active);
+  writeActive(active); // refresh heartbeat on any interaction
   const dir = goalDir(active.slug);
   const files = existsSync(dir)
     ? readdirSync(dir).filter((f) => f.endsWith('.md') || f.endsWith('.json'))
@@ -304,6 +380,7 @@ function cmdStatus() {
         ok: true,
         active,
         files,
+        ...(stale ? { stale: true, stale_since: active.heartbeat, hint: 'Goal was idle >2h. Run: npm run goal -- resume' } : {}),
         next:
           active.phase === 'research'
             ? 'Fill research.md + graph:query; then npm run goal -- phase plan'
@@ -340,6 +417,7 @@ function cmdHelp() {
 
   npm run goal -- start "title"
   npm run goal -- status
+  npm run goal -- resume
   npm run goal -- list
   npm run goal -- phase research|plan|implement
   npm run goal:verify [--build]
@@ -351,6 +429,99 @@ Active pointer: .agents/goals/active.json
 `);
 }
 
+/**
+ * Best-effort sync goal state to Turso via the durable shared lib.
+ * Failed writes queue locally and flush on the next successful sync.
+ */
+async function syncGoalToTurso(meta, verify) {
+  try {
+    const { durableExecute } = await import('./lib/turso-sync.mjs');
+    const result = await durableExecute([
+      {
+        table: 'ship_loop_goals',
+        sql: `INSERT INTO ship_loop_goals (slug, title, phase, status, verify_ok, created, completed, payload)
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+              ON CONFLICT(slug) DO UPDATE SET
+                title = excluded.title, phase = excluded.phase, status = excluded.status,
+                verify_ok = excluded.verify_ok, completed = excluded.completed, payload = excluded.payload`,
+        args: [
+          meta.slug,
+          meta.title || null,
+          meta.phase || null,
+          meta.status || null,
+          verify?.ok ? 1 : 0,
+          meta.created || null,
+          meta.completed || null,
+          JSON.stringify({ ...meta, verify }),
+        ],
+      },
+    ]);
+    return result.synced
+      ? { synced: true, slug: meta.slug }
+      : { synced: false, queued: result.queued, reason: result.reason || 'queued for retry' };
+  } catch (err) {
+    return { synced: false, reason: err.message };
+  }
+}
+
+/**
+ * Best-effort sync eval result to Turso (time-series of build health).
+ */
+async function syncEvalToTurso(evalPayload, activeGoal) {
+  try {
+    const { durableExecute } = await import('./lib/turso-sync.mjs');
+    const graders = (evalPayload.results || [])
+      .map((r) => `${r.name}:${r.pass ? 'pass' : 'fail'}`)
+      .join(',');
+    const passRate = (evalPayload.results || []).filter((r) => r.pass).length /
+      Math.max((evalPayload.results || []).length, 1);
+
+    const writes = [
+      {
+        table: 'ship_loop_evals',
+        sql: `INSERT INTO ship_loop_evals (goal_slug, ok, pass_rate, graders, at, payload)
+              VALUES (?, ?, ?, ?, ?, ?)`,
+        args: [
+          activeGoal?.slug || evalPayload.goal || null,
+          evalPayload.ok ? 1 : 0,
+          passRate,
+          graders,
+          evalPayload.at || new Date().toISOString(),
+          JSON.stringify(evalPayload),
+        ],
+      },
+    ];
+
+    if (activeGoal?.slug) {
+      writes.push({
+        table: 'ship_loop_goals',
+        sql: `INSERT INTO ship_loop_goals (slug, title, phase, status, verify_ok, created, completed, payload)
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+              ON CONFLICT(slug) DO UPDATE SET
+                phase = excluded.phase, status = excluded.status,
+                verify_ok = excluded.verify_ok, payload = excluded.payload`,
+        args: [
+          activeGoal.slug,
+          activeGoal.title || null,
+          activeGoal.phase || null,
+          activeGoal.status || 'active',
+          evalPayload.ok ? 1 : 0,
+          activeGoal.created || null,
+          activeGoal.completed || null,
+          JSON.stringify(activeGoal),
+        ],
+      });
+    }
+
+    const result = await durableExecute(writes);
+    return result.synced
+      ? { synced: true }
+      : { synced: false, queued: result.queued, reason: result.reason || 'queued for retry' };
+  } catch (err) {
+    return { synced: false, reason: err.message };
+  }
+}
+
 const args = process.argv.slice(2).filter((a) => a !== '--');
 const sub = args[0] || 'status';
 
@@ -360,11 +531,13 @@ if (sub === 'start') {
 } else if (sub === 'phase') {
   cmdPhase(args[1] || '');
 } else if (sub === 'verify') {
-  cmdVerify(args.slice(1));
+  await cmdVerify(args.slice(1));
 } else if (sub === 'done') {
-  cmdDone();
+  await cmdDone();
 } else if (sub === 'abort') {
   cmdAbort();
+} else if (sub === 'resume') {
+  cmdResume();
 } else if (sub === 'status') {
   cmdStatus();
 } else if (sub === 'list') {

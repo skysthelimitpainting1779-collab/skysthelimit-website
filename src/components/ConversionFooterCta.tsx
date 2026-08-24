@@ -1,4 +1,7 @@
+'use client';
+
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { ArrowRight, Calculator, Camera, ClipboardCheck, Phone, ShieldCheck } from 'lucide-react';
 import { businessPhone } from '../lib/contact';
 import IconFeatureCard from './IconFeatureCard';
@@ -22,6 +25,12 @@ const proofItems = [
 ];
 
 export default function ConversionFooterCta() {
+  const pathname = usePathname();
+
+  // The homepage closes with its own full walkthrough form; repeating another
+  // conversion panel immediately afterward weakens the finish and the choice.
+  if (pathname === '/') return null;
+
   return (
     <section className="border-y border-zinc-800 bg-[#111111] px-4 py-20 text-white sm:px-6 lg:px-8">
       <div className="relative z-20 mx-auto grid max-w-7xl grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">

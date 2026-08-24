@@ -1,0 +1,12 @@
+Create a high-fidelity desktop website homepage composition at 1440x1000 for Sky's the Limit Painting LLC. This is UI design, not a poster or a photograph.
+
+Direction: "The Owner's Finish Ledger" — an owner-managed painting project record combining a finish schedule, field notebook, architectural construction grid, and real residential jobsite photography. Premium, warm, exact, local, human. Do not use the incumbent black industrial hero, dark SaaS styling, rounded cards, glass effects, gradients, or generic contractor icon tiles.
+
+Composition option A — Split Ledger:
+1. A slim utility strip at top with "Twin Cities painting" and "Call / Text 651-410-4196".
+2. A crisp horizontal navigation on warm plaster-white with a simplified text wordmark "SKY'S THE LIMIT / PAINTING LLC", links Residential, Commercial, Public Sector, Projects, About, and an orange "Book a walkthrough" button.
+3. Main hero is a 58/42 split. Left is warm plaster-white paper with a faint pale-blue construction grid and monumental compressed black headline occupying most of the fold: "A FINISH THAT LASTS STARTS BEFORE THE FIRST COAT." Above it: "OWNER-LED PAINTING • TWIN CITIES". Below: one short sentence, an orange rectangular CTA "BOOK A FREE WALKTHROUGH", and a text link "Call Anthony".
+4. Right is one large crop of the referenced exterior painter photograph, not a card. A vertical cobalt-blue masking-tape seam overlaps the split. Small ledger annotations label "PROTECT / REPAIR / PRIME / FINISH" and "WRITTEN SCOPE".
+5. The bottom 20% of the image shows the start of the next section: a horizontal five-stage preparation ledger with stage 01 Protect through 05 Finish, separated by thin blue rules, plus a small owner-accountability note. Avoid generic boxes; make it one continuous document system.
+
+Palette: plaster white #F4F0E7 dominant, ink navy-black #0B1F35, cobalt masking blue #1769FF, safety orange #F26A21 used only for primary action, warm gray lines. Dark text on orange. Sharp 0px corners. Visible grid as an armature. Typography: monumental compressed grotesk for headline and calm humanist sans for body. Use the supplied images as jobsite content only; do not invent customer names, ratings, prices, awards, response-time promises, or municipal contracts. The visitor must understand what this business is and what to do within seconds.

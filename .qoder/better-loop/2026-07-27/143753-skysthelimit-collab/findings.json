@@ -1,0 +1,195 @@
+{
+  "summary": {
+    "projectName": "skysthelimit-collab",
+    "locale": "en",
+    "modelId": "agent-work-loop-v4",
+    "reportContractVersion": 24,
+    "overview": "The project exposes a well-structured agent harness with progressive disclosure, CI quality gates, and delivery governance. However, the local pre-commit hook references non-existent npm scripts, session observability is absent, and learning capture has no observed episodes to validate effectiveness.",
+    "aiAgentPractice": {
+      "inspectedSurfaces": [
+        "Rules",
+        "Skills",
+        "Custom Agents",
+        "Workflows",
+        "Plugins"
+      ],
+      "coverageRows": [
+        {
+          "surface": "Rules",
+          "scopes": [
+            "Project"
+          ],
+          "count": 2,
+          "paths": [
+            "AGENTS.md",
+            "DESIGN.md"
+          ]
+        },
+        {
+          "surface": "Skills",
+          "scopes": [
+            "Project"
+          ],
+          "count": 29,
+          "paths": [
+            ".agents/skills/banner-design/SKILL.md",
+            ".agents/skills/brand/SKILL.md",
+            ".agents/skills/ship-loop/SKILL.md"
+          ]
+        },
+        {
+          "surface": "Custom Agents",
+          "scopes": [
+            "Project"
+          ],
+          "count": 1,
+          "paths": [
+            ".agents/agents/devils-advocate/agent.md"
+          ]
+        },
+        {
+          "surface": "Workflows",
+          "scopes": [
+            "Project"
+          ],
+          "count": 20,
+          "paths": [
+            ".github/workflows/ci.yml",
+            ".github/workflows/quality-gate.yml",
+            ".github/workflows/codeql.yml"
+          ]
+        },
+        {
+          "surface": "Plugins",
+          "scopes": [
+            "Plugin"
+          ],
+          "count": 14,
+          "paths": [
+            "~/.qoder/plugins/cache/qoder-marketplace/*/"
+          ]
+        }
+      ]
+    },
+    "suggestions": [
+      {
+        "id": "fix-precommit-scripts",
+        "kind": "try-existing",
+        "title": "Align pre-commit hook with existing package scripts",
+        "reason": "The local pre-commit hook calls lint:react and lint:types, but these scripts are not defined in package.json. The hook will fail or be bypassed, leaving local commits without the intended validation gate.",
+        "confidence": "High",
+        "owner": "Repository maintainer",
+        "nextStep": "Either add lint:react and lint:types scripts to package.json that map to existing validation commands, or update the pre-commit hook to call the existing lint script.",
+        "validation": "Run git commit locally and confirm the pre-commit hook executes without missing-script errors."
+      },
+      {
+        "id": "activate-learning-capture",
+        "kind": "working-pattern",
+        "title": "Exercise the learning capture loop on bounded tasks",
+        "reason": "Learning scripts are registered but zero episodes have been observed. Without exercised episodes, the learning system cannot demonstrate effectiveness or surface recurring patterns.",
+        "confidence": "Medium",
+        "owner": "Task authors and goal-driven workflow users",
+        "nextStep": "Run npm run learn after completing one bounded goal to create an episode, then verify with npm run learn:status.",
+        "validation": "Confirm at least one episode record appears in .learnings/ and npm run learn:status reports it."
+      }
+    ],
+    "assignmentSummaries": [],
+    "dimensions": [
+      {
+        "id": "task-understanding",
+        "label": "Task Understanding",
+        "score": 76,
+        "summary": "AGENTS.md provides a concise portable entrypoint with commands, host layout, and behavior rules. Progressive disclosure routes into skills, specialists, and domain references. Multiple host adapters (Claude, Cursor, Codex, Copilot, Gemini) maintain consistent guidance.",
+        "findingRefs": []
+      },
+      {
+        "id": "controlled-execution",
+        "label": "Controlled Execution",
+        "score": 62,
+        "summary": "Package scripts cover dev, build, test, lint, and goal-driven workflows. Agent OS hooks provide PreToolUse/PostToolUse interception. However, the local pre-commit hook references lint:react and lint:types scripts that do not exist in package.json.",
+        "findingRefs": [
+          "precommit-missing-scripts"
+        ]
+      },
+      {
+        "id": "change-validation",
+        "label": "Change Validation",
+        "score": 72,
+        "summary": "CI pipeline enforces git standards, lint, typecheck, tests, and build through a reusable quality-gate workflow. Artifact uploads provide failure diagnostics. Pre-commit and pre-push hooks chain local validation. No session-observed validation behavior confirms actual usage.",
+        "findingRefs": [
+          "precommit-missing-scripts",
+          "session-observability-absent"
+        ]
+      },
+      {
+        "id": "reliable-delivery",
+        "label": "Reliable Delivery",
+        "score": 52,
+        "summary": "Delivery acceptance policy and recovery route are documented in AGENTS.md. Vercel rollback and promote commands are specified with SLA. However, no session evidence confirms delivery behavior, and the delivery-acceptance CI job depends on quality gate passage plus explicit acceptance recording.",
+        "findingRefs": [
+          "session-observability-absent"
+        ]
+      },
+      {
+        "id": "learning-capture",
+        "label": "Learning Capture",
+        "score": 28,
+        "summary": "Learning scripts (learn, learn:status, learn:sync, ship:eval, ship:improve) are registered and executable. Active prevention self-test exists. However, zero episode records, zero recurring candidates, and zero scoped Skill observations indicate learning capture has not been exercised in the observed window.",
+        "findingRefs": [
+          "session-observability-absent",
+          "learning-capture-unexercised"
+        ]
+      }
+    ]
+  },
+  "findings": [
+    {
+      "id": "precommit-missing-scripts",
+      "title": "Pre-commit hook references non-existent npm scripts",
+      "severity": "High",
+      "reason": "The local pre-commit hook at .husky/pre-commit calls 'npm run lint:react' and 'npm run lint:types', but neither script is defined in package.json. This causes the hook to fail on every commit attempt or encourages bypassing it with SKIP_PRECOMMIT=1, removing the intended local validation gate.",
+      "expectedOutput": [
+        "Pre-commit hook calls only scripts that exist in package.json",
+        "Local commits trigger the intended lint and typecheck validation"
+      ],
+      "expectedArtifact": "Updated .husky/pre-commit or package.json scripts",
+      "aiFixPrompt": "/better-loop fix this issue\n\nAlign the pre-commit hook with existing package scripts.\n\n## Validation\n\n- Run git commit locally and confirm the pre-commit hook executes without missing-script errors\n- Verify the intended validation (lint + typecheck) still runs",
+      "dimensionRefs": [
+        "controlled-execution",
+        "change-validation"
+      ]
+    },
+    {
+      "id": "session-observability-absent",
+      "title": "No session observability to validate agent behavior",
+      "severity": "Medium",
+      "reason": "Zero eligible sessions were analyzed. Without session data, claims about validation-after-edit behavior, edit habits, friction patterns, and delivery outcomes remain unverified. The harness provides the infrastructure (hooks, scripts, skills) but no observed evidence confirms actual agent-mediated work flows through it.",
+      "expectedOutput": [
+        "At least one Task Episode with goal, action, validation, and outcome evidence",
+        "Session facts command returns non-empty candidates"
+      ],
+      "expectedArtifact": "Session evidence with at least one bounded Task Episode",
+      "aiFixPrompt": "/better-loop fix this issue\n\nEnable session observability for the Qoder platform.\n\n## Validation\n\n- Complete one bounded task with Qoder\n- Run the session-analysis facts command and confirm at least one candidate episode is retained",
+      "dimensionRefs": [
+        "change-validation",
+        "reliable-delivery",
+        "learning-capture"
+      ]
+    },
+    {
+      "id": "learning-capture-unexercised",
+      "title": "Learning capture infrastructure exists but has no observed episodes",
+      "severity": "Medium",
+      "reason": "Scripts for learning episodes (learn, learn:status, learn:sync), active prevention, and ship evaluation are registered in package.json. However, zero episode records, zero recurring candidates, and zero scoped Skill observations indicate the learning loop has not been exercised. Without comparable observation windows, learning capture cannot demonstrate effectiveness or surface reusable improvements.",
+      "expectedOutput": [
+        "Episode record in .learnings/ with goal, outcome, and validation evidence",
+        "npm run learn:status reports the episode"
+      ],
+      "expectedArtifact": "At least one learning episode record",
+      "aiFixPrompt": "/better-loop fix this issue\n\nExercise the learning capture loop on one bounded task.\n\n## Validation\n\n- Run npm run learn after completing a bounded goal\n- Confirm npm run learn:status reports the episode\n- Verify the episode appears in .learnings/",
+      "dimensionRefs": [
+        "learning-capture"
+      ]
+    }
+  ]
+}

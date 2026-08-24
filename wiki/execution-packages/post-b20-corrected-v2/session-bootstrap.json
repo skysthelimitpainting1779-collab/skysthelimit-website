@@ -1,0 +1,46 @@
+{
+  "session": {
+    "cwd": "C:/Users/Johnny Cage/DEV/skys-limit-worktrees/agent-skys-limit-convex-os",
+    "branch": "agent/skys-limit-convex-os",
+    "collaborationMode": "execute",
+    "invocationMessage": "Execute"
+  },
+  "security": {
+    "approvalPolicy": "on-request",
+    "sandboxMode": "workspace-write",
+    "riskTierOverrides": {
+      "low": "automatic",
+      "medium": "requires-approval",
+      "high": "blocked-until-authorized"
+    },
+    "neverSet": ["approval_policy: never", "sandbox_mode: danger-full-access"]
+  },
+  "multiAgent": {
+    "enabled": true,
+    "maxConcurrent": 8,
+    "batchParallelism": {
+      "B25": {"writers": 1, "readOnly": 1},
+      "B31": {"writers": 2, "readOnly": 1},
+      "B30": {"writers": 2, "readOnly": 1},
+      "B50": {"writers": 2, "readOnly": 1},
+      "B60": {"writers": 1, "readOnly": 2}
+    }
+  },
+  "preflight": {
+    "required": true,
+    "script": "wiki/execution-packages/post-b20-corrected-v2/preflight.mjs",
+    "blocking": true
+  },
+  "graphInstallation": {
+    "validateAfterCopy": [
+      "node scripts/validate-graph.mjs .graph/graph.json",
+      "node scripts/critical-path.mjs .graph/graph.json",
+      "node scripts/estimate-cost.mjs .graph/graph.json"
+    ]
+  },
+  "knowledgeGraph": {
+    "tool": "graphify",
+    "maxStalenessCommits": 3,
+    "refreshCommand": "npx graphify update ."
+  }
+}

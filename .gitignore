@@ -12,6 +12,9 @@ tmp/
 tsconfig.tsbuildinfo
 *.tsbuildinfo
 graphify-out/
+/.qoder/repowiki/
+/skys-the-limit-painting-llc-website/
+/.agents/goals/_harness/*.json
 
 # Claude Code runtime state only (NOT agent definitions — those are tracked)
 .claude/*

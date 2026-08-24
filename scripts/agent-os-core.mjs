@@ -14,6 +14,7 @@ import {
   unlinkSync,
 } from 'node:fs';
 import { join } from 'node:path';
+import { tmpdir } from 'node:os';
 import crypto from 'node:crypto';
 
 export const MAX_TASK_ATTEMPTS = 3;
@@ -42,7 +43,6 @@ export function ensureControlPlane(root = process.cwd()) {
     join(agents, 'workflows'),
     join(agents, 'goals'),
     join(agents, 'goals', '_eval'),
-    join(agents, 'goals', '_harness'),
     join(root, '.learnings'),
   ];
   for (const d of dirs) ensureDir(d);
@@ -221,7 +221,18 @@ export function pickNextTask(tasks, now = Date.now()) {
   return candidates[0] || null;
 }
 
-export function hasCheckpointForTask(db, taskId, root = process.cwd()) {
+export function getAgentCheckpointDir(env = process.env) {
+  const configured = String(env.ANTIGRAVITY_EXECUTABLE_DATA_DIR || '').trim();
+  const stateRoot = configured || join(tmpdir(), 'skysthelimit-agent-state');
+  return join(stateRoot, 'agent-os', 'checkpoints');
+}
+
+export function hasCheckpointForTask(
+  db,
+  taskId,
+  _root = process.cwd(),
+  dataDir = getAgentCheckpointDir()
+) {
   if (!taskId) return false;
 
   // In-memory first
@@ -231,20 +242,29 @@ export function hasCheckpointForTask(db, taskId, root = process.cwd()) {
     }
   }
 
-  // Disk fallback (under goals/_harness — not theater checkpoints/)
-  const dir = join(root, '.agents', 'goals', '_harness');
-  if (!existsSync(dir)) return false;
+  // Dynamic state must stay outside the repository.
+  if (!existsSync(dataDir)) return false;
   try {
-    return readdirSync(dir).some((name) => name.includes(taskId));
+    return readdirSync(dataDir).some((name) => name.includes(taskId));
   } catch {
     return false;
   }
 }
 
-export function writePhaseCheckpoint(db, { taskId, sessionId, phase, logs = '', root = process.cwd() }) {
-  ensureDir(join(root, '.agents', 'goals', '_harness'));
+export function writePhaseCheckpoint(
+  db,
+  {
+    taskId,
+    sessionId,
+    phase,
+    logs = '',
+    root = process.cwd(),
+    dataDir = getAgentCheckpointDir(),
+  }
+) {
+  ensureDir(dataDir);
   const chkId = `CHK-${taskId}-${Date.now()}-${phase}`;
-  const planPath = join(root, '.agents', 'goals', '_harness', `${chkId}.json`);
+  const planPath = join(dataDir, `${chkId}.json`);
   const record = {
     id: chkId,
     task_id: taskId,

@@ -1,231 +1,166 @@
 'use client';
 
-import { ReactNode, useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Calculator, Menu, X, ChevronDown, Phone } from 'lucide-react';
-import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
+import { Menu, X } from 'lucide-react';
 
-const NavLink = ({ to, children }: { to: string; children: ReactNode }) => {
-  const pathname = usePathname();
-  const isActive = pathname === to || (to !== '/' && pathname.startsWith(to));
+const navigation = [
+  { href: '/residential', label: 'Residential' },
+  { href: '/commercial', label: 'Commercial' },
+  { href: '/public-sector', label: 'Public Sector' },
+  { href: '/projects', label: 'Projects' },
+  { href: '/service-area', label: 'Service Area' },
+  { href: '/about', label: 'About' },
+];
 
-  return (
-    <div className="relative group flex items-center">
-      <Link 
-        href={to} 
-        data-track="nav_click"
-        data-track-payload={JSON.stringify({ path: to, label: String(children) })}
-        className={`relative whitespace-nowrap text-sm font-bold transition-colors duration-200 py-2 hover:text-white ${isActive ? 'text-white' : 'text-gray-400'}`}
-      >
-        {children}
-      </Link>
-      {isActive && (
-        <motion.span
-          layoutId="nav-indicator"
-          className="absolute -bottom-1 left-0 w-full h-0.5 bg-white"
-          transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-        />
-      )}
-    </div>
-  );
-};
+function isCurrentPath(pathname: string, href: string) {
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
 
 export default function ConversionHeader() {
-  const [scrolled, setScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const pathname = usePathname();
-  const prefersReducedMotion = useReducedMotion();
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 60);
-    handleScroll();
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [pathname]);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      const ref = params.get('ref');
-      if (ref) {
-        localStorage.setItem('referrer_email', ref.trim());
-      }
-    }
+    const handleScroll = () => setScrolled(window.scrollY > 24);
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleBlur = (e: React.FocusEvent) => {
-    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
-      setDropdownOpen(false);
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      setDropdownOpen(false);
-      const button = e.currentTarget.querySelector('button');
-      if (button) {
-        (button as HTMLElement).focus();
-      }
-    }
-  };
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const referral = params.get('ref');
+    if (referral) localStorage.setItem('referrer_email', referral.trim());
+  }, []);
 
   return (
-    <>
-      <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-surface-void/85 backdrop-blur-md shadow-sm border-b border-line' : 'bg-surface-void/92 backdrop-blur-sm'}`}>
-        
-        {/* Micro-Utility Bar */}
-        <div className="h-8 bg-surface-void border-b border-line flex items-center px-4 sm:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto w-full flex justify-between items-center gap-3 overflow-hidden text-[12px] md:text-sm text-white/70 font-bold">
-            <span className="truncate">(651) 410-4196 • info@skysthelimitpaintingllc.com</span>
-            <span className="hidden sm:inline truncate">Prep-first painting across the Twin Cities • Price range, scope review, and schedule conversation in one path</span>
-          </div>
-        </div>
-
-        {/* Primary Nav */}
-        <div className={`py-4`}>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
-            <Link href="/" className="flex shrink-0 items-center gap-3">
-              <div className="grid h-14 w-14 place-items-center overflow-hidden border border-line-strong bg-white p-1.5">
-                <img src="/brand/SkyLLP_BrandLogo.svg" alt="Sky's the Limit Painting LLC" className="h-full w-full object-contain" />
-              </div>
-              <span className="font-display hidden text-xl font-black leading-none text-white sm:block">
-                SKY'S THE LIMIT
-                <span className="mt-1 block text-sm text-gray-400">Painting LLC</span>
-              </span>
-            </Link>
-
-            {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-5 xl:gap-7">
-              <NavLink to="/residential">Residential</NavLink>
-              <NavLink to="/commercial">Commercial</NavLink>
-              <NavLink to="/public-sector">Public Sector</NavLink>
-              <NavLink to="/projects">Projects</NavLink>
-              
-              {/* Dropdown Menu */}
-              <div 
-                className="relative py-2"
-                onMouseEnter={() => setDropdownOpen(true)}
-                onMouseLeave={() => setDropdownOpen(false)}
-                onBlur={handleBlur}
-                onKeyDown={handleKeyDown}
-              >
-                <button 
-                  onClick={() => setDropdownOpen(prev => !prev)}
-                  className={`relative whitespace-nowrap text-sm font-bold transition-colors duration-200 flex items-center gap-1 cursor-pointer focus:outline-none hover:text-white ${dropdownOpen ? 'text-white' : 'text-gray-400'}`}
-                  aria-haspopup="true"
-                  aria-expanded={dropdownOpen}
-                >
-                  More
-                  <ChevronDown size={12} className={`transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`} />
-                </button>
-                
-                {dropdownOpen && (
-                  <div 
-                    className="absolute left-0 mt-2 w-48 bg-surface-void border border-line p-2 flex flex-col gap-1 shadow-xl z-50"
-                    style={{ borderRadius: '0px' }}
-                  >
-                    <Link 
-                      href="/service-area" 
-                      data-track="nav_click"
-                      data-track-payload={JSON.stringify({ path: '/service-area', label: 'Areas' })}
-                      className="block px-4 py-2.5 text-sm font-bold text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
-                      onClick={() => setDropdownOpen(false)}
-                    >
-                      Areas
-                    </Link>
-                    <Link 
-                      href="/refer" 
-                      data-track="nav_click"
-                      data-track-payload={JSON.stringify({ path: '/refer', label: 'Referral' })}
-                      className="block px-4 py-2.5 text-sm font-bold text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
-                      onClick={() => setDropdownOpen(false)}
-                    >
-                      Referral
-                    </Link>
-                    <Link 
-                      href="/about" 
-                      data-track="nav_click"
-                      data-track-payload={JSON.stringify({ path: '/about', label: 'About' })}
-                      className="block px-4 py-2.5 text-sm font-bold text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
-                      onClick={() => setDropdownOpen(false)}
-                    >
-                      About
-                    </Link>
-                  </div>
-                )}
-              </div>
-
-              <NavLink to="/contact">Contact</NavLink>
-            </nav>
-
-            {/* Desktop Actions - Conversion Anchor */}
-            <div className="hidden shrink-0 items-center gap-3 lg:flex">
-              <Link
-                href="/estimate"
-                data-track="hero_cta_click"
-                data-track-payload='{"source":"header","label":"Price Range"}'
-                className="u-transition inline-flex items-center justify-center gap-2 bg-[#FF5A00] px-5 py-3 text-sm font-black uppercase tracking-[0.08em] text-white hover:bg-[#E94F00]"
-              >
-                <Calculator size={15} />
-                Price Range
-              </Link>
-              <a href="tel:+16514104196" data-track="call_click" data-track-payload='{"source":"header"}' className="u-transition inline-flex items-center justify-center gap-2 border border-[#FF5A00] px-5 py-3 text-sm font-black uppercase tracking-[0.08em] text-[#FF5A00] hover:bg-[#FF5A00] hover:text-white">
-                <Phone size={15} />
-                651-410-4196
-              </a>
-            </div>
-
-            {/* Mobile Menu Toggle */}
-            <button 
-              aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
-              aria-expanded={mobileMenuOpen}
-              className="lg:hidden p-2 text-white"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+    <header
+      className={`fixed inset-x-0 top-0 z-50 h-28 border-b border-[#071321]/20 bg-[#F6F3EB] text-[#071321] transition-shadow duration-200 ${
+        scrolled ? 'shadow-[0_14px_32px_rgba(7,19,33,0.08)]' : ''
+      }`}
+    >
+      <div className="h-8 border-b border-[#071321]/15 px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex h-full max-w-[90rem] items-center justify-between gap-4 text-[11px] font-black uppercase tracking-[0.09em]">
+          <span>Twin Cities painting</span>
+          <div className="flex items-center gap-4">
+            <span className="hidden text-[#3E4D5D] sm:inline">Owner-led · Written scope · Prep first</span>
+            <a
+              href="tel:+16514104196"
+              data-track="call_click"
+              data-track-payload='{"source":"utility_header"}'
+              className="underline decoration-[#0254C3] decoration-2 underline-offset-4"
             >
-              {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
-            </button>
+              Call / Text 651-410-4196
+            </a>
           </div>
         </div>
-      </header>
+      </div>
 
-      {/* Mobile Menu Overlay */}
-      <AnimatePresence initial={false}>
-        {mobileMenuOpen && (
-          <motion.div 
-            initial={prefersReducedMotion ? false : { opacity: 0, y: -16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={prefersReducedMotion ? undefined : { opacity: 0, y: -16 }}
-            transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.2, ease: 'easeOut' }}
-            className="fixed inset-0 top-[104px] bg-surface-void z-40 lg:hidden flex flex-col p-6 overflow-y-auto pb-32"
+      <div className="h-20 px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex h-full max-w-[90rem] items-center justify-between gap-5">
+          <Link href="/" className="flex shrink-0 items-center gap-3 leading-none" aria-label="Sky's the Limit Painting LLC home">
+            <Image
+              src="/brand/SkyLLP_BrandLogo.svg"
+              alt=""
+              width={44}
+              height={40}
+              className="h-10 w-11 object-contain"
+            />
+            <span>
+              <span className="block text-lg font-black uppercase tracking-[-0.025em] sm:text-2xl">Sky&apos;s the Limit</span>
+              <span className="mt-1 block text-[9px] font-black uppercase tracking-[0.24em] text-[#3E4D5D] sm:text-[10px]">Painting LLC</span>
+            </span>
+          </Link>
+
+          <nav aria-label="Primary navigation" className="hidden items-center gap-5 lg:flex xl:gap-8">
+            {navigation.map((item) => {
+              const current = isCurrentPath(pathname, item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  aria-current={current ? 'page' : undefined}
+                  data-track="nav_click"
+                  data-track-payload={JSON.stringify({ path: item.href, label: item.label })}
+                  className={`relative py-3 text-sm font-bold transition-colors hover:text-[#0254C3] ${
+                    current ? 'text-[#0254C3]' : 'text-[#26384A]'
+                  }`}
+                >
+                  {item.label}
+                  {current ? <span aria-hidden="true" className="absolute inset-x-0 bottom-1 h-0.5 bg-[#0254C3]" /> : null}
+                </Link>
+              );
+            })}
+          </nav>
+
+          <div className="hidden items-center gap-3 lg:flex">
+            <a
+              href="tel:+16514104196"
+              data-track="call_click"
+              data-track-payload='{"source":"primary_header"}'
+              className="inline-flex min-h-12 items-center border border-[#071321]/35 px-5 text-sm font-black text-[#071321] transition-colors hover:border-[#0254C3] hover:text-[#0254C3]"
+            >
+              Call Anthony
+            </a>
+            <Link
+              href="/estimate"
+              data-track="hero_cta_click"
+              data-track-payload='{"source":"primary_header","label":"Book a walkthrough"}'
+              className="inline-flex min-h-12 items-center bg-[#FF661C] px-6 text-sm font-black text-[#071321] transition-colors hover:bg-[#F2550A]"
+            >
+              Book a walkthrough
+            </Link>
+          </div>
+
+          <button
+            type="button"
+            aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-navigation"
+            onClick={() => setMobileMenuOpen((open) => !open)}
+            className="grid h-12 w-12 shrink-0 place-items-center border border-[#071321]/30 text-[#071321] lg:hidden"
           >
-            <nav className="flex flex-col gap-6 text-xl">
-              <NavLink to="/">Home</NavLink>
-              <NavLink to="/residential">Residential</NavLink>
-              <NavLink to="/commercial">Commercial</NavLink>
-              <NavLink to="/public-sector">Public Sector</NavLink>
-              <NavLink to="/projects">Projects</NavLink>
-              <NavLink to="/service-area">Service Area</NavLink>
-              <NavLink to="/refer">Referral Program</NavLink>
-              <NavLink to="/about">About</NavLink>
-              <NavLink to="/contact">Contact</NavLink>
-            </nav>
-            <div className="mt-12 flex flex-col gap-4">
-              <Link href="/estimate" data-track="hero_cta_click" data-track-payload='{"source":"mobile_menu","label":"Price Range"}' className="u-transition w-full text-center bg-[#FF5A00] px-6 py-4 font-black uppercase tracking-[0.08em] text-white hover:bg-[#E94F00]">
-                Get A Price Range
-              </Link>
-              <a href="tel:+16514104196" data-track="call_click" data-track-payload='{"source":"mobile_menu"}' className="w-full text-center border border-[#FF5A00] px-6 py-4 font-black uppercase tracking-[0.08em] text-[#FF5A00]">
-                Call / Text 651-410-4196
-              </a>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+            {mobileMenuOpen ? <X aria-hidden="true" size={22} /> : <Menu aria-hidden="true" size={22} />}
+          </button>
+        </div>
+      </div>
+
+      {mobileMenuOpen ? (
+        <nav
+          id="mobile-navigation"
+          aria-label="Mobile navigation"
+          className="absolute inset-x-0 top-full border-b border-[#071321]/25 bg-[#F6F3EB] px-4 py-5 shadow-[0_18px_38px_rgba(7,19,33,0.12)] lg:hidden"
+        >
+          <div className="mx-auto grid max-w-[90rem]">
+            {navigation.map((item) => {
+              const current = isCurrentPath(pathname, item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  aria-current={current ? 'page' : undefined}
+                  className={`flex min-h-12 items-center border-b border-[#071321]/15 text-lg font-black ${
+                    current ? 'text-[#0254C3]' : 'text-[#071321]'
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+            <Link href="/estimate" className="mt-5 flex min-h-14 items-center justify-center bg-[#FF661C] px-5 text-sm font-black text-[#071321]">
+              Book a free walkthrough
+            </Link>
+          </div>
+        </nav>
+      ) : null}
+    </header>
   );
 }

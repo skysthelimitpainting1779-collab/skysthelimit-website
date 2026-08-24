@@ -1,0 +1,52 @@
+{
+  "description": "Delta patch adding session contract to the execution graph",
+  "targetGraph": "compiled/.graph/graph.json",
+  "graphId": "skys-limit-convex-operating-system-v2",
+  "patches": [
+    {
+      "op": "add",
+      "path": "/graph/sessionContract",
+      "value": {
+        "requiredCwd": "C:/Users/Johnny Cage/DEV/skys-limit-worktrees/agent-skys-limit-convex-os",
+        "requiredBranch": "agent/skys-limit-convex-os",
+        "requiredMode": "execute",
+        "approvalPolicy": "on-request",
+        "sandboxMode": "workspace-write",
+        "preflightBlocking": true
+      }
+    },
+    {
+      "op": "add",
+      "path": "/graph/sessionContract/forbidden",
+      "value": [
+        "approval_policy: never",
+        "sandbox_mode: danger-full-access",
+        "collaboration_mode: plan for execution",
+        "cwd: main worktree",
+        "global multi-agent suppression"
+      ]
+    },
+    {
+      "op": "add",
+      "path": "/graph/sessionContract/validation",
+      "value": {
+        "requiredBeforeExecution": [
+          "node scripts/validate-graph.mjs .graph/graph.json",
+          "node scripts/critical-path.mjs .graph/graph.json",
+          "node scripts/estimate-cost.mjs .graph/graph.json"
+        ],
+        "requiredBeforeBatchGate": [
+          "npm run lint",
+          "npm test",
+          "npm run build",
+          "npm run goal:verify"
+        ]
+      }
+    },
+    {
+      "op": "replace",
+      "path": "/graph/controlPattern/synchronization",
+      "value": "A node starts only after every dependsOn node succeeds, resource locks are free, risk authorization is recorded, preflight has passed, and a Graphifyy-bounded node packet is generated from the current code graph with max 3 commits staleness."
+    }
+  ]
+}

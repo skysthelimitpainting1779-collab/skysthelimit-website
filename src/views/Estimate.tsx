@@ -239,8 +239,6 @@ export default function EstimatePage() {
     <PageTransition>
       <section className="relative min-h-[calc(100svh-116px)] flex items-center justify-center bg-[#050505] py-12 px-4 sm:px-6 lg:px-8 overflow-hidden mesh-gradient-bg">
         
-        <div className="noise-overlay"></div>
-
         <div className="relative w-full max-w-2xl flex flex-col h-[85svh] border border-white/10 bg-white/5 backdrop-blur-2xl shadow-2xl overflow-hidden perspective-1000">
           
           {/* Header */}
@@ -249,9 +247,9 @@ export default function EstimatePage() {
                <img src="/brand/SkyLLP_BrandLogo.svg" alt="Sky" className="h-6 w-6" />
             </div>
             <div>
-              <h2 className="font-bold text-white text-lg tracking-tight uppercase">Pricing Engine</h2>
-              <p className="eyebrow flex items-center gap-2 mt-1">
-                <span className="w-1.5 h-1.5 bg-[#FF5A00] animate-pulse"></span> Agent Online
+              <h1 className="font-bold text-white text-lg tracking-tight uppercase">Guided Project Estimator</h1>
+              <p className="mt-1 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.08em] text-[#9ca3af]">
+                <span className="h-1.5 w-1.5 bg-[#FF5A00]"></span> Takes about one minute
               </p>
             </div>
           </div>
@@ -368,11 +366,11 @@ export default function EstimatePage() {
                  <motion.div variants={containerVariants} initial="hidden" animate="show" exit="hidden" className="flex flex-col gap-3">
                    <motion.button variants={itemVariants} whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }} onClick={() => handlePrep('standard', 'Standard Prep')} className="text-left bg-[#182023] hover:bg-white/10 border border-white/10 p-5 transition-colors shadow-lg">
                      <p className="font-bold text-sm text-white">Standard Prep</p>
-                     <p className="text-xs text-[#9ca3af] mt-2 leading-relaxed">Light সংকট, minor caulk, 1 coat primer & topcoat. Great for minor refreshes.</p>
+                     <p className="text-xs text-[#9ca3af] mt-2 leading-relaxed">Spot repairs, minor caulk where specified, and the agreed coating system. Best for straightforward refreshes.</p>
                    </motion.button>
                    <motion.button variants={itemVariants} whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }} onClick={() => handlePrep('premium', 'Premium Detail Prep')} className="text-left bg-[#182023] hover:bg-white/10 border border-white/10 p-5 transition-colors shadow-lg">
                      <p className="font-bold text-sm text-[#FF5A00] flex items-center gap-2">Premium Detail Prep <span className="bg-[#FF5A00]/20 text-[#FF5A00] text-[10px] uppercase px-2 py-0.5 tracking-wider font-bold">Recommended</span></p>
-                     <p className="text-xs text-[#9ca3af] mt-2 leading-relaxed">Elite multi-stage sanding, deep caulking, wood stabilization, premium coats.</p>
+                     <p className="text-xs text-[#9ca3af] mt-2 leading-relaxed">Expanded sanding, caulking, and stabilization where the inspected surface requires more correction.</p>
                    </motion.button>
                  </motion.div>
                )}
@@ -381,14 +379,26 @@ export default function EstimatePage() {
                  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={springConfig} className="bg-[#11100d] border border-[#FF5A00]/30 p-6 shadow-2xl relative overflow-hidden">
                    <div className="absolute top-0 left-0 right-0 h-1 bg-[#FF5A00]"></div>
                    <form onSubmit={handleFinalSubmit} className="space-y-4">
-                     <p className="eyebrow mb-4">Request Walkthrough</p>
-                     <div className="grid grid-cols-2 gap-4">
-                       <input required type="text" placeholder="Name" value={name} onChange={e => setName(e.target.value)} className="bg-[#050505] border border-white/10 p-3 text-sm focus:border-[#FF5A00] outline-none transition-colors text-white placeholder:text-gray-600" />
-                       <input required type="tel" placeholder="Phone" value={phone} onChange={e => setPhone(e.target.value)} className="bg-[#050505] border border-white/10 p-3 text-sm focus:border-[#FF5A00] outline-none transition-colors text-white placeholder:text-gray-600" />
+                     <h2 className="mb-4 text-xl font-black uppercase text-white">Request a walkthrough</h2>
+                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                       <label htmlFor="estimate-name" className="grid gap-2 text-xs font-bold uppercase tracking-[0.08em] text-[#c9c1b4]">
+                         Name
+                         <input id="estimate-name" name="name" autoComplete="name" required type="text" value={name} onChange={e => setName(e.target.value)} className="bg-[#050505] border border-white/10 p-3 text-base focus:border-[#FF5A00] outline-none transition-colors text-white" />
+                       </label>
+                       <label htmlFor="estimate-phone" className="grid gap-2 text-xs font-bold uppercase tracking-[0.08em] text-[#c9c1b4]">
+                         Phone
+                         <input id="estimate-phone" name="phone" autoComplete="tel" inputMode="tel" required type="tel" value={phone} onChange={e => setPhone(e.target.value)} className="bg-[#050505] border border-white/10 p-3 text-base focus:border-[#FF5A00] outline-none transition-colors text-white" />
+                       </label>
                      </div>
-                     <div className="grid grid-cols-2 gap-4">
-                       <input required type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} className="bg-[#050505] border border-white/10 p-3 text-sm focus:border-[#FF5A00] outline-none transition-colors text-white placeholder:text-gray-600" />
-                       <input required type="text" placeholder="City" value={city} onChange={e => setCity(e.target.value)} className="bg-[#050505] border border-white/10 p-3 text-sm focus:border-[#FF5A00] outline-none transition-colors text-white placeholder:text-gray-600" />
+                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                       <label htmlFor="estimate-email" className="grid gap-2 text-xs font-bold uppercase tracking-[0.08em] text-[#c9c1b4]">
+                         Email
+                         <input id="estimate-email" name="email" autoComplete="email" required type="email" value={email} onChange={e => setEmail(e.target.value)} className="bg-[#050505] border border-white/10 p-3 text-base focus:border-[#FF5A00] outline-none transition-colors text-white" />
+                       </label>
+                       <label htmlFor="estimate-city" className="grid gap-2 text-xs font-bold uppercase tracking-[0.08em] text-[#c9c1b4]">
+                         City
+                         <input id="estimate-city" name="city" autoComplete="address-level2" required type="text" value={city} onChange={e => setCity(e.target.value)} className="bg-[#050505] border border-white/10 p-3 text-base focus:border-[#FF5A00] outline-none transition-colors text-white" />
+                       </label>
                      </div>
                      <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }} disabled={status === 'submitting'} type="submit" className="w-full bg-[#FF5A00] text-white p-4 text-sm font-bold flex items-center justify-center gap-2 hover:bg-[#ff7a33] transition-colors disabled:opacity-50 mt-2 shimmer-cta">
                        {status === 'submitting' ? <Loader2 className="animate-spin" size={16} /> : 'Lock In Estimate'}

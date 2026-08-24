@@ -18,15 +18,15 @@ describe('Tier 1: Feature Coverage', () => {
 
   test('T1.2 Routing & Navigation - Header navigation links exist', () => {
     const header = read('src/components/ConversionHeader.tsx');
-    assert.match(header, /to="\/residential"/);
-    assert.match(header, /to="\/commercial"/);
-    assert.match(header, /to="\/public-sector"/);
+    assert.match(header, /href: '\/residential'/);
+    assert.match(header, /href: '\/commercial'/);
+    assert.match(header, /href: '\/public-sector'/);
   });
 
   test('T1.3 Routing & Navigation - Micro-utility header bar displays warning/intake message', () => {
     const header = read('src/components/ConversionHeader.tsx');
-    assert.match(header, /Prep-first painting across the Twin Cities/);
-    assert.match(header, /Price range, scope review, and schedule conversation in one path/);
+    assert.match(header, /Twin Cities painting/);
+    assert.match(header, /Owner-led · Written scope · Prep first/);
   });
 
   test('T1.4 Routing & Navigation - Redirects for legacy routes redirect to new pages', () => {
@@ -43,7 +43,8 @@ describe('Tier 1: Feature Coverage', () => {
 
   test('T1.6 Three-Market Content - Home page renders the approved positioning statement', () => {
     const home = read('src/app/HomeClient.tsx');
-    assert.match(home, /Residential detail\. Commercial discipline\.[\s\S]*Preps[\s\S]*first\./i);
+    assert.match(home, /A finish that lasts starts before the first coat\./i);
+    assert.match(home, /walkthrough, written scope, preparation plan, and final detail/i);
   });
 
   test('T1.7 Three-Market Content - Residential page loads specific data fields', () => {
@@ -279,7 +280,7 @@ describe('Tier 2: Boundary/Corner Cases', () => {
 
   test('T2.11 Local SEO Pages - Invalid SEO slugs return 404', () => {
     const landing = read('src/views/LandingPage.tsx');
-    assert.match(landing, /if \(!pageData\)/);
+    assert.match(landing, /if \(!page\)/);
     assert.match(landing, /return <NotFound \/>/);
   });
 

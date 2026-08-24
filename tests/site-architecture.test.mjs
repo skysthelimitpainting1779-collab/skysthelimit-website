@@ -34,8 +34,8 @@ test('primary navigation leads with residential, commercial, and public sector',
 test('homepage states the approved positioning and avoids forbidden claims', () => {
   const home = read('src/app/HomeClient.tsx');
 
-  assert.match(home, /Residential detail\. Commercial discipline\.[\s\S]*Preps[\s\S]*first\./i);
-  assert.match(home, /registered Minnesota Specialty Contractor \(Painting\)/);
+  assert.match(home, /A finish that lasts starts before the first coat\./i);
+  assert.match(home, /Minnesota registration[\s\S]*IR816596/);
   assert.doesNotMatch(home, /Public-work ambition/i);
   assert.doesNotMatch(home, /Licensed|Bonded|MnDOT-approved|Government-certified|DBE certified|TGB certified|Trusted by government agencies|Awarded public contracts|Workers comp/i);
 });
@@ -120,7 +120,8 @@ test('local SEO and service landing pages are routable and listed in the sitemap
     assert.match(sitemap, new RegExp(slug));
   }
 
-  assert.match(landingRoute, /LeadForm/);
+  assert.match(landingRoute, /EstimateCta/);
+  assert.match(read('src/components/landing/EstimateCta.tsx'), /LeadForm/);
   assert.match(landingRoute, /landingPagePath/);
 
   // Assert that App Router dynamic page has generateMetadata for SEO headers

@@ -179,6 +179,22 @@ async function ensureSchema(c) {
       updated_at TEXT
     )
   `);
+  await c.execute(`
+    CREATE TABLE IF NOT EXISTS agent_os_episodes (
+      id TEXT PRIMARY KEY NOT NULL,
+      task TEXT,
+      outcome TEXT,
+      area TEXT,
+      pattern TEXT,
+      friction TEXT,
+      duration_min INTEGER,
+      tools_used TEXT,
+      steps_count INTEGER,
+      incident_refs TEXT,
+      recorded_at TEXT,
+      payload TEXT
+    )
+  `);
 }
 
 function readTextIfExists(relPath) {

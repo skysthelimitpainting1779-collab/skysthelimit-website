@@ -1,0 +1,13 @@
+Create a high-fidelity desktop website homepage composition at 1440x1000 for Sky's the Limit Painting LLC. This is UI design, not a poster or a photograph.
+
+Keep the approved visual world "The Owner's Finish Ledger": warm plaster-white paper, ink navy-black, cobalt-blue masking tape, safety orange only for the primary action, faint architectural construction grid, sharp 0px corners, monumental compressed grotesk headlines, calm readable body type, real residential jobsite photography, and owner-managed process annotations. Do not use the incumbent black industrial hero, dark SaaS styling, rounded cards, glass effects, gradients, generic contractor icon tiles, or invented proof.
+
+Composition option C — Scope Dossier:
+1. At top, a compact two-row header: thin contact/locality strip and a structured navigation line with a simple text wordmark "SKY'S THE LIMIT / PAINTING LLC", Residential, Commercial, Projects, About, an underlined phone action, and an orange "Book a walkthrough" button.
+2. The hero is a visible twelve-column construction grid on warm plaster-white. It is asymmetrical and information-rich but calm. Monumental headline occupies the upper-left 7 columns: "A LASTING FINISH HAS A PAPER TRAIL." Small label above: "OWNER-LED PAINTING • TWIN CITIES". Supporting sentence and orange "BOOK A FREE WALKTHROUGH" sit directly below.
+3. Upper-right is a layered editorial contact-sheet composition using the supplied exterior and interior jobsite images: one large exterior crop plus one smaller interior protection crop, aligned to grid cells, with blue tape tabs and handwritten but legible stage labels. Do not put photos in rounded cards.
+4. A narrow horizontal orange scope-status band crosses one portion of the grid and says "WALKTHROUGH → WRITTEN SCOPE → PREP PLAN → FINAL DETAIL". Orange must carry only this high-priority process/action role.
+5. The lower third begins a continuous ledger section titled "THE WORK BEFORE THE COAT". On the left is a numbered scope table with rows Surface, Condition, Protection, Repair, Primer, Finish. On the right is a bold owner note: "ONE OWNER. ONE SCOPE. NO GUESSING." with a small text link "See the walkthrough process".
+6. Show enough of this second fold to prove a full homepage system. Avoid a tiled dashboard look; it is an architectural document with photographs and one dominant headline.
+
+Use the supplied photos as visual jobsite content only. Do not invent customer names, ratings, prices, awards, response-time promises, or municipal contracts. Make the visitor's job and primary action obvious in seconds. The dominant move is the monumental headline meeting the editorial contact sheet across a visible grid.

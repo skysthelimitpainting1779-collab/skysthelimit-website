@@ -4,6 +4,7 @@ import ResponsiveImage from '../components/ResponsiveImage';
 import JsonLd from '../components/JsonLd';
 import HeroOverlays from '../components/HeroOverlays';
 import IconFeatureCard from '../components/IconFeatureCard';
+import { businessEmail } from '../lib/contact';
 import { businessSchema, breadcrumbSchema } from '../lib/seo';
 
 export default function AboutPage() {
@@ -210,8 +211,8 @@ export default function AboutPage() {
                   <a href="tel:+16514104196" className="flex items-center gap-3 text-white font-bold text-lg hover:text-gray-300 transition-colors">
                     <Phone size={20} /> (651) 410-4196
                   </a>
-                  <a href="mailto:info@skysthelimitpaintingllc.com" className="text-zinc-400 hover:text-white transition-colors">
-                    info@skysthelimitpaintingllc.com
+                  <a href={`mailto:${businessEmail}`} className="text-zinc-400 hover:text-white transition-colors">
+                    {businessEmail}
                   </a>
                 </div>
                 <p className="mt-6 text-sm text-zinc-400 leading-relaxed">

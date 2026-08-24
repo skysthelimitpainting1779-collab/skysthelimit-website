@@ -24,6 +24,7 @@ import {
   createHash,
   randomBytes,
 } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
 import {
   appendFileSync,
   existsSync,
@@ -217,23 +218,25 @@ function ensureDirs() {
 
 export function loadIndex() {
   ensureDirs();
-  if (!existsSync(INDEX_JSON)) {
-    return {
-      version: 1,
-      updated_at: null,
-      incidents: {},
-      stats: { total_records: 0, unique_fingerprints: 0, auto_heals: 0, duplicates_suppressed: 0 },
-    };
-  }
+  const empty = () => ({
+    version: 1,
+    updated_at: null,
+    incidents: {},
+    stats: { total_records: 0, unique_fingerprints: 0, auto_heals: 0, duplicates_suppressed: 0 },
+  });
+  if (!existsSync(INDEX_JSON)) return empty();
   try {
     return JSON.parse(readFileSync(INDEX_JSON, 'utf8'));
   } catch {
-    return {
-      version: 1,
-      updated_at: null,
-      incidents: {},
-      stats: { total_records: 0, unique_fingerprints: 0, auto_heals: 0, duplicates_suppressed: 0 },
-    };
+    // Self-heal: back up the corrupt file instead of silently discarding it
+    try {
+      const bak = `${INDEX_JSON}.corrupt.${Date.now()}.bak`;
+      renameSync(INDEX_JSON, bak);
+      console.error(`[learning-loop] index.json corrupt — backed up to ${bak}`);
+    } catch {
+      /* ignore */
+    }
+    return empty();
   }
 }
 
@@ -241,7 +244,15 @@ function saveIndex(index) {
   ensureDirs();
   index.updated_at = new Date().toISOString();
   index.stats.unique_fingerprints = Object.keys(index.incidents).length;
-  writeFileSync(INDEX_JSON, JSON.stringify(index, null, 2), 'utf8');
+  // Atomic write: tmp + rename so a crash never leaves a half-written index
+  const payload = JSON.stringify(index, null, 2);
+  const tmp = `${INDEX_JSON}.${process.pid}.tmp`;
+  try {
+    writeFileSync(tmp, payload, 'utf8');
+    renameSync(tmp, INDEX_JSON);
+  } catch {
+    writeFileSync(INDEX_JSON, payload, 'utf8');
+  }
 }
 
 function nextErrorId() {
@@ -838,6 +849,335 @@ export function getStatus() {
 }
 
 // ---------------------------------------------------------------------------
+// EPISODES — structured task-episode records (local + Turso dual-write)
+// ---------------------------------------------------------------------------
+
+/**
+ * Sync episodes to Turso via the durable shared lib (offline queue + auto-flush).
+ * Never throws; failed writes are queued and retried on the next sync.
+ */
+async function syncEpisodesToTurso(episodes) {
+  try {
+    const { durableExecute } = await import('./lib/turso-sync.mjs');
+    const writes = Object.values(episodes).map((ep) => ({
+      table: 'agent_os_episodes',
+      sql: `INSERT INTO agent_os_episodes (id, task, outcome, area, pattern, friction, duration_min, tools_used, steps_count, incident_refs, commit_sha, recorded_at, payload)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(id) DO UPDATE SET
+              task = excluded.task, outcome = excluded.outcome, area = excluded.area,
+              pattern = excluded.pattern, friction = excluded.friction,
+              duration_min = excluded.duration_min, tools_used = excluded.tools_used,
+              steps_count = excluded.steps_count, incident_refs = excluded.incident_refs,
+              commit_sha = excluded.commit_sha, recorded_at = excluded.recorded_at,
+              payload = excluded.payload`,
+      args: [
+        ep.id,
+        ep.task || null,
+        ep.outcome || null,
+        ep.area || null,
+        ep.pattern || null,
+        ep.friction || null,
+        ep.duration_min || null,
+        ep.tools_used ? JSON.stringify(ep.tools_used) : null,
+        ep.steps_count || null,
+        ep.incident_refs ? JSON.stringify(ep.incident_refs) : null,
+        ep.commit_sha || null,
+        ep.recorded_at || null,
+        JSON.stringify(ep),
+      ],
+    }));
+    const result = await durableExecute(writes);
+    return result.synced
+      ? { synced: true, count: result.live, flushed: result.flushed }
+      : { synced: false, queued: result.queued, reason: result.reason || 'write failed — queued for retry' };
+  } catch (err) {
+    return { synced: false, reason: err.message };
+  }
+}
+
+/**
+ * Detect recent git activity and derive a bounded task episode automatically.
+ */
+function detectGitEpisode() {
+  try {
+    const log = execFileSync('git', [
+      'log', '-5', '--pretty=format:%H|%s|%cI', '--no-merges',
+    ], { encoding: 'utf8', cwd: ROOT, stdio: ['ignore', 'pipe', 'pipe'], windowsHide: true, timeout: 10_000 });
+
+    const commits = log.split('\n').filter(Boolean).map((line) => {
+      const [sha, subject, date] = line.split('|');
+      return { sha, subject, date };
+    });
+    if (commits.length === 0) return null;
+
+    const latest = commits[0];
+    const area = latest.subject.match(/^(\w+)[:(]/)?.[1] || 'general';
+    return {
+      sha: latest.sha,
+      task: latest.subject.slice(0, 200),
+      area: ['feat', 'fix', 'chore', 'docs', 'infra', 'test', 'refactor'].includes(area) ? area : 'general',
+      detected_from: `${commits.length} recent commit(s)`,
+      latest_commit: latest.subject,
+      commit_date: latest.date,
+    };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Record a completed task episode with reusable pattern and friction attribution.
+ * Dual-writes to local index.json + Turso (best-effort async).
+ * @param {{ task?: string, outcome?: string, pattern?: string, friction?: string, area?: string, duration_min?: number, tools_used?: string[], steps_count?: number, auto_detect?: boolean }} input
+ * @returns {{ id, message, turso?: object }}
+ */
+export async function recordEpisode(input = {}) {
+  let {
+    task = '',
+    outcome = 'completed',
+    pattern = '',
+    friction = '',
+    area = 'general',
+    duration_min = null,
+    tools_used = [],
+    steps_count = null,
+    auto_detect = false,
+  } = input;
+
+  // Auto-detect from git if no task provided
+  let commitSha = null;
+  if (!task || auto_detect) {
+    const detected = detectGitEpisode();
+    if (detected) {
+      task = task || detected.task;
+      area = area === 'general' ? detected.area : area;
+      commitSha = detected.sha;
+      if (!friction) {
+        friction = `Auto-detected from git: ${detected.detected_from}; latest: "${detected.latest_commit}" (${detected.commit_date})`;
+      }
+    }
+  }
+  if (!task) task = 'Completed task episode';
+
+  ensureDirs();
+  const index = loadIndex();
+  if (!index.episodes) index.episodes = {};
+
+  // Dedup: skip if an episode for this exact commit SHA already exists
+  if (commitSha) {
+    const existing = Object.values(index.episodes).find((ep) => ep.commit_sha === commitSha);
+    if (existing) {
+      return {
+        id: existing.id,
+        episode: existing,
+        turso: { synced: false, reason: 'dedup-sha' },
+        message: `Episode already exists for commit ${commitSha.slice(0, 8)}: ${existing.id}`,
+      };
+    }
+  }
+
+  const now = new Date().toISOString();
+  const id = `EP-${now.slice(0, 10).replace(/-/g, '')}-${randomBytes(2).toString('hex')}`;
+
+  // Derive pattern from incident history if not provided
+  let derivedPattern = pattern;
+  if (!derivedPattern) {
+    const incidents = Object.values(index.incidents);
+    const areaIncidents = incidents.filter((i) => i.area === area || area === 'general');
+    if (areaIncidents.length > 0) {
+      const latest = areaIncidents.sort((a, b) => new Date(b.last_seen) - new Date(a.last_seen))[0];
+      derivedPattern = `Reuse prevention from ${latest.id}: ${latest.prevention.slice(0, 120)}`;
+    } else {
+      derivedPattern = `Task completed in ${area} area with no prior incidents; standard workflow applies.`;
+    }
+  }
+
+  // Derive friction from open/recent incidents if not provided
+  let derivedFriction = friction;
+  if (!derivedFriction) {
+    const openIncidents = Object.values(index.incidents).filter((i) => i.status === 'open');
+    if (openIncidents.length > 0) {
+      derivedFriction = `${openIncidents.length} open incident(s) in learning index; latest: ${openIncidents[0].title.slice(0, 80)}`;
+    } else {
+      derivedFriction = 'No friction detected; clean execution path.';
+    }
+  }
+
+  const episode = {
+    id,
+    task: task.slice(0, 300),
+    outcome,
+    area,
+    pattern: derivedPattern,
+    friction: derivedFriction,
+    duration_min,
+    tools_used: tools_used.length > 0 ? tools_used : undefined,
+    steps_count,
+    commit_sha: commitSha || undefined,
+    recorded_at: now,
+    incident_refs: Object.values(index.incidents)
+      .filter((i) => i.status === 'open' || i.status === 'auto-healed')
+      .slice(0, 5)
+      .map((i) => i.id),
+  };
+
+  index.episodes[id] = episode;
+  index.stats = index.stats || {};
+  index.stats.total_episodes = Object.keys(index.episodes).length;
+  saveIndex(index);
+  rebuildMarkdownViews(index);
+
+  // Async Turso sync (best-effort, non-blocking for CLI)
+  const turso = await syncEpisodesToTurso({ [id]: episode });
+
+  return {
+    id,
+    episode,
+    turso,
+    message: `Episode ${id} recorded: "${task.slice(0, 60)}" [pattern: ${derivedPattern.slice(0, 60)}...]${turso.synced ? ` [turso: synced]` : ''}`,
+  };
+}
+
+/**
+ * Get episode status — list recorded episodes with pattern/friction.
+ */
+export function getEpisodeStatus() {
+  const index = loadIndex();
+  const episodes = Object.values(index.episodes || {});
+  return {
+    total_episodes: episodes.length,
+    updated_at: index.updated_at,
+    episodes: episodes
+      .sort((a, b) => new Date(b.recorded_at) - new Date(a.recorded_at))
+      .slice(0, 10)
+      .map((ep) => ({
+        id: ep.id,
+        task: ep.task,
+        outcome: ep.outcome,
+        area: ep.area,
+        pattern: ep.pattern,
+        friction: ep.friction,
+        duration_min: ep.duration_min || null,
+        tools_used: ep.tools_used || [],
+        steps_count: ep.steps_count || null,
+        recorded_at: ep.recorded_at,
+      })),
+  };
+}
+
+/**
+ * Sync all local episodes to Turso (batch push).
+ */
+export async function syncAllEpisodes() {
+  const index = loadIndex();
+  const episodes = index.episodes || {};
+  const count = Object.keys(episodes).length;
+  if (count === 0) return { synced: false, reason: 'no episodes to sync', count: 0 };
+  const result = await syncEpisodesToTurso(episodes);
+  return { ...result, count };
+}
+
+/**
+ * Cross-source insights: what actually helps day-to-day.
+ * Aggregates episodes, incidents, and eval history into actionable signals.
+ */
+export function getInsights() {
+  const index = loadIndex();
+  const episodes = Object.values(index.episodes || {});
+  const incidents = Object.values(index.incidents || {});
+
+  // Episode cadence by area
+  const byArea = {};
+  for (const ep of episodes) {
+    byArea[ep.area || 'general'] = (byArea[ep.area || 'general'] || 0) + 1;
+  }
+
+  // Repeat offenders: incidents seen 2+ times that are still open
+  const repeatOffenders = incidents
+    .filter((i) => (i.count || 1) >= 2 && i.status === 'open')
+    .sort((a, b) => (b.count || 1) - (a.count || 1))
+    .map((i) => ({ id: i.id, title: i.title, count: i.count, prevention: i.prevention.slice(0, 140) }));
+
+  // Friction themes: recurring friction text across episodes
+  const frictionCounts = {};
+  for (const ep of episodes) {
+    const key = String(ep.friction || '')
+      .replace(/EP-\w+-\w+|ERR-\w+-\w+|dedupe-test-\d+|\d{4}-\d{2}-\d{2}T[\d:.Z+-]+/g, '')
+      .slice(0, 80)
+      .trim();
+    if (key) frictionCounts[key] = (frictionCounts[key] || 0) + 1;
+  }
+  const frictionThemes = Object.entries(frictionCounts)
+    .filter(([, n]) => n >= 2)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+    .map(([theme, n]) => ({ theme, occurrences: n }));
+
+  // Eval trend from local history.jsonl
+  let evalTrend = null;
+  try {
+    const histPath = join(ROOT, '.agents', 'goals', '_eval', 'history.jsonl');
+    if (existsSync(histPath)) {
+      const rows = readFileSync(histPath, 'utf8')
+        .split('\n')
+        .filter(Boolean)
+        .map((l) => {
+          try {
+            return JSON.parse(l);
+          } catch {
+            return null;
+          }
+        })
+        .filter(Boolean);
+      const recent = rows.slice(-10);
+      evalTrend = {
+        total_runs: rows.length,
+        recent_pass_rate: recent.length
+          ? recent.filter((r) => r.ok).length / recent.length
+          : null,
+        last: rows[rows.length - 1] || null,
+      };
+    }
+  } catch {
+    /* non-fatal */
+  }
+
+  return {
+    generated_at: new Date().toISOString(),
+    episodes: { total: episodes.length, by_area: byArea },
+    repeat_offenders: repeatOffenders,
+    friction_themes: frictionThemes,
+    eval_trend: evalTrend,
+    open_incidents: incidents.filter((i) => i.status === 'open').length,
+    recommendation:
+      repeatOffenders.length > 0
+        ? `Fix repeat offender first: ${repeatOffenders[0].title}`
+        : frictionThemes.length > 0
+          ? `Recurring friction: "${frictionThemes[0].theme}" — consider a skill or hard guard`
+          : 'No recurring problems detected. Keep shipping.',
+  };
+}
+
+/**
+ * Self-heal pass: flush the offline sync queue, re-push all episodes,
+ * verify remote health, and report anything stuck.
+ */
+export async function healSync() {
+  const { flushQueue, syncHealth } = await import('./lib/turso-sync.mjs');
+  const flush = await flushQueue(null);
+  const push = await syncAllEpisodes();
+  const health = await syncHealth();
+  return {
+    flushed: flush.flushed,
+    dropped: flush.dropped,
+    queue_remaining: flush.remaining,
+    episodes_pushed: push.count || 0,
+    remote: health,
+    healthy: health.ok === true && (health.queue_depth === 0 || flush.remaining === 0),
+  };
+}
+
+// ---------------------------------------------------------------------------
 // CLI
 // ---------------------------------------------------------------------------
 
@@ -856,7 +1196,7 @@ function parseArgs(argv) {
   return out;
 }
 
-function main() {
+async function main() {
   const args = parseArgs(process.argv.slice(2));
   const cmd = args._[0] || 'status';
 
@@ -910,9 +1250,53 @@ function main() {
     return;
   }
 
+  if (cmd === 'episode') {
+    const result = await recordEpisode({
+      task: args.task || '',
+      outcome: args.outcome || 'completed',
+      pattern: typeof args.pattern === 'string' ? args.pattern : '',
+      friction: typeof args.friction === 'string' ? args.friction : '',
+      area: args.area || 'general',
+      duration_min: args.duration ? Number(args.duration) : null,
+      tools_used: args.tools ? String(args.tools).split(',') : [],
+      steps_count: args.steps ? Number(args.steps) : null,
+      auto_detect: args['auto-detect'] === true || args.autoDetect === true || !args.task,
+    });
+    console.log(`[learning-loop] ${result.message}`);
+    if (result.turso) console.log(`[learning-loop] turso: ${JSON.stringify(result.turso)}`);
+    return;
+  }
+
+  if (cmd === 'episode-status') {
+    const s = getEpisodeStatus();
+    console.log(JSON.stringify(s, null, 2));
+    return;
+  }
+
+  if (cmd === 'episode-sync') {
+    const result = await syncAllEpisodes();
+    console.log(`[learning-loop] episode-sync: ${JSON.stringify(result)}`);
+    return;
+  }
+
+  if (cmd === 'insights') {
+    console.log(JSON.stringify(getInsights(), null, 2));
+    return;
+  }
+
+  if (cmd === 'heal-sync') {
+    const result = await healSync();
+    console.log(JSON.stringify(result, null, 2));
+    process.exitCode = result.healthy ? 0 : 1;
+    return;
+  }
+
   console.error(`Unknown command: ${cmd}
 Usage:
   node scripts/learning-loop.mjs record --title "..." --error "..." [--command "..."] [--area "..."]
+  node scripts/learning-loop.mjs episode [--task "..."] [--outcome "..."] [--pattern "..."] [--friction "..."] [--area "..."] [--tools "a,b"] [--steps N] [--auto-detect]
+  node scripts/learning-loop.mjs episode-status
+  node scripts/learning-loop.mjs episode-sync
   node scripts/learning-loop.mjs heal
   node scripts/learning-loop.mjs compact
   node scripts/learning-loop.mjs rebuild-index

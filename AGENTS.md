@@ -66,7 +66,7 @@ Map: [`.agents/HOST_NATIVE.md`](.agents/HOST_NATIVE.md)
 
 ## Mandatory discovery and reuse
 
-- **Graphifyy first:** Before navigating or searching code, query the codebase knowledge graph with `search_graph`, `trace_path`, `get_code_snippet`, `query_graph`, or the repository `graph:*` commands. Fall back to `rg` only for literals/config/non-code or when graph results are insufficient.
+- **Official Graphifyy MCP first:** Before navigating or searching code, query the official local Graphifyy MCP against this worktree so branch and uncommitted changes are represented. Use the hosted OAuth Graphify MCP only as fallback or corroboration because it indexes promoted/default-branch state. Fall back to `rg` only for literals/config/non-code or when both Graphify sources are insufficient. Keep the local server on the newest `graphifyy` package via `uvx --refresh --from graphifyy graphify-mcp --graph graphify-out/graph.json`.
 - **Context7 first:** Before implementing or changing behavior from an external library, framework, provider, or API, query its current official documentation through Context7. Record the selected library ID and the contract that affects the change.
 - **Skill before repetition:** Before performing a workflow a second time—or when the plan already shows it will recur—create or update a repository skill under `.agents/skills/` and route subsequent executions through it. Use `repeatable-workflow-capture`; validate the skill, run `npm run skills:validate`, and compile host adapters.
 

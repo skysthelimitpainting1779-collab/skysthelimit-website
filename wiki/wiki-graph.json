@@ -1,0 +1,599 @@
+{
+  "nodes": [
+    {
+      "id": "dream-loop-synthesis",
+      "label": "[[Dream Loop Synthesis]]",
+      "rawTitle": "Dream Loop Synthesis",
+      "filePath": "concepts/dream-loop-synthesis.md",
+      "dir": "Wiki / concepts",
+      "summary": "The Dream Loop is an autonomous background traversal engine that inspects knowledge graphs, uncovers hidden connections, and reconciles contradictory notes across sessions.",
+      "tags": [
+        "synthesis",
+        "automation",
+        "memory"
+      ],
+      "degree": 12,
+      "community": 0
+    },
+    {
+      "id": "gate-bounded-autonomy",
+      "label": "[[Gate-Bounded Autonomy]]",
+      "rawTitle": "Gate-Bounded Autonomy",
+      "filePath": "concepts/gate-bounded-autonomy.md",
+      "dir": "Wiki / concepts",
+      "summary": "Synthesis uncovered by the 2026-08-23 Dream Loop pass: knowledge compilation under the [[Karpathy LLM Wiki Pattern]] and governed code execution under the [[Corrected Execution Process]] are the same control loop applied to two different substrates - knowledge state and process state. Every autonomous cycle opens behind machine-checkable gates and closes with append-only evidence, which is what makes repeated autonomous sessions compound instead of drift.",
+      "tags": [
+        "synthesis",
+        "governance",
+        "automation",
+        "execution"
+      ],
+      "degree": 25,
+      "community": 1
+    },
+    {
+      "id": "karpathy-llm-wiki--compiler-specification",
+      "label": "[[Karpathy LLM Wiki: Compiler Specification]]",
+      "rawTitle": "Karpathy LLM Wiki: Compiler Specification",
+      "filePath": "concepts/karpathy-llm-wiki-compiler-specification.md",
+      "dir": "Wiki / concepts",
+      "summary": "This page is the full compiled expansion of the directive source `wiki/schema/AGENTS.md` ([[Karpathy LLM Wiki: Compiler Specification & Directives]]), turning its four directives into operational detail for this repository. It specifies how the LLM acts as the Knowledge Base Compiler: ingesting immutable raw sources and compiling them into a structured, compounding Markdown wiki instead of retrieving fragmented documents at query time.",
+      "tags": [
+        "knowledge-management",
+        "compiler",
+        "governance",
+        "llm-os"
+      ],
+      "degree": 27,
+      "community": 2
+    },
+    {
+      "id": "karpathy-llm-wiki-pattern",
+      "label": "[[Karpathy LLM Wiki Pattern]]",
+      "rawTitle": "Karpathy LLM Wiki Pattern",
+      "filePath": "concepts/karpathy-llm-wiki-pattern.md",
+      "dir": "Wiki / concepts",
+      "summary": "The LLM Wiki pattern treats personal and technical knowledge management as a **compiled software codebase** rather than ad-hoc RAG embeddings. Raw sources (`/raw`) are compiled by the LLM into an interlinked Markdown wiki (`/wiki`).",
+      "tags": [
+        "knowledge-management",
+        "llm-os",
+        "second-brain"
+      ],
+      "degree": 13,
+      "community": 3
+    },
+    {
+      "id": "second-brain-neocortex",
+      "label": "[[Second Brain Neocortex]]",
+      "rawTitle": "Second Brain Neocortex",
+      "filePath": "concepts/second-brain-neocortex.md",
+      "dir": "Wiki / concepts",
+      "summary": "The Second Brain Neocortex is an external cognitive layer that maintains context across long-running sessions, eliminating AI amnesia and reducing token overhead by over 80%.",
+      "tags": [
+        "architecture",
+        "cognitive-tools",
+        "memory"
+      ],
+      "degree": 13,
+      "community": 4
+    },
+    {
+      "id": "deepseek-harness",
+      "label": "[[DeepSeek Harness]]",
+      "rawTitle": "DeepSeek Harness",
+      "filePath": "entities/deepseek-harness.md",
+      "dir": "Wiki / entities",
+      "summary": "DeepSeek Harness (`dsh`) is the primary orchestration environment and Web UI host for running autonomous AI agents, live telemetry, and knowledge compilation.",
+      "tags": [
+        "runtime",
+        "host",
+        "ai-agent"
+      ],
+      "degree": 10,
+      "community": 5
+    },
+    {
+      "id": "execution-order--post-b20-corrected",
+      "label": "[[Execution Order: Post-B20 Corrected]]",
+      "rawTitle": "Execution Order: Post-B20 Corrected",
+      "filePath": "execution-packages/post-b20-corrected-v2/EXECUTION_ORDER.md",
+      "dir": "Wiki / execution-packages/post-b20-corrected-v2",
+      "summary": "Blocking-gate sequence G20-EVIDENCE-CLOSE -> B25 -> B31 -> B30 -> B50 -> B60 for the Post-B20 corrected rollout.",
+      "tags": [
+        "execution",
+        "runbook",
+        "batches"
+      ],
+      "degree": 7,
+      "community": 0
+    },
+    {
+      "id": "execution-package--post-b20-corrected--v2-",
+      "label": "[[Execution Package: Post-B20 Corrected (v2)]]",
+      "rawTitle": "Execution Package: Post-B20 Corrected (v2)",
+      "filePath": "execution-packages/post-b20-corrected-v2/README.md",
+      "dir": "Wiki / execution-packages/post-b20-corrected-v2",
+      "summary": "Governed v2 package superseding the failed 2026-07-27 rollout, defining gates, preflight validation, and reading order for the corrected run.",
+      "tags": [
+        "execution-package",
+        "governance",
+        "runbook"
+      ],
+      "degree": 4,
+      "community": 1
+    },
+    {
+      "id": "wiki--rollout-analysis-and-execution-packages",
+      "label": "[[Wiki: Rollout Analysis and Execution Packages]]",
+      "rawTitle": "Wiki: Rollout Analysis and Execution Packages",
+      "filePath": "README.md",
+      "dir": "Wiki / .",
+      "summary": "Entry point for the rollout failure analysis and the governed Post-B20 corrected execution package, both compiled as Second Brain wiki nodes.",
+      "tags": [],
+      "degree": 0,
+      "community": 2
+    },
+    {
+      "id": "corrected-execution-process",
+      "label": "[[Corrected Execution Process]]",
+      "rawTitle": "Corrected Execution Process",
+      "filePath": "rollout-analysis-2026-07-27/CORRECTED_EXECUTION_PROCESS.md",
+      "dir": "Wiki / rollout-analysis-2026-07-27",
+      "summary": "Phase-by-phase corrected process with pre-flight verification and gate-bounded steps for future STL Convex OS execution sessions.",
+      "tags": [
+        "process",
+        "execution",
+        "governance"
+      ],
+      "degree": 8,
+      "community": 3
+    },
+    {
+      "id": "rollout-failure-analysis--2026-07-27",
+      "label": "[[Rollout Failure Analysis: 2026-07-27]]",
+      "rawTitle": "Rollout Failure Analysis: 2026-07-27",
+      "filePath": "rollout-analysis-2026-07-27/FAILURE_ANALYSIS.md",
+      "dir": "Wiki / rollout-analysis-2026-07-27",
+      "summary": "Evidence-backed post-mortem of the 2026-07-27 rollout that produced zero implementation progress due to worktree, plan-mode, and approval-policy failures.",
+      "tags": [
+        "rollout",
+        "post-mortem",
+        "governance"
+      ],
+      "degree": 9,
+      "community": 4
+    },
+    {
+      "id": "karpathy-llm-wiki--compiler-specification---directives",
+      "label": "[[Karpathy LLM Wiki: Compiler Specification & Directives]]",
+      "rawTitle": "Karpathy LLM Wiki: Compiler Specification & Directives",
+      "filePath": "schema/AGENTS.md",
+      "dir": "Wiki / schema",
+      "summary": "A 2-3 sentence executive distillation of this concept.",
+      "tags": [
+        "tag1",
+        "tag2"
+      ],
+      "degree": 10,
+      "community": 5
+    },
+    {
+      "id": "graphify-ast-engine",
+      "label": "[[Graphify AST Engine]]*",
+      "rawTitle": "Graphify AST Engine",
+      "filePath": "uncompiled",
+      "dir": "Wiki / Needed Concepts",
+      "summary": "Concept mentioned but not yet compiled.",
+      "tags": [
+        "uncompiled"
+      ],
+      "degree": 4,
+      "community": 5
+    },
+    {
+      "id": "wikilinks",
+      "label": "[[wikilinks]]*",
+      "rawTitle": "wikilinks",
+      "filePath": "uncompiled",
+      "dir": "Wiki / Needed Concepts",
+      "summary": "Concept mentioned but not yet compiled.",
+      "tags": [
+        "uncompiled"
+      ],
+      "degree": 5,
+      "community": 5
+    },
+    {
+      "id": "concept-name",
+      "label": "[[Concept Name]]*",
+      "rawTitle": "Concept Name",
+      "filePath": "uncompiled",
+      "dir": "Wiki / Needed Concepts",
+      "summary": "Concept mentioned but not yet compiled.",
+      "tags": [
+        "uncompiled"
+      ],
+      "degree": 2,
+      "community": 5
+    },
+    {
+      "id": "entity-name",
+      "label": "[[Entity Name]]*",
+      "rawTitle": "Entity Name",
+      "filePath": "uncompiled",
+      "dir": "Wiki / Needed Concepts",
+      "summary": "Concept mentioned but not yet compiled.",
+      "tags": [
+        "uncompiled"
+      ],
+      "degree": 2,
+      "community": 5
+    },
+    {
+      "id": "target-concept",
+      "label": "[[Target Concept]]*",
+      "rawTitle": "Target Concept",
+      "filePath": "uncompiled",
+      "dir": "Wiki / Needed Concepts",
+      "summary": "Concept mentioned but not yet compiled.",
+      "tags": [
+        "uncompiled"
+      ],
+      "degree": 2,
+      "community": 5
+    },
+    {
+      "id": "related-concept-1-2",
+      "label": "[[Related Concept 1/2]]*",
+      "rawTitle": "Related Concept 1/2",
+      "filePath": "uncompiled",
+      "dir": "Wiki / Needed Concepts",
+      "summary": "Concept mentioned but not yet compiled.",
+      "tags": [
+        "uncompiled"
+      ],
+      "degree": 1,
+      "community": 5
+    },
+    {
+      "id": "related-concept-1",
+      "label": "[[Related Concept 1]]*",
+      "rawTitle": "Related Concept 1",
+      "filePath": "uncompiled",
+      "dir": "Wiki / Needed Concepts",
+      "summary": "Concept mentioned but not yet compiled.",
+      "tags": [
+        "uncompiled"
+      ],
+      "degree": 1,
+      "community": 5
+    },
+    {
+      "id": "related-concept-2",
+      "label": "[[Related Concept 2]]*",
+      "rawTitle": "Related Concept 2",
+      "filePath": "uncompiled",
+      "dir": "Wiki / Needed Concepts",
+      "summary": "Concept mentioned but not yet compiled.",
+      "tags": [
+        "uncompiled"
+      ],
+      "degree": 1,
+      "community": 5
+    }
+  ],
+  "links": [
+    {
+      "source": "dream-loop-synthesis",
+      "target": "rollout-failure-analysis--2026-07-27"
+    },
+    {
+      "source": "dream-loop-synthesis",
+      "target": "corrected-execution-process"
+    },
+    {
+      "source": "dream-loop-synthesis",
+      "target": "karpathy-llm-wiki--compiler-specification"
+    },
+    {
+      "source": "dream-loop-synthesis",
+      "target": "second-brain-neocortex"
+    },
+    {
+      "source": "dream-loop-synthesis",
+      "target": "karpathy-llm-wiki-pattern"
+    },
+    {
+      "source": "dream-loop-synthesis",
+      "target": "karpathy-llm-wiki--compiler-specification"
+    },
+    {
+      "source": "dream-loop-synthesis",
+      "target": "gate-bounded-autonomy"
+    },
+    {
+      "source": "gate-bounded-autonomy",
+      "target": "karpathy-llm-wiki-pattern"
+    },
+    {
+      "source": "gate-bounded-autonomy",
+      "target": "corrected-execution-process"
+    },
+    {
+      "source": "gate-bounded-autonomy",
+      "target": "rollout-failure-analysis--2026-07-27"
+    },
+    {
+      "source": "gate-bounded-autonomy",
+      "target": "karpathy-llm-wiki--compiler-specification"
+    },
+    {
+      "source": "gate-bounded-autonomy",
+      "target": "second-brain-neocortex"
+    },
+    {
+      "source": "gate-bounded-autonomy",
+      "target": "execution-order--post-b20-corrected"
+    },
+    {
+      "source": "gate-bounded-autonomy",
+      "target": "deepseek-harness"
+    },
+    {
+      "source": "gate-bounded-autonomy",
+      "target": "rollout-failure-analysis--2026-07-27"
+    },
+    {
+      "source": "gate-bounded-autonomy",
+      "target": "corrected-execution-process"
+    },
+    {
+      "source": "gate-bounded-autonomy",
+      "target": "execution-order--post-b20-corrected"
+    },
+    {
+      "source": "gate-bounded-autonomy",
+      "target": "karpathy-llm-wiki--compiler-specification"
+    },
+    {
+      "source": "gate-bounded-autonomy",
+      "target": "karpathy-llm-wiki-pattern"
+    },
+    {
+      "source": "gate-bounded-autonomy",
+      "target": "dream-loop-synthesis"
+    },
+    {
+      "source": "gate-bounded-autonomy",
+      "target": "second-brain-neocortex"
+    },
+    {
+      "source": "gate-bounded-autonomy",
+      "target": "deepseek-harness"
+    },
+    {
+      "source": "gate-bounded-autonomy",
+      "target": "graphify-ast-engine"
+    },
+    {
+      "source": "karpathy-llm-wiki--compiler-specification",
+      "target": "karpathy-llm-wiki--compiler-specification---directives"
+    },
+    {
+      "source": "karpathy-llm-wiki--compiler-specification",
+      "target": "karpathy-llm-wiki-pattern"
+    },
+    {
+      "source": "karpathy-llm-wiki--compiler-specification",
+      "target": "wikilinks"
+    },
+    {
+      "source": "karpathy-llm-wiki--compiler-specification",
+      "target": "wikilinks"
+    },
+    {
+      "source": "karpathy-llm-wiki--compiler-specification",
+      "target": "concept-name"
+    },
+    {
+      "source": "karpathy-llm-wiki--compiler-specification",
+      "target": "entity-name"
+    },
+    {
+      "source": "karpathy-llm-wiki--compiler-specification",
+      "target": "target-concept"
+    },
+    {
+      "source": "karpathy-llm-wiki--compiler-specification",
+      "target": "related-concept-1-2"
+    },
+    {
+      "source": "karpathy-llm-wiki--compiler-specification",
+      "target": "second-brain-neocortex"
+    },
+    {
+      "source": "karpathy-llm-wiki--compiler-specification",
+      "target": "graphify-ast-engine"
+    },
+    {
+      "source": "karpathy-llm-wiki--compiler-specification",
+      "target": "dream-loop-synthesis"
+    },
+    {
+      "source": "karpathy-llm-wiki--compiler-specification",
+      "target": "gate-bounded-autonomy"
+    },
+    {
+      "source": "karpathy-llm-wiki--compiler-specification",
+      "target": "deepseek-harness"
+    },
+    {
+      "source": "karpathy-llm-wiki--compiler-specification",
+      "target": "karpathy-llm-wiki-pattern"
+    },
+    {
+      "source": "karpathy-llm-wiki--compiler-specification",
+      "target": "karpathy-llm-wiki--compiler-specification---directives"
+    },
+    {
+      "source": "karpathy-llm-wiki--compiler-specification",
+      "target": "dream-loop-synthesis"
+    },
+    {
+      "source": "karpathy-llm-wiki--compiler-specification",
+      "target": "second-brain-neocortex"
+    },
+    {
+      "source": "karpathy-llm-wiki--compiler-specification",
+      "target": "deepseek-harness"
+    },
+    {
+      "source": "karpathy-llm-wiki--compiler-specification",
+      "target": "gate-bounded-autonomy"
+    },
+    {
+      "source": "karpathy-llm-wiki--compiler-specification",
+      "target": "graphify-ast-engine"
+    },
+    {
+      "source": "karpathy-llm-wiki-pattern",
+      "target": "karpathy-llm-wiki--compiler-specification"
+    },
+    {
+      "source": "karpathy-llm-wiki-pattern",
+      "target": "second-brain-neocortex"
+    },
+    {
+      "source": "karpathy-llm-wiki-pattern",
+      "target": "dream-loop-synthesis"
+    },
+    {
+      "source": "karpathy-llm-wiki-pattern",
+      "target": "deepseek-harness"
+    },
+    {
+      "source": "karpathy-llm-wiki-pattern",
+      "target": "graphify-ast-engine"
+    },
+    {
+      "source": "karpathy-llm-wiki-pattern",
+      "target": "karpathy-llm-wiki--compiler-specification"
+    },
+    {
+      "source": "second-brain-neocortex",
+      "target": "rollout-failure-analysis--2026-07-27"
+    },
+    {
+      "source": "second-brain-neocortex",
+      "target": "karpathy-llm-wiki-pattern"
+    },
+    {
+      "source": "second-brain-neocortex",
+      "target": "dream-loop-synthesis"
+    },
+    {
+      "source": "second-brain-neocortex",
+      "target": "deepseek-harness"
+    },
+    {
+      "source": "second-brain-neocortex",
+      "target": "gate-bounded-autonomy"
+    },
+    {
+      "source": "deepseek-harness",
+      "target": "second-brain-neocortex"
+    },
+    {
+      "source": "deepseek-harness",
+      "target": "karpathy-llm-wiki-pattern"
+    },
+    {
+      "source": "deepseek-harness",
+      "target": "karpathy-llm-wiki--compiler-specification"
+    },
+    {
+      "source": "deepseek-harness",
+      "target": "gate-bounded-autonomy"
+    },
+    {
+      "source": "execution-order--post-b20-corrected",
+      "target": "execution-package--post-b20-corrected--v2-"
+    },
+    {
+      "source": "execution-order--post-b20-corrected",
+      "target": "corrected-execution-process"
+    },
+    {
+      "source": "execution-order--post-b20-corrected",
+      "target": "gate-bounded-autonomy"
+    },
+    {
+      "source": "execution-package--post-b20-corrected--v2-",
+      "target": "rollout-failure-analysis--2026-07-27"
+    },
+    {
+      "source": "execution-package--post-b20-corrected--v2-",
+      "target": "execution-order--post-b20-corrected"
+    },
+    {
+      "source": "execution-package--post-b20-corrected--v2-",
+      "target": "gate-bounded-autonomy"
+    },
+    {
+      "source": "corrected-execution-process",
+      "target": "rollout-failure-analysis--2026-07-27"
+    },
+    {
+      "source": "corrected-execution-process",
+      "target": "execution-order--post-b20-corrected"
+    },
+    {
+      "source": "corrected-execution-process",
+      "target": "gate-bounded-autonomy"
+    },
+    {
+      "source": "rollout-failure-analysis--2026-07-27",
+      "target": "corrected-execution-process"
+    },
+    {
+      "source": "rollout-failure-analysis--2026-07-27",
+      "target": "gate-bounded-autonomy"
+    },
+    {
+      "source": "rollout-failure-analysis--2026-07-27",
+      "target": "second-brain-neocortex"
+    },
+    {
+      "source": "karpathy-llm-wiki--compiler-specification---directives",
+      "target": "concept-name"
+    },
+    {
+      "source": "karpathy-llm-wiki--compiler-specification---directives",
+      "target": "entity-name"
+    },
+    {
+      "source": "karpathy-llm-wiki--compiler-specification---directives",
+      "target": "wikilinks"
+    },
+    {
+      "source": "karpathy-llm-wiki--compiler-specification---directives",
+      "target": "target-concept"
+    },
+    {
+      "source": "karpathy-llm-wiki--compiler-specification---directives",
+      "target": "related-concept-1"
+    },
+    {
+      "source": "karpathy-llm-wiki--compiler-specification---directives",
+      "target": "related-concept-2"
+    },
+    {
+      "source": "karpathy-llm-wiki--compiler-specification---directives",
+      "target": "wikilinks"
+    },
+    {
+      "source": "karpathy-llm-wiki--compiler-specification---directives",
+      "target": "wikilinks"
+    }
+  ]
+}
