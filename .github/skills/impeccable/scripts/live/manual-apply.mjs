@@ -2,7 +2,10 @@ import { randomUUID } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { getLiveDir } from '../lib/impeccable-paths.mjs';
-import { readBuffer as readManualEditsBuffer } from './manual-edits-buffer.mjs';
+import {
+  readBuffer as readManualEditsBuffer,
+  writeBuffer as writeManualEditsBuffer,
+} from './manual-edits-buffer.mjs';
 
 const APPLY_EVENT_HARD_TIMEOUT_MS = Number(process.env.IMPECCABLE_LIVE_APPLY_EVENT_HARD_TIMEOUT_MS || 150_000);
 const APPLY_EVENT_SOFT_DEADLINE_MS = Number(process.env.IMPECCABLE_LIVE_APPLY_EVENT_SOFT_DEADLINE_MS || 120_000);
@@ -20,9 +23,25 @@ export function createManualApplyController({
   acknowledgePendingEvent,
   flushPendingPolls,
   recordManualEditActivity,
+  persistEvent,
   cwd = () => process.cwd(),
 } = {}) {
   const projectCwd = () => typeof cwd === 'function' ? cwd() : cwd || process.cwd();
+
+  function persistManualApplyEvent(event) {
+    if (typeof persistEvent !== 'function') return true;
+    try {
+      persistEvent(event);
+      return true;
+    } catch (err) {
+      recordManualEditActivity('manual_edit_apply_journal_failed', {
+        id: event?.id || null,
+        eventType: event?.type || null,
+        message: err.message || String(err),
+      });
+      return false;
+    }
+  }
 
   function tombstoneTimedOutApplyId(eventId, details = {}) {
     if (!eventId) return;
@@ -49,6 +68,10 @@ export function createManualApplyController({
     if (chunk) event.chunk = chunk;
     if (repair) event.repair = repair;
     const rollbackSnapshot = snapshotApplyEventFiles(batch, cwdValue);
+    if (!persistManualApplyEvent(event)) {
+      removeManualApplyEvidence(evidencePath, cwdValue);
+      return Promise.reject(new Error('manual_edit_apply_persist_failed'));
+    }
     recordManualEditActivity('manual_edit_apply_dispatched', {
       id: eventId,
       pageUrl,
@@ -60,6 +83,12 @@ export function createManualApplyController({
     });
     return new Promise((resolve, reject) => {
       const timer = setTimeout(() => {
+        persistManualApplyEvent({
+          type: 'discarded',
+          id: eventId,
+          sourceEventType: 'manual_edit_apply',
+          reason: 'chat_agent_timeout',
+        });
         pendingApplyDeferreds.delete(eventId);
         tombstoneTimedOutApplyId(eventId, { batch, rollbackSnapshot, cwd: cwdValue });
         acknowledgePendingEvent(eventId);
@@ -178,6 +207,12 @@ export function createManualApplyController({
   function resolveDeferred(eventId, body) {
     const deferred = pendingApplyDeferreds.get(eventId);
     if (!deferred) return false;
+    if (!persistManualApplyEvent({
+      type: 'complete',
+      id: eventId,
+      sourceEventType: 'manual_edit_apply',
+      result: body,
+    })) return false;
     pendingApplyDeferreds.delete(eventId);
     clearTimeout(deferred.timer);
     removeManualApplyEvidence(deferred.event?.evidencePath, deferred.cwd || projectCwd());
@@ -188,11 +223,30 @@ export function createManualApplyController({
   function rejectDeferred(eventId, reason) {
     const deferred = pendingApplyDeferreds.get(eventId);
     if (!deferred) return false;
+    if (!persistManualApplyEvent({
+      type: 'discarded',
+      id: eventId,
+      sourceEventType: 'manual_edit_apply',
+      reason: reason || 'chat_agent_error',
+    })) return false;
     pendingApplyDeferreds.delete(eventId);
     clearTimeout(deferred.timer);
     removeManualApplyEvidence(deferred.event?.evidencePath, deferred.cwd || projectCwd());
     deferred.reject(new Error(reason || 'chat_agent_error'));
     return true;
+  }
+
+  function finalizeRecoveredResult(event, result) {
+    if (!event?.id) return { ok: false, cleared: 0 };
+    if (!persistManualApplyEvent({
+      type: 'complete',
+      id: event.id,
+      sourceEventType: 'manual_edit_apply',
+      result,
+    })) return { ok: false, cleared: 0 };
+    const cleared = clearRecoveredManualApplyEntries(event, result, projectCwd());
+    removeManualApplyEvidence(event.evidencePath, projectCwd());
+    return { ok: true, cleared };
   }
 
   function referencedManualApplyEvidencePaths(cwdValue = projectCwd()) {
@@ -246,6 +300,12 @@ export function createManualApplyController({
     for (let i = pendingEvents.length - 1; i >= 0; i -= 1) {
       const event = pendingEvents[i]?.event;
       if (!shouldCancel(event)) continue;
+      persistManualApplyEvent({
+        type: 'discarded',
+        id: event.id,
+        sourceEventType: 'manual_edit_apply',
+        reason,
+      });
       pendingEvents.splice(i, 1);
       removeManualApplyEvidence(event.evidencePath, projectCwd());
       canceledById.set(event.id, {
@@ -257,6 +317,14 @@ export function createManualApplyController({
 
     for (const [eventId, deferred] of [...pendingApplyDeferreds.entries()]) {
       if (!shouldCancel(deferred.event)) continue;
+      if (!canceledById.has(eventId)) {
+        persistManualApplyEvent({
+          type: 'discarded',
+          id: eventId,
+          sourceEventType: 'manual_edit_apply',
+          reason,
+        });
+      }
       pendingApplyDeferreds.delete(eventId);
       clearTimeout(deferred.timer);
       const cwdValue = deferred.cwd || projectCwd();
@@ -287,6 +355,7 @@ export function createManualApplyController({
     cancelPendingEvents,
     clearTransaction: (transactionId = null) => clearManualApplyTransaction(projectCwd(), transactionId),
     countOps: countManualApplyOps,
+    finalizeRecoveredResult,
     getDeferred,
     hasTimedOutId,
     pruneStaleEvidence,
@@ -304,6 +373,36 @@ export function createManualApplyController({
     validateResultMessage: validateManualApplyResultMessage,
     writeTransaction: (opts = {}) => writeManualApplyTransaction({ cwd: projectCwd(), ...opts }),
   };
+}
+
+export function clearRecoveredManualApplyEntries(event, result, cwd = process.cwd()) {
+  const appliedIds = new Set(result?.appliedEntryIds || []);
+  if (appliedIds.size === 0) return 0;
+
+  const appliedOpsByEntry = new Map();
+  for (const entry of event?.batch?.entries || []) {
+    if (!appliedIds.has(entry.id)) continue;
+    appliedOpsByEntry.set(entry.id, new Set(
+      (entry.ops || []).map((op) => `${op.ref || ''}\u0000${op.newText || ''}`),
+    ));
+  }
+
+  const buffer = readManualEditsBuffer(cwd);
+  let cleared = 0;
+  for (const entry of buffer.entries || []) {
+    const appliedOps = appliedOpsByEntry.get(entry.id);
+    if (!appliedOps) continue;
+    entry.ops = (entry.ops || []).filter((op) => {
+      const wasApplied = appliedOps.has(`${op.ref || ''}\u0000${op.newText || ''}`);
+      if (wasApplied) cleared += 1;
+      return !wasApplied;
+    });
+  }
+  if (cleared > 0) {
+    buffer.entries = buffer.entries.filter((entry) => (entry.ops || []).length > 0);
+    writeManualEditsBuffer(cwd, buffer);
+  }
+  return cleared;
 }
 
 export function manualEditApplyChunkSize(env = process.env) {

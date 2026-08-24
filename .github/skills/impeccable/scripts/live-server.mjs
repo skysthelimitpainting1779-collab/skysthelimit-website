@@ -126,6 +126,10 @@ const manualApply = createManualApplyController({
   acknowledgePendingEvent,
   flushPendingPolls,
   recordManualEditActivity,
+  persistEvent(event) {
+    if (!state.sessionStore) throw new Error('manual_apply_session_store_unavailable');
+    return state.sessionStore.appendEvent(event);
+  },
   cwd: () => process.cwd(),
 });
 
@@ -1197,7 +1201,12 @@ function handlePollPost(req, res) {
         fileCount: validation.result.files.length,
         noteCount: validation.result.notes.length,
       });
-      manualApply.resolveDeferred(msg.id, validation.result);
+      const resolved = manualApply.resolveDeferred(msg.id, validation.result);
+      if (!resolved) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'manual_edit_apply_completion_persist_failed' }));
+        return;
+      }
       acknowledgePendingEvent(msg.id);
       flushPendingPolls();
       res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -1213,6 +1222,37 @@ function handlePollPost(req, res) {
       });
       res.writeHead(409, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: 'stale_manual_edit_apply_reply', ...rollback }));
+      return;
+    }
+    const recoveredManualApplyEvent = findPendingEventById(msg.id, 'manual_edit_apply');
+    if (recoveredManualApplyEvent) {
+      const validation = manualApply.validateResultMessage(msg, {
+        event: recoveredManualApplyEvent,
+        batch: recoveredManualApplyEvent.batch,
+      });
+      if (!validation.ok) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(validation.body));
+        return;
+      }
+      const finalized = manualApply.finalizeRecoveredResult(recoveredManualApplyEvent, validation.result);
+      if (!finalized.ok) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'manual_edit_apply_completion_persist_failed' }));
+        return;
+      }
+      acknowledgePendingEvent(msg.id, 'manual_edit_apply');
+      recordManualEditActivity('manual_edit_apply_reply_received', {
+        id: msg.id,
+        pageUrl: recoveredManualApplyEvent.pageUrl,
+        recovered: true,
+        status: validation.result.status,
+        appliedCount: validation.result.appliedEntryIds.length,
+        cleared: finalized.cleared,
+      });
+      flushPendingPolls();
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true, recovered: true, cleared: finalized.cleared }));
       return;
     }
     const sourceEventType = msg.sourceEventType || inferSourceEventType(msg);

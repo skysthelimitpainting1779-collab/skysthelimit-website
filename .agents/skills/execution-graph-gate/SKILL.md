@@ -15,9 +15,9 @@ description: Validate the canonical execution DAG, print its critical path, and 
 ## Gate
 
 ```bash
-node scripts/validate-graph.mjs .graph/graph.json
-node scripts/critical-path.mjs .graph/graph.json
-node scripts/estimate-cost.mjs .graph/graph.json --scenario expected
+python .agents/skills/hardened-validation/scripts/run.py node scripts/validate-graph.mjs .graph/graph.json
+python .agents/skills/hardened-validation/scripts/run.py node scripts/critical-path.mjs .graph/graph.json
+python .agents/skills/hardened-validation/scripts/run.py node scripts/estimate-cost.mjs .graph/graph.json --scenario expected
 ```
 
 Stop on any nonzero exit. Record the graph SHA-256, repository HEAD, command,
