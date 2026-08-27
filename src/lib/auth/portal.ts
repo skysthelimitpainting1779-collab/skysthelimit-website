@@ -30,7 +30,12 @@ const DEFAULT_LOGIN = '/portal/login';
 
 /** Whether a path belongs to the /portal segment rather than a lookalike prefix. */
 function isPortalPath(path: string): boolean {
-  return path === '/portal' || path.startsWith('/portal/');
+  return (
+    path === '/portal' ||
+    path.startsWith('/portal/') ||
+    path.startsWith('/portal?') ||
+    path.startsWith('/portal#')
+  );
 }
 
 /**
