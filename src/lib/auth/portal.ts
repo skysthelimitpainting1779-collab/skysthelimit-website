@@ -64,7 +64,7 @@ export function gatePortalAccess(
 
 /** Whether a pathname is a protected portal surface (not the login page). */
 export function isProtectedPortalPath(pathname: string): boolean {
-  const p = pathname.split('?')[0] || '';
+  const p = pathname.split(/[?#]/)[0] || '';
   if (!isPortalPath(p)) return false;
   if (p === '/portal/login' || p.startsWith('/portal/login/')) return false;
   return true;

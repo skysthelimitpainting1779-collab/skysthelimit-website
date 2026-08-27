@@ -50,6 +50,7 @@ test('isProtectedPortalPath protects /portal but not login', () => {
   assert.equal(isProtectedPortalPath('/portal?tab=billing'), true);
   assert.equal(isProtectedPortalPath('/portal#overview'), true);
   assert.equal(isProtectedPortalPath('/portal/login'), false);
+  assert.equal(isProtectedPortalPath('/portal/login#overview'), false);
   assert.equal(isProtectedPortalPath('/portal/login/extra'), false);
   assert.equal(isProtectedPortalPath('/portals'), false);
   assert.equal(isProtectedPortalPath('/portal-admin'), false);
