@@ -527,6 +527,7 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
                   <FieldLabel htmlFor="city-input">Which city is the property in?</FieldLabel>
                   <Input
                     id="city-input"
+                    className="h-12"
                     name="city"
                     type="text"
                     required
@@ -654,6 +655,7 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
                     </FieldLabel>
                     <Input
                       id="photos-input"
+                      className="h-12"
                       name="photosUrl"
                       type="text"
                       placeholder="https://drive.google.com/..."
@@ -674,6 +676,7 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
                     <FieldLabel htmlFor="name-input">Full name</FieldLabel>
                     <Input
                       id="name-input"
+                      className="h-12"
                       name="name"
                       type="text"
                       required
@@ -689,6 +692,7 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
                     <FieldLabel htmlFor="phone-input">Phone</FieldLabel>
                     <Input
                       id="phone-input"
+                      className="h-12"
                       name="phone"
                       type="tel"
                       required
@@ -707,6 +711,7 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
                     <FieldLabel htmlFor="email-input">Email</FieldLabel>
                     <Input
                       id="email-input"
+                      className="h-12"
                       name="email"
                       type="email"
                       required
@@ -741,6 +746,7 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
                   </div>
                   <Input
                     id="address-input"
+                    className="h-12"
                     name="projectAddress"
                     type="text"
                     placeholder="e.g. 100 Main St, Inver Grove Heights"
