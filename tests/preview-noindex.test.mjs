@@ -12,9 +12,13 @@ describe('preview noindex policy (#162)', () => {
     assert.equal(previewRobotsTag('preview'), PREVIEW_ROBOTS_TAG);
   });
 
-  test('branch (preview) environments are the only ones tagged', () => {
-    // Vercel uses VERCEL_ENV=preview for both PR previews and branch deploys.
-    assert.equal(previewRobotsTag('preview'), 'noindex, nofollow');
+  test('only VERCEL_ENV=preview is tagged (other values stay indexable)', () => {
+    // Vercel uses VERCEL_ENV=preview for both PR previews and branch deploys;
+    // every other value — development, empty string, anything unrecognized —
+    // must return undefined so production indexing is never blocked.
+    assert.equal(previewRobotsTag('development'), undefined);
+    assert.equal(previewRobotsTag(''), undefined);
+    assert.equal(previewRobotsTag('staging'), undefined);
   });
 
   test('production indexing is never blocked', () => {

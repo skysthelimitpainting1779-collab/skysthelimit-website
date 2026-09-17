@@ -94,7 +94,13 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Every route: public pages need the preview noindex header (#162).
+  // Page and document traffic: public pages need the preview noindex
+  // header (#162). Negative lookahead (per the Next.js Proxy guide) keeps
+  // the proxy off non-page traffic — API routes, Payload admin, static
+  // assets, image optimization, and public files with extensions — so
+  // multi-megabyte video/image range requests skip the proxy entirely.
   // Session work still runs only on portal/auth routes (see isSessionRoute).
-  matcher: '/:path*',
+  matcher: [
+    '/((?!admin|api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.*\\..*).*)',
+  ],
 };
