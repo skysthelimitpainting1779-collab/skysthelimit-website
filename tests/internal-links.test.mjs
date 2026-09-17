@@ -7,9 +7,14 @@ import { areaLandingPages, serviceLandingPages } from '../src/data/landingPages.
 // Contract: every STATIC internal navigation link in the global header and
 // footer must resolve to a known route. "Static" means a string literal in
 // the component source: data-array entries, static href attributes, and
-// static JSX-expression literals (href={'/x'}, href={`/x`}). Hrefs computed
-// at runtime (interpolated template literals, values derived from request
-// data) cannot be validated statically and are out of scope by design.
+// static JSX-expression literals (href={'/x'}, href={`/x`} — a literal $
+// in the path is fine; only ${...} interpolation is out of scope). Hrefs
+// computed at runtime (interpolated template literals, values derived from
+// request data) cannot be validated statically and are out of scope by
+// design. Relative hrefs without a leading slash (and without a scheme)
+// are collected so they fail loudly: global nav links must be
+// root-relative, otherwise the browser resolves them against the current
+// nested route and 404s.
 // Each navigation source must contribute at least one collectible link, so
 // the test fails loudly if a source's links stop being statically visible
 // instead of silently losing coverage.
@@ -24,18 +29,36 @@ const navigationSources = [
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
 
+// Template-literal hrefs need a second look: only ${...} is interpolation,
+// so a literal $ in the path must not disqualify the match.
+const templateLiteralPattern = /\bhref\s*=\s*\{\s*`(\/[^`]*)`\s*\}/g;
+const relativeTemplatePattern = /\bhref\s*=\s*\{\s*`((?![a-zA-Z][a-zA-Z0-9+.-]*:)(?![#/])[^`]*)`\s*\}/g;
+const interpolatedPatterns = new Set([templateLiteralPattern, relativeTemplatePattern]);
+
 function collectStaticInternalLinks(source) {
   const links = new Set();
   const patterns = [
     /\bhref\s*=\s*["'](\/[^"']*)["']/g,
     /\bhref\s*=\s*\{\s*["'](\/[^"']*)["']\s*\}/g,
-    /\bhref\s*=\s*\{\s*`(\/[^`$]*)`\s*\}/g,
+    templateLiteralPattern,
     /\bhref\s*:\s*["'](\/[^"']*)["']/g,
     /\[\s*["'](\/[^"']*)["']\s*,\s*["'][^"']+["']\s*\]/g,
+    // Relative hrefs (no leading slash, no scheme, no anchor): the same
+    // syntactic forms as above, collected so they are reported broken
+    // instead of silently ignored.
+    /\bhref\s*=\s*["']((?![a-zA-Z][a-zA-Z0-9+.-]*:)(?![#/])[^"']*)["']/g,
+    /\bhref\s*=\s*\{\s*["']((?![a-zA-Z][a-zA-Z0-9+.-]*:)(?![#/])[^"']*)["']\s*\}/g,
+    relativeTemplatePattern,
+    /\bhref\s*:\s*["']((?![a-zA-Z][a-zA-Z0-9+.-]*:)(?![#/])[^"']*)["']/g,
+    /\[\s*["']((?![a-zA-Z][a-zA-Z0-9+.-]*:)(?![#/])[^"']*)["']\s*,\s*["'][^"']+["']\s*\]/g,
   ];
 
   for (const pattern of patterns) {
-    for (const match of source.matchAll(pattern)) links.add(match[1]);
+    for (const match of source.matchAll(pattern)) {
+      // Interpolated template literals are not statically resolvable.
+      if (interpolatedPatterns.has(pattern) && match[1].includes('${')) continue;
+      links.add(match[1]);
+    }
   }
 
   return [...links];
@@ -57,10 +80,10 @@ const dynamicSections = {
 };
 
 function resolvesToKnownRoute(target) {
-  // Protocol-relative targets (//host/path) are external URLs, not local
-  // routes — reject before segment normalization can collapse them into a
-  // matching local path.
-  if (target.startsWith('//')) return false;
+  // Only root-relative targets are valid nav links: protocol-relative
+  // (//host) targets are external URLs, and relative hrefs (no leading
+  // slash) resolve against the current nested route and 404.
+  if (!target.startsWith('/') || target.startsWith('//')) return false;
 
   const pathname = target.split(/[?#]/, 1)[0];
   const segments = pathname.split('/').filter(Boolean);
