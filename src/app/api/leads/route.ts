@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { Resend } from 'resend';
 import { createClient } from '@supabase/supabase-js';
 import {
@@ -7,7 +7,9 @@ import {
   validate,
   buildLeadId,
   buildLeadHtml,
-  createRateLimiter
+  createRateLimiter,
+  jsonOk,
+  jsonError
 } from '@/lib/api/utils';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
@@ -359,23 +361,23 @@ export async function POST(req: NextRequest) {
   const ip = (req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown').split(',')[0].trim();
   if (!rateLimit(ip)) {
     console.warn(`Rate limit exceeded for IP: ${ip}`);
-    return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 });
+    return jsonError('Too many requests. Please try again later.', 429);
   }
 
   let payload: Record<string, unknown>;
   try {
     payload = await req.json();
   } catch {
-    return NextResponse.json({ error: 'Invalid JSON.' }, { status: 400 });
+    return jsonError('Invalid JSON.', 400);
   }
 
   if (!isPayload(payload)) {
-    return NextResponse.json({ error: 'Invalid lead payload.' }, { status: 400 });
+    return jsonError('Invalid lead payload.', 400);
   }
 
   const validationError = validate(payload);
   if (validationError) {
-    return NextResponse.json({ error: validationError }, { status: 400 });
+    return jsonError(validationError, 400);
   }
 
   const lead = {
@@ -448,8 +450,8 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error('Lead delivery failed with error:', error);
     // res.status(500).json({ error: 'Lead delivery failed.', fallback: 'email' })
-    return NextResponse.json({ error: 'Lead delivery failed. Please email us directly at skysthelimitpainting1779@gmail.com', fallback: 'email' }, { status: 500 });
+    return jsonError('Lead delivery failed. Please email us directly at skysthelimitpainting1779@gmail.com', 500, { fallback: 'email' });
   }
 
-  return NextResponse.json({ ok: true, leadId: lead.leadId }, { status: 201 });
+  return jsonOk({ leadId: lead.leadId }, 201);
 }

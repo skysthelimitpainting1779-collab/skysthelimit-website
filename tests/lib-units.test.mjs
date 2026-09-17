@@ -4,7 +4,6 @@ import { test, describe } from 'node:test';
 import { getEnv, ENV } from '../src/lib/env.ts';
 import { businessEmail, businessPhone, smsPhone, buildEstimateMailto } from '../src/lib/contact.ts';
 import { serviceSchema, breadcrumbSchema, localBusinessSchema } from '../src/lib/seo.ts';
-import { DEFAULT_SETTINGS } from '../src/lib/settings.ts';
 
 // ---------------------------------------------------------------------------
 // ENV module tests
@@ -121,20 +120,5 @@ describe('lib/seo - Schema.org JSON-LD generation', () => {
     assert.ok(result.name.includes('Eagan'));
     assert.ok(result.name.includes("Sky's the Limit Painting LLC"));
     assert.ok(result.url.includes('/service-areas/eagan'));
-  });
-});
-
-// ---------------------------------------------------------------------------
-// Settings module tests
-// ---------------------------------------------------------------------------
-describe('lib/settings - Company settings and defaults', () => {
-  test('DEFAULT_SETTINGS company_name matches brand', () => {
-    assert.equal(DEFAULT_SETTINGS.company_name, "Sky's the Limit Painting LLC");
-  });
-  test('DEFAULT_SETTINGS service_areas includes all six service areas', () => {
-    const areas = ['Inver Grove Heights', 'South St. Paul', 'St. Paul', 'Eagan', 'Woodbury', 'Minneapolis'];
-    for (const area of areas) {
-      assert.ok(DEFAULT_SETTINGS.service_areas.includes(area), `service_areas should include ${area}`);
-    }
   });
 });

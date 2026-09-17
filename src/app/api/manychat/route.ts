@@ -1,19 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { createRateLimiter, asText, escapeHtml, buildLeadId, isPayload, validate } from '@/lib/api/utils';
+import { NextRequest } from 'next/server';
+import { createRateLimiter, asText, buildLeadId, buildLeadHtml, isPayload, validate, jsonOk, jsonError } from '@/lib/api/utils';
 
 const leadToEmail = process.env.LEAD_TO_EMAIL || 'skysthelimitpainting1779@gmail.com';
 
 // Simple in-memory IP rate limiter
 const rateLimit = createRateLimiter(5, 60 * 1000);
 
-function buildLeadHtml(payload: Record<string, unknown>): string {
-  const rows = Object.entries(payload)
-    .filter(([key, value]) => key !== 'website' && asText(value).length > 0)
-    .map(([key, value]) => '<tr><td style="padding:6px 10px;border:1px solid #ddd;font-weight:700;">' + escapeHtml(key) + '</td><td style="padding:6px 10px;border:1px solid #ddd;">' + escapeHtml(value) + '</td></tr>')
-    .join('');
-
-  return '<h1>New Sky\'s the Limit Painting ManyChat Lead</h1><table style="border-collapse:collapse;">' + rows + '</table>';
-}
+const manychatLeadEmailTitle = "New Sky's the Limit Painting ManyChat Lead";
 
 async function sendWithResend(payload: Record<string, unknown>) {
   const apiKey = process.env.RESEND_API_KEY;
@@ -35,7 +28,7 @@ async function sendWithResend(payload: Record<string, unknown>) {
       to: [leadToEmail],
       cc: process.env.LEAD_CC_EMAIL ? [process.env.LEAD_CC_EMAIL] : undefined,
       subject: `New ManyChat Lead - ${asText(payload.name)} - ${asText(payload.leadId)}`,
-      html: buildLeadHtml(payload),
+      html: buildLeadHtml(payload, manychatLeadEmailTitle),
       reply_to: asText(payload.email),
     }),
   });
@@ -214,26 +207,26 @@ export async function POST(req: NextRequest) {
   const ip = (req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown').split(',')[0].trim();
   if (!rateLimit(ip)) {
     console.warn(`ManyChat rate limit exceeded for IP: ${ip}`);
-    return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 });
+    return jsonError('Too many requests. Please try again later.', 429);
   }
 
   const webhookSecret = process.env.MANYCHAT_WEBHOOK_SECRET;
   if (webhookSecret) {
     const provided = req.headers.get('x-manychat-secret') || '';
     if (provided !== webhookSecret) {
-      return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
+      return jsonError('Unauthorized.', 401);
     }
   }
 
-  let body: any;
+  let body: Record<string, unknown>;
   try {
     body = await req.json();
   } catch {
-    return NextResponse.json({ error: 'Invalid JSON.' }, { status: 400 });
+    return jsonError('Invalid JSON.', 400);
   }
 
   // Parse and extract custom fields sent by ManyChat webhook
-  const customFields = body.custom_fields || {};
+  const customFields = isPayload(body.custom_fields) ? body.custom_fields : {};
   
   const name = asText(body.name || `${body.first_name || ''} ${body.last_name || ''}`.trim()) || 'ManyChat Lead';
   const phone = asText(body.phone || customFields.phone || customFields.Phone || '');
@@ -266,12 +259,12 @@ export async function POST(req: NextRequest) {
   };
 
   if (!lead.phone && !lead.email) {
-    return NextResponse.json({ error: 'ManyChat lead must have either a phone number or email address.' }, { status: 400 });
+    return jsonError('ManyChat lead must have either a phone number or email address.', 400);
   }
 
   const validationError = validate(lead);
   if (validationError) {
-    return NextResponse.json({ error: validationError }, { status: 400 });
+    return jsonError(validationError, 400);
   }
 
   try {
@@ -293,12 +286,12 @@ export async function POST(req: NextRequest) {
 
     if (!configured) {
       console.error('ManyChat lead delivery error: Lead delivery is not configured yet.');
-      return NextResponse.json({ error: 'Lead delivery platforms not configured in .env', fallback: 'email' }, { status: 500 });
+      return jsonError('Lead delivery platforms not configured in .env', 500, { fallback: 'email' });
     }
   } catch (error) {
     console.error('ManyChat lead delivery failed with error:', error);
-    return NextResponse.json({ error: 'ManyChat lead delivery failed.', fallback: 'email' }, { status: 500 });
+    return jsonError('ManyChat lead delivery failed.', 500, { fallback: 'email' });
   }
 
-  return NextResponse.json({ ok: true, leadId: lead.leadId }, { status: 201 });
+  return jsonOk({ leadId: lead.leadId }, 201);
 }

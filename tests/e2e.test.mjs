@@ -131,10 +131,8 @@ describe('Tier 1: Feature Coverage', () => {
     assert.ok(!exists('src/components/Layout.tsx'));
   });
 
-  test('T1.20 Interactive Components - MagneticButtons trigger hover states and scale', () => {
-    const btn = read('src/components/animations/MagneticButton.tsx');
-    assert.match(btn, /motion/);
-    assert.match(btn, /useSpring/);
+  test('T1.20 Interactive Components - unused magnetic button theater stays deleted', () => {
+    assert.ok(!exists('src/components/animations/MagneticButton.tsx'));
   });
 
   test('T1.26 Reputation Funnel - Rating 4 stars displays the Google Review redirect prompt', () => {
@@ -423,6 +421,14 @@ describe('Tier 3: Cross-Feature Combinations', () => {
   test('T3.4 Product theater components stay deleted', () => {
     assert.ok(!exists('src/components/CustomCursor.tsx'));
     assert.ok(!exists('src/components/SpecInspector.tsx'));
+    assert.ok(!exists('src/components/ReviewCarousel.tsx'));
+    assert.ok(!exists('src/components/TestimonialCard.tsx'));
+    assert.ok(!exists('src/components/SpotlightCard.tsx'));
+    assert.ok(!exists('src/components/IconFeatureCard.tsx'));
+    assert.ok(!exists('src/components/animations/Stagger.tsx'));
+    assert.ok(!exists('src/components/animations/MagneticButton.tsx'));
+    assert.ok(!exists('src/components/animations/HoverLift.tsx'));
+    assert.ok(!exists('src/lib/settings.ts'));
     assert.ok(!exists('src/app/api/memory/route.ts'));
     assert.ok(!exists('scripts/prerender.mjs'));
   });

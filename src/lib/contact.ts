@@ -11,7 +11,3 @@ export function buildEstimateMailto(fields: Record<string, string>) {
   const subject = "Estimate request - Sky's the Limit Painting LLC";
   return `mailto:${businessEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
-
-export function openEstimateEmail(fields: Record<string, string>) {
-  window.location.href = buildEstimateMailto(fields);
-}
