@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
+import { jsonOk, jsonError } from '@/lib/api/utils';
 
 const SITE_URL = process.env.SITE_URL || 'https://www.skysthelimitpaintingllc.com';
 
@@ -23,10 +24,10 @@ export async function GET(request: NextRequest) {
     if (cronSecret) {
       const authorization = request.headers.get('authorization');
       if (authorization !== `Bearer ${cronSecret}`) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        return jsonError('Unauthorized', 401);
       }
     } else if (onVercel) {
-      return NextResponse.json({ error: 'Unauthorized: endpoint requires CRON_SECRET' }, { status: 401 });
+      return jsonError('Unauthorized: endpoint requires CRON_SECRET', 401);
     }
 
     const checks = await Promise.all([
@@ -34,8 +35,7 @@ export async function GET(request: NextRequest) {
       fetchCheck(`${SITE_URL}/`),
     ]);
 
-    return NextResponse.json({
-      ok: true,
+    return jsonOk({
       ranAt: new Date().toISOString(),
       secured: Boolean(cronSecret),
       checks,
@@ -43,6 +43,6 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Cron route error';
     console.error('[/api/cron/seo-ping GET]', message);
-    return NextResponse.json({ error: message }, { status: 500 });
+    return jsonError(message, 500);
   }
 }

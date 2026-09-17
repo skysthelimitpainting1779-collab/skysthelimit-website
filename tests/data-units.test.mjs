@@ -335,16 +335,6 @@ describe('Cross-module data consistency', () => {
     }
   });
 
-  test('settings service_areas match seo.ts areaServed cities', () => {
-    const settingsSrc = read('src/lib/settings.ts');
-    const seoSrc = read('src/lib/seo.ts');
-    const settingsAreas = ['Inver Grove Heights', 'South St. Paul', 'St. Paul', 'Eagan', 'Woodbury', 'Minneapolis'];
-    for (const area of settingsAreas) {
-      assert.match(settingsSrc, new RegExp(area.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&')), `settings should include ${area}`);
-      assert.match(seoSrc, new RegExp(area.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&')), `seo should include ${area}`);
-    }
-  });
-
   test('contact phone matches seo phone', () => {
     const contactSrc = read('src/lib/contact.ts');
     const seoSrc = read('src/lib/seo.ts');

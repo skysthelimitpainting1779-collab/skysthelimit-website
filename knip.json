@@ -32,9 +32,7 @@
     "references/**",
     "next-env.d.ts",
     "src/components/ui/**",
-    "src/components/animations/**",
-    "src/components/ReviewCarousel.tsx",
-    "src/components/SpotlightCard.tsx"
+    "src/components/animations/**"
   ],
   "ignoreBinaries": [
     "graphify",
