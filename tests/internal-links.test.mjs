@@ -13,6 +13,10 @@ import { areaLandingPages, serviceLandingPages } from '../src/data/landingPages.
 // Each navigation source must contribute at least one collectible link, so
 // the test fails loudly if a source's links stop being statically visible
 // instead of silently losing coverage.
+// Route-group ((name)) and catch-all ([[...segments]]) targets are not
+// resolved: no current header/footer link uses them, and the resolver covers
+// the conventions the site's navigation actually uses (literal segments
+// plus the two data-driven dynamic sections above).
 const navigationSources = [
   'src/components/ConversionHeader.tsx',
   'src/components/public/PublicFooter.tsx',
@@ -37,7 +41,27 @@ function collectStaticInternalLinks(source) {
   return [...links];
 }
 
+// Dynamic sections whose slugs are validated against landing-page data. The
+// [slug] page module must exist, or the whole section counts as broken: data
+// slugs alone must not keep the test green if the route module is removed,
+// renamed, or moved.
+const dynamicSections = {
+  'painting-services': {
+    module: 'src/app/painting-services/[slug]/page.tsx',
+    slugs: serviceLandingPages,
+  },
+  'service-areas': {
+    module: 'src/app/service-areas/[slug]/page.tsx',
+    slugs: areaLandingPages,
+  },
+};
+
 function resolvesToKnownRoute(target) {
+  // Protocol-relative targets (//host/path) are external URLs, not local
+  // routes — reject before segment normalization can collapse them into a
+  // matching local path.
+  if (target.startsWith('//')) return false;
+
   const pathname = target.split(/[?#]/, 1)[0];
   const segments = pathname.split('/').filter(Boolean);
   const staticPage = segments.length === 0
@@ -48,15 +72,13 @@ function resolvesToKnownRoute(target) {
 
   if (segments.length !== 2) return false;
   const [route, slug] = segments;
+  const section = dynamicSections[route];
+  if (!section) return false;
 
-  if (route === 'painting-services') {
-    return serviceLandingPages.some((page) => page.slug === slug);
-  }
-  if (route === 'service-areas') {
-    return areaLandingPages.some((page) => page.slug === slug);
-  }
-
-  return false;
+  return (
+    existsSync(new URL(`../${section.module}`, import.meta.url)) &&
+    section.slugs.some((page) => page.slug === slug)
+  );
 }
 
 test('static links in the global header and footer resolve to known routes', () => {
