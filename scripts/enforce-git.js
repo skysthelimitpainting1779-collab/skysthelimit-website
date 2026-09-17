@@ -18,6 +18,7 @@ const ALLOWED_PREFIXES = [
   'devin/',
   'agent/',
   'dependabot/',
+  'slice/',
 ];
 const CC_RE =
   /^(feat|fix|chore|docs|infra|refactor|test|style|ci|build|perf|revert)(?:\([a-z0-9_./-]+\))*!?: .{1,200}/i;

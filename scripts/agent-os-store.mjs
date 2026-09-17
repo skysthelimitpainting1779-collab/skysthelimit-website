@@ -499,6 +499,7 @@ export function captureGitPlatform() {
         'chore/',
         'docs/',
         'infra/',
+        'slice/',
         'devin/',
         'agent/',
         'dependabot/',
