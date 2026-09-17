@@ -36,6 +36,10 @@ export default function ConversionHeader() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  // Keep the utility strip expanded while keyboard focus is inside it so a
+  // focused call link is never yanked out from under the user on collapse.
+  const [stripHasFocus, setStripHasFocus] = useState(false);
+  const utilityExpanded = !isScrolled || stripHasFocus;
 
   useEffect(() => {
     setMobileMenuOpen(false);
@@ -61,9 +65,17 @@ export default function ConversionHeader() {
       className="conversion-header public-surface fixed inset-x-0 top-0 z-50 border-b border-border bg-background text-foreground shadow-[0_14px_32px_rgb(7_19_33_/_0.08)] print:static print:shadow-none"
     >
       <div
+        onFocus={() => setStripHasFocus(true)}
+        onBlur={(event) => {
+          if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+            setStripHasFocus(false);
+          }
+        }}
         className={cn(
           'overflow-hidden border-b px-4 transition-[height,opacity,border-color] duration-200 motion-reduce:transition-none sm:px-6 lg:px-8',
-          isScrolled ? 'invisible h-0 border-transparent opacity-0' : 'visible h-8 border-border opacity-100',
+          utilityExpanded ? 'visible h-11 border-border opacity-100' : 'invisible h-0 border-transparent opacity-0',
+          // Print always restores the strip (license + phone) regardless of scroll state.
+          'print:visible print:h-auto print:border-border print:opacity-100',
         )}
       >
         <div className="mx-auto flex h-full max-w-[90rem] items-center justify-between gap-4 text-[11px] font-bold uppercase tracking-[0.09em]">
