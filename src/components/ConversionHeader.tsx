@@ -35,6 +35,7 @@ function isCurrentPath(pathname: string, href: string) {
 export default function ConversionHeader() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
     setMobileMenuOpen(false);
@@ -46,21 +47,37 @@ export default function ConversionHeader() {
     if (referral) localStorage.setItem('referrer_email', referral.trim());
   }, []);
 
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 100);
+
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <header
       data-surface="public"
-      className="conversion-header public-surface fixed inset-x-0 top-0 z-50 h-28 border-b border-border bg-background text-foreground shadow-[0_14px_32px_rgb(7_19_33_/_0.08)] print:static print:shadow-none"
+      className="conversion-header public-surface fixed inset-x-0 top-0 z-50 border-b border-border bg-background text-foreground shadow-[0_14px_32px_rgb(7_19_33_/_0.08)] print:static print:shadow-none"
     >
-      <div className="h-8 border-b border-border px-4 sm:px-6 lg:px-8">
+      <div
+        className={cn(
+          'overflow-hidden border-b px-4 transition-[height,opacity,border-color] duration-200 motion-reduce:transition-none sm:px-6 lg:px-8',
+          isScrolled ? 'invisible h-0 border-transparent opacity-0' : 'visible h-8 border-border opacity-100',
+        )}
+      >
         <div className="mx-auto flex h-full max-w-[90rem] items-center justify-between gap-4 text-[11px] font-bold uppercase tracking-[0.09em]">
-          <span>Twin Cities painting</span>
+          <div className="flex items-center gap-4">
+            <span className="hidden sm:inline">Twin Cities painting</span>
+            <span>MN Contractor IR816596</span>
+          </div>
           <div className="flex items-center gap-4">
             <span className="hidden text-muted-foreground sm:inline">Owner-led / Written scope / Prep first</span>
             <a
               href="tel:+16514104196"
               data-track="call_click"
               data-track-payload='{"source":"utility_header"}'
-              className="underline decoration-trust decoration-2 underline-offset-4"
+              className="flex min-h-11 items-center py-2 text-xs underline decoration-trust decoration-2 underline-offset-4"
             >
               Call / Text 651-410-4196
             </a>
@@ -68,7 +85,12 @@ export default function ConversionHeader() {
         </div>
       </div>
 
-      <div className="h-20 px-4 sm:px-6 lg:px-8">
+      <div
+        className={cn(
+          'px-4 transition-[height] duration-200 motion-reduce:transition-none sm:px-6 lg:px-8',
+          isScrolled ? 'h-16' : 'h-20',
+        )}
+      >
         <div className="mx-auto flex h-full max-w-[90rem] items-center justify-between gap-5">
           <Link href="/" className="flex shrink-0 items-center gap-3 leading-none" aria-label="Sky's the Limit Painting LLC home">
             <Image src="/brand/SkyLLP_BrandLogo.svg" alt="" width={44} height={40} className="h-10 w-11 object-contain" preload />
@@ -126,7 +148,7 @@ export default function ConversionHeader() {
                 <Button
                   variant="outline"
                   size="icon-lg"
-                  className="lg:hidden"
+                  className="size-11 lg:hidden"
                   aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
                 />
               )}
