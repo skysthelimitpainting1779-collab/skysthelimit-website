@@ -9,12 +9,6 @@ export const metadata: Metadata = {
   },
 };
 
-import { Suspense } from 'react';
-
 export default function Projects() {
-  return (
-    <Suspense fallback={<div className="min-h-screen bg-[#050505] flex items-center justify-center text-white font-display font-black">Loading projects...</div>}>
-      <ProjectsPage />
-    </Suspense>
-  );
+  return <ProjectsPage />;
 }
