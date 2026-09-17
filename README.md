@@ -122,7 +122,7 @@ Only verified facts in marketing copy:
 | **CodeQL** | JS/TS analysis |
 | **Release** | Tag `v*` → production deploy (Vercel token) |
 
-**Branch prefixes:** `feat/` `fix/` `chore/` `docs/` `infra/` `agent/` `devin/` `dependabot/`  
+**Branch prefixes:** `feat/` `fix/` `chore/` `docs/` `infra/` `slice/` `agent/` `devin/` `dependabot/`  
 
 **Commits:** Conventional Commits — `type(scope): subject`
 
