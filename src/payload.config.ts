@@ -19,7 +19,10 @@ import { SiteSettings } from './globals/payload/SiteSettings';
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
-const payloadSecret = process.env.PAYLOAD_SECRET;
+// Treat empty/blank as unset: `cp .env.example .env.local` leaves PAYLOAD_SECRET
+// empty, and an empty secret must never count as configured.
+const rawPayloadSecret = process.env.PAYLOAD_SECRET;
+const payloadSecret = rawPayloadSecret?.trim() ? rawPayloadSecret : undefined;
 
 // Build-time guard: `next build` statically collects route data and must import
 // this module even when PAYLOAD_SECRET is absent from the build environment

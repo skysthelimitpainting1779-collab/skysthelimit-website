@@ -110,6 +110,48 @@ test('Payload config fails fast when PAYLOAD_SECRET is missing', async () => {
   }
 });
 
+test('Payload config treats an empty PAYLOAD_SECRET as missing during `next build`', async () => {
+  const previous = {
+    secret: process.env.PAYLOAD_SECRET,
+    phase: process.env.NEXT_PHASE,
+  };
+  // Standard template setup: `cp .env.example .env.local` leaves PAYLOAD_SECRET empty.
+  process.env.PAYLOAD_SECRET = '';
+  process.env.NEXT_PHASE = 'phase-production-build';
+
+  try {
+    const config = (await import(`${configUrl}?build-phase-empty-secret`)).default;
+    assert.equal(typeof config.secret, 'string');
+    assert.match(config.secret, /^[0-9a-f]{64}$/);
+  } finally {
+    if (previous.secret === undefined) delete process.env.PAYLOAD_SECRET;
+    else process.env.PAYLOAD_SECRET = previous.secret;
+    if (previous.phase === undefined) delete process.env.NEXT_PHASE;
+    else process.env.NEXT_PHASE = previous.phase;
+  }
+});
+
+test('Payload config rejects an empty PAYLOAD_SECRET at runtime', async () => {
+  const previous = {
+    secret: process.env.PAYLOAD_SECRET,
+    phase: process.env.NEXT_PHASE,
+  };
+  process.env.PAYLOAD_SECRET = '   ';
+  process.env.NEXT_PHASE = 'phase-production-server';
+
+  try {
+    await assert.rejects(
+      import(`${configUrl}?runtime-phase-blank-secret`),
+      /PAYLOAD_SECRET is required\. Set it to a strong, unique value before starting Payload\./,
+    );
+  } finally {
+    if (previous.secret === undefined) delete process.env.PAYLOAD_SECRET;
+    else process.env.PAYLOAD_SECRET = previous.secret;
+    if (previous.phase === undefined) delete process.env.NEXT_PHASE;
+    else process.env.NEXT_PHASE = previous.phase;
+  }
+});
+
 test('Payload config enables verified TLS for the Postgres pool', async () => {
   const previous = {
     secret: process.env.PAYLOAD_SECRET,
