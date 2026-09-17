@@ -41,13 +41,17 @@ export default function ConversionHeader() {
   const [stripHasFocus, setStripHasFocus] = useState(false);
   const utilityExpanded = !isScrolled || stripHasFocus;
   // The header's rendered height varies: the utility strip collapses on scroll
-  // and its labels can wrap on narrow screens. Track the live height so the
-  // layout offset stays in sync, and track the expanded (top-of-page) height
-  // separately so viewport-filling heroes size from a stable baseline
-  // instead of reflowing when the header collapses on scroll.
+  // and its labels can wrap on narrow screens. Track the live height in
+  // --site-header-height so scroll padding stays in sync, and track the
+  // expanded (top-of-page) height separately so viewport-filling heroes and
+  // the main spacer size from a stable baseline instead of reflowing when
+  // the header collapses. The expanded value is measured only in the true
+  // unscrolled state: the strip can stay expanded while scrolled (keyboard
+  // focus keeps it visible), so guard on isScrolled rather than strip
+  // visibility, or the partially-collapsed height would poison the baseline.
   const headerRef = useRef<HTMLElement | null>(null);
-  const utilityExpandedRef = useRef(utilityExpanded);
-  utilityExpandedRef.current = utilityExpanded;
+  const isScrolledRef = useRef(isScrolled);
+  isScrolledRef.current = isScrolled;
 
   useEffect(() => {
     const header = headerRef.current;
@@ -56,7 +60,7 @@ export default function ConversionHeader() {
       const height = Math.round(header.getBoundingClientRect().height);
       const root = document.documentElement;
       root.style.setProperty('--site-header-height', `${height}px`);
-      if (utilityExpandedRef.current) {
+      if (!isScrolledRef.current) {
         root.style.setProperty('--site-header-height-expanded', `${height}px`);
       }
     };
@@ -111,7 +115,7 @@ export default function ConversionHeader() {
           <div className="mx-auto flex min-h-11 max-w-[90rem] items-center justify-between gap-4 text-[11px] font-bold uppercase tracking-[0.09em]">
             <div className="flex items-center gap-4">
               <span className="hidden sm:inline">Twin Cities painting</span>
-              <span>MN Contractor IR816596</span>
+              <span>MN Registration IR816596</span>
             </div>
             <div className="flex items-center gap-4">
               <span className="hidden text-muted-foreground sm:inline">Owner-led / Written scope / Prep first</span>
@@ -165,7 +169,10 @@ export default function ConversionHeader() {
             })}
           </nav>
 
-          <div className="hidden items-center gap-3 lg:flex">
+          {/* Keep a call action visible from tablet widths: at md-lg the utility
+              strip collapses on scroll and the sticky rail is mobile-only, so
+              the header call button must already be present below lg. */}
+          <div className="hidden items-center gap-3 md:flex">
             <PublicCtaLink
               href="tel:+16514104196"
               variant="outline"

@@ -696,7 +696,11 @@
 
 .public-surface [id],
 .ledger-surface [id] {
-  scroll-margin-top: 8rem;
+  /* Fragment offsets come from a single source: `html { scroll-padding-top:
+     var(--site-header-height) }`, which tracks the live header height.
+     scroll-margin and scroll-padding stack for anchor navigation, so a second
+     fixed margin here would double the offset below the collapsed header. */
+  scroll-margin-top: 0;
 }
 
 .public-surface :is(a, button, input, select, textarea):focus-visible,

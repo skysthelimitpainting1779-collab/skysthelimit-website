@@ -189,7 +189,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <ConversionHeader />
           </Suspense>
 
-          <main id="main-content" className="flex-grow pt-[var(--site-header-height)] pb-24 md:pb-0">
+          <main id="main-content" className="flex-grow pt-[var(--site-header-height-expanded)] pb-24 md:pb-0">
             {children}
           </main>
 
