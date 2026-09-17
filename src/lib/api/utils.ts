@@ -1,5 +1,7 @@
-// Shared API response shape: success is always { ok: true, ...data },
-// errors are always { error: message, ...extra }.
+// Shared API response shape: success is always { ...data, ok: true },
+// errors are always { ...extra, error: message }.
+// Data/extras are spread first so the reserved fields can't be overridden
+// by caller-supplied values.
 import { NextResponse } from 'next/server';
 
 export function jsonOk(data: Record<string, unknown> = {}, status = 200) {
