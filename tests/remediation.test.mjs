@@ -110,9 +110,14 @@ test('lead form controls have accessible names and normalized funnel events', ()
   const leadsApi = read('src/app/api/leads/route.ts');
   const apiUtils = read('src/lib/api/utils.ts');
 
-  for (const label of ['Full name', 'Phone', 'Email', 'City', 'Project address or cross streets', 'Market', 'Project type', 'Property type', 'Timeline', 'Budget range', 'Preferred contact method', 'Project photo link', 'Project details']) {
+  for (const label of ['Full name', 'Phone', 'Email', 'Project address or cross streets', 'Market', 'Project type', 'Property type', 'Timeline', 'Budget range', 'Preferred contact method', 'Project photo link', 'Project details']) {
     assert.match(leadForm, new RegExp(`aria-label="${label}"`));
   }
+
+  // City uses an explicit <label htmlFor> association instead of a redundant aria-label (#282).
+  assert.match(leadForm, /htmlFor="city-input"/);
+  assert.match(leadForm, /id="city-input"/);
+  assert.doesNotMatch(leadForm, /aria-label="City"/);
 
   for (const eventName of ['lead_form_start', 'lead_form_submit_success', 'lead_form_submit_error', 'lead_mailto_fallback_opened']) {
     assert.match(leadForm, new RegExp(`'${eventName}'`));

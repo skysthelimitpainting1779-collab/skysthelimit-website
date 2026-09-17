@@ -41,6 +41,11 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
   const [uploadProgress, setUploadProgress] = useState('');
   const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
 
+  // Roving tab stop for the toggle groups: tracks the last focused option so
+  // arrow-key focus movement (without selection) keeps a single tab stop.
+  const [focusedMarket, setFocusedMarket] = useState<string | null>(null);
+  const [focusedPropertyType, setFocusedPropertyType] = useState<string | null>(null);
+
   const [formData, setFormData] = useState({
     market: defaultMarket,
     projectType: '',
@@ -193,9 +198,9 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
   const isStepValid = (step: number) => {
     switch (step) {
       case 0:
-        return !!formData.market && !!formData.propertyType && !!formData.city.trim();
+        return !!formData.name.trim() && !!formData.phone.trim() && !!formData.city.trim();
       case 1:
-        return !!formData.projectType && !!formData.timeline && !!formData.budget && !!formData.notes.trim();
+        return !!formData.market && !!formData.propertyType && !!formData.projectType && !!formData.timeline && !!formData.budget && !!formData.notes.trim();
       case 2:
         return (
           !!formData.name.trim() &&
@@ -211,19 +216,19 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
   const getStepError = (step: number) => {
     switch (step) {
       case 0:
-        if (!formData.market) return 'Please select a market segment.';
-        if (!formData.propertyType) return 'Please select a property class.';
+        if (!formData.name.trim()) return 'Full name is required.';
+        if (!formData.phone.trim()) return 'Phone number is required.';
         if (!formData.city.trim()) return 'City is required.';
         return '';
       case 1:
+        if (!formData.market) return 'Please select a market segment.';
+        if (!formData.propertyType) return 'Please select a property type.';
         if (!formData.projectType) return 'Please select a project type.';
         if (!formData.timeline) return 'Please select a timeline.';
         if (!formData.budget) return 'Please select a budget range.';
         if (!formData.notes.trim()) return 'Scope notes are required to check details.';
         return '';
       case 2:
-        if (!formData.name.trim()) return 'Full name is required.';
-        if (!formData.phone.trim()) return 'Phone number is required.';
         if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
           return 'Please enter a valid email address.';
         }
@@ -237,7 +242,10 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
   const handleNext = () => {
     if (isStepValid(currentStep)) {
       if (currentStep === 0) {
-        trackEvent('lead_form_start', { source, market: formData.market });
+        // Market segment is chosen on step 1, so the start event carries no
+        // market dimension; per-market attribution comes from the submit
+        // success event, which always includes the chosen market.
+        trackEvent('lead_form_start', { source });
       }
       setDirection(1);
       setCurrentStep((prev) => Math.min(prev + 1, 2));
@@ -383,9 +391,9 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
   };
 
   const stepTitles = [
-    'Location & Segment',
-    'Project Specifications',
     'Personal Verification',
+    'Project Specifications',
+    'Contact & Address',
   ];
 
   const progressPercent = Math.round(((currentStep + 1) / 3) * 100);
@@ -472,8 +480,60 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
             transition={slideTransition}
             className="flex flex-col gap-6"
           >
-            {/* STEP 0: LOCATION & SEGMENT */}
+            {/* STEP 0: PERSONAL VERIFICATION */}
             {currentStep === 0 && (
+              <div className="flex flex-col gap-5">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <Field>
+                    <FieldLabel htmlFor="name-input">Full name</FieldLabel>
+                    <Input
+                      id="name-input"
+                      name="name"
+                      type="text"
+                      required
+                      placeholder="e.g. Johnny Cage"
+                      aria-label="Full name"
+                      autoComplete="name"
+                      value={formData.name}
+                      onChange={(e) => updateField('name', e.target.value)}
+                    />
+                  </Field>
+
+                  <Field>
+                    <FieldLabel htmlFor="phone-input">Phone</FieldLabel>
+                    <Input
+                      id="phone-input"
+                      name="phone"
+                      type="tel"
+                      required
+                      placeholder="e.g. 651-410-4196"
+                      aria-label="Phone"
+                      autoComplete="tel"
+                      inputMode="tel"
+                      value={formData.phone}
+                      onChange={(e) => updateField('phone', e.target.value)}
+                    />
+                  </Field>
+                </div>
+
+                <Field>
+                  <FieldLabel htmlFor="city-input">Which city is the property in?</FieldLabel>
+                  <Input
+                    id="city-input"
+                    name="city"
+                    type="text"
+                    required
+                    placeholder="e.g. Minneapolis"
+                    autoComplete="address-level2"
+                    value={formData.city}
+                    onChange={(e) => updateField('city', e.target.value)}
+                  />
+                </Field>
+              </div>
+            )}
+
+            {/* STEP 1: PROJECT SPECIFICATIONS */}
+            {currentStep === 1 && (
               <div className="flex flex-col gap-5">
                 <Field>
                   <FieldLabel id="market-segment-label">Market segment</FieldLabel>
@@ -481,13 +541,14 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
                     aria-labelledby="market-segment-label"
                     value={[formData.market]}
                     onValueChange={(values) => values[0] && updateField('market', values[0] as typeof formData.market)}
+                    loopFocus
                     variant="outline"
                     size="lg"
                     spacing={2}
                     className="grid w-full grid-cols-1 sm:grid-cols-3"
                   >
                     {['Residential', 'Commercial', 'Public Sector'].map((option) => (
-                      <ToggleGroupItem key={option} value={option} data-lead-choice className="h-auto min-h-12 whitespace-normal px-3 py-2">
+                      <ToggleGroupItem key={option} value={option} tabIndex={(focusedMarket ?? formData.market) === option ? 0 : -1} onFocus={() => setFocusedMarket(option)} data-lead-choice className="h-auto min-h-12 whitespace-normal px-3 py-2">
                         {option}
                       </ToggleGroupItem>
                     ))}
@@ -506,13 +567,14 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
                     aria-labelledby="property-type-label"
                     value={formData.propertyType ? [formData.propertyType] : []}
                     onValueChange={(values) => values[0] && updateField('propertyType', values[0])}
+                    loopFocus
                     variant="outline"
                     size="lg"
                     spacing={2}
                     className="grid w-full grid-cols-2 sm:grid-cols-3"
                   >
                     {propertyOptions.map((option) => (
-                      <ToggleGroupItem key={option} value={option} data-lead-choice className="h-auto min-h-12 whitespace-normal px-3 py-2">
+                      <ToggleGroupItem key={option} value={option} tabIndex={((focusedPropertyType ?? formData.propertyType) || propertyOptions[0]) === option ? 0 : -1} onFocus={() => setFocusedPropertyType(option)} data-lead-choice className="h-auto min-h-12 whitespace-normal px-3 py-2">
                         {option.split(' / ')[0]}
                       </ToggleGroupItem>
                     ))}
@@ -523,26 +585,6 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
                   </select>
                 </Field>
 
-                <Field>
-                  <FieldLabel htmlFor="city-input">Which city is the property in?</FieldLabel>
-                  <Input
-                    id="city-input"
-                    name="city"
-                    type="text"
-                    required
-                    placeholder="e.g. Minneapolis"
-                    aria-label="City"
-                    autoComplete="address-level2"
-                    value={formData.city}
-                    onChange={(e) => updateField('city', e.target.value)}
-                  />
-                </Field>
-              </div>
-            )}
-
-            {/* STEP 1: PROJECT SPECIFICATIONS */}
-            {currentStep === 1 && (
-              <div className="flex flex-col gap-5">
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                   <Field>
                     <FieldLabel htmlFor="lead-project-type">Project type</FieldLabel>
@@ -666,42 +708,9 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
               </div>
             )}
 
-            {/* STEP 2: PERSONAL VERIFICATION */}
+            {/* STEP 2: LOCATION & SEGMENT */}
             {currentStep === 2 && (
               <div className="flex flex-col gap-4">
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <Field>
-                    <FieldLabel htmlFor="name-input">Full name</FieldLabel>
-                    <Input
-                      id="name-input"
-                      name="name"
-                      type="text"
-                      required
-                      placeholder="e.g. Johnny Cage"
-                      aria-label="Full name"
-                      autoComplete="name"
-                      value={formData.name}
-                      onChange={(e) => updateField('name', e.target.value)}
-                    />
-                  </Field>
-
-                  <Field>
-                    <FieldLabel htmlFor="phone-input">Phone</FieldLabel>
-                    <Input
-                      id="phone-input"
-                      name="phone"
-                      type="tel"
-                      required
-                      placeholder="e.g. 651-410-4196"
-                      aria-label="Phone"
-                      autoComplete="tel"
-                      inputMode="tel"
-                      value={formData.phone}
-                      onChange={(e) => updateField('phone', e.target.value)}
-                    />
-                  </Field>
-                </div>
-
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <Field>
                     <FieldLabel htmlFor="email-input">Email</FieldLabel>
