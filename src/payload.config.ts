@@ -18,6 +18,13 @@ import { SiteSettings } from './globals/payload/SiteSettings';
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
+const payloadSecret = process.env.PAYLOAD_SECRET;
+
+if (!payloadSecret) {
+  throw new Error('PAYLOAD_SECRET is required. Set it to a strong, unique value before starting Payload.');
+}
+
+const supabaseCa = process.env.SUPABASE_DB_CA?.replace(/\\n/g, '\n');
 
 export default buildConfig({
   admin: {
@@ -41,9 +48,13 @@ export default buildConfig({
 
   db: postgresAdapter({
     pool: {
-      // Direct Postgres connection (not the anon REST API)
-      // Must be the pooler connection string from Supabase: Settings > Database > Connection String
+      // Supabase pooler connections use TLS with full CA and hostname verification.
+      // SUPABASE_DB_CA may contain the project's CA PEM when it is not in Node's trust store.
       connectionString: process.env.SUPABASE_DB_URL || 'postgres://localhost:5432/payload_placeholder',
+      ssl: {
+        rejectUnauthorized: true,
+        ...(supabaseCa ? { ca: supabaseCa } : {}),
+      },
     },
     // Dedicated schema — never touches the existing public CRM/content tables
     schemaName: 'payload',
@@ -83,7 +94,7 @@ export default buildConfig({
     }),
   ],
 
-  secret: process.env.PAYLOAD_SECRET ?? 'CHANGE_ME_IN_ENV',
+  secret: payloadSecret,
 
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
