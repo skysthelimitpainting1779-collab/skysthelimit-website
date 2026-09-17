@@ -45,10 +45,10 @@ export default function HomeClient() {
 
       <section aria-labelledby="home-title" className="proof-hero relative isolate min-h-[calc(100svh-7rem)] overflow-hidden bg-[#071321] text-[#F6F3EB]">
         <ResponsiveImage
-          src="/images/site/proof-in-the-prep-tape-material.jpg"
+          src="/images/site/proof-in-the-prep-tape-material.webp"
           alt=""
-          width={2560}
-          height={1440}
+          width={1920}
+          height={1080}
           sizes="100vw"
           priority
           fetchPriority="high"
@@ -65,7 +65,7 @@ export default function HomeClient() {
           </div>
 
           <div className="max-w-[56rem] py-12 sm:py-16 lg:py-20">
-            <h1 id="home-title" className="proof-display max-w-[10ch] text-[clamp(4.2rem,10vw,10.5rem)] leading-[0.78] tracking-[-0.06em] text-[#F6F3EB]">
+            <h1 id="home-title" className="proof-display max-w-[10ch] text-[clamp(2.75rem,10vw,10.5rem)] leading-[0.78] tracking-[-0.06em] text-[#F6F3EB]">
               Paint is the last thing we do.
             </h1>
             <p className="mt-8 max-w-[39rem] text-lg font-semibold leading-8 text-[#DDEBFA] sm:text-xl sm:leading-9">
