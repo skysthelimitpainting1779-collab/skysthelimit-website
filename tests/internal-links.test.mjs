@@ -41,7 +41,17 @@ const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), 'utf
 // happens: CI supplies no Supabase credentials, so a live query would always
 // degrade there. The loud degradation warning fires only when the snapshot
 // itself is missing or unreadable.
-const { slugs: serviceAreaSlugs } = await getServiceAreaSlugs(areaLandingPages);
+//
+// Freshness: this test passes verifyFreshness, so when Supabase IS reachable
+// the live service_areas slugs are compared against the snapshot and a
+// mismatch FAILS loudly — runtime admin mutations (add/rename/delete in
+// /manage) do not regenerate the snapshot, and a stale snapshot would keep
+// accepting slugs whose links now 404. When Supabase is unreachable the
+// snapshot remains the deterministic source of truth. Offline regen:
+// npm run sync:service-area-slugs.
+const { slugs: serviceAreaSlugs } = await getServiceAreaSlugs(areaLandingPages, {
+  verifyFreshness: true,
+});
 
 const dynamicSections = {
   'painting-services': {

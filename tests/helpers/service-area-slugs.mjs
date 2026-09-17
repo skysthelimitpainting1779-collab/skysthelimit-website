@@ -21,6 +21,17 @@
 // genuinely-unverifiable case — a missing or unreadable snapshot — where
 // validation degrades to the static list only. A healthy snapshot in the
 // normal CI path produces no warning at all.
+//
+// Pass { verifyFreshness: true } to add automatic staleness detection (used
+// by internal-links.test.mjs): when Supabase is reachable, the live
+// service_areas slugs are compared against what the snapshot recorded at
+// generation time, and a mismatch FAILS loudly — runtime admin mutations
+// (add/rename/delete in /manage) do not regenerate the snapshot, so a stale
+// one would keep accepting slugs whose links now 404. When Supabase is
+// unreachable (no credentials, network/auth failure) the snapshot remains the
+// deterministic source of truth and validation falls back to it; a failed
+// check proves nothing, so it never fails on noise. Offline regen:
+// npm run sync:service-area-slugs.
 
 import { existsSync, readFileSync } from 'node:fs';
 
@@ -62,7 +73,7 @@ function loadSnapshotSlugs(snapshotPath) {
 // Returns { slugs: Set<string>, dbAware: boolean }.
 export async function getServiceAreaSlugs(
   staticPages,
-  { snapshotPath = DEFAULT_SNAPSHOT_PATH } = {},
+  { snapshotPath = DEFAULT_SNAPSHOT_PATH, verifyFreshness = false } = {},
 ) {
   const slugs = new Set(staticPages.map((page) => page.slug));
 
@@ -71,14 +82,79 @@ export async function getServiceAreaSlugs(
     return { slugs, dbAware: false };
   }
 
+  let snapshotSlugs;
   try {
-    for (const slug of loadSnapshotSlugs(snapshotPath)) {
-      slugs.add(slug);
-    }
-    return { slugs, dbAware: true };
+    snapshotSlugs = loadSnapshotSlugs(snapshotPath);
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     warnDegraded(`snapshot unreadable: ${message}`);
     return { slugs, dbAware: false };
   }
+
+  // Deliberately outside the try/catch above: a verified-stale snapshot must
+  // FAIL validation, not degrade to the static list with a warning.
+  if (verifyFreshness) {
+    await verifySnapshotFreshness(snapshotSlugs);
+  }
+
+  for (const slug of snapshotSlugs) {
+    slugs.add(slug);
+  }
+  return { slugs, dbAware: true };
+}
+
+// Fails loudly when Supabase is reachable and the live service_areas slugs no
+// longer match the snapshot. Falls back silently when Supabase is unreachable.
+async function verifySnapshotFreshness(snapshotSlugs) {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !key) return; // offline path: the snapshot is the source of truth
+
+  let liveSlugs;
+  try {
+    const { createClient } = await import('@supabase/supabase-js');
+    liveSlugs = await fetchLiveSlugs(createClient(url, key));
+  } catch {
+    return; // unreachable or query failed: a failed check proves nothing
+  }
+
+  const stale =
+    liveSlugs.size !== snapshotSlugs.size ||
+    [...liveSlugs].some((slug) => !snapshotSlugs.has(slug));
+  if (stale) {
+    throw new Error(
+      `${CHECK_NAME}: the checked-in snapshot is STALE — the live service_areas ` +
+        `table no longer matches src/data/serviceAreaSlugs.snapshot.json ` +
+        `(live: ${liveSlugs.size} slug(s), snapshot: ${snapshotSlugs.size}). ` +
+        `Runtime admin changes (add/rename/delete in /manage) do not regenerate ` +
+        `the snapshot automatically. Regenerate with: npm run sync:service-area-slugs`,
+    );
+  }
+}
+
+// Paginated, ordered fetch: the unpaged PostgREST default silently truncates
+// past 1,000 rows, which would make a healthy snapshot look stale.
+async function fetchLiveSlugs(supabase) {
+  const PAGE_SIZE = 1000;
+  const slugs = new Set();
+  let offset = 0;
+  for (;;) {
+    const { data, error } = await supabase
+      .from('service_areas')
+      .select('slug')
+      .order('slug', { ascending: true })
+      .range(offset, offset + PAGE_SIZE - 1);
+    if (error) throw error;
+    if (!Array.isArray(data)) {
+      throw new Error('service_areas returned a non-array payload');
+    }
+    for (const row of data) {
+      if (typeof row?.slug === 'string' && row.slug.length > 0) {
+        slugs.add(row.slug);
+      }
+    }
+    if (data.length < PAGE_SIZE) break;
+    offset += PAGE_SIZE;
+  }
+  return slugs;
 }

@@ -113,6 +113,28 @@ test('warns loud with a named warning when the snapshot is missing', async () =>
   assert.match(warning, /sync:service-area-slugs/);
 });
 
+test('verifyFreshness passes silently on the offline path (no Supabase credentials)', async () => {
+  // Deterministic everywhere: temporarily clear credentials so the freshness
+  // check takes the "unreachable -> fall back to the snapshot" path without
+  // touching the network.
+  const savedUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const savedKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  delete process.env.NEXT_PUBLIC_SUPABASE_URL;
+  delete process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  try {
+    const { slugs, dbAware } = await getServiceAreaSlugs(staticPages, {
+      verifyFreshness: true,
+    });
+
+    assert.equal(dbAware, true, 'snapshot still trusted when Supabase is unreachable');
+    assert.ok(slugs.has('minneapolis'), 'static slug retained');
+    assert.deepEqual(warnings, [], 'no warning on the offline fallback path');
+  } finally {
+    if (savedUrl !== undefined) process.env.NEXT_PUBLIC_SUPABASE_URL = savedUrl;
+    if (savedKey !== undefined) process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = savedKey;
+  }
+});
+
 test('degrades to the static list with a warning when the snapshot is invalid', async () => {
   const snapshotPath = fixtureSnapshot('this is not JSON {{{');
 
