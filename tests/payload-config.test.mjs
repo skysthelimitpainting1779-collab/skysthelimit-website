@@ -143,8 +143,12 @@ test('Payload config strips ssl query params so they cannot weaken verified TLS'
   const previous = {
     secret: process.env.PAYLOAD_SECRET,
     url: process.env.SUPABASE_DB_URL,
+    ca: process.env.SUPABASE_DB_CA,
   };
   process.env.PAYLOAD_SECRET = 'smoke-test-secret';
+  // Hermetic: an ambient SUPABASE_DB_CA would otherwise merge into pool.ssl
+  // and break the deepEqual below.
+  delete process.env.SUPABASE_DB_CA;
   // node-postgres merges parsed connection-string params over explicit pool
   // options, so ?sslmode=no-verify would otherwise replace the enforced
   // `ssl` object with { rejectUnauthorized: false }.
@@ -159,6 +163,8 @@ test('Payload config strips ssl query params so they cannot weaken verified TLS'
     else process.env.PAYLOAD_SECRET = previous.secret;
     if (previous.url === undefined) delete process.env.SUPABASE_DB_URL;
     else process.env.SUPABASE_DB_URL = previous.url;
+    if (previous.ca === undefined) delete process.env.SUPABASE_DB_CA;
+    else process.env.SUPABASE_DB_CA = previous.ca;
   }
 });
 
