@@ -25,6 +25,47 @@ registerHooks({
   },
 });
 
+test('Payload config does not throw during `next build` without PAYLOAD_SECRET', async () => {
+  const previous = {
+    secret: process.env.PAYLOAD_SECRET,
+    phase: process.env.NEXT_PHASE,
+  };
+  delete process.env.PAYLOAD_SECRET;
+  process.env.NEXT_PHASE = 'phase-production-build';
+
+  try {
+    const config = (await import(`${configUrl}?build-phase-no-secret`)).default;
+    assert.equal(config.secret, 'build-time-placeholder-secret-do-not-deploy');
+  } finally {
+    if (previous.secret === undefined) delete process.env.PAYLOAD_SECRET;
+    else process.env.PAYLOAD_SECRET = previous.secret;
+    if (previous.phase === undefined) delete process.env.NEXT_PHASE;
+    else process.env.NEXT_PHASE = previous.phase;
+  }
+});
+
+test('Payload config still fails loudly at runtime without PAYLOAD_SECRET', async () => {
+  const previous = {
+    secret: process.env.PAYLOAD_SECRET,
+    phase: process.env.NEXT_PHASE,
+  };
+  delete process.env.PAYLOAD_SECRET;
+  // Simulate the runtime server process (e.g. `next start`): not a build phase.
+  process.env.NEXT_PHASE = 'phase-production-server';
+
+  try {
+    await assert.rejects(
+      import(`${configUrl}?runtime-phase-no-secret`),
+      /PAYLOAD_SECRET is required\. Set it to a strong, unique value before starting Payload\./,
+    );
+  } finally {
+    if (previous.secret === undefined) delete process.env.PAYLOAD_SECRET;
+    else process.env.PAYLOAD_SECRET = previous.secret;
+    if (previous.phase === undefined) delete process.env.NEXT_PHASE;
+    else process.env.NEXT_PHASE = previous.phase;
+  }
+});
+
 test('Payload config fails fast when PAYLOAD_SECRET is missing', async () => {
   const previousSecret = process.env.PAYLOAD_SECRET;
   delete process.env.PAYLOAD_SECRET;

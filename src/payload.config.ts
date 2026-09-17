@@ -20,8 +20,22 @@ const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 const payloadSecret = process.env.PAYLOAD_SECRET;
 
-if (!payloadSecret) {
+// Build-time guard: `next build` statically collects route data and must import
+// this module even when PAYLOAD_SECRET is absent from the build environment
+// (e.g. Vercel preview). Do not fail the build for that — defer the hard
+// requirement to runtime, where the real secret is actually needed and a missing
+// one fails loudly below.
+const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build';
+
+if (!payloadSecret && !isBuildPhase) {
   throw new Error('PAYLOAD_SECRET is required. Set it to a strong, unique value before starting Payload.');
+}
+
+if (!payloadSecret) {
+  console.warn(
+    '[payload] PAYLOAD_SECRET is not set during `next build` — continuing with a build-only placeholder. ' +
+      'Set PAYLOAD_SECRET in the Vercel environment before deploying; the app will fail at runtime without it.'
+  );
 }
 
 const supabaseCa = process.env.SUPABASE_DB_CA?.replace(/\\n/g, '\n');
@@ -94,7 +108,9 @@ export default buildConfig({
     }),
   ],
 
-  secret: payloadSecret,
+  // Build-only placeholder when PAYLOAD_SECRET is absent during `next build`;
+  // any real runtime load without the secret throws above before reaching this.
+  secret: payloadSecret ?? 'build-time-placeholder-secret-do-not-deploy',
 
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
