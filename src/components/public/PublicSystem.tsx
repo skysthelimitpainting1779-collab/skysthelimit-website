@@ -119,7 +119,7 @@ export function PublicHero({
 }: PublicHeroProps) {
   return (
     <section id={id} data-tone="paper" className="border-b border-border">
-      <div className="mx-auto grid min-h-[min(48rem,calc(100svh-7rem))] max-w-[94rem] lg:grid-cols-[58fr_42fr]">
+      <div className="mx-auto grid min-h-[min(48rem,calc(100svh_-_var(--site-header-height-expanded)))] max-w-[94rem] lg:grid-cols-[58fr_42fr]">
         <div className="public-grid flex flex-col justify-center px-5 py-12 sm:px-8 lg:px-12 lg:py-16 xl:px-16">
           <Badge variant="eyebrow" className="mb-6">
             {BadgeIcon ? <BadgeIcon aria-hidden="true" data-icon="inline-start" /> : null}
