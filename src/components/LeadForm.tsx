@@ -41,6 +41,11 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
   const [uploadProgress, setUploadProgress] = useState('');
   const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
 
+  // Roving tab stop for the toggle groups: tracks the last focused option so
+  // arrow-key focus movement (without selection) keeps a single tab stop.
+  const [focusedMarket, setFocusedMarket] = useState<string | null>(null);
+  const [focusedPropertyType, setFocusedPropertyType] = useState<string | null>(null);
+
   const [formData, setFormData] = useState({
     market: defaultMarket,
     projectType: '',
@@ -195,7 +200,7 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
       case 0:
         return !!formData.name.trim() && !!formData.phone.trim() && !!formData.city.trim();
       case 1:
-        return !!formData.projectType && !!formData.timeline && !!formData.budget && !!formData.notes.trim();
+        return !!formData.market && !!formData.propertyType && !!formData.projectType && !!formData.timeline && !!formData.budget && !!formData.notes.trim();
       case 2:
         return (
           !!formData.name.trim() &&
@@ -216,6 +221,8 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
         if (!formData.city.trim()) return 'City is required.';
         return '';
       case 1:
+        if (!formData.market) return 'Please select a market segment.';
+        if (!formData.propertyType) return 'Please select a property type.';
         if (!formData.projectType) return 'Please select a project type.';
         if (!formData.timeline) return 'Please select a timeline.';
         if (!formData.budget) return 'Please select a budget range.';
@@ -235,7 +242,10 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
   const handleNext = () => {
     if (isStepValid(currentStep)) {
       if (currentStep === 0) {
-        trackEvent('lead_form_start', { source, market: formData.market });
+        // Market segment is chosen on step 1, so the start event carries no
+        // market dimension; per-market attribution comes from the submit
+        // success event, which always includes the chosen market.
+        trackEvent('lead_form_start', { source });
       }
       setDirection(1);
       setCurrentStep((prev) => Math.min(prev + 1, 2));
@@ -383,7 +393,7 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
   const stepTitles = [
     'Personal Verification',
     'Project Specifications',
-    'Location & Segment',
+    'Contact & Address',
   ];
 
   const progressPercent = Math.round(((currentStep + 1) / 3) * 100);
@@ -538,7 +548,7 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
                     className="grid w-full grid-cols-1 sm:grid-cols-3"
                   >
                     {['Residential', 'Commercial', 'Public Sector'].map((option) => (
-                      <ToggleGroupItem key={option} value={option} tabIndex={formData.market === option ? 0 : -1} data-lead-choice className="h-auto min-h-12 whitespace-normal px-3 py-2">
+                      <ToggleGroupItem key={option} value={option} tabIndex={(focusedMarket ?? formData.market) === option ? 0 : -1} onFocus={() => setFocusedMarket(option)} data-lead-choice className="h-auto min-h-12 whitespace-normal px-3 py-2">
                         {option}
                       </ToggleGroupItem>
                     ))}
@@ -563,8 +573,8 @@ export default function LeadForm({ source, defaultMarket = 'Residential', compac
                     spacing={2}
                     className="grid w-full grid-cols-2 sm:grid-cols-3"
                   >
-                    {propertyOptions.map((option, index) => (
-                      <ToggleGroupItem key={option} value={option} tabIndex={formData.propertyType ? (formData.propertyType === option ? 0 : -1) : (index === 0 ? 0 : -1)} data-lead-choice className="h-auto min-h-12 whitespace-normal px-3 py-2">
+                    {propertyOptions.map((option) => (
+                      <ToggleGroupItem key={option} value={option} tabIndex={((focusedPropertyType ?? formData.propertyType) || propertyOptions[0]) === option ? 0 : -1} onFocus={() => setFocusedPropertyType(option)} data-lead-choice className="h-auto min-h-12 whitespace-normal px-3 py-2">
                         {option.split(' / ')[0]}
                       </ToggleGroupItem>
                     ))}
