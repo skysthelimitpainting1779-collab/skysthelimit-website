@@ -8,7 +8,11 @@ import { previewRobotsTag } from './lib/preview-noindex';
  * Next.js proxy (session refresh + portal/admin route protection).
  * Also applies the preview-only X-Robots-Tag header on every response
  * (issue #162) — see config.matcher below.
- * Payload admin routes (/admin/[[...segments]]) are excluded; Payload handles its own auth.
+ * Payload admin routes (/admin/[[...segments]]) intentionally stay matched:
+ * the admin login surface is a public HTML document with no robots
+ * metadata of its own, so the deployment-wide preview noindex policy must
+ * cover it (issue #162); admin routes get the same cheap pass-through
+ * header as other non-session routes.
  */
 
 // Routes that need Supabase session work: everything the proxy matched
@@ -96,14 +100,18 @@ export async function proxy(request: NextRequest) {
 export const config = {
   // Page and document traffic: public pages need the preview noindex
   // header (#162). Negative lookahead (per the Next.js Proxy guide) keeps
-  // the proxy off non-page traffic — API routes, Payload admin, _next
-  // static/image paths, metadata files, and bulky media/static assets —
-  // so multi-megabyte video/image range requests skip the proxy entirely.
-  // Extension exclusions are intentionally narrow: indexable documents
-  // such as .pdf, .txt, and .md stay under the matcher so preview
-  // deployments tag them too (a PDF has no HTML robots-meta fallback).
+  // the proxy off non-page traffic — API routes, _next static/image paths,
+  // metadata files, and bulky media/static assets — so multi-megabyte
+  // video/image range requests skip the proxy entirely. Extension
+  // exclusions are intentionally narrow: indexable documents such as .pdf,
+  // .txt, and .md stay under the matcher so preview deployments tag them
+  // too (a PDF has no HTML robots-meta fallback). /admin stays matched on
+  // purpose: the Payload admin login surface is a public HTML document
+  // with no robots metadata of its own, and the deployment-wide preview
+  // policy must cover it; non-session routes get a cheap pass-through
+  // with the header (no session work).
   // Session work still runs only on portal/auth routes (see isSessionRoute).
   matcher: [
-    '/((?!admin|api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.*\\.(?:mp4|webm|mov|avi|mkv|png|jpe?g|gif|webp|avif|svg|ico|woff2?|ttf|otf|eot|css|js|map)$).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.*\\.(?:mp4|webm|mov|avi|mkv|png|jpe?g|gif|webp|avif|svg|ico|woff2?|ttf|otf|eot|css|js|map)$).*)',
   ],
 };
