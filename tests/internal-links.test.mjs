@@ -3,6 +3,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { test } from 'node:test';
 
 import { areaLandingPages, serviceLandingPages } from '../src/data/landingPages.ts';
+import { getServiceAreaSlugs } from './helpers/service-area-slugs.mjs';
 
 // Contract: every STATIC internal navigation link in the global header and
 // footer must resolve to a known route. "Static" means a string literal in
@@ -68,6 +69,13 @@ function collectStaticInternalLinks(source) {
 // [slug] page module must exist, or the whole section counts as broken: data
 // slugs alone must not keep the test green if the route module is removed,
 // renamed, or moved.
+// The service-areas route serves database-backed slugs first
+// (getServiceAreaPage in the route module queries the service_areas table
+// before falling back to the static list), so the slug set validated here is
+// DB-aware on a best-effort basis: when Supabase credentials are absent, it
+// degrades to the static list with a loud console warning (never silently).
+const { slugs: serviceAreaSlugs } = await getServiceAreaSlugs(areaLandingPages);
+
 const dynamicSections = {
   'painting-services': {
     module: 'src/app/painting-services/[slug]/page.tsx',
@@ -75,7 +83,7 @@ const dynamicSections = {
   },
   'service-areas': {
     module: 'src/app/service-areas/[slug]/page.tsx',
-    slugs: areaLandingPages,
+    slugs: [...serviceAreaSlugs].map((slug) => ({ slug })),
   },
 };
 
