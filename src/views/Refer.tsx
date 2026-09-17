@@ -17,6 +17,7 @@ import { Button } from '@/components/ui/button';
 import { Field, FieldDescription, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { ENV } from '@/lib/env';
+import { phoneHref } from '@/lib/contact';
 import { trackEvent } from '@/lib/analytics';
 
 const referralSteps = [
@@ -55,7 +56,9 @@ export default function ReferPage() {
   };
 
   const shareText = "I used Sky's the Limit Painting for detailed painting work. This referral link applies the current qualifying customer offer:";
-  const smsHref = `sms:?&body=${encodeURIComponent(`${shareText} ${generatedLink}`)}`;
+  // T31 (#284): the former SMS share composer is now the canonical tap-to-call href.
+  // Display text and labels are unchanged.
+  const shareHref = phoneHref;
   const mailHref = `mailto:?subject=${encodeURIComponent('Painting project referral')}&body=${encodeURIComponent(`${shareText}\n\n${generatedLink}`)}`;
 
   return (
@@ -115,7 +118,7 @@ export default function ReferPage() {
                     <FieldDescription aria-live="polite">{copied ? 'Copied to clipboard.' : 'Copy the link or share it directly.'}</FieldDescription>
                   </Field>
                   <Field orientation="responsive">
-                    <PublicCtaLink href={smsHref} variant="outline" icon={MessageSquare} iconPosition="start" track="referral_share_sms" trackPayload={{ email }} className="w-full">
+                    <PublicCtaLink href={shareHref} variant="outline" icon={MessageSquare} iconPosition="start" track="referral_share_sms" trackPayload={{ email }} className="w-full">
                       Send Text
                     </PublicCtaLink>
                     <PublicCtaLink href={mailHref} variant="outline" icon={Mail} iconPosition="start" track="referral_share_email" trackPayload={{ email }} className="w-full">
