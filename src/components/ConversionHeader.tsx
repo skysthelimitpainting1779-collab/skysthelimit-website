@@ -71,7 +71,7 @@ export default function ConversionHeader() {
       <div className="h-20 px-4 sm:px-6 lg:px-8">
         <div className="mx-auto flex h-full max-w-[90rem] items-center justify-between gap-5">
           <Link href="/" className="flex shrink-0 items-center gap-3 leading-none" aria-label="Sky's the Limit Painting LLC home">
-            <Image src="/brand/SkyLLP_BrandLogo.svg" alt="" width={44} height={40} className="h-10 w-11 object-contain" preload />
+            <Image src="/brand/SkyLLP_BrandLogo.svg" alt="" width={44} height={40} className="h-10 w-11 object-contain" />
             <span>
               <span className="block text-lg font-black uppercase tracking-[-0.025em] sm:text-2xl">Sky&apos;s the Limit</span>
               <span className="mt-1 block text-[9px] font-bold uppercase tracking-[0.24em] text-muted-foreground sm:text-[10px]">Painting LLC</span>
