@@ -922,7 +922,7 @@
 
 @media (max-width: 767px) {
   .proof-hero {
-    min-height: calc(100svh - 7rem);
+    min-height: calc(100svh - var(--site-header-height, 124px));
   }
 
   .proof-stage:hover {

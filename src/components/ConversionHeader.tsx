@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -40,6 +40,24 @@ export default function ConversionHeader() {
   // focused call link is never yanked out from under the user on collapse.
   const [stripHasFocus, setStripHasFocus] = useState(false);
   const utilityExpanded = !isScrolled || stripHasFocus;
+  // The header's rendered height varies: the utility strip collapses on scroll
+  // and its labels can wrap on narrow screens. Track the live height so the
+  // layout offset and viewport-filling heroes stay in sync.
+  const headerRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+    const applyHeaderHeight = () => {
+      const height = Math.round(header.getBoundingClientRect().height);
+      document.documentElement.style.setProperty('--site-header-height', `${height}px`);
+    };
+    applyHeaderHeight();
+    if (typeof ResizeObserver === 'undefined') return;
+    const observer = new ResizeObserver(applyHeaderHeight);
+    observer.observe(header);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     setMobileMenuOpen(false);
@@ -61,6 +79,7 @@ export default function ConversionHeader() {
 
   return (
     <header
+      ref={headerRef}
       data-surface="public"
       className="conversion-header public-surface fixed inset-x-0 top-0 z-50 border-b border-border bg-background text-foreground shadow-[0_14px_32px_rgb(7_19_33_/_0.08)] print:static print:shadow-none"
     >
@@ -72,27 +91,31 @@ export default function ConversionHeader() {
           }
         }}
         className={cn(
-          'overflow-hidden border-b px-4 transition-[height,opacity,border-color] duration-200 motion-reduce:transition-none sm:px-6 lg:px-8',
-          utilityExpanded ? 'visible h-auto min-h-11 border-border opacity-100' : 'invisible h-0 border-transparent opacity-0',
+          // Collapse via grid-template-rows: height cannot animate to/from auto,
+          // so the strip content lives in a 1fr->0fr row instead.
+          'grid overflow-hidden border-b px-4 transition-[grid-template-rows,opacity,border-color] duration-200 motion-reduce:transition-none sm:px-6 lg:px-8',
+          utilityExpanded ? 'visible grid-rows-[1fr] border-border opacity-100' : 'invisible grid-rows-[0fr] border-transparent opacity-0',
           // Print always restores the strip (license + phone) regardless of scroll state.
-          'print:visible print:h-auto print:border-border print:opacity-100',
+          'print:visible print:grid-rows-[1fr] print:border-border print:opacity-100',
         )}
       >
-        <div className="mx-auto flex h-full max-w-[90rem] items-center justify-between gap-4 text-[11px] font-bold uppercase tracking-[0.09em]">
-          <div className="flex items-center gap-4">
-            <span className="hidden sm:inline">Twin Cities painting</span>
-            <span>MN Contractor IR816596</span>
-          </div>
-          <div className="flex items-center gap-4">
-            <span className="hidden text-muted-foreground sm:inline">Owner-led / Written scope / Prep first</span>
-            <a
-              href="tel:+16514104196"
-              data-track="call_click"
-              data-track-payload='{"source":"utility_header"}'
-              className="flex min-h-11 items-center py-2 text-xs underline decoration-trust decoration-2 underline-offset-4"
-            >
-              Call / Text 651-410-4196
-            </a>
+        <div className="min-h-0 min-w-0 overflow-hidden">
+          <div className="mx-auto flex min-h-11 max-w-[90rem] items-center justify-between gap-4 text-[11px] font-bold uppercase tracking-[0.09em]">
+            <div className="flex items-center gap-4">
+              <span className="hidden sm:inline">Twin Cities painting</span>
+              <span>MN Contractor IR816596</span>
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="hidden text-muted-foreground sm:inline">Owner-led / Written scope / Prep first</span>
+              <a
+                href="tel:+16514104196"
+                data-track="call_click"
+                data-track-payload='{"source":"utility_header"}'
+                className="flex min-h-11 items-center py-2 text-xs underline decoration-trust decoration-2 underline-offset-4"
+              >
+                Call / Text 651-410-4196
+              </a>
+            </div>
           </div>
         </div>
       </div>
