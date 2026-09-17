@@ -3,11 +3,11 @@
 import { NextResponse } from 'next/server';
 
 export function jsonOk(data: Record<string, unknown> = {}, status = 200) {
-  return NextResponse.json({ ok: true, ...data }, { status });
+  return NextResponse.json({ ...data, ok: true }, { status });
 }
 
 export function jsonError(error: string, status = 400, extra: Record<string, unknown> = {}) {
-  return NextResponse.json({ error, ...extra }, { status });
+  return NextResponse.json({ ...extra, error }, { status });
 }
 
 export function asText(value: unknown): string {
