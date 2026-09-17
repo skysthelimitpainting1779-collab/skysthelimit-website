@@ -4,6 +4,23 @@ import { test } from 'node:test';
 
 const configUrl = new URL('../src/payload.config.ts', import.meta.url).href;
 
+// Explicit mocks for every non-node import of payload.config.ts. Unknown
+// imports fail fast here with a descriptive message instead of a guessed
+// export name, so a new import in the config surfaces as a test-setup problem,
+// not a misleading mock error.
+const localModules = [
+  './collections/payload/Admins',
+  './collections/payload/Services',
+  './collections/payload/ServiceAreas',
+  './collections/payload/Portfolio',
+  './collections/payload/Testimonials',
+  './collections/payload/FAQs',
+  './collections/payload/Media',
+  './collections/payload/crm/Leads',
+  './collections/payload/crm/CrmTasks',
+  './globals/payload/SiteSettings',
+];
+
 registerHooks({
   resolve(specifier, context, nextResolve) {
     if (context.parentURL?.startsWith(configUrl) && !specifier.startsWith('node:') && !['path', 'url'].includes(specifier)) {
@@ -20,7 +37,16 @@ registerHooks({
       '@payloadcms/storage-s3': 'export const s3Storage = value => value;',
       '@payloadcms/richtext-lexical': 'export const lexicalEditor = () => ({});',
     };
-    const source = exports[name] ?? `export const ${name.split('/').at(-1)} = {};`;
+    for (const local of localModules) {
+      exports[local] = `export const ${local.split('/').at(-1)} = {};`;
+    }
+    const source = exports[name];
+    if (!source) {
+      throw new Error(
+        `[payload-config test] no mock defined for import "${name}" from payload.config.ts — ` +
+          'add an explicit entry to the exports map in tests/payload-config.test.mjs'
+      );
+    }
     return { format: 'module', source, shortCircuit: true };
   },
 });
@@ -35,7 +61,10 @@ test('Payload config does not throw during `next build` without PAYLOAD_SECRET',
 
   try {
     const config = (await import(`${configUrl}?build-phase-no-secret`)).default;
-    assert.equal(config.secret, 'build-time-placeholder-secret-do-not-deploy');
+    // Random per-build secret: a string with no forgery value, never a
+    // hardcoded public constant.
+    assert.equal(typeof config.secret, 'string');
+    assert.match(config.secret, /^[0-9a-f]{64}$/);
   } finally {
     if (previous.secret === undefined) delete process.env.PAYLOAD_SECRET;
     else process.env.PAYLOAD_SECRET = previous.secret;
@@ -107,5 +136,50 @@ test('Payload config enables verified TLS for the Postgres pool', async () => {
       if (value === undefined) delete process.env[name];
       else process.env[name] = value;
     }
+  }
+});
+
+test('Payload config strips ssl query params so they cannot weaken verified TLS', async () => {
+  const previous = {
+    secret: process.env.PAYLOAD_SECRET,
+    url: process.env.SUPABASE_DB_URL,
+  };
+  process.env.PAYLOAD_SECRET = 'smoke-test-secret';
+  // node-postgres merges parsed connection-string params over explicit pool
+  // options, so ?sslmode=no-verify would otherwise replace the enforced
+  // `ssl` object with { rejectUnauthorized: false }.
+  process.env.SUPABASE_DB_URL = 'postgresql://user:password@example.supabase.com:6543/postgres?sslmode=no-verify';
+
+  try {
+    const config = (await import(`${configUrl}?ssl-params-stripped`)).default;
+    assert.equal(config.db.pool.connectionString, 'postgresql://user:password@example.supabase.com:6543/postgres');
+    assert.deepEqual(config.db.pool.ssl, { rejectUnauthorized: true });
+  } finally {
+    if (previous.secret === undefined) delete process.env.PAYLOAD_SECRET;
+    else process.env.PAYLOAD_SECRET = previous.secret;
+    if (previous.url === undefined) delete process.env.SUPABASE_DB_URL;
+    else process.env.SUPABASE_DB_URL = previous.url;
+  }
+});
+
+test('Payload config does not demand TLS for the localhost fallback', async () => {
+  const previous = {
+    secret: process.env.PAYLOAD_SECRET,
+    url: process.env.SUPABASE_DB_URL,
+  };
+  process.env.PAYLOAD_SECRET = 'smoke-test-secret';
+  delete process.env.SUPABASE_DB_URL;
+
+  try {
+    const config = (await import(`${configUrl}?localhost-fallback`)).default;
+    assert.equal(config.db.pool.connectionString, 'postgres://localhost:5432/payload_placeholder');
+    // Local dev Postgres is plain TCP — demanding verified TLS here would
+    // break every standard local install.
+    assert.equal(config.db.pool.ssl, undefined);
+  } finally {
+    if (previous.secret === undefined) delete process.env.PAYLOAD_SECRET;
+    else process.env.PAYLOAD_SECRET = previous.secret;
+    if (previous.url === undefined) delete process.env.SUPABASE_DB_URL;
+    else process.env.SUPABASE_DB_URL = previous.url;
   }
 });
