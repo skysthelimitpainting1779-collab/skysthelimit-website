@@ -14,7 +14,7 @@ import {
 } from '@/components/public/PublicSystem';
 import ResponsiveImage from '@/components/ResponsiveImage';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { businessEmail, businessPhone } from '@/lib/contact';
+import { businessEmail, phoneHref } from '@/lib/contact';
 import { breadcrumbSchema, businessSchema } from '@/lib/seo';
 
 const credentials = [
@@ -57,7 +57,7 @@ export default function AboutPage() {
             <PublicCtaLink href="/estimate" size="marketing-lg" track="hero_cta_click" trackPayload={{ source: 'about_hero', label: 'Get a Free Price Range' }}>
               Get a Free Price Range
             </PublicCtaLink>
-            <PublicCtaLink href={`tel:${businessPhone}`} variant="outline" size="marketing-lg" icon={Phone} iconPosition="start" track="call_click" trackPayload={{ source: 'about_hero' }}>
+            <PublicCtaLink href={phoneHref} variant="outline" size="marketing-lg" icon={Phone} iconPosition="start" track="call_click" trackPayload={{ source: 'about_hero' }}>
               Call Anthony
             </PublicCtaLink>
           </>

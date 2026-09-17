@@ -15,12 +15,12 @@ import {
   PublicSplitCard,
 } from '@/components/public/PublicSystem';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { businessEmail, businessPhone, smsPhone } from '@/lib/contact';
+import { businessEmail, businessPhone, phoneHref } from '@/lib/contact';
 import { breadcrumbSchema } from '@/lib/seo';
 
 const channels = [
-  { icon: Phone, label: 'Call Anthony', value: businessPhone, href: `tel:${businessPhone}`, event: 'call_click' },
-  { icon: MessageSquareText, label: 'Text Anthony', value: businessPhone, href: `sms:${smsPhone}`, event: 'text_click' },
+  { icon: Phone, label: 'Call Anthony', value: businessPhone, href: phoneHref, event: 'call_click' },
+  { icon: MessageSquareText, label: 'Text Anthony', value: businessPhone, href: phoneHref, event: 'text_click' },
   { icon: Mail, label: 'Email direct', value: businessEmail, href: `mailto:${businessEmail}`, event: 'lead_mailto_fallback_opened' },
 ] as const;
 
