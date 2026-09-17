@@ -90,9 +90,13 @@ test('remediation guardrails cover secrets, headers, App Router SEO, and accessi
   assert.match(serviceAreaMap, /useReducedMotion/);
   assert.doesNotMatch(serviceAreaMap, /iframe/);
 
-  for (const label of ['Full name', 'Phone', 'Email', 'City', 'Market', 'Project type', 'Timeline', 'Budget range', 'Preferred contact method', 'Project details']) {
+  for (const label of ['Full name', 'Phone', 'Email', 'Market', 'Project type', 'Timeline', 'Budget range', 'Preferred contact method', 'Project details']) {
     assert.match(leadForm, new RegExp(`aria-label="${label}"`));
   }
+
+  // City uses an explicit <label htmlFor> association instead of a redundant aria-label (#282).
+  assert.match(leadForm, /htmlFor="city-input"/);
+  assert.doesNotMatch(leadForm, /aria-label="City"/);
 });
 
 test('local SEO and service landing pages are routable and listed in the sitemap', () => {
