@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated_at": "2026-09-17T06:51:08.407Z",
+  "updated_at": "2026-07-24T18:33:15.372Z",
   "incidents": {
     "d58a0248d6022326": {
       "id": "ERR-20260720-9b47",
@@ -217,52 +217,12 @@
       "healed_at": null,
       "archive": null,
       "last_title": "Synthetic failure dedupe-test-1784917995150"
-    },
-    "87259ad26c3de319": {
-      "id": "ERR-20260917-db30",
-      "fingerprint": "87259ad26c3de319",
-      "title": "Synthetic failure dedupe-test-1789627757029",
-      "category": "general",
-      "severity": "medium",
-      "healable": false,
-      "prevention": "Reproduce with the exact command, fix root cause (see .agents/governance/ROOT_CAUSE.md), add a regression test when durable, then re-run verify chain.",
-      "area": "test",
-      "command": "node -e \"process.exit(1)\"",
-      "snippet": "unique-marker-dedupe-test-1789627757029 boom",
-      "count": 2,
-      "status": "open",
-      "first_seen": "2026-09-17T06:49:19.207Z",
-      "last_seen": "2026-09-17T06:49:21.430Z",
-      "heal_attempts": 0,
-      "healed_at": null,
-      "archive": null,
-      "last_title": "Synthetic failure dedupe-test-1789627757029"
-    },
-    "7ba67a02a76f30ce": {
-      "id": "ERR-20260917-e635",
-      "fingerprint": "7ba67a02a76f30ce",
-      "title": "Synthetic failure dedupe-test-1789627866011",
-      "category": "general",
-      "severity": "medium",
-      "healable": false,
-      "prevention": "Reproduce with the exact command, fix root cause (see .agents/governance/ROOT_CAUSE.md), add a regression test when durable, then re-run verify chain.",
-      "area": "test",
-      "command": "node -e \"process.exit(1)\"",
-      "snippet": "unique-marker-dedupe-test-1789627866011 boom",
-      "count": 2,
-      "status": "open",
-      "first_seen": "2026-09-17T06:51:07.082Z",
-      "last_seen": "2026-09-17T06:51:08.406Z",
-      "heal_attempts": 0,
-      "healed_at": null,
-      "archive": null,
-      "last_title": "Synthetic failure dedupe-test-1789627866011"
     }
   },
   "stats": {
-    "total_records": 22,
-    "unique_fingerprints": 12,
+    "total_records": 18,
+    "unique_fingerprints": 10,
     "auto_heals": 0,
-    "duplicates_suppressed": 10
+    "duplicates_suppressed": 8
   }
 }
