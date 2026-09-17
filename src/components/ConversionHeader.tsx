@@ -42,15 +42,23 @@ export default function ConversionHeader() {
   const utilityExpanded = !isScrolled || stripHasFocus;
   // The header's rendered height varies: the utility strip collapses on scroll
   // and its labels can wrap on narrow screens. Track the live height so the
-  // layout offset and viewport-filling heroes stay in sync.
+  // layout offset stays in sync, and track the expanded (top-of-page) height
+  // separately so viewport-filling heroes size from a stable baseline
+  // instead of reflowing when the header collapses on scroll.
   const headerRef = useRef<HTMLElement | null>(null);
+  const utilityExpandedRef = useRef(utilityExpanded);
+  utilityExpandedRef.current = utilityExpanded;
 
   useEffect(() => {
     const header = headerRef.current;
     if (!header) return;
     const applyHeaderHeight = () => {
       const height = Math.round(header.getBoundingClientRect().height);
-      document.documentElement.style.setProperty('--site-header-height', `${height}px`);
+      const root = document.documentElement;
+      root.style.setProperty('--site-header-height', `${height}px`);
+      if (utilityExpandedRef.current) {
+        root.style.setProperty('--site-header-height-expanded', `${height}px`);
+      }
     };
     applyHeaderHeight();
     if (typeof ResizeObserver === 'undefined') return;
