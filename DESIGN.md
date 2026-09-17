@@ -150,7 +150,7 @@ Public content is contained at approximately 92–94rem. Major sections use rule
 
 The five-stage ledger remains a single horizontal record on wide layouts and may horizontally scroll when preserving its sequence is clearer than wrapping. Preparation, accountability, FAQ, and conversion sections stack at narrow widths. Do not force desktop asymmetry into unreadably narrow columns.
 
-The fixed header is 112px tall: 32px utility row plus 80px primary row. Mobile reserves bottom space for a fixed three-column rail: Call and Text are equal smaller actions; Get a Free Price Range receives the largest orange column. Controls must remain at least 44px high; principal actions are 48–56px.
+The fixed header is 124px tall: 44px utility row plus 80px primary row. The utility row collapses after 100px of scroll, leaving a 64px header. Mobile reserves bottom space for a fixed three-column rail: Call and Text are equal smaller actions; Get a Free Price Range receives the largest orange column. Controls must remain at least 44px high; principal actions are 48–56px.
 
 **The Shared-Rule Rule.** Adjacent blocks meet on one rule. Avoid card gaps, detached shadows, or rounded tiles when a ledger row or ruled split communicates the relationship better.
 

@@ -73,7 +73,7 @@ export default function ConversionHeader() {
         }}
         className={cn(
           'overflow-hidden border-b px-4 transition-[height,opacity,border-color] duration-200 motion-reduce:transition-none sm:px-6 lg:px-8',
-          utilityExpanded ? 'visible h-11 border-border opacity-100' : 'invisible h-0 border-transparent opacity-0',
+          utilityExpanded ? 'visible h-auto min-h-11 border-border opacity-100' : 'invisible h-0 border-transparent opacity-0',
           // Print always restores the strip (license + phone) regardless of scroll state.
           'print:visible print:h-auto print:border-border print:opacity-100',
         )}
