@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { Camera, ClipboardCheck, PaintRoller, Phone, ShieldCheck } from 'lucide-react';
 
 import JsonLd from '@/components/JsonLd';
@@ -96,6 +97,16 @@ export default function AboutPage() {
         <PublicContainer>
           <PublicSectionHeading eyebrow="Credentials and coverage" title="Trade discipline you can verify." />
           <div className="mt-12"><PublicFeatureGrid items={credentials} columns={4} /></div>
+          <p className="mt-8 text-sm text-muted-foreground">
+            For bids and procurement, read our{' '}
+            <Link
+              href="/documents/skys-the-limit-capabilities-statement.pdf"
+              className="font-semibold text-foreground underline decoration-trust underline-offset-4 hover:text-trust"
+            >
+              capabilities statement (PDF)
+            </Link>
+            .
+          </p>
         </PublicContainer>
       </PublicSection>
 
