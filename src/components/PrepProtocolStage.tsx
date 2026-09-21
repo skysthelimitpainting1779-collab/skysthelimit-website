@@ -85,7 +85,7 @@ export default function PrepProtocolStage() {
           </div>
         </div>
 
-        <div className="relative min-h-[38rem] overflow-hidden bg-[#0254C3] lg:min-h-[48rem]">
+        <div className="relative aspect-[4/3] min-h-[38rem] min-w-0 overflow-hidden bg-[#0254C3] lg:min-h-[48rem]">
           <Image
             key={active.image}
             src={active.image}

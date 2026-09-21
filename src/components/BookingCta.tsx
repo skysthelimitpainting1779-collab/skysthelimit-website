@@ -3,7 +3,7 @@ import { CalendarClock, Phone } from 'lucide-react';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
-import { businessPhone } from '../lib/contact';
+import { phoneHref } from '../lib/contact';
 import { ENV } from '../lib/env';
 
 interface BookingCtaProps {
@@ -43,7 +43,7 @@ export default function BookingCta({ audience = 'homeowner', className = '' }: B
 
   return (
     <a
-      href={`tel:${businessPhone}`}
+      href={phoneHref}
       data-track="booking_click"
       data-track-payload={JSON.stringify({ audience, fallback: 'phone' })}
       className={cn(buttonVariants({ variant: 'outline', size: 'marketing-lg' }), className)}
