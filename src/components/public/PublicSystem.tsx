@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
+import { phoneHref } from '@/lib/contact';
 
 type Tone = 'paper' | 'soft' | 'ink' | 'trust';
 type CtaVariant = 'default' | 'outline' | 'trust' | 'inverse' | 'secondary';
@@ -87,7 +88,8 @@ export function PublicCtaLink({
     </>
   );
 
-  if (download || href.startsWith('tel:') || href.startsWith('sms:') || href.startsWith('mailto:')) {
+  // Tap-to-call detection keys off the canonical E.164 href constant (T31).
+  if (download || href.startsWith(phoneHref) || href.startsWith('mailto:')) {
     return <a href={href} download={download || undefined} {...sharedProps}>{content}</a>;
   }
 

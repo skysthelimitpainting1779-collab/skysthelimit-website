@@ -10,7 +10,7 @@ import {
   PublicSection,
   PublicSectionHeading,
 } from '@/components/public/PublicSystem';
-import { businessPhone } from '@/lib/contact';
+import { phoneHref } from '@/lib/contact';
 
 const proofItems = [
   {
@@ -56,7 +56,7 @@ export default function ConversionFooterCta() {
                 Get a Free Price Range
               </PublicCtaLink>
               <PublicCtaLink
-                href={`tel:${businessPhone}`}
+                href={phoneHref}
                 variant="outline"
                 size="marketing-lg"
                 icon={Phone}

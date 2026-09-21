@@ -18,7 +18,7 @@ import {
 import ResponsiveImage from '@/components/ResponsiveImage';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { marketBySlug, type MarketSlug } from '@/data/markets';
-import { businessPhone } from '@/lib/contact';
+import { phoneHref } from '@/lib/contact';
 import { breadcrumbSchema, serviceSchema } from '@/lib/seo';
 
 interface MarketPageProps {
@@ -61,7 +61,7 @@ export default function MarketPage({ slug }: MarketPageProps) {
               Get a Free Price Range
             </PublicCtaLink>
             <PublicCtaLink
-              href={`tel:${businessPhone}`}
+              href={phoneHref}
               variant="outline"
               icon={Phone}
               iconPosition="start"
