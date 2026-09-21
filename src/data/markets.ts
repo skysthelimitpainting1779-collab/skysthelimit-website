@@ -66,7 +66,7 @@ export const markets: Market[] = [
       { title: 'Review And Clean', body: 'Walk the work, clean the area, and confirm the details before wrapping the job.' },
     ],
     cta: 'Plan A Residential Project',
-    metaTitle: 'House Painters, Twin Cities',
+    metaTitle: 'House Painters, Twin Cities | Sky’s the Limit Painting',
     metaDescription:
       'Twin Cities house painters for interiors, exteriors, cabinets, and drywall — one owner, one written scope. Free estimates.',
   },
@@ -107,7 +107,7 @@ export const markets: Market[] = [
       { title: 'Close The Loop', body: 'Review completion items, cleanup, touchups, and any documentation needed for the job record.' },
     ],
     cta: 'Discuss A Commercial Job',
-    metaTitle: 'Who We Serve: Commercial Properties',
+    metaTitle: 'Who We Serve: Commercial Properties | Sky’s the Limit Painting',
     metaDescription:
       'Who Sky’s the Limit works with: Twin Cities shops, offices, HOAs, churches, and multi-family properties. See our commercial painting services and project approach.',
     resourceLinks: [
@@ -151,7 +151,7 @@ export const markets: Market[] = [
       { title: 'Verify Completion', body: 'Confirm visible finish, cleanup, punch items, photos, and documentation requested for qualified opportunities.' },
     ],
     cta: 'Discuss Public-Sector Readiness',
-    metaTitle: 'Public Sector Painting Opportunities',
+    metaTitle: 'Public Sector Painting Opportunities | Sky’s the Limit Painting',
     metaDescription:
       'Sky’s the Limit Painting is preparing to compete for Minnesota city, county, and state painting, facility, striping, and pavement-marking opportunities.',
     resourceLinks: [
