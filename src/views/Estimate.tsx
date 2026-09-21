@@ -1,6 +1,7 @@
 'use client';
 
 import { type FormEvent, useMemo, useState } from 'react';
+import Link from 'next/link';
 import { Bot, Calculator, CheckCircle2, Loader2, Mail, ShieldCheck } from 'lucide-react';
 
 import RangeSlider from '@/components/RangeSlider';
@@ -198,6 +199,23 @@ export default function EstimatePage() {
             title="Twin Cities Room Painting Cost Calculator"
             description="Get a useful price range in about one minute. Answer the surface questions first; contact details are requested only after the planning range is visible."
           />
+          <p className="mt-6 text-sm text-muted-foreground">
+            Researching a project? Start with our{' '}
+            <Link
+              href="/residential"
+              className="font-semibold text-foreground underline decoration-trust underline-offset-4 hover:text-trust"
+            >
+              residential painting services
+            </Link>{' '}
+            or read about{' '}
+            <Link
+              href="/painting-services/interior-painting"
+              className="font-semibold text-foreground underline decoration-trust underline-offset-4 hover:text-trust"
+            >
+              interior painting costs
+            </Link>
+            .
+          </p>
 
           <Card variant="panel" className="mt-10 overflow-hidden">
             <CardHeader className="border-b border-border">

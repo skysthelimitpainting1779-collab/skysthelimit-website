@@ -31,6 +31,10 @@ const defaultServiceAreasSlugs = [
   'woodbury',
   'minneapolis',
   'twin-cities',
+  'bloomington',
+  'eden-prairie',
+  'edina',
+  'maple-grove',
 ];
 
 const defaultPaintingServicesSlugs = [
@@ -42,6 +46,7 @@ const defaultPaintingServicesSlugs = [
   'deck-fence-staining',
   'parking-lot-striping',
   'pavement-marking',
+  'ada-parking-lot-striping',
 ];
 
 async function generateSitemap() {
