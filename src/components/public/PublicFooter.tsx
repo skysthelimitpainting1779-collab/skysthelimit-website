@@ -45,6 +45,7 @@ const columns = [
       ['/refer', 'Referral Program'],
       ['/review', 'Google Review Funnel'],
       ['/contact', 'Get an Estimate'],
+      ['/faq', 'FAQ'],
     ],
   },
 ] as const;
