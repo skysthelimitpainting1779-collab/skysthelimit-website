@@ -11,6 +11,7 @@ import JsonLd from '../components/JsonLd';
 import MobileConversionRail from '../components/public/MobileConversionRail';
 import PublicFooter from '../components/public/PublicFooter';
 import VercelInsights from '../components/VercelInsights';
+import VoiceAgentWidget from '../components/voice/VoiceAgentWidget';
 import { ENV } from '../lib/env';
 import { cn } from '../lib/utils';
 
@@ -201,6 +202,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </Suspense>
           <PublicFooter year={currentYear} />
         </div>
+        <VoiceAgentWidget />
         <VercelInsights />
       </body>
     </html>
