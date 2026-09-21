@@ -202,7 +202,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </Suspense>
           <PublicFooter year={currentYear} />
         </div>
-        <VoiceAgentWidget />
+        <Suspense fallback={null}>
+          <VoiceAgentWidget />
+        </Suspense>
         <VercelInsights />
       </body>
     </html>

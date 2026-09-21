@@ -38,7 +38,13 @@ export default function VoiceAgentWidget() {
       document.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = '';
     };
-  }, [open ]);
+  }, [open]);
+
+  // Release body scroll lock + close the dialog on route change.
+  useEffect(() => {
+    setOpen(false);
+    document.body.style.overflow = '';
+  }, [pathname]);
 
   if (isInternalRoute) return null;
 
@@ -95,7 +101,7 @@ export default function VoiceAgentWidget() {
             <iframe
               src={ORB_URL}
               title="Sky voice assistant"
-              allow="microphone; autoplay; camera"
+              allow="microphone; autoplay"
               className="h-full w-full border-0"
             />
           </div>
