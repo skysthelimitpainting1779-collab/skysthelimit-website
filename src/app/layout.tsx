@@ -66,7 +66,7 @@ const displayFont = Barlow_Condensed({
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Twin Cities Painting Contractor | Sky's the Limit Painting LLC",
+    default: "Twin Cities Painting Contractor | Sky's the Limit Painting",
     template: "%s | Sky's the Limit Painting",
   },
   description:
@@ -189,7 +189,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <ConversionHeader />
           </Suspense>
 
-          <main id="main-content" className="flex-grow pt-[112px] pb-24 md:pb-0">
+          <main id="main-content" className="flex-grow pt-[var(--site-header-height-expanded)] pb-24 md:pb-0">
             {children}
           </main>
 

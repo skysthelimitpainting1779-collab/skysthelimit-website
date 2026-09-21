@@ -5,8 +5,12 @@ import { ArrowDownRight, ArrowRight, ArrowUpRight, Check, ShieldCheck } from 'lu
 import LeadForm from '../components/LeadForm';
 import PrepProtocolStage from '../components/PrepProtocolStage';
 import ResponsiveImage from '../components/ResponsiveImage';
+import ReviewsSection from '../components/ReviewsSection';
 import { PublicCtaLink, PublicPage } from '../components/public/PublicSystem';
 import { faqSchema } from '../lib/seo';
+
+// Pre-generated hero variants live in public/images/site/ and are referenced
+// directly (see the hero <img> below).
 
 const stageLedger = [
   ['01', 'Protect', 'Cover, mask, and safeguard the property before preparation begins.'],
@@ -43,14 +47,22 @@ export default function HomeClient() {
     <PublicPage className="proof-surface overflow-hidden bg-[#071321]">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema([...faqItems])) }} />
 
-      <section aria-labelledby="home-title" className="proof-hero relative isolate min-h-[calc(100svh-7rem)] overflow-hidden bg-[#071321] text-[#F6F3EB]">
-        <ResponsiveImage
-          src="/images/site/proof-in-the-prep-tape-material.webp"
+      <section aria-labelledby="home-title" className="proof-hero relative isolate min-h-[calc(100svh_-_var(--site-header-height-expanded))] overflow-hidden bg-[#071321] text-[#F6F3EB]">
+        <link
+          rel="preload"
+          as="image"
+          imageSrcSet="/images/site/proof-in-the-prep-tape-material-640.webp 640w, /images/site/proof-in-the-prep-tape-material-828.webp 828w, /images/site/proof-in-the-prep-tape-material-1280.webp 1280w, /images/site/proof-in-the-prep-tape-material-1920.webp 1920w"
+          imageSizes="100vw"
+          fetchPriority="high"
+        />
+        <img
+          src="/images/site/proof-in-the-prep-tape-material-1280.webp"
+          srcSet="/images/site/proof-in-the-prep-tape-material-640.webp 640w, /images/site/proof-in-the-prep-tape-material-828.webp 828w, /images/site/proof-in-the-prep-tape-material-1280.webp 1280w, /images/site/proof-in-the-prep-tape-material-1920.webp 1920w"
+          sizes="100vw"
           alt=""
           width={1920}
           height={1080}
-          sizes="100vw"
-          priority
+          decoding="async"
           fetchPriority="high"
           className="absolute inset-0 h-full w-full object-cover object-center"
         />
@@ -58,7 +70,7 @@ export default function HomeClient() {
         <div aria-hidden="true" className="proof-hero-grain absolute inset-0" />
         <div aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-white/30" />
 
-        <div className="relative mx-auto flex min-h-[calc(100svh-7rem)] max-w-[96rem] flex-col justify-between px-5 py-8 sm:px-8 sm:py-10 lg:px-12 lg:py-12 xl:px-16">
+        <div className="relative mx-auto flex min-h-[calc(100svh_-_var(--site-header-height-expanded))] max-w-[96rem] flex-col justify-between px-5 py-8 sm:px-8 sm:py-10 lg:px-12 lg:py-12 xl:px-16">
           <div className="flex items-center justify-between gap-6 text-[0.7rem] font-black uppercase tracking-[0.18em] text-[#DDEBFA]">
             <span>Twin Cities painting</span>
             <span className="hidden sm:block">Owner-led from walkthrough to final detail</span>
@@ -246,6 +258,8 @@ export default function HomeClient() {
           </div>
         </div>
       </section>
+
+      <ReviewsSection />
 
       <section id="walkthrough" aria-labelledby="walkthrough-title" className="relative overflow-hidden bg-[#0254C3] text-[#F6F3EB]">
         <div aria-hidden="true" className="proof-walkthrough-lines absolute inset-0" />

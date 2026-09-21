@@ -4,7 +4,7 @@ import HomeClient from './HomeClient';
 export const metadata: Metadata = {
   title: 'Twin Cities Painting Contractor',
   description:
-    'Owner-operated Twin Cities painter for interior, exterior, cabinet, commercial, and pavement-marking projects. Prep-first scopes and free estimates.',
+    'Twin Cities painting contractor for homes, offices, and parking lots. Owner-led, one written scope, crisp lines. Free estimates.',
   alternates: {
     canonical: "https://www.skysthelimitpaintingllc.com",
   },

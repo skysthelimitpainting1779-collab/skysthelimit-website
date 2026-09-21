@@ -45,6 +45,7 @@ const columns = [
       ['/refer', 'Referral Program'],
       ['/review', 'Google Review Funnel'],
       ['/contact', 'Get an Estimate'],
+      ['/faq', 'FAQ'],
     ],
   },
 ] as const;
@@ -62,10 +63,10 @@ export default function PublicFooter({ year }: { year: string }) {
                 Fully insured, owner-operated painting across the Twin Cities Metro. Registered Minnesota Specialty Contractor IR816596.
               </p>
               <div className="mt-7 grid gap-2">
-                <a href="tel:+16514104196" data-track="call_click" data-track-payload='{"source":"footer"}' className="text-xl font-bold text-foreground hover:text-primary">
+                <a href="tel:+16514104196" data-track="call_click" data-track-payload='{"source":"footer"}' className="flex min-h-11 items-center py-2.5 text-xl font-bold text-foreground hover:text-primary">
                   651-410-4196
                 </a>
-                <a href="mailto:skysthelimitpainting1779@gmail.com" className="break-all text-muted-foreground hover:text-foreground">
+                <a href="mailto:skysthelimitpainting1779@gmail.com" className="flex min-h-11 items-center break-all py-2.5 text-muted-foreground hover:text-foreground">
                   skysthelimitpainting1779@gmail.com
                 </a>
               </div>
@@ -77,7 +78,7 @@ export default function PublicFooter({ year }: { year: string }) {
                 <h3 className="text-sm font-bold uppercase tracking-[0.12em] text-foreground">{column.title}</h3>
                 <nav className="mt-6 flex flex-col gap-3 text-sm text-muted-foreground" aria-label={`${column.title} links`}>
                   {column.links.map(([href, label]) => (
-                    <Link key={href} href={href} className="hover:text-foreground">{label}</Link>
+                    <Link key={href} href={href} className="flex min-h-11 items-center py-2.5 hover:text-foreground">{label}</Link>
                   ))}
                 </nav>
               </div>
@@ -89,8 +90,8 @@ export default function PublicFooter({ year }: { year: string }) {
             <div className="grid gap-2">
               <p>&copy; {year} Sky&apos;s the Limit Painting LLC. All rights reserved.</p>
               <div className="flex gap-4">
-                <Link href="/privacy" className="hover:text-foreground">Privacy Policy</Link>
-                <Link href="/terms" className="hover:text-foreground">Terms of Service</Link>
+                <Link href="/privacy" className="inline-flex min-h-11 items-center py-2.5 hover:text-foreground">Privacy Policy</Link>
+                <Link href="/terms" className="inline-flex min-h-11 items-center py-2.5 hover:text-foreground">Terms of Service</Link>
               </div>
             </div>
             <p className="max-w-2xl md:text-right">
