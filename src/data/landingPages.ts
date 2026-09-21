@@ -68,7 +68,7 @@ export const areaLandingPages: LandingPage[] = [
         heading: 'Parking Lot Striping in Inver Grove Heights',
         eyebrow: 'The lot',
         body: [
-          'We run a pavement-marking operation right from our home base in Inver Grove Heights: re-stripes, ADA-compliant stalls and access aisles, fire lanes, arrows, and crosswalks. Free walkthrough, written quote, and one crew that can take the building and the lot in the same visit.',
+          'We run a pavement-marking operation right from our home base in Inver Grove Heights: re-stripes, ADA stalls and access aisles, fire lanes, arrows, and crosswalks. Free walkthrough, written quote, and one contractor that can take the building and the lot in the same visit.',
         ],
         links: [
           { text: 'parking lot striping in Inver Grove Heights', href: '/painting-services/parking-lot-striping' },
@@ -182,7 +182,7 @@ export const areaLandingPages: LandingPage[] = [
         heading: 'Parking Lot Striping in Eagan',
         eyebrow: 'The lot',
         body: [
-          'Eagan’s corporate and retail corridors need striping that keeps up with heavy traffic and hard winters. We re-stripe stalls, ADA layouts, fire lanes, and crosswalks — free walkthrough, written quote, one crew for the building and the lot.',
+          'Eagan’s corporate and retail corridors need striping that keeps up with heavy traffic and hard winters. We re-stripe stalls, ADA layouts, fire lanes, and crosswalks — free walkthrough, written quote, one contractor for the building and the lot.',
         ],
         links: [
           { text: 'parking lot striping in Eagan', href: '/painting-services/parking-lot-striping' },
@@ -296,7 +296,7 @@ export const areaLandingPages: LandingPage[] = [
         heading: 'Parking Lot Striping Across the Twin Cities',
         eyebrow: 'The lot',
         body: [
-          'Every suburb page on this site feeds the same striping operation: re-stripes, ADA-compliant stalls and access aisles, fire lanes, and crosswalks across the Minneapolis–St. Paul metro. One crew, one schedule, and a free walkthrough before anything is quoted.',
+          'Every suburb page on this site feeds the same striping operation: re-stripes, ADA stalls and access aisles, fire lanes, and crosswalks across the Minneapolis–St. Paul metro. One contractor, one schedule, and a free walkthrough before anything is quoted.',
         ],
         links: [
           { text: 'parking lot striping in the Twin Cities', href: '/painting-services/parking-lot-striping' },
@@ -316,14 +316,14 @@ export const areaLandingPages: LandingPage[] = [
       'Sky’s the Limit Painting LLC serves Bloomington with residential painting, commercial painting, and parking lot striping. Based in Inver Grove Heights, working the whole south metro.',
     metaTitle: 'Bloomington Painting Contractor',
     metaDescription:
-      'House painting, commercial painting & parking lot striping in Bloomington, MN. Local crew, free estimates. Call 651-410-4196.',
+      'House painting, commercial painting & parking lot striping in Bloomington, MN. Owner-operated, free estimates. Call 651-410-4196.',
     image: '/brand/generated/sky-local-authority.webp',
     accent: 'South metro local',
     market: 'Residential',
     proof: [
       'Based in Inver Grove Heights, serving Bloomington',
       'Owner-led project communication',
-      'Residential, commercial, and striping under one crew',
+      'Residential, commercial, and striping from one owner-led operation',
       'Free walkthroughs, written quotes',
     ],
     scope: [
@@ -356,7 +356,7 @@ export const areaLandingPages: LandingPage[] = [
         body: [
           'Most of our Bloomington residential work falls into three buckets. Exterior repaints — siding, trim, soffits, and decks — prepped the way Minnesota weather demands: scrape, prime, caulk, then topcoat with exterior-grade paint built for freeze-thaw cycles.',
           'Interior repaints run year-round: whole homes, single rooms, and basements. Winter is our busiest interior season in the Twin Cities, and we schedule around your household, not the other way around.',
-          'Cabinet painting is the full kitchen refinish without the full remodel price. We spray-shop the doors and drawers for a factory-smooth finish and finish the boxes in place.',
+          'Cabinet painting is the full kitchen refinish without the full remodel price. We spray the doors and drawers for a factory-smooth finish and finish the boxes in place.',
           'Every residential job starts with a walkthrough and a written quote — what is included, what is prepped, what paint goes where. No allowance-line games.',
         ],
         links: [
@@ -381,8 +381,8 @@ export const areaLandingPages: LandingPage[] = [
         heading: 'Parking Lot Striping and Pavement Marking in Bloomington',
         eyebrow: 'The lot',
         body: [
-          'We are a painting contractor in the south metro that also runs a pavement-marking operation: re-stripes, ADA-compliant stalls and access aisles, fire lanes, arrows, crosswalks, and full new-lot layouts. In Bloomington that matters — retail and office lots take a beating from snowplows every winter, and faded lines are a liability problem, not just a cosmetic one.',
-          'We do the same free walkthrough on lots that we do on buildings: measure the stalls, check your ADA layout against the current configuration, and give you a written number for the work. If the same property also needs the building painted, one crew schedules both — no coordinating a painter and a striping company separately.',
+          'We are a painting contractor in the south metro that also runs a pavement-marking operation: re-stripes, ADA stalls and access aisles, fire lanes, arrows, crosswalks, and full new-lot layouts. In Bloomington that matters — retail and office lots take a beating from snowplows every winter, and faded lines are a liability problem, not just a cosmetic one.',
+          'We do the same free walkthrough on lots that we do on buildings: measure the stalls, check your ADA layout against the current configuration, and give you a written number for the work. If the same property also needs the building painted, one contractor schedules both — no coordinating a painter and a striping company separately.',
         ],
         links: [
           { text: 'parking lot striping in Bloomington', href: '/painting-services/parking-lot-striping' },
@@ -448,10 +448,10 @@ export const areaLandingPages: LandingPage[] = [
     eyebrow: 'West metro / corporate corridor',
     headline: 'Commercial-grade painting for Eden Prairie offices, business parks, and family homes.',
     description:
-      'Sky’s the Limit Painting LLC serves Eden Prairie with commercial painting, parking lot striping, and residential painting. After-hours scheduling, phased multi-tenant work, and one crew for the building and the lot.',
+      'Sky’s the Limit Painting LLC serves Eden Prairie with commercial painting, parking lot striping, and residential painting. After-hours scheduling, phased multi-tenant work, and one contractor for the building and the lot.',
     metaTitle: 'Eden Prairie Painting Contractor',
     metaDescription:
-      'House painting, commercial painting & parking lot striping in Eden Prairie, MN. Local crew, free estimates. Call 651-410-4196.',
+      'House painting, commercial painting & parking lot striping in Eden Prairie, MN. Owner-operated, free estimates. Call 651-410-4196.',
     image: '/brand/generated/sky-local-authority.webp',
     accent: 'West metro local',
     market: 'Commercial',
@@ -482,7 +482,7 @@ export const areaLandingPages: LandingPage[] = [
         body: [
           'Sky’s the Limit Painting serves Eden Prairie neighborhoods and the 494/169 corridor with commercial painting, parking lot striping, and residential painting. We are a local, owner-run crew, and this page reads the way we actually work here: written for the facilities manager and the property manager first, the homeowner second.',
           'Eden Prairie is where the Twin Cities’ corporate corridor lives — business parks, corporate offices, and retail centers that need painters who plan like contractors, not handymen. After-hours and weekend scheduling is the default here, not the exception. Multi-tenant properties get phased work: floor by floor or suite by suite, so tenants stay put and operations never stop.',
-          'And when the same property needs its lot re-striped, one crew does both. Tell us your operating hours at the walkthrough and we build the schedule around them — in writing.',
+          'And when the same property needs its lot re-striped, one contractor does both. Tell us your operating hours at the walkthrough and we build the schedule around them — in writing.',
         ],
       },
       {
@@ -516,7 +516,7 @@ export const areaLandingPages: LandingPage[] = [
         heading: 'Parking Lot Striping and Pavement Marking in Eden Prairie',
         eyebrow: 'The lot',
         body: [
-          'Corporate and retail lots in Eden Prairie restripe on a cycle — plows, salt, and traffic wear lines down every winter. We run the full operation: re-stripes, ADA-compliant stalls and access aisles, fire lanes, arrows, crosswalks, and new-lot layouts chalked from your site plan.',
+          'Corporate and retail lots in Eden Prairie restripe on a cycle — plows, salt, and traffic wear lines down every winter. We run the full operation: re-stripes, ADA stalls and access aisles, fire lanes, arrows, crosswalks, and new-lot layouts chalked from your site plan.',
           'The walkthrough is free: we measure the stalls, check your ADA layout against the current configuration, and give you a written number. One crew can schedule the building and the lot together — no coordinating a painter and a striping company separately.',
         ],
         links: [
@@ -586,14 +586,14 @@ export const areaLandingPages: LandingPage[] = [
       'Sky’s the Limit Painting LLC serves Edina with whole-home repaints, exterior refreshes, cabinet refinishing, and commercial painting. Spray-shop cabinet doors, careful prep on mature exteriors, and written quotes that itemize what matters on a high-end job.',
     metaTitle: 'Edina Painting Contractor',
     metaDescription:
-      'House painting, commercial painting & parking lot striping in Edina, MN. Local crew, free estimates. Call 651-410-4196.',
+      'House painting, commercial painting & parking lot striping in Edina, MN. Owner-operated, free estimates. Call 651-410-4196.',
     image: '/brand/generated/sky-local-authority.webp',
     accent: 'West metro local',
     market: 'Residential',
     proof: [
       'Based in Inver Grove Heights, serving Edina',
       'Owner-led project communication',
-      'Finish-quality positioning: spray-shop cabinet doors',
+      'Finish-quality positioning: sprayed cabinet doors',
       'Written, itemized quotes on every job',
     ],
     scope: [
@@ -616,7 +616,7 @@ export const areaLandingPages: LandingPage[] = [
         eyebrow: 'Why Edina',
         body: [
           'Sky’s the Limit Painting serves Edina neighborhoods with residential painting — whole-home repaints, exterior refreshes, and cabinet refinishing — plus commercial painting and parking lot striping. We are a local, owner-run crew, and the work we do in Edina is finish-quality work: the prep shows in the final coat.',
-          'Edina’s housing stock rewards care. Mature exteriors need proper scraping, priming, and caulking before a topcoat earns its keep through another decade of freeze-thaw. Interiors get the protection treatment: floors covered, fixtures masked, and clean lines at every edge. And cabinet refinishing gets spray-shop doors and drawers, so the kitchen reads like a remodel without the remodel price.',
+          'Edina’s housing stock rewards care. Mature exteriors need proper scraping, priming, and caulking before a topcoat earns its keep through another decade of freeze-thaw. Interiors get the protection treatment: floors covered, fixtures masked, and clean lines at every edge. And cabinet refinishing gets sprayed doors and drawers, so the kitchen reads like a remodel without the remodel price.',
           'Call or text 651-410-4196 for a free estimate. We walk the job with you and give you a straight, written number.',
         ],
       },
@@ -640,7 +640,7 @@ export const areaLandingPages: LandingPage[] = [
         eyebrow: 'Businesses',
         body: [
           'Small offices, retail spaces, and professional suites in Edina need the same finish quality as the homes around them. We schedule around operating hours — evenings and weekends when the job calls for it — and keep common areas clean and signed off.',
-          'Retail fronts and commercial interiors get careful staging and protection so the business keeps running. Parking lots attached to those properties get re-striped and ADA-checked in the same visit when you want them to — one crew, one schedule.',
+          'Retail fronts and commercial interiors get careful staging and protection so the business keeps running. Parking lots attached to those properties get re-striped and ADA-checked in the same visit when you want them to — one contractor, one schedule.',
           'Small-office refreshes often come with turnover deadlines — lease dates, open houses, tenant move-ins. Tell us the date at the walkthrough and we will give you an honest answer on whether we can hit it, with the schedule written into the quote.',
         ],
         links: [
@@ -710,7 +710,7 @@ export const areaLandingPages: LandingPage[] = [
       'Sky’s the Limit Painting LLC serves Maple Grove with commercial painting, parking lot striping, and residential painting. Growth-corridor contractor: responsive scheduling, one call for paint and striping.',
     metaTitle: 'Maple Grove Painting Contractor',
     metaDescription:
-      'House painting, commercial painting & parking lot striping in Maple Grove, MN. Local crew, free estimates. Call 651-410-4196.',
+      'House painting, commercial painting & parking lot striping in Maple Grove, MN. Owner-operated, free estimates. Call 651-410-4196.',
     image: '/brand/generated/sky-local-authority.webp',
     accent: 'Northwest metro local',
     market: 'Commercial',
@@ -740,7 +740,7 @@ export const areaLandingPages: LandingPage[] = [
         eyebrow: 'Why Maple Grove',
         body: [
           'Sky’s the Limit Painting serves Maple Grove neighborhoods and the I-94 corridor with commercial painting, parking lot striping, and residential painting. We are a local, owner-run crew built for the growth-corridor pace: new tenants turning spaces over, retail fronts refreshing on a cycle, and family homes repainting on newer housing stock.',
-          'The commercial story here is speed with control. New-tenant build-outs and refreshes need painters who show up, stage cleanly, and hand the space back on schedule — we schedule weekends and off-hours so businesses do not close for a paint job. Retail lots along the corridor restripe on a cycle too, and one crew can take the building and the lot in the same visit.',
+          'The commercial story here is speed with control. New-tenant build-outs and refreshes need painters who show up, stage cleanly, and hand the space back on schedule — we schedule weekends and off-hours so businesses do not close for a paint job. Retail lots along the corridor restripe on a cycle too, and one contractor can take the building and the lot in the same visit.',
           'Call or text 651-410-4196 for a free estimate. Tell us the timeline and we will tell you honestly whether we can hit it.',
         ],
       },
@@ -830,6 +830,463 @@ export const areaLandingPages: LandingPage[] = [
       {
         question: 'Do you paint in winter in Maple Grove?',
         answer: 'Exteriors are spring through fall — Minnesota winters do not cooperate with exterior coatings. Interiors, cabinets, and commercial interiors run year-round.',
+      },
+    ],
+  },
+  {
+    kind: 'area',
+    slug: 'lakeville',
+    title: 'Lakeville Painting Contractor',
+    shortTitle: 'Lakeville',
+    eyebrow: 'Dakota County / south metro',
+    headline: 'Owner-operated painting in Lakeville — homes, townhomes, and the commercial lots around them.',
+    description:
+      'Sky’s the Limit Painting LLC serves Lakeville with residential painting, commercial painting, and parking lot striping. Based in nearby Inver Grove Heights, working across Dakota County.',
+    metaTitle: 'Lakeville Painting Contractor',
+    metaDescription:
+      'House painting, commercial painting & parking lot striping in Lakeville, MN. Owner-operated, free estimates. Call 651-410-4196.',
+    image: '/brand/generated/sky-local-authority.webp',
+    accent: 'Dakota County local',
+    market: 'Residential',
+    proof: [
+      'Based in Inver Grove Heights, serving Lakeville',
+      'Owner-led project communication',
+      'Residential, commercial, and striping from one owner-led operation',
+      'Free walkthroughs, written quotes',
+    ],
+    scope: [
+      'Interior repainting',
+      'Exterior repaints',
+      'Cabinet refinishing',
+      'Commercial interiors and exteriors',
+      'Parking lot striping and ADA stalls',
+    ],
+    process: [
+      { title: 'Call or Text', body: 'Tell us what you are looking at — house, townhome, office, parking lot — and where in Lakeville it is.' },
+      { title: 'Walkthrough', body: 'We come to you, measure, and note the prep the job actually needs.' },
+      { title: 'Written Quote', body: 'One number, line-itemed. You know exactly what is covered before we start.' },
+      { title: 'Scheduled Work', body: 'We show up on the date we said, keep the site clean, and walk it with you at the end.' },
+    ],
+    related: ['apple-valley', 'rosemount', 'inver-grove-heights', 'parking-lot-striping'],
+    customSections: [
+      {
+        heading: 'Painting Contractor in Lakeville, MN',
+        eyebrow: 'Why Lakeville',
+        body: [
+          'Sky’s the Limit Painting serves Lakeville with residential painting, commercial painting, and parking lot striping. We are based in Inver Grove Heights — a short drive south — and we work Lakeville jobs the same way we work our home turf: owner-run, prep-first, one written scope.',
+          'Lakeville keeps growing, which means two kinds of work land on our schedule: newer homes and townhomes that need their first real repaint or a full interior refresh, and established neighborhoods where exteriors are due after a decade of Minnesota winters. On the commercial side, Lakeville’s retail and office properties need lots that stay legible through plow season — faded striping in a busy lot is a liability problem, not a cosmetic one.',
+          'Call or text 651-410-4196 for a free estimate. We will come out, walk the job with you, and give you a straight number.',
+        ],
+      },
+      {
+        heading: 'Residential Painting in Lakeville',
+        eyebrow: 'Homes',
+        body: [
+          'Lakeville residential work runs from whole-home interior repaints to exterior refreshes on two-stories that have taken ten winters of wind and sun. We scrape, prime, caulk, and topcoat with exterior-grade paint built for freeze-thaw — the prep is the job, the paint is just the finish.',
+          'Cabinet painting is a frequent request: sprayed doors and drawers for a factory-smooth finish, boxes finished in place, hardware back on and aligned. Townhome owners ask about it constantly — it is one of the most cost-effective kitchen updates short of a remodel.',
+          'Interior repaints run year-round. Winter is our busiest interior season in the Twin Cities; we schedule around your household.',
+        ],
+        links: [
+          { text: 'interior painting', href: '/painting-services/interior-painting' },
+          { text: 'exterior painting', href: '/painting-services/exterior-painting' },
+          { text: 'cabinet painting', href: '/painting-services/cabinet-painting' },
+        ],
+      },
+      {
+        heading: 'Commercial Painting and Striping for Lakeville Properties',
+        eyebrow: 'Businesses',
+        body: [
+          'Lakeville’s retail centers, offices, and multi-tenant properties need contractors who do not interrupt business to do the work. We paint after hours and on weekends, stage cleanly, and coordinate with property managers so operations never stop.',
+          'The differentiator: we also run a pavement-marking operation. Re-stripes, ADA stalls and access aisles, fire lanes, arrows, and crosswalks — on the same contract as the building paint if you want it. One walkthrough, one written quote, one schedule.',
+        ],
+        links: [
+          { text: 'commercial painting services', href: '/painting-services/commercial-painting' },
+          { text: 'parking lot striping', href: '/painting-services/parking-lot-striping' },
+          { text: 'ADA parking lot striping', href: '/painting-services/ada-parking-lot-striping' },
+        ],
+      },
+      {
+        heading: 'How a Lakeville Project Runs',
+        eyebrow: 'Process',
+        body: [
+          'Call or text 651-410-4196. We walk the job — house, office, or lot — measure, note the prep it actually needs, and hand you a written, line-itemed quote. Then we show up on the date we said, keep the site clean, and walk it with you at the end.',
+          'Drywall repair, deck and fence staining, and pavement marking can be folded into the same project — ask during the walkthrough.',
+        ],
+        links: [
+          { text: 'free estimate', href: '/estimate' },
+          { text: 'pavement marking', href: '/painting-services/pavement-marking' },
+        ],
+      },
+      {
+        heading: 'Serving Lakeville and Dakota County',
+        eyebrow: 'Service area',
+        body: [
+          'Based in Inver Grove Heights, MN. We serve Lakeville and the surrounding Dakota County suburbs — Apple Valley, Rosemount, Eagan, Burnsville, and the wider Twin Cities metro.',
+        ],
+        links: [
+          { text: 'full service-area map', href: '/service-area' },
+          { text: 'painting contractor in Apple Valley', href: '/service-areas/apple-valley' },
+          { text: 'painting contractor in Rosemount', href: '/service-areas/rosemount' },
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: 'Do you serve all of Lakeville or just certain neighborhoods?',
+        answer: 'All of Lakeville — north to south. We are based in nearby Inver Grove Heights, so Lakeville jobs get the same scheduling priority as our home turf.',
+      },
+      {
+        question: 'Can you stripe our lot and paint our building on one contract?',
+        answer: 'Yes. One walkthrough, one written quote, one schedule for both the building and the lot — that is the advantage of hiring a painter that also runs a striping operation.',
+      },
+      {
+        question: 'Do you paint townhome exteriors or just interiors?',
+        answer: 'Both, where the HOA allows owner-arranged work. Interiors are straightforward; exteriors depend on your association’s rules — ask us at the walkthrough and we will tell you straight.',
+      },
+      {
+        question: 'How far out are you booking?',
+        answer: 'It moves with the season — exteriors book fastest in spring. Call or text 651-410-4196 and we will give you an honest timeline for your job type.',
+      },
+    ],
+  },
+  {
+    kind: 'area',
+    slug: 'apple-valley',
+    title: 'Apple Valley Painting Contractor',
+    shortTitle: 'Apple Valley',
+    eyebrow: 'Dakota County / west of IGH',
+    headline: 'Owner-operated painting in Apple Valley — repaints, refinishes, and retail-lot striping.',
+    description:
+      'Sky’s the Limit Painting LLC serves Apple Valley with residential painting, cabinet refinishing, commercial painting, and parking lot striping. Based in nearby Inver Grove Heights.',
+    metaTitle: 'Apple Valley Painting Contractor',
+    metaDescription:
+      'House painting, cabinet refinishing & parking lot striping in Apple Valley, MN. Owner-operated, free estimates. Call 651-410-4196.',
+    image: '/brand/generated/sky-local-authority.webp',
+    accent: 'Dakota County local',
+    market: 'Residential',
+    proof: [
+      'Based in Inver Grove Heights, serving Apple Valley',
+      'Owner-led project communication',
+      'Cabinet refinishing specialty',
+      'Free walkthroughs, written quotes',
+    ],
+    scope: [
+      'Interior repainting',
+      'Exterior repaints',
+      'Cabinet refinishing',
+      'Townhome and HOA-friendly scheduling',
+      'Parking lot striping and ADA stalls',
+    ],
+    process: [
+      { title: 'Call or Text', body: 'Tell us the project — whole home, kitchen cabinets, office, lot — and where in Apple Valley.' },
+      { title: 'Walkthrough', body: 'We measure, check surfaces and prep needs, and talk paint and schedule.' },
+      { title: 'Written Quote', body: 'One number, line-itemed. No allowance-line games.' },
+      { title: 'Scheduled Work', body: 'Clean site, on-date arrival, final walkthrough with you.' },
+    ],
+    related: ['lakeville', 'rosemount', 'inver-grove-heights', 'cabinet-painting'],
+    customSections: [
+      {
+        heading: 'Painting Contractor in Apple Valley, MN',
+        eyebrow: 'Why Apple Valley',
+        body: [
+          'Sky’s the Limit Painting serves Apple Valley from our home base in nearby Inver Grove Heights. Owner-run, prep-first, one written scope — the same job whether it is a whole-home repaint or a retail lot re-stripe.',
+          'Apple Valley’s housing stock is largely established — homes hitting the age where original builder paint is done and exteriors need a real prep-and-repaint cycle, not a spray-and-pray. Kitchens are the other big ask: cabinet refinishing gives the full update without the remodel price, and doors and drawers get a sprayed, factory-smooth finish.',
+          'Call or text 651-410-4196 for a free estimate.',
+        ],
+      },
+      {
+        heading: 'Cabinet Refinishing in Apple Valley',
+        eyebrow: 'Kitchens',
+        body: [
+          'Cabinet painting — refinishing, done right — is one of our most-requested Apple Valley jobs. Doors and drawers are finished with a sprayed, factory-smooth finish; boxes are finished in place with full masking and dust control; hardware goes back on aligned and adjusted.',
+          'It is one of the most cost-effective kitchen updates short of a remodel, at a fraction of the disruption. We give you an exact timeline at the walkthrough based on door count and finish.',
+        ],
+        links: [
+          { text: 'cabinet painting services', href: '/painting-services/cabinet-painting' },
+          { text: 'interior painting', href: '/painting-services/interior-painting' },
+        ],
+      },
+      {
+        heading: 'Exterior and Interior Repaints in Apple Valley',
+        eyebrow: 'Homes',
+        body: [
+          'Exterior repaints follow the Minnesota playbook: scrape to sound surface, prime bare wood, caulk the gaps, then topcoat with exterior-grade paint rated for freeze-thaw. Siding, trim, soffits, fascia, and decks.',
+          'Interiors run year-round — whole homes, single rooms, basements, stairwells. We protect floors and furnishings like it is our own house, because the referral is the business.',
+        ],
+        links: [
+          { text: 'exterior painting', href: '/painting-services/exterior-painting' },
+          { text: 'drywall repair', href: '/painting-services/drywall-repair' },
+        ],
+      },
+      {
+        heading: 'Commercial and Lot Work in Apple Valley',
+        eyebrow: 'Businesses',
+        body: [
+          'Apple Valley’s retail corridors and office properties get the same owner-led treatment: after-hours and weekend scheduling, clean staging, and coordination with your property manager.',
+          'And the lot comes with the building if you want it — re-stripes, ADA stalls and access aisles, fire lanes, arrows, and crosswalks, all on one contract. Plow season chews up markings every winter; a spring walkthrough keeps the lot legible and compliant.',
+        ],
+        links: [
+          { text: 'commercial painting', href: '/painting-services/commercial-painting' },
+          { text: 'parking lot striping', href: '/painting-services/parking-lot-striping' },
+          { text: 'ADA parking lot striping', href: '/painting-services/ada-parking-lot-striping' },
+        ],
+      },
+      {
+        heading: 'Serving Apple Valley and Dakota County',
+        eyebrow: 'Service area',
+        body: [
+          'Based in Inver Grove Heights, MN. We serve Apple Valley and the surrounding Dakota County suburbs — Lakeville, Rosemount, Eagan, Burnsville, and the wider Twin Cities metro.',
+        ],
+        links: [
+          { text: 'full service-area map', href: '/service-area' },
+          { text: 'painting contractor in Lakeville', href: '/service-areas/lakeville' },
+          { text: 'painting contractor in Eagan', href: '/service-areas/eagan' },
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: 'How long does cabinet refinishing take?',
+        answer: 'Most kitchens are back in service in days, not weeks. We will give you an exact timeline at the walkthrough based on door count and finish.',
+      },
+      {
+        question: 'Do you work with HOAs and townhome associations?',
+        answer: 'Yes — we are used to HOA color approvals and scheduling rules. Bring the requirements to the walkthrough and we will build the quote around them.',
+      },
+      {
+        question: 'Can you stripe our parking lot too?',
+        answer: 'Yes. Re-stripes, ADA stalls, fire lanes, and full layouts — on the same contract as building work if you want one vendor and one schedule.',
+      },
+      {
+        question: 'Do you paint exteriors in winter?',
+        answer: 'No — Minnesota winters do not cooperate with exterior coatings. Exterior season is spring through fall; interiors and cabinets run year-round.',
+      },
+    ],
+  },
+  {
+    kind: 'area',
+    slug: 'rosemount',
+    title: 'Rosemount Painting Contractor',
+    shortTitle: 'Rosemount',
+    eyebrow: 'Dakota County / south metro',
+    headline: 'Owner-operated painting in Rosemount — homes, rentals, and commercial properties.',
+    description:
+      'Sky’s the Limit Painting LLC serves Rosemount with residential painting, commercial painting, and parking lot striping. Based in nearby Inver Grove Heights.',
+    metaTitle: 'Rosemount Painting Contractor',
+    metaDescription:
+      'House painting, commercial painting & parking lot striping in Rosemount, MN. Owner-operated, free estimates. Call 651-410-4196.',
+    image: '/brand/generated/sky-local-authority.webp',
+    accent: 'Dakota County local',
+    market: 'Residential',
+    proof: [
+      'Based in Inver Grove Heights, serving Rosemount',
+      'Owner-led project communication',
+      'Residential, commercial, and striping from one owner-led operation',
+      'Free walkthroughs, written quotes',
+    ],
+    scope: [
+      'Interior repainting',
+      'Exterior repaints',
+      'Rental turnovers and refreshes',
+      'Commercial interiors and exteriors',
+      'Parking lot striping and ADA stalls',
+    ],
+    process: [
+      { title: 'Call or Text', body: 'Describe the job — home, rental, office, lot — and where in Rosemount.' },
+      { title: 'Walkthrough', body: 'We come out, measure, and scope the prep honestly.' },
+      { title: 'Written Quote', body: 'One number, line-itemed, before anything starts.' },
+      { title: 'Scheduled Work', body: 'On-date, clean, walked with you at the end.' },
+    ],
+    related: ['lakeville', 'apple-valley', 'inver-grove-heights', 'exterior-painting'],
+    customSections: [
+      {
+        heading: 'Painting Contractor in Rosemount, MN',
+        eyebrow: 'Why Rosemount',
+        body: [
+          'Sky’s the Limit Painting serves Rosemount from just north in Inver Grove Heights. Owner-run and prep-first: homes, rentals, offices, and the parking lots that serve them.',
+          'Rosemount mixes established neighborhoods with newer development and working commercial and industrial properties. That mix is exactly where a one-crew contractor earns its keep — the same visit can scope a building repaint and a lot re-stripe, and rental turnovers need painters who schedule to your turnover date and confirm it in writing, because the next tenant is already scheduled.',
+          'Call or text 651-410-4196 for a free estimate.',
+        ],
+      },
+      {
+        heading: 'Residential and Rental Painting in Rosemount',
+        eyebrow: 'Homes and rentals',
+        body: [
+          'Owner-occupied repaints get the full prep treatment: scrape, prime, caulk, topcoat with exterior-grade paint on the outside; protection-first interiors on the inside. Rental turnovers get a different gear — fast, clean, durable finishes on a hard date, because vacancy costs more than paint.',
+          'Either way the quote is written and line-itemed before work starts. No surprises at turnover is the whole point.',
+        ],
+        links: [
+          { text: 'interior painting', href: '/painting-services/interior-painting' },
+          { text: 'exterior painting', href: '/painting-services/exterior-painting' },
+        ],
+      },
+      {
+        heading: 'Commercial Painting and Striping in Rosemount',
+        eyebrow: 'Businesses',
+        body: [
+          'Rosemount’s commercial and industrial properties need painters who work around operations, not through them. We schedule after hours and weekends, stage cleanly, and keep communication to one owner-led thread.',
+          'The lot work rides along: re-stripes, ADA stalls and access aisles, fire lanes, arrows, crosswalks, and full new-lot layouts. Winter plowing degrades markings every year — a spring walkthrough is the cheapest way to stay compliant and legible.',
+        ],
+        links: [
+          { text: 'commercial painting services', href: '/painting-services/commercial-painting' },
+          { text: 'parking lot striping', href: '/painting-services/parking-lot-striping' },
+          { text: 'ADA parking lot striping', href: '/painting-services/ada-parking-lot-striping' },
+          { text: 'pavement marking', href: '/painting-services/pavement-marking' },
+        ],
+      },
+      {
+        heading: 'How a Rosemount Project Runs',
+        eyebrow: 'Process',
+        body: [
+          'Call or text 651-410-4196, tell us what you are looking at, and we will walk it with you — measure, scope the prep, hand you a written number. Then we show up on the date we said and walk the finished work with you.',
+        ],
+        links: [
+          { text: 'free estimate', href: '/estimate' },
+          { text: 'our capabilities', href: '/capabilities' },
+        ],
+      },
+      {
+        heading: 'Serving Rosemount and Dakota County',
+        eyebrow: 'Service area',
+        body: [
+          'Based in Inver Grove Heights, MN. We serve Rosemount and the surrounding Dakota County suburbs — Lakeville, Apple Valley, Eagan, Farmington, and the wider Twin Cities metro.',
+        ],
+        links: [
+          { text: 'full service-area map', href: '/service-area' },
+          { text: 'painting contractor in Lakeville', href: '/service-areas/lakeville' },
+          { text: 'painting contractor in Apple Valley', href: '/service-areas/apple-valley' },
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: 'Do you handle rental turnovers on tight timelines?',
+        answer: 'Yes — tell us the turnover date at first contact and we will tell you straight whether we can hit it. The quote and schedule go in writing before work starts.',
+      },
+      {
+        question: 'Can you paint our building and stripe the lot in one visit?',
+        answer: 'Yes. One walkthrough, one written quote, one schedule — building and lot under a single contract.',
+      },
+      {
+        question: 'Do you do industrial or warehouse painting?',
+        answer: 'Tell us about the facility at the walkthrough — coatings, access, and scheduling around operations. If it is in our scope we will quote it; if not, we will say so.',
+      },
+      {
+        question: 'Are estimates really free?',
+        answer: 'Yes. Walkthrough, measurement, and a written quote cost nothing — for houses, buildings, and lots alike.',
+      },
+    ],
+  },
+  {
+    kind: 'area',
+    slug: 'cottage-grove',
+    title: 'Cottage Grove Painting Contractor',
+    shortTitle: 'Cottage Grove',
+    eyebrow: 'Washington County / east metro',
+    headline: 'Owner-operated painting in Cottage Grove — river-town homes and east-metro commercial.',
+    description:
+      'Sky’s the Limit Painting LLC serves Cottage Grove with residential painting, commercial painting, and parking lot striping. Based in Inver Grove Heights, across the metro east.',
+    metaTitle: 'Cottage Grove Painting Contractor',
+    metaDescription:
+      'House painting, commercial painting & parking lot striping in Cottage Grove, MN. Owner-operated, free estimates. Call 651-410-4196.',
+    image: '/brand/generated/sky-local-authority.webp',
+    accent: 'East metro local',
+    market: 'Residential',
+    proof: [
+      'Based in Inver Grove Heights, serving Cottage Grove',
+      'Owner-led project communication',
+      'Residential, commercial, and striping from one owner-led operation',
+      'Free walkthroughs, written quotes',
+    ],
+    scope: [
+      'Interior repainting',
+      'Exterior repaints',
+      'Deck and fence staining',
+      'Commercial interiors and exteriors',
+      'Parking lot striping and ADA stalls',
+    ],
+    process: [
+      { title: 'Call or Text', body: 'Tell us the project and where in Cottage Grove it is.' },
+      { title: 'Walkthrough', body: 'We measure, scope prep, and talk finishes and timing.' },
+      { title: 'Written Quote', body: 'One number, line-itemed.' },
+      { title: 'Scheduled Work', body: 'On-date arrival, clean site, final walkthrough.' },
+    ],
+    related: ['inver-grove-heights', 'south-st-paul', 'st-paul', 'deck-fence-staining'],
+    customSections: [
+      {
+        heading: 'Painting Contractor in Cottage Grove, MN',
+        eyebrow: 'Why Cottage Grove',
+        body: [
+          'Sky’s the Limit Painting serves Cottage Grove from our Inver Grove Heights home base, just east across the metro. Owner-run, prep-first — homes near the river valley, established neighborhoods, and the commercial corridors that serve them.',
+          'Cottage Grove homes face the full Minnesota weather range — freeze-thaw, sun, and wind — which is why exterior prep matters more here than the paint brand on the can. Decks and fences are a standing ask: strip, brighten, and stain them on the right cycle and they last years longer.',
+          'Call or text 651-410-4196 for a free estimate.',
+        ],
+      },
+      {
+        heading: 'Exterior Painting and Deck Staining in Cottage Grove',
+        eyebrow: 'Exteriors',
+        body: [
+          'Exterior repaints follow the full prep sequence: scrape to sound surface, prime bare wood, caulk gaps, topcoat with exterior-grade paint built for Minnesota freeze-thaw. Siding, trim, soffits, fascia — and the garage and outbuildings too.',
+          'Decks and fences get their own process: wash, strip or brighten as needed, then stain with product matched to sun exposure and wood condition. Done on cycle, a stained deck stays a long-term asset instead of an early replacement.',
+        ],
+        links: [
+          { text: 'exterior painting', href: '/painting-services/exterior-painting' },
+          { text: 'deck and fence staining', href: '/painting-services/deck-fence-staining' },
+        ],
+      },
+      {
+        heading: 'Interior Painting in Cottage Grove',
+        eyebrow: 'Interiors',
+        body: [
+          'Whole-home repaints, single rooms, basements, and stairwells — year-round, scheduled around your household. Floors, furniture, and fixtures protected before a drop of paint moves.',
+        ],
+        links: [
+          { text: 'interior painting', href: '/painting-services/interior-painting' },
+          { text: 'cabinet painting', href: '/painting-services/cabinet-painting' },
+        ],
+      },
+      {
+        heading: 'Commercial Painting and Striping in Cottage Grove',
+        eyebrow: 'Businesses',
+        body: [
+          'Cottage Grove’s retail, office, and service commercial properties get after-hours and weekend scheduling, clean staging, and one owner-led point of contact.',
+          'Lot work rides on the same contract: re-stripes, ADA stalls and access aisles, fire lanes, arrows, and crosswalks. One walkthrough covers building and lot.',
+        ],
+        links: [
+          { text: 'commercial painting', href: '/painting-services/commercial-painting' },
+          { text: 'parking lot striping', href: '/painting-services/parking-lot-striping' },
+          { text: 'ADA parking lot striping', href: '/painting-services/ada-parking-lot-striping' },
+        ],
+      },
+      {
+        heading: 'Serving Cottage Grove and the East Metro',
+        eyebrow: 'Service area',
+        body: [
+          'Based in Inver Grove Heights, MN. We serve Cottage Grove and the east metro — South St. Paul, St. Paul Park, Woodbury, Hastings, and the wider Twin Cities metro.',
+        ],
+        links: [
+          { text: 'full service-area map', href: '/service-area' },
+          { text: 'painting contractor in South St. Paul', href: '/service-areas/south-st-paul' },
+          { text: 'painting contractor in Woodbury', href: '/service-areas/woodbury' },
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: 'How often should a deck be re-stained in Minnesota?',
+        answer: 'It depends on sun exposure and the previous product — most decks need attention every few years. We will assess yours at the walkthrough and tell you straight whether it needs a wash, a re-stain, or a full strip.',
+      },
+      {
+        question: 'Do you paint in winter in Cottage Grove?',
+        answer: 'Exteriors are spring through fall. Interiors, cabinets, and commercial interiors run year-round — winter is actually our busiest interior season.',
+      },
+      {
+        question: 'Can you handle both our building and our lot?',
+        answer: 'Yes — painting and striping on one contract, one walkthrough, one schedule.',
+      },
+      {
+        question: 'Are your estimates free?',
+        answer: 'Yes. Walkthrough, measurement, and written quote — free for homes, buildings, and lots.',
       },
     ],
   },
@@ -934,7 +1391,7 @@ export const serviceLandingPages: LandingPage[] = [
       { title: 'Protect Operations', body: 'Mask and cover adjacent surfaces while keeping the work area orderly.' },
       { title: 'Close Professionally', body: 'Review the result, handle touchups, and leave a cleaner property presentation.' },
     ],
-    related: ['commercial', 'st-paul', 'minneapolis', 'public-sector'],
+    related: ['commercial', 'st-paul', 'minneapolis', 'public-sector', 'ada-parking-lot-striping'],
   },
   {
     kind: 'service',
@@ -1030,7 +1487,7 @@ export const serviceLandingPages: LandingPage[] = [
       { title: 'Prepare The Surface', body: 'Plan cleaning, debris removal, chalk lines, and access timing.' },
       { title: 'Stripe For Clarity', body: 'Focus on visibility, flow, property presentation, and closeout photos.' },
     ],
-    related: ['commercial', 'pavement-marking', 'public-sector', 'parking-lot-striping-pricing'],
+    related: ['commercial', 'pavement-marking', 'public-sector', 'parking-lot-striping-pricing', 'twin-cities', 'ada-parking-lot-striping'],
     customSections: [
       {
         heading: 'Parking Lot Striping Services in the Minneapolis–St. Paul Metro',
@@ -1143,7 +1600,7 @@ export const serviceLandingPages: LandingPage[] = [
       { title: 'Plan Execution', body: 'Clarify layout, surface condition, cleaning needs, materials, and work windows.' },
       { title: 'Close With Proof', body: 'Use photos and notes to record the completed surface work.' },
     ],
-    related: ['parking-lot-striping', 'commercial', 'public-sector', 'parking-lot-striping-pricing'],
+    related: ['parking-lot-striping', 'commercial', 'public-sector', 'parking-lot-striping-pricing', 'minneapolis', 'ada-parking-lot-striping'],
     customSections: [
       {
         heading: 'ADA-Compliant Parking Lot Marking in the Twin Cities',
