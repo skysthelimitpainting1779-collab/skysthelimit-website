@@ -5,6 +5,7 @@ import { ArrowDownRight, ArrowRight, ArrowUpRight, Check, ShieldCheck } from 'lu
 import LeadForm from '../components/LeadForm';
 import PrepProtocolStage from '../components/PrepProtocolStage';
 import ResponsiveImage from '../components/ResponsiveImage';
+import ReviewsSection from '../components/ReviewsSection';
 import { PublicCtaLink, PublicPage } from '../components/public/PublicSystem';
 import { faqSchema } from '../lib/seo';
 
@@ -246,6 +247,8 @@ export default function HomeClient() {
           </div>
         </div>
       </section>
+
+      <ReviewsSection />
 
       <section id="walkthrough" aria-labelledby="walkthrough-title" className="relative overflow-hidden bg-[#0254C3] text-[#F6F3EB]">
         <div aria-hidden="true" className="proof-walkthrough-lines absolute inset-0" />
