@@ -56,6 +56,9 @@ export default async function PaintingServiceLandingPage({ params }: PageProps) 
   const page = serviceLandingPages.find((p) => p.slug === slug);
   if (!page) {
     notFound();
+    // notFound() is not typed as `never` in this Next version, so the
+    // explicit throw keeps TypeScript narrowing sound (unreachable at runtime).
+    throw new Error(`Painting service not found: ${slug}`);
   }
 
   const serviceJson = serviceSchema(page.title, page.metaDescription, `/painting-services/${page.slug}`);
