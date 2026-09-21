@@ -22,6 +22,17 @@
     • Measure: body text capped at ~65ch (`.measure`).
 */
 
+/* ── Fixed header height (single source of truth) ──────────────────── */
+/* ConversionHeader writes these via ResizeObserver. The :root defaults
+   centralize the 124px expanded-height fallback and cover SSR / no-JS
+   first paint. `--site-header-height` tracks the live (collapsing) height;
+   `--site-header-height-expanded` freezes at the top-of-page height so
+   viewport-filling heroes never reflow when the header collapses. */
+:root {
+  --site-header-height: 124px;
+  --site-header-height-expanded: 124px;
+}
+
 @theme {
   /* ── Charcoal surface scale (dark) ───────────────────────────────── */
   --color-surface-void: #0A0A0A;   /* page floor / deepest */
@@ -95,7 +106,7 @@
   html {
     font-size: 100%;
     scroll-behavior: smooth;
-    scroll-padding-top: 7.5rem;
+    scroll-padding-top: var(--site-header-height);
     width: 100%;
     max-width: 100%;
     overflow-x: clip;
@@ -685,7 +696,11 @@
 
 .public-surface [id],
 .ledger-surface [id] {
-  scroll-margin-top: 8rem;
+  /* Fragment offsets come from a single source: `html { scroll-padding-top:
+     var(--site-header-height) }`, which tracks the live header height.
+     scroll-margin and scroll-padding stack for anchor navigation, so a second
+     fixed margin here would double the offset below the collapsed header. */
+  scroll-margin-top: 0;
 }
 
 .public-surface :is(a, button, input, select, textarea):focus-visible,
@@ -922,7 +937,7 @@
 
 @media (max-width: 767px) {
   .proof-hero {
-    min-height: calc(100svh - 7rem);
+    min-height: calc(100svh - var(--site-header-height-expanded));
   }
 
   .proof-stage:hover {
