@@ -3,6 +3,7 @@
 import { usePathname } from 'next/navigation';
 
 import { PublicCtaLink } from '@/components/public/PublicSystem';
+import { phoneHref } from '@/lib/contact';
 
 export default function MobileConversionRail() {
   const pathname = usePathname();
@@ -19,6 +20,7 @@ export default function MobileConversionRail() {
     >
       <a
         href="tel:+16514104196"
+        aria-label="Call Sky's the Limit Painting"
         data-track="call_click"
         data-track-payload='{"source":"mobile_sticky"}'
         className="flex min-h-14 items-center justify-center border-r border-border px-2 text-xs font-bold uppercase tracking-[0.08em] text-foreground"
@@ -26,7 +28,7 @@ export default function MobileConversionRail() {
         Call
       </a>
       <a
-        href="sms:+16514104196"
+        href={phoneHref}
         data-track="text_click"
         data-track-payload='{"source":"mobile_sticky"}'
         className="flex min-h-14 items-center justify-center border-r border-border px-2 text-xs font-bold uppercase tracking-[0.08em] text-foreground"
