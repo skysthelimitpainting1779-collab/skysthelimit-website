@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -35,6 +35,41 @@ function isCurrentPath(pathname: string, href: string) {
 export default function ConversionHeader() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  // Keep the utility strip expanded while keyboard focus is inside it so a
+  // focused call link is never yanked out from under the user on collapse.
+  const [stripHasFocus, setStripHasFocus] = useState(false);
+  const utilityExpanded = !isScrolled || stripHasFocus;
+  // The header's rendered height varies: the utility strip collapses on scroll
+  // and its labels can wrap on narrow screens. Track the live height in
+  // --site-header-height so scroll padding stays in sync, and track the
+  // expanded (top-of-page) height separately so viewport-filling heroes and
+  // the main spacer size from a stable baseline instead of reflowing when
+  // the header collapses. The expanded value is measured only in the true
+  // unscrolled state: the strip can stay expanded while scrolled (keyboard
+  // focus keeps it visible), so guard on isScrolled rather than strip
+  // visibility, or the partially-collapsed height would poison the baseline.
+  const headerRef = useRef<HTMLElement | null>(null);
+  const isScrolledRef = useRef(isScrolled);
+  isScrolledRef.current = isScrolled;
+
+  useEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+    const applyHeaderHeight = () => {
+      const height = Math.round(header.getBoundingClientRect().height);
+      const root = document.documentElement;
+      root.style.setProperty('--site-header-height', `${height}px`);
+      if (!isScrolledRef.current) {
+        root.style.setProperty('--site-header-height-expanded', `${height}px`);
+      }
+    };
+    applyHeaderHeight();
+    if (typeof ResizeObserver === 'undefined') return;
+    const observer = new ResizeObserver(applyHeaderHeight);
+    observer.observe(header);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     setMobileMenuOpen(false);
@@ -46,29 +81,63 @@ export default function ConversionHeader() {
     if (referral) localStorage.setItem('referrer_email', referral.trim());
   }, []);
 
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 100);
+
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <header
+      ref={headerRef}
       data-surface="public"
-      className="conversion-header public-surface fixed inset-x-0 top-0 z-50 h-28 border-b border-border bg-background text-foreground shadow-[0_14px_32px_rgb(7_19_33_/_0.08)] print:static print:shadow-none"
+      className="conversion-header public-surface fixed inset-x-0 top-0 z-50 border-b border-border bg-background text-foreground shadow-[0_14px_32px_rgb(7_19_33_/_0.08)] print:static print:shadow-none"
     >
-      <div className="h-8 border-b border-border px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto flex h-full max-w-[90rem] items-center justify-between gap-4 text-[11px] font-bold uppercase tracking-[0.09em]">
-          <span>Twin Cities painting</span>
-          <div className="flex items-center gap-4">
-            <span className="hidden text-muted-foreground sm:inline">Owner-led / Written scope / Prep first</span>
-            <a
-              href="tel:+16514104196"
-              data-track="call_click"
-              data-track-payload='{"source":"utility_header"}'
-              className="underline decoration-trust decoration-2 underline-offset-4"
-            >
-              Call / Text 651-410-4196
-            </a>
+      <div
+        onFocus={() => setStripHasFocus(true)}
+        onBlur={(event) => {
+          if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+            setStripHasFocus(false);
+          }
+        }}
+        className={cn(
+          // Collapse via grid-template-rows: height cannot animate to/from auto,
+          // so the strip content lives in a 1fr->0fr row instead.
+          'grid overflow-hidden border-b px-4 transition-[grid-template-rows,opacity,border-color] duration-200 motion-reduce:transition-none sm:px-6 lg:px-8',
+          utilityExpanded ? 'visible grid-rows-[1fr] border-border opacity-100' : 'invisible grid-rows-[0fr] border-transparent opacity-0',
+          // Print always restores the strip (license + phone) regardless of scroll state.
+          'print:visible print:grid-rows-[1fr] print:border-border print:opacity-100',
+        )}
+      >
+        <div className="min-h-0 min-w-0 overflow-hidden">
+          <div className="mx-auto flex min-h-11 max-w-[90rem] items-center justify-between gap-4 text-[11px] font-bold uppercase tracking-[0.09em]">
+            <div className="flex items-center gap-4">
+              <span className="hidden sm:inline">Twin Cities painting</span>
+              <span>MN Registration IR816596</span>
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="hidden text-muted-foreground sm:inline">Owner-led / Written scope / Prep first</span>
+              <a
+                href="tel:+16514104196"
+                data-track="call_click"
+                data-track-payload='{"source":"utility_header"}'
+                className="flex min-h-11 items-center py-2 text-xs underline decoration-trust decoration-2 underline-offset-4"
+              >
+                Call / Text 651-410-4196
+              </a>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="h-20 px-4 sm:px-6 lg:px-8">
+      <div
+        className={cn(
+          'px-4 transition-[height] duration-200 motion-reduce:transition-none sm:px-6 lg:px-8',
+          isScrolled ? 'h-16' : 'h-20',
+        )}
+      >
         <div className="mx-auto flex h-full max-w-[90rem] items-center justify-between gap-5">
           <Link href="/" className="flex shrink-0 items-center gap-3 leading-none" aria-label="Sky's the Limit Painting LLC home">
             <Image src="/brand/SkyLLP_BrandLogo.svg" alt="" width={44} height={40} className="h-10 w-11 object-contain" />
@@ -100,7 +169,10 @@ export default function ConversionHeader() {
             })}
           </nav>
 
-          <div className="hidden items-center gap-3 lg:flex">
+          {/* Keep a call action visible from tablet widths: at md-lg the utility
+              strip collapses on scroll and the sticky rail is mobile-only, so
+              the header call button must already be present below lg. */}
+          <div className="hidden items-center gap-3 md:flex">
             <PublicCtaLink
               href="tel:+16514104196"
               variant="outline"
@@ -126,7 +198,7 @@ export default function ConversionHeader() {
                 <Button
                   variant="outline"
                   size="icon-lg"
-                  className="lg:hidden"
+                  className="size-11 lg:hidden"
                   aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
                 />
               )}
