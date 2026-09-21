@@ -155,6 +155,7 @@ export default function EstimatePage() {
     Details: projectDetail,
     Preparation: prepLevel || '',
     Timeline: timeline,
+    Photos: photosUrl.trim(),
     'Preferred contact': contactMethod,
     'Planning range': planningRange ? `$${planningRange.low.toLocaleString()} to $${planningRange.high.toLocaleString()}` : '',
   });
@@ -242,10 +243,28 @@ export default function EstimatePage() {
         body: JSON.stringify(payload),
       });
 
+    // Route a non-OK lead response to the email fallback or an inline error.
+    // 429/5xx after the retry and the server's explicit `fallback: 'email'`
+    // marker go to the prefilled-email card, where the "Open Prefilled Email"
+    // action actually exists; 4xx validation failures stay inline so the user
+    // can correct and resubmit.
+    const routeFailure = async (response: Response) => {
+      const result = (await response.json().catch(() => ({}))) as { error?: string; fallback?: string };
+      if (response.status === 429 || response.status >= 500 || result?.fallback === 'email') {
+        setStatus('fallback');
+      } else {
+        setStatus('error');
+        setFormError(result?.error || 'The request could not be sent. Please try again.');
+      }
+    };
+
     try {
       let response = await postLead();
-      if (!response.ok && (response.status >= 500 || response.status === 429)) {
-        // One retry for transient failures before falling back to email.
+      if (!response.ok && response.status === 429) {
+        // 429 is returned before anything is persisted, so one retry is safe.
+        // 5xx is NOT retried: the leads API persists the row before delivery
+        // and its 500 carries { fallback: 'email' } — re-POSTing would insert
+        // a duplicate lead.
         setStatus('retrying');
         await new Promise((resolve) => setTimeout(resolve, 1500));
         response = await postLead();
@@ -254,15 +273,10 @@ export default function EstimatePage() {
         setStatus('sent');
         return;
       }
-      const result = (await response.json().catch(() => ({}))) as { error?: string; fallback?: string };
-      if (response.status === 502 || response.status === 501 || result?.fallback === 'email') {
-        setStatus('fallback');
-      } else {
-        setStatus('error');
-        setFormError(result?.error || 'The request could not be sent. Please try again or use the email option below.');
-      }
+      await routeFailure(response);
     } catch {
-      // Network error: single retry, then the email fallback.
+      // Network error: single retry, then route the retried response like the
+      // primary path so the server's message is not silently discarded.
       try {
         setStatus('retrying');
         await new Promise((resolve) => setTimeout(resolve, 1500));
@@ -271,10 +285,10 @@ export default function EstimatePage() {
           setStatus('sent');
           return;
         }
+        await routeFailure(response);
       } catch {
-        /* fall through to the email fallback */
+        setStatus('fallback');
       }
-      setStatus('fallback');
     }
   };
 
