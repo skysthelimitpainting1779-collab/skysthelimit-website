@@ -25,11 +25,12 @@ interface CaseStudyCardProps {
   prep: string[];
   result: string;
   image?: string;
+  imageAlt?: string;
   beforeImage?: string;
   afterImage?: string;
 }
 
-function CaseStudyCard({ type, location, problem, prep, result, image, beforeImage, afterImage }: CaseStudyCardProps) {
+function CaseStudyCard({ type, location, problem, prep, result, image, imageAlt, beforeImage, afterImage }: CaseStudyCardProps) {
   return (
     <Card variant="panel" className="flex h-full flex-col overflow-hidden">
       <div className="relative min-h-[22rem] border-b border-border">
@@ -38,7 +39,7 @@ function CaseStudyCard({ type, location, problem, prep, result, image, beforeIma
         ) : image ? (
           <ResponsiveImage
             src={image}
-            alt={`${type} finish reference in ${location}`}
+            alt={imageAlt ?? `${type} finish reference in ${location}`}
             width={1200}
             height={800}
             sizes="(min-width: 1024px) 50vw, 100vw"
@@ -101,8 +102,7 @@ export default async function ProjectsPage() {
       problem: 'A storefront interior needed a darker, more finished look while working with the existing ceiling grid.',
       prep: ['Grid cleaning', 'Floor protection', 'Masking fixtures', 'Adhesion primer'],
       result: 'A cleaner commercial interior with a more complete presentation for customers and staff.',
-      beforeImage: '/brand/generated/sky-owner-proof.webp',
-      afterImage: '/images/services/commercial/sky-work-08-finished-commercial.webp',
+      image: '/images/services/commercial/sky-work-08-finished-commercial.webp',
     },
     {
       type: 'Interior Residential Repaint',
@@ -110,8 +110,8 @@ export default async function ProjectsPage() {
       problem: 'Bedroom walls, trim, and doors had visible wear, dated colors, and stains that required preparation before finish paint.',
       prep: ['Drywall patching', 'Stain-blocking primer', 'Trim sanding', 'Dust containment'],
       result: 'A calmer bedroom finish with sharper lines, stronger coverage, and cleaner detail.',
-      beforeImage: '/images/services/interior/sky-work-01-finished-kitchen.webp',
-      afterImage: '/images/services/interior/sky-work-real-04-before-after-bedroom.webp',
+      image: '/images/services/interior/sky-work-real-04-before-after-bedroom.webp',
+      imageAlt: 'Before-and-after bedroom repaint, Twin Cities Metro',
     },
     {
       type: 'Pavement Marking and Striping',
