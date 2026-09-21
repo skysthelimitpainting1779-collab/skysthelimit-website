@@ -381,7 +381,7 @@ export const areaLandingPages: LandingPage[] = [
         heading: 'Parking Lot Striping and Pavement Marking in Bloomington',
         eyebrow: 'The lot',
         body: [
-          'We are one of the few painting contractors in the south metro that also runs a pavement-marking operation: re-stripes, ADA-compliant stalls and access aisles, fire lanes, arrows, crosswalks, and full new-lot layouts. In Bloomington that matters — retail and office lots take a beating from snowplows every winter, and faded lines are a liability problem, not just a cosmetic one.',
+          'We are a painting contractor in the south metro that also runs a pavement-marking operation: re-stripes, ADA-compliant stalls and access aisles, fire lanes, arrows, crosswalks, and full new-lot layouts. In Bloomington that matters — retail and office lots take a beating from snowplows every winter, and faded lines are a liability problem, not just a cosmetic one.',
           'We do the same free walkthrough on lots that we do on buildings: measure the stalls, check your ADA layout against the current configuration, and give you a written number for the work. If the same property also needs the building painted, one crew schedules both — no coordinating a painter and a striping company separately.',
         ],
         links: [
@@ -1030,7 +1030,7 @@ export const serviceLandingPages: LandingPage[] = [
       { title: 'Prepare The Surface', body: 'Plan cleaning, debris removal, chalk lines, and access timing.' },
       { title: 'Stripe For Clarity', body: 'Focus on visibility, flow, property presentation, and closeout photos.' },
     ],
-    related: ['commercial-painting', 'pavement-marking', 'public-sector', 'twin-cities'],
+    related: ['commercial', 'pavement-marking', 'public-sector', 'twin-cities'],
     customSections: [
       {
         heading: 'Parking Lot Striping Services in the Minneapolis–St. Paul Metro',
@@ -1143,7 +1143,7 @@ export const serviceLandingPages: LandingPage[] = [
       { title: 'Plan Execution', body: 'Clarify layout, surface condition, cleaning needs, materials, and work windows.' },
       { title: 'Close With Proof', body: 'Use photos and notes to record the completed surface work.' },
     ],
-    related: ['parking-lot-striping', 'commercial-painting', 'public-sector', 'minneapolis'],
+    related: ['parking-lot-striping', 'commercial', 'public-sector', 'minneapolis'],
     customSections: [
       {
         heading: 'ADA-Compliant Parking Lot Marking in the Twin Cities',
@@ -1225,7 +1225,7 @@ export const serviceLandingPages: LandingPage[] = [
       },
       {
         question: 'My accessible symbols are fading — is that a violation?',
-        answer: 'Faded markings can be a problem: if the International Symbol of Accessibility or the blue background is not clearly visible, the space may not read as accessible — and in Minnesota, winter plows wear symbols faster than standard lines. Restriping before they disappear keeps you compliant.',
+        answer: 'Faded markings can be a problem: if the International Symbol of Accessibility or the blue background is not clearly visible, the space may not read as accessible — and in Minnesota, winter plows wear symbols faster than standard lines. Restriping before they disappear keeps the lot clearly readable; federal ADA standards require compliant signs and dimensions but do not themselves mandate a painted symbol, so check state and local rules.',
       },
       {
         question: 'Do ADA rules apply to my private lot?',
@@ -1266,7 +1266,7 @@ export const serviceLandingPages: LandingPage[] = [
       { title: 'Compliant Layout', body: 'We chalk a layout that hits the space counts, van ratio, widths, and closest-to-entrance placement.' },
       { title: 'Crisp Lines', body: 'Professional striping equipment, proper surface prep, and stencils for ISA symbols, arrows, and lettering.' },
     ],
-    related: ['pavement-marking', 'parking-lot-striping', 'commercial', 'twin-cities'],
+    related: ['pavement-marking', 'parking-lot-striping', 'commercial-painting', 'twin-cities'],
     customSections: [
       {
         heading: 'ADA Parking Lot Striping in the Twin Cities',
