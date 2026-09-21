@@ -211,7 +211,7 @@ export function PublicProcess({ items }: { items: readonly { title: string; body
         <li key={item.title} className="border-b border-r border-border bg-card p-6 text-card-foreground">
           <p className="text-sm font-bold text-trust">Step {String(index + 1).padStart(2, '0')}</p>
           <h3 className="public-display mt-8 text-3xl leading-none">{item.title}</h3>
-          <p className="mt-4 text-sm leading-6 text-muted-foreground">{item.body}</p>
+          <p className="mt-4 text-base leading-6 text-muted-foreground">{item.body}</p>
         </li>
       ))}
     </ol>
@@ -225,7 +225,7 @@ export function PublicProofBand({ items }: { items: readonly string[] }) {
         {items.map((item, index) => (
           <div key={item} className="flex items-start gap-3 border-b border-border px-5 py-5 last:border-b-0 md:border-b-0 md:border-r md:last:border-r-0 sm:px-8">
             <span className="font-display text-2xl font-bold text-trust">{String(index + 1).padStart(2, '0')}</span>
-            <p className="text-sm font-bold leading-6 text-foreground">{item}</p>
+            <p className="text-base font-bold leading-6 text-foreground">{item}</p>
           </div>
         ))}
       </div>
