@@ -197,35 +197,126 @@ export const areaLandingPages: LandingPage[] = [
     slug: 'woodbury',
     title: 'Woodbury Painting Contractor',
     shortTitle: 'Woodbury',
-    eyebrow: 'East metro painting',
-    headline: 'Clean residential and commercial painting for Woodbury projects that need a sharper finish.',
+    eyebrow: 'East metro / 494-94 corridor',
+    headline: 'Owner-operated painting in Woodbury — retail corridors, medical offices, and the neighborhoods around them.',
     description:
-      'Sky’s the Limit Painting LLC supports Woodbury painting inquiries with detailed prep, owner communication, and estimate paths for homes and properties.',
+      'Sky’s the Limit Painting LLC serves Woodbury with residential painting, commercial painting, and parking lot striping. East-metro coverage along the 494/94 corridor.',
     metaTitle: 'Woodbury Painting Contractor',
     metaDescription:
-      'Woodbury painting contractor for residential painting, commercial refreshes, trim work, exterior painting conversations, and project scoping.',
-    image: '/brand/generated/sky-residential-authority.webp',
-    accent: 'East metro detail',
-    market: 'Residential',
-    proof: ['Residential detail mindset', 'Property-refresh capability', 'Clear estimate intake'],
-    scope: ['Interior repainting', 'Trim and doors', 'Commercial touchups and refreshes', 'Exterior surface review', 'Deck and fence staining inquiries'],
-    process: [
-      { title: 'Review The Space', body: 'Document rooms, surfaces, damage, colors, access, and timing.' },
-      { title: 'Plan Protection', body: 'Prepare a clean work path that respects floors, fixtures, furniture, and active spaces.' },
-      { title: 'Finish With Accountability', body: 'Tie the final walkthrough to visible touchups, cleanup, and owner-led follow-through.' },
+      'House painting, commercial painting & parking lot striping in Woodbury, MN. Local crew, free estimates. Call 651-410-4196.',
+    image: '/brand/generated/sky-commercial-authority.webp',
+    accent: 'East metro commercial',
+    market: 'Commercial',
+    proof: [
+      'Serving the Woodbury 494/94 corridor',
+      'Owner-led project communication',
+      'Commercial, residential, and striping under one crew',
+      'Free walkthroughs, written quotes',
     ],
-    related: ['eagan', 'deck-fence-staining', 'residential', 'exterior-painting'],
+    scope: [
+      'Retail and office repainting',
+      'Medical and professional offices',
+      'Interior repainting',
+      'Exterior repaints',
+      'Parking lot striping and ADA stalls',
+    ],
+    process: [
+      { title: 'Call or Text', body: 'Tell us what you are looking at — office, retail space, house, parking lot — and where in Woodbury it is.' },
+      { title: 'Walkthrough', body: 'We come to you, measure, and note the prep the job actually needs.' },
+      { title: 'Written Quote', body: 'One number, line-itemed. You know exactly what is covered before we start.' },
+      { title: 'Scheduled Work', body: 'We show up on the date we said, keep the site clean, and walk it with you at the end.' },
+    ],
+    related: ['commercial-painting', 'parking-lot-striping', 'eagan', 'st-paul'],
     customSections: [
+      {
+        heading: 'Painting Contractor in Woodbury, MN',
+        eyebrow: 'Why Woodbury',
+        body: [
+          'Sky’s the Limit Painting serves Woodbury’s 494/94 corridor with commercial painting, residential painting, and parking lot striping. We are a local, owner-run crew — not a franchise — and every job gets a direct line to the person doing the work.',
+          'Woodbury keeps growing east: retail centers along Valley Creek and the Radio Drive corridor, medical and professional offices clustering near the interstate interchanges, and established neighborhoods like Stonemill Farms and Wedgwood full of homes that need periodic exterior refreshes. It is the kind of market where commercial clients choose vendors on reliability — the crew that hits the schedule without disrupting business gets the next property too.',
+          'Call or text 651-410-4196 for a free estimate. We will come out, walk the job with you, and give you a straight number.',
+        ],
+      },
+      {
+        heading: 'Commercial Painting in Woodbury: Retail, Medical, and Office',
+        eyebrow: 'Commercial',
+        body: [
+          'Woodbury’s commercial mix runs retail storefronts, medical and dental offices, and professional office buildings — properties that live or die on appearance. A tired waiting room, scuffed retail front, or faded exterior trim sends a message you do not want patients or customers to read. We repaint commercial interiors and exteriors to a standard that holds up under traffic and light.',
+          'We schedule around your operation: evenings and weekends for medical offices that cannot have a crew in the hallways during clinic hours, phased work for retail tenants that stay open, and clean, signed-off work areas every day. If you manage multiple properties along the corridor, ask about scheduling both the building and the parking lot in one visit.',
+          'For multi-tenant buildings, consistency matters: the same colors, the same finish, the same schedule discipline across every suite. We document the specs on the first property so the second and third match without a re-discovery walkthrough. Property managers get one point of contact and a written scope per address, and retail fronts get off-hours scheduling so the center never looks like a construction site during business hours.',
+        ],
+        links: [
+          { text: 'commercial painting services', href: '/painting-services/commercial-painting' },
+          { text: 'our capabilities', href: '/capabilities' },
+        ],
+      },
+      {
+        heading: 'Residential Painting in Woodbury',
+        eyebrow: 'Homes',
+        body: [
+          'Woodbury residential work splits two ways: interior repaints that run year-round — whole homes, single rooms, finished basements — and exterior repaints that run spring through fall. Exterior prep on Minnesota homes is where the money goes: scrape, prime, caulk, then an exterior-grade topcoat built for freeze-thaw. Skipping the prep is how a repaint peels early; we price the prep in and say so.',
+          'Every residential job starts with a walkthrough and a written quote — what is included, what is prepped, what paint goes where. No allowance-line games. Finished basements and single-room refreshes are common too, and we schedule around your household, moving furniture, covering floors, and working one room at a time when the house is occupied. Drywall repairs and deck or fence staining can be folded into the same project — ask during the walkthrough.',
+        ],
+        links: [
+          { text: 'interior painting', href: '/painting-services/interior-painting' },
+          { text: 'exterior painting', href: '/painting-services/exterior-painting' },
+        ],
+      },
       {
         heading: 'Parking Lot Striping in Woodbury',
         eyebrow: 'The lot',
         body: [
-          'Woodbury retail and office lots restripe on a cycle — plows and traffic wear the lines down every winter. We handle re-stripes, ADA stalls and access aisles, and full new-lot layouts. Free walkthrough and a written number before any work starts.',
+          'Retail and office lots along the Woodbury corridor take plow damage every winter, and faded lines plus a worn ADA stall are a liability problem, not a cosmetic one. We restripe lots — stalls, ADA spaces and access aisles, fire lanes, arrows, crosswalks — and every lot job starts with a free walkthrough: we measure, check your ADA layout against the current configuration, and give you a written number.',
+          'If the same property also needs the building painted, one crew schedules both. No coordinating a painter and a striping company separately.',
         ],
         links: [
-          { text: 'parking lot striping in Woodbury', href: '/painting-services/parking-lot-striping' },
-          { text: 'pavement marking in Woodbury', href: '/painting-services/pavement-marking' },
+          { text: 'parking lot striping services', href: '/painting-services/parking-lot-striping' },
+          { text: 'pavement marking services', href: '/painting-services/pavement-marking' },
         ],
+      },
+      {
+        heading: 'Why Woodbury Property Managers and Homeowners Call Us',
+        eyebrow: 'Why us',
+        body: [
+          'One crew, building and lot: painting and striping under one quote and one schedule. Straight quotes — written, itemized, no surprises. Commercial scheduling discipline: evenings, weekends, and phased work so businesses stay open. And the person you talk to is the person accountable for the work.',
+        ],
+        links: [
+          { text: 'free estimate', href: '/estimate' },
+        ],
+      },
+      {
+        heading: 'Serving Woodbury and the East Metro',
+        eyebrow: 'Service area',
+        body: [
+          'Based in Inver Grove Heights, MN. We serve Woodbury and the east metro — St. Paul, Eagan, and the wider Twin Cities.',
+        ],
+        links: [
+          { text: 'full service-area map', href: '/service-area' },
+          { text: 'painting contractor in St. Paul', href: '/service-areas/st-paul' },
+          { text: 'painting contractor in Eagan', href: '/service-areas/eagan' },
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: 'Do you repaint medical offices in Woodbury without disrupting clinic hours?',
+        answer: 'Yes — tell us your operating hours at the walkthrough and we schedule evenings, weekends, or phased work around them. The schedule goes in the written scope before work starts.',
+      },
+      {
+        question: 'Can you stripe our Woodbury lot and paint the building on one contract?',
+        answer: 'Yes — one walkthrough, one written quote, one schedule for both the building and the lot.',
+      },
+      {
+        question: 'How do you price a parking lot re-stripe?',
+        answer: 'Every lot is different, so we walk it with you, measure, and give you a free written quote. The walkthrough costs nothing and the number is in writing before we start.',
+      },
+      {
+        question: 'Do you paint exteriors in Woodbury during winter?',
+        answer: 'No — Minnesota winters do not cooperate with exterior coatings. Exterior season runs roughly spring through fall, and we book the season early. Interior work and commercial interiors run year-round, including winter.',
+      },
+      {
+        question: 'Do you handle phased retail work so other tenants stay open?',
+        answer: 'Yes. We work bay by bay on retail centers, keeping the rest of the center open and clean. Phasing goes in the written scope before we start.',
       },
     ],
     neighborhoods: ['Stonemill Farms', 'Colby Lake', 'Powers Lake', 'Bailey Lake', 'Wedgwood'],
@@ -833,6 +924,695 @@ export const areaLandingPages: LandingPage[] = [
       },
     ],
   },
+  {
+    kind: 'area',
+    slug: 'st-louis-park',
+    title: 'St. Louis Park Painting Contractor',
+    shortTitle: 'St. Louis Park',
+    eyebrow: 'First-ring west / 394-100 corridor',
+    headline: 'Owner-operated painting in St. Louis Park — homes, businesses, and the lots they park in.',
+    description:
+      'Sky’s the Limit Painting LLC serves St. Louis Park with residential painting, commercial painting, and parking lot striping. Based in Inver Grove Heights, working the whole west metro.',
+    metaTitle: 'St. Louis Park Painting Contractor',
+    metaDescription:
+      'House painting, commercial painting & parking lot striping in St. Louis Park, MN. Local crew, free estimates. Call 651-410-4196.',
+    image: '/brand/generated/sky-local-authority.webp',
+    accent: 'First-ring west local',
+    market: 'Residential',
+    proof: [
+      'Based in Inver Grove Heights, serving St. Louis Park',
+      'Owner-led project communication',
+      'Residential, commercial, and striping under one crew',
+      'Free walkthroughs, written quotes',
+    ],
+    scope: [
+      'Interior repainting',
+      'Exterior repaints',
+      'Cabinet refinishing',
+      'Commercial interiors and exteriors',
+      'Parking lot striping and ADA stalls',
+    ],
+    process: [
+      { title: 'Call or Text', body: 'Tell us what you are looking at — house, office, parking lot — and where in St. Louis Park it is.' },
+      { title: 'Walkthrough', body: 'We come to you, measure, and note the prep the job actually needs.' },
+      { title: 'Written Quote', body: 'One number, line-itemed. You know exactly what is covered before we start.' },
+      { title: 'Scheduled Work', body: 'We show up on the date we said, keep the site clean, and walk it with you at the end.' },
+    ],
+    related: ['edina', 'eden-prairie', 'minnetonka', 'commercial-painting'],
+    customSections: [
+      {
+        heading: 'Painting Contractor in St. Louis Park, MN',
+        eyebrow: 'Why St. Louis Park',
+        body: [
+          'Sky’s the Limit Painting serves St. Louis Park neighborhoods and the 394/100 corridor with residential painting, commercial painting, and parking lot striping. We are a local, owner-run crew — not a franchise — and every job gets a direct line to the person doing the work.',
+          'St. Louis Park sits in the first-ring west sweet spot: a straight shot up 394/100 from the metro core, and full of mid-century ranches, split-levels, and duplexes that take a beating from Minnesota freeze-thaw. The commercial side runs on small offices, retail storefronts, and service businesses along the highway corridors — the kind of jobs where a crew that shows up on time and finishes clean wins the next one by word of mouth.',
+          'Call or text 651-410-4196 for a free estimate. We will come out, walk the job with you, and give you a straight number.',
+        ],
+      },
+      {
+        heading: 'Residential Painting in St. Louis Park',
+        eyebrow: 'Homes',
+        body: [
+          'St. Louis Park exteriors: mid-century siding, original trim, soffits, and fascia on 1950s and 60s homes need real prep before paint — scrape, prime, caulk, then an exterior-grade topcoat built for freeze-thaw. Skipping the prep is how a repaint peels early; we price the prep in and say so.',
+          'Interior repaints run year-round: whole homes, single rooms, and finished basements. We schedule around your household — furniture moved, floors covered, one room at a time if that is what it takes.',
+          'Cabinet painting is the full kitchen refinish without the full remodel price. We spray-shop the doors and drawers for a factory-smooth finish and finish the boxes in place — no kitchen downtime measured in weeks.',
+          'Every residential job starts with a walkthrough and a written quote — what is included, what is prepped, what paint goes where. No allowance-line games.',
+        ],
+        links: [
+          { text: 'interior painting', href: '/painting-services/interior-painting' },
+          { text: 'exterior painting', href: '/painting-services/exterior-painting' },
+          { text: 'cabinet painting', href: '/painting-services/cabinet-painting' },
+        ],
+      },
+      {
+        heading: 'Commercial Painting for St. Louis Park Businesses',
+        eyebrow: 'Businesses',
+        body: [
+          'St. Louis Park’s commercial mix is small offices, retail storefronts, and service businesses along the 394/100 corridors — workplaces that cannot afford to look tired and cannot afford to close for a week either. We paint after hours and on weekends, keep common areas clean and signed off, and coordinate with your property manager so the job never touches operating hours.',
+          'We handle office refreshes, retail fronts, common areas, and multi-tenant buildings where consistency across suites matters. If you are comparing bids, ask us about phased scheduling — we can work suite by suite so tenants stay put and rent keeps flowing.',
+        ],
+        links: [
+          { text: 'commercial painting services', href: '/painting-services/commercial-painting' },
+          { text: 'our capabilities', href: '/capabilities' },
+        ],
+      },
+      {
+        heading: 'Parking Lot Striping in St. Louis Park',
+        eyebrow: 'The lot',
+        body: [
+          'Office and retail lots along the 394/100 corridor take their share of plow damage every winter, and faded lines plus a worn ADA stall are a liability problem, not a cosmetic one. We restripe lots — stalls, ADA spaces and access aisles, fire lanes, arrows — and every lot job starts with a free walkthrough: we measure, check your ADA layout against the current configuration, and give you a written number.',
+          'If the same property also needs the building painted, one crew schedules both. No coordinating a painter and a striping company separately.',
+        ],
+        links: [
+          { text: 'parking lot striping services', href: '/painting-services/parking-lot-striping' },
+          { text: 'pavement marking services', href: '/painting-services/pavement-marking' },
+        ],
+      },
+      {
+        heading: 'How a St. Louis Park Project Runs',
+        eyebrow: 'Process',
+        body: [
+          'First, call or text 651-410-4196 and tell us what you are looking at — house, office, parking lot. Then we walk it: measure, note the prep the job actually needs, and flag anything you should know before money moves. You get a written quote — one number, line-itemed. Then we show up on the date we said, keep the site clean, and walk it with you at the end.',
+          'Drywall repairs and deck or fence staining can be folded into the same project — ask during the walkthrough.',
+        ],
+        links: [
+          { text: 'free estimate', href: '/estimate' },
+          { text: 'paint-ready drywall repair', href: '/painting-services/drywall-repair' },
+        ],
+      },
+      {
+        heading: 'Why St. Louis Park Homeowners and Property Managers Call Us',
+        eyebrow: 'Why us',
+        body: [
+          'One crew, building and lot: painting and striping under one quote and one schedule. Straight quotes — written, itemized, no surprises. First-ring west logistics: we run the 494/35W/394 loop all week from Inver Grove Heights, so a St. Louis Park walkthrough is never a special trip. And the person you talk to is the person accountable for the work.',
+        ],
+      },
+      {
+        heading: 'Serving St. Louis Park and the West Metro',
+        eyebrow: 'Service area',
+        body: [
+          'Based in Inver Grove Heights, MN. We serve St. Louis Park and the west metro — Edina, Eden Prairie, Minnetonka, and the wider Twin Cities.',
+        ],
+        links: [
+          { text: 'full service-area map', href: '/service-area' },
+          { text: 'painting contractor in Edina', href: '/service-areas/edina' },
+          { text: 'painting contractor in Eden Prairie', href: '/service-areas/eden-prairie' },
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: 'My house is a 1950s rambler — how do you handle the prep?',
+        answer: 'The walkthrough checks siding and trim condition first, and the written quote itemizes scraping, priming, and caulking before any topcoat. On older exteriors, prep is most of the job — and we price it that way.',
+      },
+      {
+        question: 'Do you paint exteriors in St. Louis Park during winter?',
+        answer: 'No — Minnesota winters do not cooperate with exterior coatings. Exterior season runs roughly spring through fall, and we book the season early. Interior work, cabinets, and commercial interiors run year-round, including winter.',
+      },
+      {
+        question: 'Can you stripe our lot and paint the building on one contract?',
+        answer: 'Yes — that is the advantage of hiring us. One walkthrough, one written quote, one schedule for both the building and the lot.',
+      },
+      {
+        question: 'How do you price a parking lot re-stripe?',
+        answer: 'Every lot is different, so we walk it with you, measure, and give you a free written quote. The walkthrough costs nothing and the number is in writing before we start.',
+      },
+      {
+        question: 'Do you work after hours for businesses?',
+        answer: 'Tell us your operating hours at the walkthrough — we build small-office and retail work around them so your operation never stops, and the schedule goes in the written scope.',
+      },
+    ],
+  },
+  {
+    kind: 'area',
+    slug: 'richfield',
+    title: 'Richfield Painting Contractor',
+    shortTitle: 'Richfield',
+    eyebrow: 'South first-ring / 494-35W-77 corridor',
+    headline: 'Owner-operated painting in Richfield — homes, retail fronts, and the lots behind them.',
+    description:
+      'Sky’s the Limit Painting LLC serves Richfield with residential painting, commercial painting, and parking lot striping. Based in Inver Grove Heights, working the whole south metro.',
+    metaTitle: 'Richfield Painting Contractor',
+    metaDescription:
+      'House painting, commercial painting & parking lot striping in Richfield, MN. Local crew, free estimates. Call 651-410-4196.',
+    image: '/brand/generated/sky-local-authority.webp',
+    accent: 'South first-ring local',
+    market: 'Residential',
+    proof: [
+      'Based in Inver Grove Heights, serving Richfield',
+      'Owner-led project communication',
+      'Residential, commercial, and striping under one crew',
+      'Free walkthroughs, written quotes',
+    ],
+    scope: [
+      'Interior repainting',
+      'Exterior repaints',
+      'Cabinet refinishing',
+      'Commercial interiors and exteriors',
+      'Parking lot striping and ADA stalls',
+    ],
+    process: [
+      { title: 'Call or Text', body: 'Tell us what you are looking at — house, storefront, parking lot — and where in Richfield it is.' },
+      { title: 'Walkthrough', body: 'We come to you, measure, and note the prep the job actually needs.' },
+      { title: 'Written Quote', body: 'One number, line-itemed. You know exactly what is covered before we start.' },
+      { title: 'Scheduled Work', body: 'We show up on the date we said, keep the site clean, and walk it with you at the end.' },
+    ],
+    related: ['bloomington', 'edina', 'twin-cities', 'parking-lot-striping'],
+    customSections: [
+      {
+        heading: 'Painting Contractor in Richfield, MN',
+        eyebrow: 'Why Richfield',
+        body: [
+          'Sky’s the Limit Painting serves Richfield neighborhoods and the 494/35W-77 corridor with residential painting, commercial painting, and parking lot striping. We are a local, owner-run crew — not a franchise — and every job gets a direct line to the person doing the work.',
+          'Richfield is a working first-ring suburb: postwar ranches and duplexes that need honest exterior work, and a retail strip along 494 that keeps painters and stripers busy in equal measure. It is the kind of market where one contractor doing the building AND the lot is a real advantage — the storefront refresh and the restripe happen on one schedule instead of two.',
+          'Call or text 651-410-4196 for a free estimate. We will come out, walk the job with you, and give you a straight number.',
+        ],
+      },
+      {
+        heading: 'Residential Painting in Richfield',
+        eyebrow: 'Homes',
+        body: [
+          'Richfield postwar housing stock means exteriors that are due or overdue. The process is always the same: walkthrough, real prep (scrape, prime, caulk), then exterior-grade topcoat rated for Minnesota freeze-thaw. On older siding, prep is the job; we itemize it in the quote instead of hiding it.',
+          'Interiors run year-round: whole homes, single rooms, and rental turnovers.',
+          'Cabinet painting is the full kitchen refinish without the full remodel price. We spray-shop the doors and drawers for a factory-smooth finish and finish the boxes in place.',
+          'Every residential job starts with a walkthrough and a written quote — what is included, what is prepped, what paint goes where. No allowance-line games.',
+        ],
+        links: [
+          { text: 'interior painting', href: '/painting-services/interior-painting' },
+          { text: 'exterior painting', href: '/painting-services/exterior-painting' },
+          { text: 'cabinet painting', href: '/painting-services/cabinet-painting' },
+        ],
+      },
+      {
+        heading: 'Commercial Painting for Richfield Businesses',
+        eyebrow: 'Businesses',
+        body: [
+          'Richfield’s commercial work centers on the 494 retail strip and the first-ring housing behind it: retail fronts, restaurants, small offices, and multi-tenant buildings. We paint after hours and on weekends so the business stays open, keep the work zone tight and clean, and coordinate with your property manager or GC.',
+          'We handle storefront refreshes, retail interiors, office repaints, and multi-tenant properties where consistent color across suites matters. If you manage a retail center, talk to us about phasing — we work bay by bay so the center never looks like a construction site.',
+        ],
+        links: [
+          { text: 'commercial painting services', href: '/painting-services/commercial-painting' },
+          { text: 'our capabilities', href: '/capabilities' },
+        ],
+      },
+      {
+        heading: 'Parking Lot Striping and Pavement Marking in Richfield',
+        eyebrow: 'The lot',
+        body: [
+          'We are a painting contractor in the south metro that also runs a pavement-marking operation: re-stripes, ADA-compliant stalls and access aisles, fire lanes, arrows, crosswalks, and full new-lot layouts. In Richfield that earns its place — the retail lots along the 494 edge live under a plow blade half the year, and faded lines are a liability problem, not just a cosmetic one.',
+          'We do the same free walkthrough on lots that we do on buildings: measure the stalls, check your ADA layout against the current configuration, and give you a written number for the work. If the same property also needs the building painted, one crew schedules both — no coordinating a painter and a striping company separately.',
+        ],
+        links: [
+          { text: 'parking lot striping services', href: '/painting-services/parking-lot-striping' },
+          { text: 'pavement marking services', href: '/painting-services/pavement-marking' },
+        ],
+      },
+      {
+        heading: 'How a Richfield Project Runs',
+        eyebrow: 'Process',
+        body: [
+          'First, call or text 651-410-4196 and tell us what you are looking at — house, storefront, parking lot. Then we walk it: measure, note the prep the job actually needs, and flag anything you should know before money moves. You get a written quote — one number, line-itemed. Then we show up on the date we said, keep the site clean, and walk it with you at the end.',
+          'Drywall repairs and deck or fence staining can be folded into the same project — ask during the walkthrough.',
+        ],
+        links: [
+          { text: 'free estimate', href: '/estimate' },
+          { text: 'deck and fence staining', href: '/painting-services/deck-fence-staining' },
+        ],
+      },
+      {
+        heading: 'Why Richfield Homeowners and Property Managers Call Us',
+        eyebrow: 'Why us',
+        body: [
+          'One crew, building and lot: painting and striping under one quote and one schedule. Straight quotes — written, itemized, no surprises. 494-strip familiarity: the retail lots along Richfield’s 494 edge get plowed hard all winter, and we restripe and ADA-check lots that live under a plow blade half the year. And the person you talk to is the person accountable for the work.',
+        ],
+      },
+      {
+        heading: 'Serving Richfield and the South Metro',
+        eyebrow: 'Service area',
+        body: [
+          'Based in Inver Grove Heights, MN. We serve Richfield and the south metro — Bloomington, Edina, Burnsville, and the wider Twin Cities.',
+        ],
+        links: [
+          { text: 'full service-area map', href: '/service-area' },
+          { text: 'painting contractor in Bloomington', href: '/service-areas/bloomington' },
+          { text: 'painting contractor in Edina', href: '/service-areas/edina' },
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: 'Our retail lot on 494 is plow-chewed every winter — can you restripe it?',
+        answer: 'Yes, and the ADA layout check comes with the walkthrough. We measure the stalls, confirm the accessible spaces and aisles, and give you a written number for the restripe before spring traffic picks up.',
+      },
+      {
+        question: 'Do you paint exteriors in Richfield during winter?',
+        answer: 'No — Minnesota winters do not cooperate with exterior coatings. Exterior season runs roughly spring through fall, and we book the season early. Interior work, cabinets, and commercial interiors run year-round, including winter.',
+      },
+      {
+        question: 'Can you stripe our lot and paint the storefront on one contract?',
+        answer: 'Yes — that is the advantage of hiring us. One walkthrough, one written quote, one schedule for both the building and the lot.',
+      },
+      {
+        question: 'How do you price a parking lot re-stripe?',
+        answer: 'Every lot is different, so we walk it with you, measure, and give you a free written quote. The walkthrough costs nothing and the number is in writing before we start.',
+      },
+      {
+        question: 'Do you work weekends so our store can stay open?',
+        answer: 'Yes — most Richfield retail work is scheduled evenings and weekends. Tell us your hours at the walkthrough and we build the schedule around them in the written scope.',
+      },
+    ],
+  },
+  {
+    kind: 'area',
+    slug: 'minnetonka',
+    title: 'Minnetonka Painting Contractor',
+    shortTitle: 'Minnetonka',
+    eyebrow: 'West metro / 394-494 corporate corridor',
+    headline: 'Commercial-first painting in Minnetonka — offices, multi-tenant buildings, and the lots around them.',
+    description:
+      'Sky’s the Limit Painting LLC serves Minnetonka with commercial painting, residential painting, and parking lot striping. Based in Inver Grove Heights, working the west-metro corporate corridor.',
+    metaTitle: 'Minnetonka Painting Contractor',
+    metaDescription:
+      'Commercial painting, house painting & parking lot striping in Minnetonka, MN. Local crew, free estimates. Call 651-410-4196.',
+    image: '/brand/generated/sky-local-authority.webp',
+    accent: 'Corporate corridor local',
+    market: 'Commercial',
+    proof: [
+      'Based in Inver Grove Heights, serving Minnetonka',
+      'After-hours and weekend commercial scheduling',
+      'Residential, commercial, and striping under one crew',
+      'Free walkthroughs, written quotes',
+    ],
+    scope: [
+      'Commercial interiors and exteriors',
+      'Multi-tenant and office properties',
+      'Parking lot striping and ADA stalls',
+      'Interior repainting',
+      'Exterior repaints and cabinet refinishing',
+    ],
+    process: [
+      { title: 'Call or Text', body: 'Tell us about the property — office building, retail center, home — and where in Minnetonka it is.' },
+      { title: 'Walkthrough', body: 'We walk the building and the lot with you, noting prep, phasing, and schedule constraints.' },
+      { title: 'Written Quote', body: 'One number, line-itemed, with the schedule in writing before we start.' },
+      { title: 'Scheduled Work', body: 'We show up on the date we said, keep the site clean, and walk it with you at the end.' },
+    ],
+    related: ['eden-prairie', 'plymouth', 'maple-grove', 'commercial-painting'],
+    customSections: [
+      {
+        heading: 'Painting Contractor in Minnetonka, MN',
+        eyebrow: 'Why Minnetonka',
+        body: [
+          'Sky’s the Limit Painting serves Minnetonka and the 394/494 corporate corridor with commercial painting, residential painting, and parking lot striping. We are a local, owner-run crew — not a franchise — and every job gets a direct line to the person doing the work.',
+          'Minnetonka is corporate west-metro: office parks and multi-tenant buildings off the 394/494 corridors, where the work that matters is the work nobody’s tenants ever notice. This page is written for the facilities manager first and the homeowner second — procurement language, scheduling detail, and a quote that actually itemizes what matters on a commercial job.',
+          'Call or text 651-410-4196 for a free walkthrough and written quote. We will come out, measure, and give you a straight number.',
+        ],
+      },
+      {
+        heading: 'Commercial Painting for Minnetonka Offices and Property Managers',
+        eyebrow: 'Businesses',
+        body: [
+          'Minnetonka’s office parks and multi-tenant buildings need painters who operate on building time, not contractor time. We paint after hours and on weekends, phase work floor by floor or suite by suite so tenants stay put, and coordinate directly with your property manager or GC. Common areas, lobbies, corridors, exteriors — one crew, one schedule, one point of accountability.',
+          'We also handle the turnover side: office repaints between tenants, retail refreshes, and exterior touch-ups that keep a property competitive on the corridor. If you manage multiple buildings, ask about a standing walkthrough schedule — a planned repaint cycle beats an emergency repaint every time.',
+        ],
+        links: [
+          { text: 'commercial painting services', href: '/painting-services/commercial-painting' },
+          { text: 'our capabilities', href: '/capabilities' },
+        ],
+      },
+      {
+        heading: 'Parking Lot Striping and Pavement Marking in Minnetonka',
+        eyebrow: 'The lot',
+        body: [
+          'We are a painting contractor in the west metro that also runs a pavement-marking operation: re-stripes, ADA-compliant stalls and access aisles, fire lanes, arrows, crosswalks, and full new-lot layouts. Office-park lots off the 394/494 corridors are exactly where striping pays for itself — high tenant turnover, snowplow wear every winter, and accessible-parking layouts that drift a little further out of compliance every year.',
+          'We do the same free walkthrough on lots that we do on buildings: measure the stalls, check your ADA layout against the current configuration, and give you a written number for the work. And when the same property needs the building painted, one crew schedules both — paint and striping on one quote, no coordinating two contractors.',
+        ],
+        links: [
+          { text: 'parking lot striping services', href: '/painting-services/parking-lot-striping' },
+          { text: 'pavement marking services', href: '/painting-services/pavement-marking' },
+        ],
+      },
+      {
+        heading: 'Residential Painting in Minnetonka',
+        eyebrow: 'Homes',
+        body: [
+          'Minnetonka residential work runs the full range: whole-home repaints, exterior refreshes on lakeside and wooded lots that take weather differently than open subdivisions, and interior repaints year-round, scheduled around your household.',
+          'Cabinet painting is the full kitchen refinish without the full remodel price — we spray-shop the doors and drawers for a factory-smooth finish and finish the boxes in place. Every residential job starts with a walkthrough and a written quote: what is included, what is prepped, what paint goes where. No allowance-line games.',
+        ],
+        links: [
+          { text: 'interior painting', href: '/painting-services/interior-painting' },
+          { text: 'exterior painting', href: '/painting-services/exterior-painting' },
+          { text: 'cabinet painting', href: '/painting-services/cabinet-painting' },
+        ],
+      },
+      {
+        heading: 'How a Minnetonka Project Runs',
+        eyebrow: 'Process',
+        body: [
+          'First, call or text 651-410-4196 and tell us about the property — office building, retail center, home, lot. Then we walk it with you: measure, note the prep the job actually needs, work out the phasing and schedule constraints, and flag anything you should know before money moves. You get a written quote — one number, line-itemed, with the schedule in writing. Then we show up on the date we said, keep the site clean, and walk it with you at the end.',
+          'Drywall repairs can be folded into the same project — ask during the walkthrough.',
+        ],
+        links: [
+          { text: 'free estimate', href: '/estimate' },
+          { text: 'paint-ready drywall repair', href: '/painting-services/drywall-repair' },
+        ],
+      },
+      {
+        heading: 'Why Minnetonka Property Managers and Homeowners Call Us',
+        eyebrow: 'Why us',
+        body: [
+          'Corporate-corridor scheduling: after-hours and weekend work, phased across multi-tenant buildings, built around your tenants’ hours. One crew, building and lot: painting and striping under one quote and one schedule. Straight quotes — written, itemized, no surprises. And the person you talk to is the person accountable for the work.',
+        ],
+      },
+      {
+        heading: 'Serving Minnetonka and the West Metro',
+        eyebrow: 'Service area',
+        body: [
+          'Based in Inver Grove Heights, MN. We serve Minnetonka and the west-metro corridor — Eden Prairie, Plymouth, the 394/494 loop, and the wider Twin Cities.',
+        ],
+        links: [
+          { text: 'full service-area map', href: '/service-area' },
+          { text: 'painting contractor in Eden Prairie', href: '/service-areas/eden-prairie' },
+          { text: 'painting contractor in Plymouth', href: '/service-areas/plymouth' },
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: 'Can you paint our office building without disrupting tenants?',
+        answer: 'Yes — that is the core of our commercial scheduling. We work after hours and weekends, phase floor by floor or suite by suite, and put the schedule in the written scope so tenants know what to expect.',
+      },
+      {
+        question: 'Do you handle ADA layout checks on office-park lots?',
+        answer: 'Yes. The free lot walkthrough includes measuring stalls and access aisles and checking your accessible-parking layout against the current configuration, then a written number for the restripe.',
+      },
+      {
+        question: 'Do you take on smaller commercial jobs, not just whole buildings?',
+        answer: 'Yes — single-suite repaints, lobby refreshes, and retail turnovers are common. The walkthrough and written quote work the same at any scale.',
+      },
+      {
+        question: 'How do you price a commercial repaint?',
+        answer: 'Per project, after a walkthrough: we measure, note the prep, and give you a written, itemized number. No square-foot guesswork over the phone.',
+      },
+      {
+        question: 'Do you paint exteriors in Minnetonka during winter?',
+        answer: 'No — Minnesota winters do not cooperate with exterior coatings. Exterior season runs roughly spring through fall. Interiors, cabinets, and commercial interiors run year-round, including winter.',
+      },
+    ],
+  },
+  {
+    kind: 'area',
+    slug: 'plymouth',
+    title: 'Plymouth Painting Contractor',
+    shortTitle: 'Plymouth',
+    eyebrow: 'Northwest metro / 494-55 corporate corridor',
+    headline: 'Owner-operated painting in Plymouth — corporate corridor, new-tenant build-outs, and the lots out front.',
+    description:
+      'Sky’s the Limit Painting LLC serves Plymouth with commercial painting, residential painting, and parking lot striping. Based in Inver Grove Heights, working the northwest corporate corridor.',
+    metaTitle: 'Plymouth Painting Contractor',
+    metaDescription:
+      'Commercial painting, house painting & parking lot striping in Plymouth, MN. Local crew, free estimates. Call 651-410-4196.',
+    image: '/brand/generated/sky-local-authority.webp',
+    accent: 'Corporate corridor local',
+    market: 'Commercial',
+    proof: [
+      'Based in Inver Grove Heights, serving Plymouth',
+      'New-tenant build-out and turnover scheduling',
+      'Residential, commercial, and striping under one crew',
+      'Free walkthroughs, written quotes',
+    ],
+    scope: [
+      'Commercial interiors and exteriors',
+      'New-tenant build-outs and turnovers',
+      'Parking lot striping and ADA stalls',
+      'Interior repainting',
+      'Exterior repaints and cabinet refinishing',
+    ],
+    process: [
+      { title: 'Call or Text', body: 'Tell us about the space — build-out, office, retail, home — and where in Plymouth it is.' },
+      { title: 'Walkthrough', body: 'We walk it with you, measure, and nail down the schedule and phasing.' },
+      { title: 'Written Quote', body: 'One number, line-itemed, with the completion date in writing.' },
+      { title: 'Scheduled Work', body: 'We show up on the date we said, keep the site clean, and walk it with you at the end.' },
+    ],
+    related: ['maple-grove', 'minnetonka', 'twin-cities', 'parking-lot-striping'],
+    customSections: [
+      {
+        heading: 'Painting Contractor in Plymouth, MN',
+        eyebrow: 'Why Plymouth',
+        body: [
+          'Sky’s the Limit Painting serves Plymouth and the 494/55 northwest corporate corridor with commercial painting, residential painting, and parking lot striping. We are a local, owner-run crew — not a franchise — and every job gets a direct line to the person doing the work.',
+          'Plymouth’s corridor runs on build-outs and turnovers: new tenants signing along 494/55, retail and office spaces that hand back fast, and property managers who need a painter that can keep a schedule instead of explaining why they missed it. We stage paint work around lease dates and GC schedules — the space is ready when the lease starts, not a week after.',
+          'Call or text 651-410-4196 for a free walkthrough and written quote. We will come out, measure, and give you a straight number.',
+        ],
+      },
+      {
+        heading: 'Commercial Painting for Plymouth Build-Outs and Offices',
+        eyebrow: 'Businesses',
+        body: [
+          'New-tenant build-outs, office refreshes, and retail turnovers along the 494/55 corridor are our bread-and-butter commercial work. We coordinate with your GC or property manager, paint on the build-out’s timeline — nights and weekends when the schedule demands it — and keep the site clean enough for the next trade to walk in behind us.',
+          'We also handle multi-tenant properties, common areas, and exteriors that need to look sharp for the next prospect walking the building. Phased scheduling keeps occupied suites running while the turnover suite gets finished — one crew, one accountable contact, one written schedule.',
+        ],
+        links: [
+          { text: 'commercial painting services', href: '/painting-services/commercial-painting' },
+          { text: 'our capabilities', href: '/capabilities' },
+        ],
+      },
+      {
+        heading: 'Parking Lot Striping and Pavement Marking in Plymouth',
+        eyebrow: 'The lot',
+        body: [
+          'We are a painting contractor in the northwest metro that also runs a pavement-marking operation: re-stripes, ADA-compliant stalls and access aisles, fire lanes, arrows, crosswalks, and full new-lot layouts. Corporate-corridor lots in Plymouth get heavy turnover traffic and a full winter of plow wear — faded lines and worn accessible stalls are a liability problem, not just a cosmetic one.',
+          'We do the same free walkthrough on lots that we do on buildings: measure the stalls, check your ADA layout against the current configuration, and give you a written number for the work. And when the building needs paint too, one crew schedules both — no coordinating a painter and a striping company separately.',
+        ],
+        links: [
+          { text: 'parking lot striping services', href: '/painting-services/parking-lot-striping' },
+          { text: 'pavement marking services', href: '/painting-services/pavement-marking' },
+        ],
+      },
+      {
+        heading: 'Residential Painting in Plymouth',
+        eyebrow: 'Homes',
+        body: [
+          'Plymouth residential work spans newer subdivisions and established neighborhoods: exterior repaints prepped for Minnesota freeze-thaw — scrape, prime, caulk, then exterior-grade topcoat — and interior repaints that run year-round, scheduled around your household.',
+          'Cabinet painting is the full kitchen refinish without the full remodel price: spray-shop doors and drawers for a factory-smooth finish, boxes finished in place. Every residential job starts with a walkthrough and a written quote — what is included, what is prepped, what paint goes where. No allowance-line games.',
+        ],
+        links: [
+          { text: 'interior painting', href: '/painting-services/interior-painting' },
+          { text: 'exterior painting', href: '/painting-services/exterior-painting' },
+          { text: 'cabinet painting', href: '/painting-services/cabinet-painting' },
+        ],
+      },
+      {
+        heading: 'How a Plymouth Project Runs',
+        eyebrow: 'Process',
+        body: [
+          'First, call or text 651-410-4196 and tell us about the space — build-out, office, retail, home, lot. Then we walk it with you: measure, note the prep, lock the schedule and phasing against your lease date or timeline, and flag anything you should know before money moves. You get a written quote — one number, line-itemed, with the completion date in writing. Then we show up on the date we said, keep the site clean, and walk it with you at the end.',
+          'Drywall repairs and deck or fence staining can be folded into the same project — ask during the walkthrough.',
+        ],
+        links: [
+          { text: 'free estimate', href: '/estimate' },
+          { text: 'paint-ready drywall repair', href: '/painting-services/drywall-repair' },
+        ],
+      },
+      {
+        heading: 'Why Plymouth Property Managers and Homeowners Call Us',
+        eyebrow: 'Why us',
+        body: [
+          'Build-out speed: new-tenant spaces along the 494/55 corridor hand back fast — we stage paint so the space is ready when the lease starts. One crew, building and lot: painting and striping under one quote and one schedule. Straight quotes — written, itemized, with the completion date on paper. And the person you talk to is the person accountable for the work.',
+        ],
+      },
+      {
+        heading: 'Serving Plymouth and the Northwest Metro',
+        eyebrow: 'Service area',
+        body: [
+          'Based in Inver Grove Heights, MN. We serve Plymouth and the northwest metro — Maple Grove, Minnetonka, the I-94 corridor, and the wider Twin Cities.',
+        ],
+        links: [
+          { text: 'full service-area map', href: '/service-area' },
+          { text: 'painting contractor in Maple Grove', href: '/service-areas/maple-grove' },
+          { text: 'painting contractor in Minnetonka', href: '/service-areas/minnetonka' },
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: 'Can you hit a lease-start deadline on a tenant build-out?',
+        answer: 'Yes — tell us the date at the walkthrough and it goes in the written quote. We schedule build-outs on the lease timeline, working nights and weekends when the calendar demands it.',
+      },
+      {
+        question: 'Do you coordinate with our general contractor?',
+        answer: 'Yes. We work in the GC’s sequence, keep the site clean for the next trade, and put phasing in the written scope so everyone is working from the same plan.',
+      },
+      {
+        question: 'Do you paint exteriors in Plymouth during winter?',
+        answer: 'No — Minnesota winters do not cooperate with exterior coatings. Exterior season runs roughly spring through fall, and we book the season early. Interior work, cabinets, and commercial interiors run year-round, including winter.',
+      },
+      {
+        question: 'Can you stripe our lot and paint the building on one contract?',
+        answer: 'Yes — that is the advantage of hiring us. One walkthrough, one written quote, one schedule for both the building and the lot.',
+      },
+      {
+        question: 'How do you price a parking lot re-stripe?',
+        answer: 'Every lot is different, so we walk it with you, measure, and give you a free written quote. The walkthrough costs nothing and the number is in writing before we start.',
+      },
+    ],
+  },
+  {
+    kind: 'area',
+    slug: 'burnsville',
+    title: 'Burnsville Painting Contractor',
+    shortTitle: 'Burnsville',
+    eyebrow: 'South metro / 35W-35E retail corridor',
+    headline: 'Owner-operated painting in Burnsville — retail fronts, restaurants, homes, and the lots in front of them.',
+    description:
+      'Sky’s the Limit Painting LLC serves Burnsville with residential painting, commercial painting, and parking lot striping. Based in Inver Grove Heights, working the whole south metro.',
+    metaTitle: 'Burnsville Painting Contractor',
+    metaDescription:
+      'House painting, commercial painting & parking lot striping in Burnsville, MN. Local crew, free estimates. Call 651-410-4196.',
+    image: '/brand/generated/sky-local-authority.webp',
+    accent: 'South metro local',
+    market: 'Residential',
+    proof: [
+      'Based in Inver Grove Heights, serving Burnsville',
+      'Retail and restaurant scheduling around your hours',
+      'Residential, commercial, and striping under one crew',
+      'Free walkthroughs, written quotes',
+    ],
+    scope: [
+      'Interior repainting',
+      'Exterior repaints',
+      'Cabinet refinishing',
+      'Commercial interiors and exteriors',
+      'Parking lot striping and ADA stalls',
+    ],
+    process: [
+      { title: 'Call or Text', body: 'Tell us what you are looking at — house, storefront, restaurant, parking lot — and where in Burnsville it is.' },
+      { title: 'Walkthrough', body: 'We come to you, measure, and note the prep the job actually needs.' },
+      { title: 'Written Quote', body: 'One number, line-itemed. You know exactly what is covered before we start.' },
+      { title: 'Scheduled Work', body: 'We show up on the date we said, keep the site clean, and walk it with you at the end.' },
+    ],
+    related: ['bloomington', 'eagan', 'inver-grove-heights', 'pavement-marking'],
+    customSections: [
+      {
+        heading: 'Painting Contractor in Burnsville, MN',
+        eyebrow: 'Why Burnsville',
+        body: [
+          'Sky’s the Limit Painting serves Burnsville and the 35W/35E south-metro corridor with residential painting, commercial painting, and parking lot striping. We are a local, owner-run crew — not a franchise — and every job gets a direct line to the person doing the work.',
+          'Burnsville runs on retail and restaurants: fronts that live on curb appeal and lots that take punishment from traffic and plows all year. A tired facade costs a retail business customers, and a faded lot costs the property manager a liability problem. We do the building and the lot under one contract, on a schedule that never closes the business.',
+          'Call or text 651-410-4196 for a free estimate. We will come out, walk the job with you, and give you a straight number.',
+        ],
+      },
+      {
+        heading: 'Commercial Painting for Burnsville Retail and Restaurants',
+        eyebrow: 'Businesses',
+        body: [
+          'Burnsville’s retail and restaurant fronts along the 35W corridor live and die on first impressions. We paint retail facades, restaurant interiors, and common areas on nights and weekends so the business never closes — tight work zones, clean exits, and a site that opens for business on time every morning.',
+          'We also handle multi-tenant retail centers: consistent colors across suites, storefront refreshes between tenants, and phased work so the center never looks like a construction site. If you manage a center, ask about phasing — we work bay by bay while the rest of the center stays open.',
+        ],
+        links: [
+          { text: 'commercial painting services', href: '/painting-services/commercial-painting' },
+          { text: 'our capabilities', href: '/capabilities' },
+        ],
+      },
+      {
+        heading: 'Parking Lot Striping and Pavement Marking in Burnsville',
+        eyebrow: 'The lot',
+        body: [
+          'We are a painting contractor in the south metro that also runs a pavement-marking operation: re-stripes, ADA-compliant stalls and access aisles, fire lanes, arrows, crosswalks, and full new-lot layouts. Burnsville’s retail and restaurant lots earn the full section — high-turnover parking, plow wear every winter, and accessible-parking layouts that drift out of compliance while the paint fades.',
+          'We do the same free walkthrough on lots that we do on buildings: measure the stalls, check your ADA layout against the current configuration, and give you a written number for the work. And when the building needs paint too, one crew schedules both — the facade and the lot on one quote, ready for the same opening day.',
+        ],
+        links: [
+          { text: 'parking lot striping services', href: '/painting-services/parking-lot-striping' },
+          { text: 'pavement marking services', href: '/painting-services/pavement-marking' },
+        ],
+      },
+      {
+        heading: 'Residential Painting in Burnsville',
+        eyebrow: 'Homes',
+        body: [
+          'Burnsville residential work covers established neighborhoods and newer builds: exterior repaints prepped for Minnesota freeze-thaw — scrape, prime, caulk, then exterior-grade topcoat — and interior repaints that run year-round, scheduled around your household.',
+          'Cabinet painting is the full kitchen refinish without the full remodel price: spray-shop doors and drawers for a factory-smooth finish, boxes finished in place. Every residential job starts with a walkthrough and a written quote — what is included, what is prepped, what paint goes where. No allowance-line games.',
+        ],
+        links: [
+          { text: 'interior painting', href: '/painting-services/interior-painting' },
+          { text: 'exterior painting', href: '/painting-services/exterior-painting' },
+          { text: 'cabinet painting', href: '/painting-services/cabinet-painting' },
+        ],
+      },
+      {
+        heading: 'How a Burnsville Project Runs',
+        eyebrow: 'Process',
+        body: [
+          'First, call or text 651-410-4196 and tell us what you are looking at — house, storefront, restaurant, parking lot. Then we walk it: measure, note the prep the job actually needs, and build the schedule around your hours before money moves. You get a written quote — one number, line-itemed. Then we show up on the date we said, keep the site clean, and walk it with you at the end.',
+          'Drywall repairs and deck or fence staining can be folded into the same project — ask during the walkthrough.',
+        ],
+        links: [
+          { text: 'free estimate', href: '/estimate' },
+          { text: 'deck and fence staining', href: '/painting-services/deck-fence-staining' },
+        ],
+      },
+      {
+        heading: 'Why Burnsville Homeowners and Property Managers Call Us',
+        eyebrow: 'Why us',
+        body: [
+          'Retail-front turnaround: restaurants and retail along the 35W corridor live on curb appeal — we paint and restripe around your hours so you never close. One crew, building and lot: painting and striping under one quote and one schedule. Straight quotes — written, itemized, no surprises. And the person you talk to is the person accountable for the work.',
+        ],
+      },
+      {
+        heading: 'Serving Burnsville and the South Metro',
+        eyebrow: 'Service area',
+        body: [
+          'Based in Inver Grove Heights, MN. We serve Burnsville and the south metro — Bloomington, Eagan, Inver Grove Heights, and the wider Twin Cities.',
+        ],
+        links: [
+          { text: 'full service-area map', href: '/service-area' },
+          { text: 'painting contractor in Bloomington', href: '/service-areas/bloomington' },
+          { text: 'painting contractor in Inver Grove Heights', href: '/service-areas/inver-grove-heights' },
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: 'Can you repaint our restaurant without closing for service?',
+        answer: 'Yes — most Burnsville restaurant work happens overnight and between services. Tell us your hours at the walkthrough and the schedule goes in the written scope; the dining room opens on time.',
+      },
+      {
+        question: 'Do you paint exteriors in Burnsville during winter?',
+        answer: 'No — Minnesota winters do not cooperate with exterior coatings. Exterior season runs roughly spring through fall, and we book the season early. Interior work, cabinets, and commercial interiors run year-round, including winter.',
+      },
+      {
+        question: 'Can you stripe our lot and paint the building on one contract?',
+        answer: 'Yes — that is the advantage of hiring us. One walkthrough, one written quote, one schedule for both the building and the lot.',
+      },
+      {
+        question: 'How do you price a parking lot re-stripe?',
+        answer: 'Every lot is different, so we walk it with you, measure, and give you a free written quote. The walkthrough costs nothing and the number is in writing before we start.',
+      },
+      {
+        question: 'Do you handle retail-center phasing so other tenants stay open?',
+        answer: 'Yes. We work bay by bay on retail centers, keeping the rest of the center open and clean. Phasing goes in the written scope before we start.',
+      },
+    ],
+  },
 ];
 
 export const serviceLandingPages: LandingPage[] = [
@@ -1294,7 +2074,7 @@ export const serviceLandingPages: LandingPage[] = [
         heading: 'Common Violations We See in Twin Cities Lots',
         eyebrow: 'What fails',
         body: [
-          'Minnesota lots fail ADA checks for a handful of repeat reasons — and winter is behind most of them. Plow blades scrape flat-painted symbols in the drive path first; when the wheelchair symbol wears away, the space stops reading as accessible even if the stall is still wide enough. Access aisles get painted narrower than 5 feet, or painted correctly and then used as a drive lane or snow-storage strip all winter.',
+          'Minnesota lots fail ADA checks for a handful of repeat reasons — and winter is behind most of them. Plow blades scrape flat-painted symbols in the drive path first; when the wheelchair symbol wears away, the space stops reading as accessible even if the stall is still wide enough. Access aisles get painted too narrow, or painted correctly and then used as a drive lane or snow-storage strip all winter.',
           'We also see lots with accessible spaces but no van space, van-width spaces without the "van-accessible" sign, signs mounted too low or missing after a January storm, and wrong counts after a lot gets restriped with a few extra stalls. Older asphalt settles too — what graded at 1:48 when poured can exceed it ten winters later.',
           'The pattern is always the same: the layout drifts while the paint fades, and nobody catches it until a complaint or an inspection. A spring walkthrough of the accessible stalls and aisles is the cheapest insurance a property manager can buy — it costs you a phone call.',
         ],
@@ -1464,6 +2244,256 @@ export const serviceLandingPages: LandingPage[] = [
       {
         question: 'Can I get a quote without a site visit?',
         answer: 'You can get a preliminary estimate from clear lot photos (aerial or wide shots), a stall count, and knowing whether it is a restripe or new layout. The final quote is confirmed on a walk-through so the surface condition does not surprise either of us.',
+      },
+    ],
+  },
+  {
+    kind: 'service',
+    slug: 'ada-striping-requirements-minnesota',
+    title: 'ADA Parking Lot Striping Requirements: A Minnesota Property Owner’s Guide',
+    shortTitle: 'ADA Requirements Guide',
+    eyebrow: 'Compliance / ADA guide',
+    headline: 'ADA parking lot striping requirements, explained for Minnesota property owners.',
+    description:
+      'A Minnesota property owner’s plain-language guide to ADA accessible-parking striping requirements — space counts, van-accessible spaces, access aisles, and signage — plus what Minnesota adds on top.',
+    metaTitle: 'ADA Striping Requirements in Minnesota — Property Owner Guide',
+    metaDescription:
+      'ADA parking lot striping requirements for Minnesota owners: accessible spaces, van spaces, access aisles, signage. Free walkthroughs. Call 651-410-4196.',
+    image: '/brand/generated/sky-public-authority.webp',
+    accent: 'Compliance guidance',
+    market: 'Commercial',
+    proof: [
+      'Plain-language summary of the federal ADA framework',
+      'Minnesota-specific verification steps',
+      'Based on the 2010 ADA Standards for Accessible Design',
+      'Not legal advice — verify with your local authority',
+    ],
+    scope: [
+      'Accessible space counts by lot size',
+      'Van-accessible space requirements',
+      'Access aisles',
+      'Signage rules',
+      'Minnesota code-layer checklist',
+    ],
+    process: [
+      { title: 'Assessment', body: 'Walk the lot: count spaces, measure accessible stalls and aisles, check signage and slopes.' },
+      { title: 'Layout Plan', body: 'Chalk a layout that hits space counts, van ratio, widths, and closest-to-entrance placement.' },
+      { title: 'Restripe', body: 'Professional striping, surface prep, and stencils for ISA symbols, arrows, and lettering.' },
+      { title: 'Verify', body: 'Confirm the finished layout against the requirements before the crew leaves.' },
+    ],
+    related: ['ada-parking-lot-striping', 'parking-lot-striping', 'pavement-marking', 'commercial-painting'],
+    customSections: [
+      {
+        heading: 'ADA Parking Lot Striping Requirements: A Minnesota Property Owner’s Guide',
+        eyebrow: 'The guide',
+        body: [
+          'This guide explains the federal ADA framework for accessible parking striping in plain language — space counts, van-accessible spaces, access aisles, and signage — and where Minnesota’s own rules layer on top. It is a starting point, not legal advice: requirements change, and your city may ask for more than the federal minimum. Verify your layout with your local authority before you stripe.',
+          'If you are a property manager staring at a faded lot and wondering what you actually owe, this guide lets you read your own lot the way an inspector would. When you are ready to fix what you find, our ADA striping services page covers what we do about it.',
+        ],
+        links: [
+          { text: 'ADA parking lot striping services', href: '/painting-services/ada-parking-lot-striping' },
+          { text: 'free estimate', href: '/estimate' },
+        ],
+      },
+      {
+        heading: 'The Federal Framework: 2010 ADA Standards for Accessible Design',
+        eyebrow: 'The Standards',
+        body: [
+          'Accessible parking under the ADA is not just a blue wheelchair symbol. The 2010 ADA Standards for Accessible Design set specific, measurable requirements for parking on lots open to the public. Here is the framework in plain terms.',
+          'Space counts scale with lot size, and the standards define the required share of van-accessible spaces, minimum widths for spaces and access aisles, slope limits, and sign mounting rules. We do not reproduce the federal tables here — requirements change, and Minnesota building code and your city can add requirements on top of the federal floor. Use this guide as the shape of the rules, then verify the exact numbers for your lot with your local authority having jurisdiction before you stripe.',
+          'Accessible spaces must also be on the shortest accessible route to the building entrance. Again — this is a summary, not the code book. Read it as the floor your lot has to clear, then verify the details with your local authority.',
+        ],
+        links: [
+          { text: 'ADA pavement marking services', href: '/painting-services/pavement-marking' },
+          { text: 'parking lot striping services', href: '/painting-services/parking-lot-striping' },
+        ],
+      },
+      {
+        heading: 'What Minnesota Adds on Top',
+        eyebrow: 'Minnesota',
+        body: [
+          'The ADA is federal law, but it is not the only rulebook. Minnesota adopts its own building code and accessibility provisions, and cities and counties can add requirements beyond the federal floor — on accessible-space counts, stall and aisle dimensions, or how the accessible route connects to the building entrance. A layout that clears the federal Standards can still fail a local inspection.',
+          'The practical move: verify the layout with your local authority having jurisdiction — your city’s building department or the county — before a new layout or a major restripe. Local inspectors enforce local rules, and they are the ones who sign off. When we do an ADA layout assessment on a walkthrough, we check the configuration against the current requirements and flag anything that needs local confirmation — then you stripe once, not twice.',
+        ],
+        links: [
+          { text: 'ADA layout assessments', href: '/painting-services/ada-parking-lot-striping' },
+          { text: 'free estimate', href: '/estimate' },
+        ],
+      },
+      {
+        heading: 'Where Minnesota Lots Go Wrong',
+        eyebrow: 'What fails',
+        body: [
+          'Minnesota lots fail for a handful of repeat reasons, and winter is behind most of them. Plow blades scrape flat-painted wheelchair symbols in the drive path first — when the symbol wears away, the space stops reading as accessible even if the stall is still wide enough. Access aisles get painted too narrow, or painted correctly and then used as a drive lane or snow-storage strip all winter.',
+          'We also see lots with accessible spaces but no van space, van-width spaces without the “van-accessible” sign, signs mounted too low or knocked out by a January storm, and wrong counts after a restripe added a few extra stalls. Older asphalt settles too — what graded at 1:48 when poured can exceed it ten winters later.',
+          'The pattern is always the same: the layout drifts while the paint fades, and nobody catches it until a complaint or an inspection. A spring walkthrough of the accessible stalls and aisles is the cheapest compliance insurance a property manager can buy — it costs a phone call.',
+        ],
+      },
+      {
+        heading: 'What To Do About It',
+        eyebrow: 'Next steps',
+        body: [
+          'Start with an assessment, not paint. Walk the lot, count total and accessible spaces, measure stall and aisle widths, check sign heights, and note the slopes. Compare what you find against the framework above and your local rules. Then restripe to a compliant layout — crisp lines, correct symbols, proper signage — and keep a record of what the finished layout meets.',
+          'That is exactly what our ADA walkthrough does: free, on your lot, measured and documented, with a written number for the restripe. No legal advice, no guesswork — a layout you can defend.',
+        ],
+        links: [
+          { text: 'ADA parking lot striping services', href: '/painting-services/ada-parking-lot-striping' },
+          { text: 'free estimate', href: '/estimate' },
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: 'Are ADA striping rules the same in every Minnesota city?',
+        answer: 'No. The federal ADA Standards are the floor every lot must clear, but Minnesota’s building code and local city or county rules can add requirements on top. Verify the layout with your local authority having jurisdiction before you stripe.',
+      },
+      {
+        question: 'How many accessible spaces does my lot need?',
+        answer: 'It scales with lot size: the required number of accessible spaces grows with total stall count, and a defined share of those must be van-accessible. We check the count on every lot walkthrough and flag anything that needs confirmation with your local authority.',
+      },
+      {
+        question: 'What makes a van-accessible space different?',
+        answer: 'A van-accessible space is wider than a standard accessible space, sits beside a full-width access aisle, and carries a sign reading “van-accessible” mounted at the required height. The standards define the exact dimensions — confirm them with your local authority having jurisdiction before you stripe.',
+      },
+      {
+        question: 'Do painted wheelchair symbols satisfy the signage rule?',
+        answer: 'No. Painted symbols are markings, not signage — the federal rule requires the raised sign mounted at the correct height. Paint alone fails the sign requirement.',
+      },
+      {
+        question: 'How often should a Minnesota lot be restriped?',
+        answer: 'When the markings stop reading clearly — plows wear accessible symbols first. Schedule a walkthrough each spring, and restripe when lines, symbols, or aisles no longer read as compliant.',
+      },
+    ],
+  },
+  {
+    kind: 'service',
+    slug: 'how-to-choose-commercial-painter',
+    title: 'How to Choose a Commercial Painting Contractor in the Twin Cities',
+    shortTitle: 'Choosing a Commercial Painter',
+    eyebrow: 'Buyer guide',
+    headline: 'How to choose a commercial painting contractor in the Twin Cities — the vetting checklist.',
+    description:
+      'Choosing a commercial painter in the Twin Cities? The vetting checklist: written scope, insurance and COI, scheduling around operations, phased work, references, and the red flags that should end the conversation.',
+    metaTitle: 'How to Choose a Commercial Painter — Twin Cities Guide',
+    metaDescription:
+      'How to choose a commercial painting contractor: written scope, insurance, scheduling, references, red flags. Twin Cities buyer’s checklist. Free estimates.',
+    image: '/brand/generated/sky-commercial-authority.webp',
+    accent: 'Buyer guidance',
+    market: 'Commercial',
+    proof: [
+      'Vetting checklist for Twin Cities commercial painting',
+      'What to ask, what to require, what to walk away from',
+      'Applies to offices, retail, multi-tenant, and restaurants',
+      'No sales pitch — a buyer’s checklist',
+    ],
+    scope: [
+      'Written scope checklist',
+      'Insurance and documentation checks',
+      'Operations-safe scheduling',
+      'Red-flag screening',
+      'Bid comparison method',
+    ],
+    process: [
+      { title: 'Define the Job', body: 'Write down the spaces, the surfaces, the timeline, and your operating hours.' },
+      { title: 'Get 2–3 Written Bids', body: 'Compare line-itemed scopes, not just bottom-line numbers.' },
+      { title: 'Check Insurance and References', body: 'Certificate of insurance and calls to two recent commercial clients.' },
+      { title: 'Award on Scope', body: 'Pick the contractor whose scope and schedule match your operation, not the lowest number.' },
+    ],
+    related: ['commercial-painting', 'parking-lot-striping', 'twin-cities', 'interior-painting'],
+    customSections: [
+      {
+        heading: 'How to Choose a Commercial Painting Contractor in the Twin Cities',
+        eyebrow: 'The checklist',
+        body: [
+          'Hiring a commercial painter is a procurement decision, not a decorating one. The wrong contractor costs you tenant complaints, schedule slips, and a repaint in two years; the right one is invisible — the work happens around your operation and the building just looks maintained. This checklist is how you tell them apart before money moves.',
+          'Work through it in order: define the job, require a written scope, verify insurance, pin down scheduling, meet the person running the job, check references, and watch for red flags. It applies whether you are hiring us or anyone else — the checklist does not change.',
+        ],
+        links: [
+          { text: 'commercial painting services', href: '/painting-services/commercial-painting' },
+          { text: 'free estimate', href: '/estimate' },
+        ],
+      },
+      {
+        heading: 'Start With a Written Scope',
+        eyebrow: 'Scope first',
+        body: [
+          'A real commercial bid is a document, not a number. The written scope should name every space being painted, the surfaces in each space, the prep being done (scrape, patch, prime, caulk — specified, not assumed), the products going on, and the schedule. If the prep is not specified in writing, you are not getting the prep.',
+          'The scope should also cover change orders: what happens when the job reveals something behind the walls, and how extras get priced and approved. A contractor who will not put the scope in writing will not honor it in practice. That is the first and biggest filter.',
+        ],
+      },
+      {
+        heading: 'Verify Insurance and Documentation',
+        eyebrow: 'Paperwork',
+        body: [
+          'Before work starts, require a certificate of insurance and confirm coverage is current — general liability at minimum, and workers’ compensation for the crew that will be in your building. Ask whether the people on your site are employees or subcontractors, and get the answer in the scope.',
+          'This is not adversarial; it is standard commercial procurement. Any established Twin Cities commercial painter produces a COI on request. One that stalls or deflects is telling you something.',
+        ],
+      },
+      {
+        heading: 'Pin Down Scheduling Around Your Operations',
+        eyebrow: 'Operations',
+        body: [
+          'The bid means nothing without a schedule that fits your operation. For offices: after hours and weekends, with common areas open during the day. For retail and restaurants: nights and between-services windows, with the site clean and open on time every morning. For multi-tenant: phased work — suite by suite or floor by floor — so occupied spaces stay running.',
+          'Get the schedule in writing in the scope: start date, work windows, completion date, and what happens if the contractor slips. Then hold them to it.',
+        ],
+      },
+      {
+        heading: 'Ask Who Actually Runs the Job',
+        eyebrow: 'Accountability',
+        body: [
+          'Know the name of the person accountable for your building. Who is the crew lead on site day to day? Who is your single point of contact if something is wrong? What happens when a question comes up at 6 a.m. before opening?',
+          '“Can’t name the crew lead” is a red flag (see below). The estimator who sells the job is often not the person who shows up — that is fine, as long as the person who shows up has a name and a phone number before work begins.',
+        ],
+      },
+      {
+        heading: 'Check Commercial References — Then Call Them',
+        eyebrow: 'References',
+        body: [
+          'Ask for two or three recent commercial clients with comparable work: similar building type, similar schedule constraints. Then call them and ask the questions that matter — did the crew show up when they said, did the schedule hold, how was the site left every day, would you hire them again for the next building?',
+          'Glossy project photos prove a contractor can paint. References prove a contractor can run a job. They are different skills.',
+        ],
+      },
+      {
+        heading: 'Red Flags That Should End the Conversation',
+        eyebrow: 'Walk away',
+        body: [
+          'Some bids disqualify themselves. No written quote — just a number on a napkin or a verbal “we’ll take care of it.” A demand for a large deposit before work starts; standard commercial work runs on reasonable progress terms, not big money up front. Can’t name the crew lead. Can’t produce a certificate of insurance. A vague or shifting timeline. And a price far below every other bid with no explanation — that is not a deal, it is a scope that will grow once your building is torn apart.',
+          'One red flag ends the conversation. You do not need to debate it.',
+        ],
+      },
+      {
+        heading: 'Comparing Bids Fairly — and What To Bring to the Walkthrough',
+        eyebrow: 'Compare and close',
+        body: [
+          'Lay the bids side by side and compare scope to scope: same spaces, same prep, same products, same schedule windows. The lowest number usually means the thinnest scope — and the “savings” come back as change orders. Award on the scope and the schedule, not the number alone.',
+          'When you are ready to get bids, bring the walkthrough the facts it needs: the spaces and surfaces, your operating hours, the timeline you are working against, and any constraints (tenant communication, GC sequencing, building rules). The better the contractor understands your operation, the better the quote. Start with a free estimate and see how the walkthrough goes.',
+        ],
+        links: [
+          { text: 'commercial painting services', href: '/painting-services/commercial-painting' },
+          { text: 'free estimate', href: '/estimate' },
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: 'Should I get multiple bids for a commercial painting job?',
+        answer: 'Yes — two or three, all in writing. Compare scope to scope: spaces, prep, products, schedule. The lowest number usually means the thinnest scope.',
+      },
+      {
+        question: 'Is a large deposit normal for commercial painting?',
+        answer: 'No. A large deposit demanded before work starts is a red flag. Standard commercial work runs on reasonable progress terms agreed in the written scope.',
+      },
+      {
+        question: 'Can commercial painting happen during business hours?',
+        answer: 'It can, but it should not have to — most offices, retail, and restaurant work is scheduled after hours or in phases. If a contractor insists on painting through your operating hours, question the plan.',
+      },
+      {
+        question: 'What is the difference between a commercial and a residential painter?',
+        answer: 'Scheduling and accountability: after-hours windows, phased work across occupied spaces, written scopes with schedule dates, insurance documentation, and coordination with property managers or GCs.',
+      },
+      {
+        question: 'Do I need a written contract, or is a written quote enough?',
+        answer: 'A written, line-itemed quote with the schedule in it covers most commercial repaints — spaces, prep, products, schedule, and change-order terms. Bigger jobs get a formal contract. Verbal agreements cover nothing.',
       },
     ],
   },
