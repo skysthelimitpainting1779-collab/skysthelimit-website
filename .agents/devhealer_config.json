@@ -1,5 +1,0 @@
-{
-  "tech_stack": "node",
-  "default_test_command": "npm test",
-  "ci_managed": true
-}

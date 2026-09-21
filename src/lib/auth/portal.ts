@@ -1,6 +1,6 @@
 /**
  * Portal auth gate + client resource mapping (pure helpers + server loaders).
- * Session stack: Supabase Auth (OAuth / password). CMS stays Directus-separated.
+ * Session stack: Supabase Auth (OAuth / password). CMS is Payload 3 in-app.
  */
 
 export type PortalUser = {

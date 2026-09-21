@@ -1,9 +1,0 @@
-{
-  "id": "CHK-TEST-PHASE-1784563606298-1784563606299-PLAN",
-  "task_id": "TEST-PHASE-1784563606298",
-  "session_id": "SESS-1",
-  "phase": "PLAN",
-  "status": "success",
-  "timestamp": "2026-07-20T16:06:46.299Z",
-  "logs": "[auto-seed] Entry criteria: seeded PLAN checkpoint before RESEARCH"
-}

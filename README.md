@@ -21,7 +21,6 @@ The site drives residential, commercial, and public-sector leads with estimate i
 | **AI crawl map** | [/llms.txt](https://www.skysthelimitpaintingllc.com/llms.txt) |
 | **GitHub** | [skysthelimitpainting1779-collab/skys-the-limit-painting-llc-website](https://github.com/skysthelimitpainting1779-collab/skys-the-limit-painting-llc-website) (target rename: `skysthelimit-website`) |
 | **Naming SSOT** | [`docs/NAMING.md`](./docs/NAMING.md) |
-| **Agent guidance** | Kernel [`.agents/AGENTS.md`](./.agents/AGENTS.md) |
 | **Design SSOT** | [`DESIGN.md`](./DESIGN.md) |
 | **Templates** | [`docs/templates/`](./docs/templates/) |
 
@@ -35,14 +34,13 @@ The site drives residential, commercial, and public-sector leads with estimate i
 - **Resend** (transactional email)
 - **Vercel** (hosting, Analytics, Speed Insights)
 - **Remotion** (brand video loops)
-- **Agent guidance** (`.agents/` kernel, skills, and host-native adapters)
+- **Payload CMS 3** (`/admin` — Postgres + S3)
 - **Linear** — tasks / milestones (`skysthelimit · Platform` · `Reliability`)
 
 **Node:** `24.x` (see `.nvmrc`)
 
 ```bash
 npm run ci:contract                    # validate CI workflow commands and local references
-npm run learn:prevent:test             # self-test active prevention rules
 npm run smoke:site -- --base-url http://localhost:3000
 ```
 
@@ -78,8 +76,6 @@ npm run ci
 | `npm test` | Test suite |
 | `npm run ci:contract` | Validate CI workflow commands and local references |
 | `npm run smoke:site -- --base-url <url>` | Smoke-test a local or deployed site |
-| `npm run learn:prevent:test` | Self-test active prevention rules |
-| `npm run learn:prevent:rebuild` | Rebuild active prevention context |
 
 ---
 
@@ -122,11 +118,9 @@ Only verified facts in marketing copy:
 | **CodeQL** | JS/TS analysis |
 | **Release** | Tag `v*` → production deploy (Vercel token) |
 
-**Branch prefixes:** `feat/` `fix/` `chore/` `docs/` `infra/` `slice/` `agent/` `devin/` `dependabot/`  
+**Branch prefixes:** `feat/` `fix/` `chore/` `docs/` `infra/` `slice/` `dependabot/`  
 
 **Commits:** Conventional Commits — `type(scope): subject`
-
-**Agent work:** see [`.agents/AGENTS.md`](.agents/AGENTS.md)
 
 ---
 
@@ -137,8 +131,7 @@ src/app/          Next.js App Router pages & API
 src/components/   UI & conversion components
 src/views/        Page bodies
 src/lib/          SEO, Supabase, env, analytics
-scripts/          CI, automation, hooks, and maintenance tools
-.agents/          Agent guidance, skills, and host-native configuration
+scripts/          CI and maintenance tools
 .github/          Workflows, CODEOWNERS, templates
 public/           Static assets, llms.txt, sitemap
 supabase/         Migrations

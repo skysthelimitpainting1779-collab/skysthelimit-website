@@ -28,29 +28,6 @@ test('public Supabase helper stays inert when deployment variables are absent', 
   );
 });
 
-test('unconfigured Directus reads return fallback content without warning or network work', async () => {
-  const previousPublicUrl = process.env.NEXT_PUBLIC_DIRECTUS_URL;
-  const previousServerUrl = process.env.DIRECTUS_URL;
-  delete process.env.NEXT_PUBLIC_DIRECTUS_URL;
-  delete process.env.DIRECTUS_URL;
-
-  const warnings = [];
-  const originalWarn = console.warn;
-  console.warn = (...args) => warnings.push(args);
-
-  try {
-    const { getCaseStudies } = await import('../src/lib/directus/client.ts');
-    assert.deepEqual(await getCaseStudies(), []);
-    assert.deepEqual(warnings, []);
-  } finally {
-    console.warn = originalWarn;
-    if (previousPublicUrl === undefined) delete process.env.NEXT_PUBLIC_DIRECTUS_URL;
-    else process.env.NEXT_PUBLIC_DIRECTUS_URL = previousPublicUrl;
-    if (previousServerUrl === undefined) delete process.env.DIRECTUS_URL;
-    else process.env.DIRECTUS_URL = previousServerUrl;
-  }
-});
-
 test('site smoke runner proves critical routes and reports the exact failed route', async () => {
   assert.ok(exists('scripts/smoke-site.mjs'), 'production smoke runner must exist');
   const { checkSite } = await import('../scripts/smoke-site.mjs');

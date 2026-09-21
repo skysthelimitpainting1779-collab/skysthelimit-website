@@ -90,13 +90,11 @@ test('public routes compose the modular shadcn design system', () => {
 });
 
 test('release documentation and local Graphify configuration remain portable', () => {
-  const agentConfig = read('.agents/mcp_config.json');
   const codexConfig = read('.codex/config.toml');
   const design = read('DESIGN.md');
 
-  assert.match(agentConfig, /graphify-out\/graph\.json/);
   assert.match(codexConfig, /graphify-out\/graph\.json/);
-  assert.doesNotMatch(`${agentConfig}\n${codexConfig}`, /C:\/Users\//i);
+  assert.doesNotMatch(codexConfig, /C:\/Users\//i);
   assert.doesNotMatch(design, /\.impeccable\//);
 });
 
@@ -144,15 +142,13 @@ test('project claims, landing metadata, and smoke markers remain evidence-safe',
   assert.match(smoke, /Real surfaces\. Real finish\./);
 });
 
-test('visual capture skill keeps local-only and complete-page safety checks in every host copy', () => {
-  const agentCapture = read('.agents/skills/capture-public-site-visuals/scripts/capture.mjs');
+test('visual capture skill keeps local-only and complete-page safety checks', () => {
   const githubCapture = read('.github/skills/capture-public-site-visuals/scripts/capture.mjs');
 
-  assert.equal(agentCapture, githubCapture);
-  assert.match(agentCapture, /'\[::1\]'/);
-  assert.match(agentCapture, /resolvedUrl\.origin !== baseUrl\.origin/);
-  assert.match(agentCapture, /Capture route.*returned HTTP/);
-  assert.match(agentCapture, /waitForBrowserPort/);
-  assert.match(agentCapture, /image\.loading = 'eager'/);
-  assert.match(agentCapture, /if \(fullPage\)[\s\S]*window\.scrollTo/);
+  assert.match(githubCapture, /'\[::1\]'/);
+  assert.match(githubCapture, /resolvedUrl\.origin !== baseUrl\.origin/);
+  assert.match(githubCapture, /Capture route.*returned HTTP/);
+  assert.match(githubCapture, /waitForBrowserPort/);
+  assert.match(githubCapture, /image\.loading = 'eager'/);
+  assert.match(githubCapture, /if \(fullPage\)[\s\S]*window\.scrollTo/);
 });

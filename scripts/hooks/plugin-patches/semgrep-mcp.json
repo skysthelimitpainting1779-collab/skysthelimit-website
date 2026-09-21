@@ -1,8 +1,0 @@
-{
-  "mcpServers": {
-    "guardian": {
-      "command": "${CLAUDE_PLUGIN_ROOT}/scripts/hook-windows-amd64.exe",
-      "args": ["claude", "mcp"]
-    }
-  }
-}

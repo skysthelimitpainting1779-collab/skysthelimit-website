@@ -15,19 +15,11 @@
     "remotion/**/*.{ts,tsx}"
   ],
   "ignore": [
-    ".agents/**",
-    ".claude/**",
-    ".cursor/**",
-    ".codex/**",
-    ".gemini/**",
-    ".entire/**",
-    ".learnings/**",
     ".github/**",
     "graphify-out/**",
     "scratch/**",
     "mcps/**",
     "public/**",
-    "directus/**",
     "supabase/**",
     "references/**",
     "next-env.d.ts",
@@ -41,7 +33,6 @@
     "remotion"
   ],
   "ignoreDependencies": [
-    "@libsql/client",
     "@remotion/cli",
     "@tailwindcss/postcss",
     "dotenv",

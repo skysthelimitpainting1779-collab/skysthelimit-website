@@ -14,7 +14,6 @@ import ResponsiveImage from '@/components/ResponsiveImage';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { directusAssetUrl, getCaseStudies } from '@/lib/directus/client';
 import { breadcrumbSchema, businessSchema } from '@/lib/seo';
 import { createPublicClient } from '@/lib/supabase/public';
 
@@ -78,10 +77,10 @@ function CaseStudyCard({ type, location, problem, prep, result, image, beforeIma
 }
 
 export default async function ProjectsPage() {
-  const cmsStudies = await getCaseStudies();
+  // Portfolio is Supabase-only after Directus decoupling; falls back to static ledger.
   let portfolioItems: Array<{ title: string; location: string; problem: string; prep: string[]; result: string; image_url?: string; before_image_url?: string; after_image_url?: string }> = [];
 
-  if (cmsStudies.length === 0) {
+  {
     const supabase = createPublicClient();
     if (supabase) {
       try {
@@ -131,29 +130,18 @@ export default async function ProjectsPage() {
     },
   ];
 
-  const projectsToRender = cmsStudies.length
-    ? cmsStudies.map((item) => ({
-        type: item.type,
+  const projectsToRender = portfolioItems.length
+    ? portfolioItems.map((item) => ({
+        type: item.title,
         location: item.location,
         problem: item.problem,
         prep: item.prep || [],
         result: item.result,
-        image: directusAssetUrl(item.image),
-        beforeImage: directusAssetUrl(item.before_image),
-        afterImage: directusAssetUrl(item.after_image),
+        image: item.image_url ?? undefined,
+        beforeImage: item.before_image_url ?? undefined,
+        afterImage: item.after_image_url ?? undefined,
       }))
-    : portfolioItems.length
-      ? portfolioItems.map((item) => ({
-          type: item.title,
-          location: item.location,
-          problem: item.problem,
-          prep: item.prep || [],
-          result: item.result,
-          image: item.image_url ?? undefined,
-          beforeImage: item.before_image_url ?? undefined,
-          afterImage: item.after_image_url ?? undefined,
-        }))
-      : fallbackProjects;
+    : fallbackProjects;
 
   return (
     <PublicPage>
@@ -169,10 +157,7 @@ export default async function ProjectsPage() {
       />
       <PublicSection tone="soft">
         <PublicContainer>
-          <PublicSectionHeading
-            eyebrow={cmsStudies.length ? `${cmsStudies.length} published case studies` : 'Project ledger'}
-            title="The work is easier to judge when the prep is visible."
-          />
+          <PublicSectionHeading eyebrow="Project ledger" title="The work is easier to judge when the prep is visible." />
           <div className="mt-12 grid gap-8 lg:grid-cols-2">
             {projectsToRender.map((project, index) => <CaseStudyCard key={`${project.type}-${index}`} {...project} />)}
           </div>
