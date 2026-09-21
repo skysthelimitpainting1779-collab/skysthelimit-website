@@ -2,7 +2,7 @@ import LandingPageRoute from '../../../views/LandingPage';
 import { areaLandingPages, type LandingPage } from '../../../data/landingPages';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { localBusinessSchema, breadcrumbSchema } from '../../../lib/seo';
+import { localBusinessSchema, breadcrumbSchema, faqSchema } from '../../../lib/seo';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 
 // Create safe, cookie-less public client for build/static rendering tasks
@@ -153,6 +153,7 @@ export default async function ServiceAreaLandingPage({ params }: PageProps) {
     { name: 'Service Area', path: '/service-area' },
     { name: page.shortTitle, path: `/service-areas/${page.slug}` },
   ]);
+  const faqJson = page.faq?.length ? faqSchema(page.faq) : null;
 
   return (
     <>
@@ -164,6 +165,12 @@ export default async function ServiceAreaLandingPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJson) }}
       />
+      {faqJson ? (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJson) }}
+        />
+      ) : null}
       <LandingPageRoute kind="area" initialPageData={page} />
     </>
   );

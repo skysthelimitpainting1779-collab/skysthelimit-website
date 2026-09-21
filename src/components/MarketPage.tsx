@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { Calculator, Camera, ClipboardCheck, FileCheck2, Phone } from 'lucide-react';
 
 import BookingCta from '@/components/BookingCta';
@@ -132,6 +133,32 @@ export default function MarketPage({ slug }: MarketPageProps) {
           </div>
         </PublicContainer>
       </PublicSection>
+
+      {market.resourceLinks?.length ? (
+        <PublicSection tone="paper">
+          <PublicContainer className="max-w-4xl">
+            <PublicSectionHeading eyebrow="Related resources" title="Keep moving in the right lane." />
+            <div className="mt-6 flex flex-wrap items-center gap-x-2 gap-y-2 text-sm">
+              {market.resourceLinks.map((link, index) => (
+                <span key={`${link.href}-${link.text}`}>
+                  {index > 0 ? (
+                    <span className="text-muted-foreground" aria-hidden="true">
+                      {' '}
+                      ·{' '}
+                    </span>
+                  ) : null}
+                  <Link
+                    href={link.href}
+                    className="font-semibold text-foreground underline decoration-trust underline-offset-4 hover:text-trust"
+                  >
+                    {link.text}
+                  </Link>
+                </span>
+              ))}
+            </div>
+          </PublicContainer>
+        </PublicSection>
+      ) : null}
 
       <PublicSection tone="trust">
         <PublicContainer className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
