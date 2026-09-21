@@ -64,6 +64,8 @@ export default function ReviewsSection() {
                 href={googleReviewsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                data-track="review_read_click"
+                data-track-payload={JSON.stringify({ source: 'reviews_section', label: 'Read reviews on Google' })}
                 className="inline-flex min-h-12 items-center gap-3 border-b-2 border-[#F6F3EB] text-sm font-black uppercase tracking-[0.08em] transition-colors hover:border-[#FF661C] hover:text-[#FF661C]"
               >
                 Read reviews on Google <ArrowUpRight aria-hidden="true" size={17} />
@@ -72,6 +74,8 @@ export default function ReviewsSection() {
                 href={googleReviewUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                data-track="review_write_click"
+                data-track-payload={JSON.stringify({ source: 'reviews_section', label: 'Leave us a Google review' })}
                 className="inline-flex min-h-12 items-center gap-3 border-b-2 border-transparent text-sm font-black uppercase tracking-[0.08em] text-[#C8D7E6] transition-colors hover:border-[#FF661C] hover:text-[#FF661C]"
               >
                 Leave us a Google review <ArrowUpRight aria-hidden="true" size={17} />
