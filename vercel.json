@@ -57,7 +57,7 @@
       "schedule": "0 8 * * *"
     }
   ],
-  "ignoreCommand": "case \"$VERCEL_GIT_COMMIT_REF\" in entire/*) echo 'agent branch, skipping'; exit 0;; *) echo 'proceeding with build'; exit 1;; esac",
+  "ignoreCommand": "if [ \"$VERCEL_GIT_COMMIT_REF\" = main ]; then echo 'main — proceeding'; exit 1; else echo \"non-main ($VERCEL_GIT_COMMIT_REF) — skipping\"; exit 0; fi",
   "git": {
     "deploymentEnabled": {
       "*": false,

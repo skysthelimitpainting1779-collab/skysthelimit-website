@@ -113,5 +113,11 @@ test('Vercel Git integration owns main deployment and the release marker is gone
   assert.equal(config.git?.deploymentEnabled?.main, true);
   assert.equal(config.git?.deploymentEnabled?.['*'], false);
   assert.equal(config.git?.deploymentEnabled?.['**/*'], false);
+  assert.match(
+    String(config.ignoreCommand ?? ''),
+    /VERCEL_GIT_COMMIT_REF.*=\s*main/,
+  );
+  assert.match(String(config.ignoreCommand ?? ''), /exit 0/);
+  assert.match(String(config.ignoreCommand ?? ''), /exit 1/);
   assert.equal(exists('.github/production-release.json'), false);
 });
