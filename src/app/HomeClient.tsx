@@ -5,6 +5,7 @@ import { ArrowDownRight, ArrowRight, ArrowUpRight, Check, ShieldCheck } from 'lu
 import LeadForm from '../components/LeadForm';
 import PrepProtocolStage from '../components/PrepProtocolStage';
 import ResponsiveImage from '../components/ResponsiveImage';
+import TestimonialsSection from '../components/testimonials/TestimonialsSection';
 import { PublicCtaLink, PublicPage } from '../components/public/PublicSystem';
 import { faqSchema } from '../lib/seo';
 
@@ -227,6 +228,8 @@ export default function HomeClient() {
           </div>
         </div>
       </section>
+
+      <TestimonialsSection />
 
       <section aria-labelledby="questions-title" className="bg-[#F6F3EB] text-[#071321]">
         <div className="mx-auto grid max-w-[96rem] lg:grid-cols-[0.78fr_1.22fr]">
