@@ -66,7 +66,7 @@ const displayFont = Barlow_Condensed({
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Twin Cities Painting Contractor | Sky's the Limit Painting LLC",
+    default: "Twin Cities Painting Contractor | Sky's the Limit Painting",
     template: "%s | Sky's the Limit Painting",
   },
   description:

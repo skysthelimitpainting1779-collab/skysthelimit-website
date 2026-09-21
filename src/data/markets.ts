@@ -26,6 +26,7 @@ export interface Market {
   cta: string;
   metaTitle: string;
   metaDescription: string;
+  resourceLinks?: Array<{ text: string; href: string }>;
 }
 
 export const markets: Market[] = [
@@ -65,16 +66,16 @@ export const markets: Market[] = [
       { title: 'Review And Clean', body: 'Walk the work, clean the area, and confirm the details before wrapping the job.' },
     ],
     cta: 'Plan A Residential Project',
-    metaTitle: 'Residential Painting | Sky’s the Limit Painting LLC',
+    metaTitle: 'House Painters, Twin Cities | Sky’s the Limit Painting',
     metaDescription:
-      'Residential painting in Inver Grove Heights, Minneapolis, St. Paul, and the Twin Cities Metro. Owner-led prep, careful home protection, clear communication, and refined finishes.',
+      'Twin Cities house painters for interiors, exteriors, cabinets, and drywall — one owner, one written scope. Free estimates.',
   },
   {
     slug: 'commercial',
     navLabel: 'Commercial',
     number: '02',
-    title: 'Commercial Painting',
-    headline: 'Reliable commercial painting for properties where presentation and schedule matter.',
+    title: 'Who We Serve: Commercial Properties',
+    headline: 'Who we serve: shops, offices, HOAs, churches, and multi-family properties across the Twin Cities.',
     summary:
       'Retail stores, offices, multi-family common areas, warehouses, and more. Professional finishes delivered on your timeline with minimal disruption to your customers, employees, or daily operations.',
     description:
@@ -106,9 +107,12 @@ export const markets: Market[] = [
       { title: 'Close The Loop', body: 'Review completion items, cleanup, touchups, and any documentation needed for the job record.' },
     ],
     cta: 'Discuss A Commercial Job',
-    metaTitle: 'Commercial Painting | Sky’s the Limit Painting LLC',
+    metaTitle: 'Who We Serve: Commercial Properties | Sky’s the Limit Painting',
     metaDescription:
-      'Commercial painting for Twin Cities shops, offices, facilities, and properties with organized communication, clean execution, and durable finishes.',
+      'Who Sky’s the Limit works with: Twin Cities shops, offices, HOAs, churches, and multi-family properties. See our commercial painting services and project approach.',
+    resourceLinks: [
+      { text: 'commercial painting services', href: '/painting-services/commercial-painting' },
+    ],
   },
   {
     slug: 'public-sector',
@@ -147,9 +151,12 @@ export const markets: Market[] = [
       { title: 'Verify Completion', body: 'Confirm visible finish, cleanup, punch items, photos, and documentation requested for qualified opportunities.' },
     ],
     cta: 'Discuss Public-Sector Readiness',
-    metaTitle: 'Public Sector Painting Opportunities | Sky’s the Limit Painting LLC',
+    metaTitle: 'Public Sector Painting Opportunities | Sky’s the Limit Painting',
     metaDescription:
       'Sky’s the Limit Painting is preparing to compete for Minnesota city, county, and state painting, facility, striping, and pavement-marking opportunities.',
+    resourceLinks: [
+      { text: 'corporate capabilities statement', href: '/documents/skys-the-limit-capabilities-statement.pdf' },
+    ],
   },
 ];
 

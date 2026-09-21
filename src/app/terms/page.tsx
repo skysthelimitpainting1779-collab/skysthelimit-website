@@ -10,6 +10,9 @@ import {
 export const metadata: Metadata = {
   title: 'Website Terms',
   description: "Terms governing use of the Sky's the Limit Painting LLC website.",
+  alternates: {
+    canonical: 'https://www.skysthelimitpaintingllc.com/terms',
+  },
 };
 
 const sections = [
