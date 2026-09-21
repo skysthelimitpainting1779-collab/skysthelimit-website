@@ -47,6 +47,7 @@ const defaultPaintingServicesSlugs = [
   'parking-lot-striping',
   'pavement-marking',
   'ada-parking-lot-striping',
+  'parking-lot-striping-pricing',
 ];
 
 async function generateSitemap() {
