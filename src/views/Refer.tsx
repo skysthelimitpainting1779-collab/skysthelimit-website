@@ -67,8 +67,8 @@ export default function ReferPage() {
         eyebrow="Referral program"
         title="Share the work. Share the reward."
         description="Create a trackable referral link for a friend, neighbor, or colleague planning a qualifying painting project."
-        image="/brand/generated/sky-owner-proof.webp"
-        imageAlt="Sky's the Limit Painting branded equipment"
+        image="/brand/generated/chatgpt/sky-crew-at-work.webp"
+        imageAlt="Illustrative: painting crew at work on a home exterior"
         proof={['Direct referral tracking', 'Qualifying customer offer', 'Owner-operated local business']}
         badgeIcon={Gift}
       />

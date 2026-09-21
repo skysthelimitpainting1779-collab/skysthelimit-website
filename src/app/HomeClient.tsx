@@ -45,10 +45,10 @@ export default function HomeClient() {
 
       <section aria-labelledby="home-title" className="proof-hero relative isolate min-h-[calc(100svh_-_var(--site-header-height-expanded))] overflow-hidden bg-[#071321] text-[#F6F3EB]">
         <ResponsiveImage
-          src="/images/site/proof-in-the-prep-tape-material.webp"
+          src="/brand/generated/chatgpt/sky-hero-exterior.webp"
           alt=""
-          width={1920}
-          height={1080}
+          width={1672}
+          height={941}
           sizes="100vw"
           priority
           fetchPriority="high"

@@ -848,7 +848,7 @@ export const serviceLandingPages: LandingPage[] = [
     metaTitle: 'Room & Whole-Home Interior Painting, Twin Cities',
     metaDescription:
       'Interior painting in the Twin Cities — single rooms to whole homes, clean lines, low-odor paint. Free estimates.',
-    image: '/brand/generated/sky-residential-authority.webp',
+    image: '/brand/generated/chatgpt/sky-finished-room.webp',
     accent: 'Clean indoor finish',
     market: 'Residential',
     proof: ['Walls, ceilings, trim, and doors', 'Protection-first prep', 'Final walkthrough mindset'],
@@ -886,7 +886,7 @@ export const serviceLandingPages: LandingPage[] = [
     metaTitle: 'Exterior Painters in Twin Cities',
     metaDescription:
       'Exterior painting contractor for Twin Cities homes and properties with prep-first scoping, weather-aware scheduling, and owner communication.',
-    image: '/brand/generated/sky-service-proof.webp',
+    image: '/brand/generated/chatgpt/sky-surface-prep.webp',
     accent: 'Exterior readiness',
     market: 'Residential',
     proof: ['Prep-first exterior review', 'Weather-aware scheduling', 'Curb-appeal presentation'],
@@ -924,7 +924,7 @@ export const serviceLandingPages: LandingPage[] = [
     metaTitle: 'Commercial Painting Minneapolis-St. Paul',
     metaDescription:
       'Commercial painting in Minneapolis–St. Paul: offices, HOAs, churches, multi-family. Written scopes, minimal downtime. Free estimates.',
-    image: '/brand/generated/sky-commercial-authority.webp',
+    image: '/brand/generated/chatgpt/sky-commercial-facade.webp',
     accent: 'Property presentation',
     market: 'Commercial',
     proof: ['Retail and office presentation', 'Occupied-space awareness', 'Schedule-aware communication'],

@@ -117,7 +117,17 @@ export default function AboutPage() {
             title="The same sequence, scaled to the scope."
             description="A residential room and a commercial facility need different logistics, but both benefit from a visible work sequence."
           />
-          <PublicProcess items={process} />
+          <figure className="mt-12 overflow-hidden border border-white/20">
+            <ResponsiveImage
+              src="/brand/generated/chatgpt/sky-interior-craft.webp"
+              alt="Illustrative: close-up of trim cut-in work during interior painting"
+              width={1672}
+              height={941}
+              sizes="(min-width: 1024px) 80vw, 100vw"
+              className="h-auto w-full object-cover"
+            />
+          </figure>
+          <div className="mt-12"><PublicProcess items={process} /></div>
         </PublicContainer>
       </PublicSection>
 
