@@ -142,6 +142,9 @@ export default async function ServiceAreaLandingPage({ params }: PageProps) {
   const page = await getServiceAreaPage(slug);
   if (!page) {
     notFound();
+    // notFound() is not typed as `never` in this Next version, so the
+    // explicit throw keeps TypeScript narrowing sound (unreachable at runtime).
+    throw new Error(`Service area not found: ${slug}`);
   }
 
   const businessJson = localBusinessSchema(page.shortTitle, page.slug);
