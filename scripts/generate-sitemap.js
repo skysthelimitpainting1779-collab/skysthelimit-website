@@ -36,6 +36,11 @@ const defaultServiceAreasSlugs = [
   'eden-prairie',
   'edina',
   'maple-grove',
+  'st-louis-park',
+  'richfield',
+  'minnetonka',
+  'plymouth',
+  'burnsville',
 ];
 
 const defaultPaintingServicesSlugs = [
@@ -48,6 +53,8 @@ const defaultPaintingServicesSlugs = [
   'parking-lot-striping',
   'pavement-marking',
   'ada-parking-lot-striping',
+  'ada-striping-requirements-minnesota',
+  'how-to-choose-commercial-painter',
 ];
 
 async function generateSitemap() {
