@@ -2,7 +2,8 @@ import LandingPageRoute from '../../../views/LandingPage';
 import { serviceLandingPages } from '../../../data/landingPages';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { serviceSchema, breadcrumbSchema } from '../../../lib/seo';
+import { serviceSchema, breadcrumbSchema, faqSchema } from '../../../lib/seo';
+import JsonLd from '../../../components/JsonLd';
 
 export function generateStaticParams() {
   return serviceLandingPages.map((page) => ({
@@ -67,17 +68,13 @@ export default async function PaintingServiceLandingPage({ params }: PageProps) 
     { name: 'Capabilities', path: '/capabilities' },
     { name: page.shortTitle, path: `/painting-services/${page.slug}` },
   ]);
+  const faqJson = page.faq?.length ? faqSchema(page.faq) : null;
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJson) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJson) }}
-      />
+      <JsonLd data={serviceJson} />
+      <JsonLd data={breadcrumbJson} />
+      {faqJson ? <JsonLd data={faqJson} /> : null}
       <LandingPageRoute kind="service" initialPageData={page} />
     </>
   );
