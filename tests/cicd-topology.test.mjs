@@ -111,6 +111,7 @@ test('Vercel Git integration owns main deployment and the release marker is gone
 
   assert.equal(config.installCommand, 'npm ci');
   assert.equal(config.git?.deploymentEnabled?.main, true);
-  assert.equal(config.git?.deploymentEnabled?.['entire/*'], false);
+  assert.equal(config.git?.deploymentEnabled?.['*'], false);
+  assert.equal(config.git?.deploymentEnabled?.['**/*'], false);
   assert.equal(exists('.github/production-release.json'), false);
 });
