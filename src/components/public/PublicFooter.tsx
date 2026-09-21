@@ -76,7 +76,7 @@ export default function PublicFooter({ year }: { year: string }) {
               <div key={column.title}>
                 <h3 className="text-sm font-bold uppercase tracking-[0.12em] text-foreground">{column.title}</h3>
                 <nav className="mt-6 flex flex-col gap-3 text-sm text-muted-foreground" aria-label={`${column.title} links`}>
-                  {column.links.map(([href, label]) => (
+                  {column.links.map(([href, label]: readonly [string, string]) => (
                     <Link key={href} href={href} className="hover:text-foreground">{label}</Link>
                   ))}
                 </nav>

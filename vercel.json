@@ -1,24 +1,27 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
-  "alias": [
-    "skysthelimitpaintingllc.com",
-    "www.skysthelimitpaintingllc.com"
-  ],
+  "alias": ["skysthelimitpaintingllc.com", "www.skysthelimitpaintingllc.com"],
   "buildCommand": "npm run build",
   "installCommand": "npm ci",
+  "cleanUrls": true,
+  "trailingSlash": false,
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
         { "key": "X-Content-Type-Options", "value": "nosniff" },
         { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-DNS-Prefetch-Control", "value": "on" },
+        { "key": "X-XSS-Protection", "value": "0" },
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" },
-        { "key": "Strict-Transport-Security", "value": "max-age=31536000; includeSubDomains" },
+        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=(), browsing-topics=()" },
+        { "key": "Cross-Origin-Opener-Policy", "value": "same-origin" },
+        { "key": "Cross-Origin-Resource-Policy", "value": "same-origin" },
+        { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains; preload" },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; base-uri 'self'; frame-ancestors 'none'; object-src 'none'; img-src 'self' data: https: blob:; media-src 'self'; font-src 'self' data: https://www.skysthelimitpaintingllc.com; style-src 'self' 'unsafe-inline' https://www.skysthelimitpaintingllc.com; script-src 'self' 'unsafe-inline' https://www.skysthelimitpaintingllc.com https://va.vercel-scripts.com https://www.googletagmanager.com; connect-src 'self' https://www.skysthelimitpaintingllc.com https://vitals.vercel-insights.com https://*.vercel-insights.com https://va.vercel-scripts.com https://www.google-analytics.com https://*.google-analytics.com https://www.googletagmanager.com https://*.supabase.co https://*.supabase.in https://*.turso.io wss://*.turso.io; frame-src 'self' https://cal.com https://*.cal.com https://accounts.google.com https://github.com; form-action 'self' mailto:"
+          "value": "default-src 'self'; base-uri 'self'; frame-ancestors 'none'; object-src 'none'; img-src 'self' data: https: blob:; media-src 'self'; font-src 'self' data: https://www.skysthelimitpaintingllc.com; style-src 'self' 'unsafe-inline' https://www.skysthelimitpaintingllc.com; script-src 'self' 'unsafe-inline' https://www.skysthelimitpaintingllc.com https://va.vercel-scripts.com https://www.googletagmanager.com https://www.google-analytics.com; connect-src 'self' https://www.skysthelimitpaintingllc.com https://vitals.vercel-insights.com https://*.vercel-insights.com https://va.vercel-scripts.com https://www.google-analytics.com https://*.google-analytics.com https://www.googletagmanager.com https://*.supabase.co https://*.supabase.in https://*.turso.io wss://*.turso.io; frame-src 'self' https://cal.com https://*.cal.com https://accounts.google.com https://github.com; form-action 'self' mailto:; upgrade-insecure-requests"
         }
       ]
     },
@@ -26,15 +29,22 @@
       "source": "/api/(.*)",
       "headers": [
         { "key": "Access-Control-Allow-Origin", "value": "https://www.skysthelimitpaintingllc.com" },
-        { "key": "Access-Control-Allow-Methods", "value": "POST,OPTIONS" },
-        { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Accept" }
+        { "key": "Access-Control-Allow-Methods", "value": "GET,POST,OPTIONS" },
+        { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Accept, Authorization" },
+        { "key": "Cache-Control", "value": "no-store" }
       ]
     },
     {
       "source": "/brand/(.*)",
-      "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
-      ]
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    },
+    {
+      "source": "/_next/static/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    },
+    {
+      "source": "/images/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=86400" }]
     }
   ],
   "redirects": [
@@ -52,10 +62,7 @@
     { "source": "/services/pavement-marking", "destination": "/public-sector", "permanent": true }
   ],
   "crons": [
-    {
-      "path": "/api/cron/seo-ping",
-      "schedule": "0 8 * * *"
-    }
+    { "path": "/api/cron/seo-ping", "schedule": "0 8 * * *" }
   ],
   "ignoreCommand": "case \"$VERCEL_GIT_COMMIT_REF\" in entire/*) echo 'agent branch, skipping'; exit 0;; *) echo 'proceeding with build'; exit 1;; esac",
   "git": {

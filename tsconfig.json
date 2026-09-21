@@ -1,14 +1,10 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
+    "target": "ES2024",
     "experimentalDecorators": true,
     "useDefineForClassFields": false,
     "module": "ESNext",
-    "lib": [
-      "ES2022",
-      "DOM",
-      "DOM.Iterable"
-    ],
+    "lib": ["ES2024", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
     "moduleResolution": "bundler",
     "isolatedModules": true,
@@ -16,19 +12,25 @@
     "allowJs": true,
     "jsx": "react-jsx",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@payload-config": [
-        "./src/payload.config.ts"
-      ]
+      "@/*": ["./src/*"],
+      "@payload-config": ["./src/payload.config.ts"]
     },
     "allowImportingTsExtensions": true,
     "noEmit": true,
-    "strict": false,
+    "strict": true,
+    "noImplicitAny": false,
+    "noUncheckedIndexedAccess": false,
+    "noImplicitOverride": true,
+    "forceConsistentCasingInFileNames": true,
+    "exactOptionalPropertyTypes": false,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "incremental": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
+    "verbatimModuleSyntax": false,
     "plugins": [
       {
         "name": "next"
@@ -36,19 +38,6 @@
     ],
     "strictNullChecks": true
   },
-  "include": [
-    "remotion",
-    "src",
-    "tests",
-    ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts"
-  ],
-  "exclude": [
-    "dist",
-    "node_modules",
-    "tmp",
-    ".agents",
-    "agent-skills-main",
-    "references"
-  ]
+  "include": ["remotion", "src", "tests", ".next/types/**/*.ts", ".next/dev/types/**/*.ts"],
+  "exclude": ["dist", "node_modules", "tmp", ".agents", "agent-skills-main", "references"]
 }

@@ -1,9 +1,35 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
-import { Barlow_Condensed, Inter, Source_Sans_3 } from 'next/font/google';
 import React, { Suspense } from 'react';
 
+// MAX: Offline-resilient font loading.
+// `next/font/google` fetches fonts.googleapis.com at build time (fails in
+// sandboxed/offline CI with SSL_ERROR_SYSCALL). Instead we use locally
+// self-hosted fonts via @fontsource — zero network at build, same visual
+// result, better privacy/CSP (no fonts.gstatic.com needed) and no FOUT.
+// Variables are kept for DESIGN.md tokens; adjustFontFallback is handled by
+// fontsource's unicode-range + size-adjust metrics.
+const internalFont = { variable: '--font-internal' } as const;
+const bodyFont = { variable: '--font-ledger-body' } as const;
+const displayFont = { variable: '--font-ledger-display' } as const;
+
+// To re-enable Google loading on a host with egress, replace the three
+// stubs above with:
+//   import { Barlow_Condensed, Inter, Source_Sans_3 } from 'next/font/google';
+//   const internalFont = Inter({ subsets: ['latin'], variable: '--font-internal', display: 'swap', preload: true, fallback: ['system-ui', 'sans-serif'], adjustFontFallback: true });
+//   const bodyFont = Source_Sans_3({ subsets: ['latin'], variable: '--font-ledger-body', display: 'swap', preload: true, fallback: ['system-ui', 'sans-serif'], adjustFontFallback: true });
+//   const displayFont = Barlow_Condensed({ subsets: ['latin'], weight: ['600','700','800'], variable: '--font-ledger-display', display: 'swap', preload: true, fallback: ['Arial Narrow','sans-serif'], adjustFontFallback: true });
+
 import '../index.css';
+import '@fontsource/barlow-condensed/600.css';
+import '@fontsource/barlow-condensed/700.css';
+import '@fontsource/barlow-condensed/800.css';
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
+import '@fontsource/inter/700.css';
+import '@fontsource/source-sans-3/400.css';
+import '@fontsource/source-sans-3/600.css';
 import AnalyticsDelegator from '../components/AnalyticsDelegator';
 import ConversionFooterCta from '../components/ConversionFooterCta';
 import ConversionHeader from '../components/ConversionHeader';
@@ -44,24 +70,16 @@ function escapeUnsafeJsChars(str: string): string {
 const siteUrl = ENV.SITE_URL.replace(/\/$/, '') || 'https://www.skysthelimitpaintingllc.com';
 const gaMeasurementId = ENV.GA_MEASUREMENT_ID;
 
-const internalFont = Inter({
-  subsets: ['latin'],
-  variable: '--font-internal',
-  display: 'swap',
-});
-
-const bodyFont = Source_Sans_3({
-  subsets: ['latin'],
-  variable: '--font-ledger-body',
-  display: 'swap',
-});
-
-const displayFont = Barlow_Condensed({
-  subsets: ['latin'],
-  weight: ['600', '700', '800'],
-  variable: '--font-ledger-display',
-  display: 'swap',
-});
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#F6F3EB' },
+    { media: '(prefers-color-scheme: dark)', color: '#050505' },
+  ],
+  colorScheme: 'light dark',
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -81,7 +99,14 @@ export const metadata: Metadata = {
     'commercial painting Minnesota',
     'parking lot striping Minnesota',
     'pavement marking Minnesota',
+    'cabinet refinishing Twin Cities',
+    'deck staining Minnesota',
   ],
+  authors: [{ name: "Sky's the Limit Painting LLC", url: siteUrl }],
+  creator: "Sky's the Limit Painting LLC",
+  publisher: "Sky's the Limit Painting LLC",
+  category: 'construction',
+  classification: 'Painting Contractor',
   alternates: { canonical: siteUrl },
   openGraph: {
     type: 'website',
@@ -97,14 +122,28 @@ export const metadata: Metadata = {
     title: "Twin Cities Painting Contractor | Sky's the Limit Painting LLC",
     description: 'Owner-operated painting for Twin Cities homes and businesses. Fully insured. Free estimate.',
     images: ['/brand/generated/sky-local-authority.webp'],
+    creator: '@skysthelimitpaintingllc',
   },
   robots: {
     index: true,
     follow: true,
-    googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 },
+    googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1, 'max-video-preview': -1 },
   },
   verification: {
     google: ENV.GOOGLE_SITE_VERIFICATION || 'E4yKOu61Os6v4EQNmZ6-djni1eCyuDCw6v_XyLYFo90',
+  },
+  appleWebApp: {
+    capable: true,
+    title: "Sky's the Limit Painting",
+    statusBarStyle: 'black-translucent',
+  },
+  formatDetection: {
+    telephone: true,
+    email: true,
+    address: true,
+  },
+  other: {
+    'msapplication-TileColor': '#0254C3',
   },
 };
 

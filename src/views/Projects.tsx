@@ -149,9 +149,9 @@ export default async function ProjectsPage() {
           problem: item.problem,
           prep: item.prep || [],
           result: item.result,
-          image: item.image_url,
-          beforeImage: item.before_image_url,
-          afterImage: item.after_image_url,
+          image: item.image_url ?? undefined,
+          beforeImage: item.before_image_url ?? undefined,
+          afterImage: item.after_image_url ?? undefined,
         }))
       : fallbackProjects;
 
