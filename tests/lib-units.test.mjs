@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { test, describe } from 'node:test';
 
 import { getEnv, ENV } from '../src/lib/env.ts';
-import { businessEmail, businessPhone, smsPhone, buildEstimateMailto } from '../src/lib/contact.ts';
+import { businessEmail, businessPhone, phoneHref, buildEstimateMailto } from '../src/lib/contact.ts';
 import { serviceSchema, breadcrumbSchema, localBusinessSchema } from '../src/lib/seo.ts';
 
 // ---------------------------------------------------------------------------
@@ -46,9 +46,9 @@ describe('lib/contact - Contact utilities', () => {
     assert.equal(businessPhone, '651-410-4196');
   });
 
-  test('smsPhone is E.164 format without dashes', () => {
-    assert.equal(smsPhone, '16514104196');
-    assert.ok(/^\d+$/.test(smsPhone), 'smsPhone should contain only digits');
+  test('phoneHref is the canonical E.164 tel: href (#284)', () => {
+    assert.equal(phoneHref, 'tel:+16514104196');
+    assert.ok(/^tel:\+\d+$/.test(phoneHref), 'phoneHref should be tel: + E.164 digits');
   });
 
   test('buildEstimateMailto generates valid mailto link', () => {

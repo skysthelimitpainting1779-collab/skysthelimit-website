@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
+import { phoneHref } from '@/lib/contact';
 
 type Tone = 'paper' | 'soft' | 'ink' | 'trust';
 type CtaVariant = 'default' | 'outline' | 'trust' | 'inverse' | 'secondary';
@@ -87,7 +88,8 @@ export function PublicCtaLink({
     </>
   );
 
-  if (download || href.startsWith('tel:') || href.startsWith('sms:') || href.startsWith('mailto:')) {
+  // Tap-to-call detection keys off the canonical E.164 href constant (T31).
+  if (download || href.startsWith(phoneHref) || href.startsWith('mailto:')) {
     return <a href={href} download={download || undefined} {...sharedProps}>{content}</a>;
   }
 
@@ -119,7 +121,7 @@ export function PublicHero({
 }: PublicHeroProps) {
   return (
     <section id={id} data-tone="paper" className="border-b border-border">
-      <div className="mx-auto grid min-h-[min(48rem,calc(100svh-7rem))] max-w-[94rem] lg:grid-cols-[58fr_42fr]">
+      <div className="mx-auto grid min-h-[min(48rem,calc(100svh_-_var(--site-header-height-expanded)))] max-w-[94rem] lg:grid-cols-[58fr_42fr]">
         <div className="public-grid flex flex-col justify-center px-5 py-12 sm:px-8 lg:px-12 lg:py-16 xl:px-16">
           <Badge variant="eyebrow" className="mb-6">
             {BadgeIcon ? <BadgeIcon aria-hidden="true" data-icon="inline-start" /> : null}
@@ -211,7 +213,7 @@ export function PublicProcess({ items }: { items: readonly { title: string; body
         <li key={item.title} className="border-b border-r border-border bg-card p-6 text-card-foreground">
           <p className="text-sm font-bold text-trust">Step {String(index + 1).padStart(2, '0')}</p>
           <h3 className="public-display mt-8 text-3xl leading-none">{item.title}</h3>
-          <p className="mt-4 text-sm leading-6 text-muted-foreground">{item.body}</p>
+          <p className="mt-4 text-base leading-6 text-muted-foreground">{item.body}</p>
         </li>
       ))}
     </ol>
@@ -225,7 +227,7 @@ export function PublicProofBand({ items }: { items: readonly string[] }) {
         {items.map((item, index) => (
           <div key={item} className="flex items-start gap-3 border-b border-border px-5 py-5 last:border-b-0 md:border-b-0 md:border-r md:last:border-r-0 sm:px-8">
             <span className="font-display text-2xl font-bold text-trust">{String(index + 1).padStart(2, '0')}</span>
-            <p className="text-sm font-bold leading-6 text-foreground">{item}</p>
+            <p className="text-base font-bold leading-6 text-foreground">{item}</p>
           </div>
         ))}
       </div>

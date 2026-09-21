@@ -10,7 +10,7 @@ import {
   PublicSectionHeading,
 } from '@/components/public/PublicSystem';
 import ServiceAreaMap from '@/components/ServiceAreaMap';
-import { businessPhone } from '@/lib/contact';
+import { phoneHref } from '@/lib/contact';
 import { breadcrumbSchema, businessSchema } from '@/lib/seo';
 
 export default function ServiceAreaPage() {
@@ -28,7 +28,7 @@ export default function ServiceAreaPage() {
         actions={
           <>
             <PublicCtaLink href="/estimate" size="marketing-lg">Get a Free Price Range</PublicCtaLink>
-            <PublicCtaLink href={`tel:${businessPhone}`} variant="outline" size="marketing-lg" icon={Phone} iconPosition="start">Call Anthony</PublicCtaLink>
+            <PublicCtaLink href={phoneHref} variant="outline" size="marketing-lg" icon={Phone} iconPosition="start">Call Anthony</PublicCtaLink>
           </>
         }
       />

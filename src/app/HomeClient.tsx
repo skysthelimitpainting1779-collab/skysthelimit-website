@@ -43,7 +43,7 @@ export default function HomeClient() {
     <PublicPage className="proof-surface overflow-hidden bg-[#071321]">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema([...faqItems])) }} />
 
-      <section aria-labelledby="home-title" className="proof-hero relative isolate min-h-[calc(100svh-7rem)] overflow-hidden bg-[#071321] text-[#F6F3EB]">
+      <section aria-labelledby="home-title" className="proof-hero relative isolate min-h-[calc(100svh_-_var(--site-header-height-expanded))] overflow-hidden bg-[#071321] text-[#F6F3EB]">
         <ResponsiveImage
           src="/images/site/proof-in-the-prep-tape-material.webp"
           alt=""
@@ -58,7 +58,7 @@ export default function HomeClient() {
         <div aria-hidden="true" className="proof-hero-grain absolute inset-0" />
         <div aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-white/30" />
 
-        <div className="relative mx-auto flex min-h-[calc(100svh-7rem)] max-w-[96rem] flex-col justify-between px-5 py-8 sm:px-8 sm:py-10 lg:px-12 lg:py-12 xl:px-16">
+        <div className="relative mx-auto flex min-h-[calc(100svh_-_var(--site-header-height-expanded))] max-w-[96rem] flex-col justify-between px-5 py-8 sm:px-8 sm:py-10 lg:px-12 lg:py-12 xl:px-16">
           <div className="flex items-center justify-between gap-6 text-[0.7rem] font-black uppercase tracking-[0.18em] text-[#DDEBFA]">
             <span>Twin Cities painting</span>
             <span className="hidden sm:block">Owner-led from walkthrough to final detail</span>

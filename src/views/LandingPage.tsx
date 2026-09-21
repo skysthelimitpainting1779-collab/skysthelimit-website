@@ -27,7 +27,7 @@ import {
   type LandingPage,
   type LandingPageKind,
 } from '@/data/landingPages';
-import { businessPhone } from '@/lib/contact';
+import { phoneHref } from '@/lib/contact';
 import NotFound from '@/views/NotFound';
 
 interface LandingPageRouteProps {
@@ -84,7 +84,7 @@ export default function LandingPageRoute({ kind, initialPageData }: LandingPageR
               Get a Free Price Range
             </PublicCtaLink>
             <PublicCtaLink
-              href={`tel:${businessPhone}`}
+              href={phoneHref}
               variant="outline"
               icon={Phone}
               iconPosition="start"
