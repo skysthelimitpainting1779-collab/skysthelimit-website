@@ -16,6 +16,12 @@ export type VerifiedReview = {
   when: string;
   /** Null when the reviewer left stars without written text. */
   text: string | null;
+  /**
+   * Display excerpt, cut at sentence boundaries. Every word is verbatim from
+   * `text`; the card links to the full review on Google. (taste 4.10: landing
+   * quotes stay scannable, max ~3 lines.)
+   */
+  excerpt: string | null;
 };
 
 export const reviews: readonly VerifiedReview[] = [
@@ -23,16 +29,21 @@ export const reviews: readonly VerifiedReview[] = [
     author: 'Cristina Brostrom',
     when: '2 months ago',
     text: "Anthony painted our living room and it turned out so nice. He was really careful with all the prep and protection so nothing got messed up. The space feels so much brighter and cleaner now. He communicated well and made the whole process easy. I'm really happy with how it looks.",
+    excerpt:
+      'Anthony painted our living room and it turned out so nice. He was really careful with all the prep and protection so nothing got messed up. The space feels so much brighter and cleaner now.',
   },
   {
     author: 'Joseph Bailey',
     when: '2 months ago',
     text: "Anthony did the exterior of my place and did it the right way. He prepped everything properly instead of rushing through it. The finish looks clean and sharp, and it's already holding up well. He was on time, professional, and easy to work with. I'd recommend him to anyone who wants it done right the first time.",
+    excerpt:
+      'Anthony did the exterior of my place and did it the right way. He prepped everything properly instead of rushing through it. The finish looks clean and sharp, and it\'s already holding up well.',
   },
   {
     author: 'Tori Athey',
     when: 'a month ago',
     text: null,
+    excerpt: null,
   },
 ] as const;
 

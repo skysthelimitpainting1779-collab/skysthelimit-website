@@ -25,13 +25,14 @@ interface CaseStudyCardProps {
   prep: string[];
   result: string;
   image?: string;
+  imageAlt?: string;
   beforeImage?: string;
   afterImage?: string;
   /** True only when the before/after pair documents one real project. */
   verifiedPair?: boolean;
 }
 
-function CaseStudyCard({ type, location, problem, prep, result, image, beforeImage, afterImage, verifiedPair }: CaseStudyCardProps) {
+function CaseStudyCard({ type, location, problem, prep, result, image, imageAlt, beforeImage, afterImage, verifiedPair }: CaseStudyCardProps) {
   return (
     <Card variant="panel" className="flex h-full flex-col overflow-hidden">
       <div className="relative min-h-[22rem] border-b border-border">
@@ -46,7 +47,7 @@ function CaseStudyCard({ type, location, problem, prep, result, image, beforeIma
         ) : image ? (
           <ResponsiveImage
             src={image}
-            alt={`${type} finish reference in ${location}`}
+            alt={imageAlt ?? `${type} finish reference in ${location}`}
             width={1200}
             height={800}
             sizes="(min-width: 1024px) 50vw, 100vw"
@@ -125,6 +126,7 @@ export default async function ProjectsPage() {
       // different room and cannot document this project, so the slider is
       // removed until a real before photo is captured.
       image: '/images/services/interior/sky-work-real-04-before-after-bedroom.webp',
+      imageAlt: 'Before-and-after bedroom repaint, Twin Cities Metro',
     },
     {
       type: 'Pavement Marking and Striping',

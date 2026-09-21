@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { motion, useMotionTemplate, useSpring, useTransform } from 'motion/react';
+import { motion, useMotionTemplate, useMotionValue, useReducedMotion, useSpring, useTransform } from 'motion/react';
 import { ChevronLeft, ChevronRight, ImageOff } from 'lucide-react';
 
 import ResponsiveImage from './ResponsiveImage';
@@ -49,26 +49,39 @@ export default function BeforeAfterSlider({
   afterLabel = 'After',
   verifiedPair = false,
 }: BeforeAfterSliderProps) {
-  const [sliderPosition, setSliderPosition] = useState(50);
-
-  const spring = useSpring(sliderPosition, { stiffness: 300, damping: 30, mass: 0.6 });
-  const clipRight = useTransform(spring, (value) => 100 - value);
+  // Taste 3.B: the drag position is a continuous input value, so it lives in a
+  // MotionValue outside the React render cycle. `committed` is a discrete
+  // mirror kept only for the input value and the screen-reader announcement.
+  const position = useMotionValue(50);
+  const reduceMotion = useReducedMotion();
+  const spring = useSpring(position, { stiffness: 300, damping: 30, mass: 0.6 });
+  // Reduced-motion users get the raw position: the comparison still works,
+  // without the autonomous spring glide.
+  const driver = reduceMotion ? position : spring;
+  const clipRight = useTransform(driver, (value) => 100 - value);
   const clipPath = useMotionTemplate`inset(0 ${clipRight}% 0 0)`;
-  const handleLeft = useTransform(spring, (value) => `${value}%`);
+  const handleLeft = useTransform(driver, (value) => `${value}%`);
+  const [committed, setCommitted] = useState(50);
+
+  const commitPosition = (next: number) => {
+    const clamped = Math.min(100, Math.max(0, Math.round(next)));
+    position.set(clamped);
+    setCommitted(clamped);
+  };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'ArrowLeft' || event.key === 'ArrowDown') {
       event.preventDefault();
-      setSliderPosition((pos) => Math.max(0, pos - 5));
+      commitPosition(position.get() - 5);
     } else if (event.key === 'ArrowRight' || event.key === 'ArrowUp') {
       event.preventDefault();
-      setSliderPosition((pos) => Math.min(100, pos + 5));
+      commitPosition(position.get() + 5);
     } else if (event.key === 'Home') {
       event.preventDefault();
-      setSliderPosition(0);
+      commitPosition(0);
     } else if (event.key === 'End') {
       event.preventDefault();
-      setSliderPosition(100);
+      commitPosition(100);
     }
   };
 
@@ -114,10 +127,10 @@ export default function BeforeAfterSlider({
           type="range"
           min={0}
           max={100}
-          value={Math.round(sliderPosition)}
+          value={committed}
           aria-label="Before and after image comparison slider"
-          aria-valuetext={`${Math.round(sliderPosition)} percent ${beforeLabel} visible`}
-          onChange={(event) => setSliderPosition(Number(event.target.value))}
+          aria-valuetext={`${committed} percent ${beforeLabel} visible`}
+          onChange={(event) => commitPosition(Number(event.target.value))}
           onKeyDown={handleKeyDown}
           onMouseDown={(event) => event.currentTarget.focus()}
           onTouchStart={(event) => event.currentTarget.focus()}

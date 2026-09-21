@@ -55,10 +55,10 @@ export function TestimonialCard({ review, index, tone }: TestimonialCardProps) {
         </span>
       </div>
 
-      {review.text != null ? (
+      {review.excerpt != null ? (
         <figure className="mt-5 flex flex-1 flex-col">
           <blockquote className="flex-1 text-[0.95rem] leading-7 text-[#E6EFF8]">
-            &ldquo;{review.text}&rdquo;
+            &ldquo;{review.excerpt}&rdquo;
           </blockquote>
           <figcaption className="mt-6 border-t border-white/20 pt-4">
             <p className="text-sm font-black text-[#F6F3EB]">{review.author}</p>
