@@ -36,7 +36,7 @@ const faqs = [
   {
     question: 'How do free estimates work?',
     answer:
-      'Start with the estimate form on this site — it walks through your project in three steps — or call 651-410-4196. Every estimate is free, and the written scope documents surfaces, preparation, and timing before any work begins.',
+      'Start with the estimate form on this site — it walks through your project in four steps — or call 651-410-4196. Every estimate is free, and the written scope documents surfaces, preparation, and timing before any work begins.',
   },
   {
     question: 'What does your prep work include?',
@@ -108,7 +108,7 @@ export default function FaqPage() {
           <div className="mt-10 divide-y divide-border border-y border-border">
             {faqs.map((item) => (
               <details key={item.question} className="group py-6">
-                <summary className="min-h-11 cursor-pointer text-lg font-bold text-foreground marker:text-primary">
+                <summary className="min-h-11 cursor-pointer text-lg font-bold text-foreground marker:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0254C3]">
                   {item.question}
                 </summary>
                 <p className="mt-4 leading-7 text-muted-foreground">{item.answer}</p>

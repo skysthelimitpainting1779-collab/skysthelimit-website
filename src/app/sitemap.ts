@@ -17,7 +17,7 @@ const staticRoutes: { path: string; changeFrequency: MetadataRoute.Sitemap[0]['c
     { path: '/capabilities', changeFrequency: 'monthly', priority: 0.75 },
     { path: '/service-area', changeFrequency: 'monthly', priority: 0.8 },
     { path: '/refer', changeFrequency: 'monthly', priority: 0.6 },
-    { path: '/faq', changeFrequency: 'monthly', priority: 0.75 },
+    { path: '/faq', changeFrequency: 'weekly', priority: 0.8 },
     { path: '/painting-services/interior-painting', changeFrequency: 'monthly', priority: 0.85 },
   ];
 
