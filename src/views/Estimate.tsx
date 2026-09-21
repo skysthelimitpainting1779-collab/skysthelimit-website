@@ -244,10 +244,10 @@ export default function EstimatePage() {
       });
 
     // Route a non-OK lead response to the email fallback or an inline error.
-    // 429/5xx after the retry and the server's explicit `fallback: 'email'`
-    // marker go to the prefilled-email card, where the "Open Prefilled Email"
-    // action actually exists; 4xx validation failures stay inline so the user
-    // can correct and resubmit.
+    // A 429 that persists after its retry, any 5xx, and the server's explicit
+    // `fallback: 'email'` marker go to the prefilled-email card, where the
+    // "Open Prefilled Email" action actually exists; 4xx validation failures
+    // stay inline so the user can correct and resubmit.
     const routeFailure = async (response: Response) => {
       const result = (await response.json().catch(() => ({}))) as { error?: string; fallback?: string };
       if (response.status === 429 || response.status >= 500 || result?.fallback === 'email') {
@@ -275,20 +275,10 @@ export default function EstimatePage() {
       }
       await routeFailure(response);
     } catch {
-      // Network error: single retry, then route the retried response like the
-      // primary path so the server's message is not silently discarded.
-      try {
-        setStatus('retrying');
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-        const response = await postLead();
-        if (response.ok) {
-          setStatus('sent');
-          return;
-        }
-        await routeFailure(response);
-      } catch {
-        setStatus('fallback');
-      }
+      // Network error: the POST may or may not have reached the server, so an
+      // automatic retry could insert a duplicate lead. Go straight to the
+      // prefilled-email fallback and let the user send explicitly.
+      setStatus('fallback');
     }
   };
 
@@ -367,7 +357,7 @@ export default function EstimatePage() {
               <div
                 ref={stepPanelRef}
                 tabIndex={-1}
-                className="min-h-[34rem] bg-card p-6 text-card-foreground focus:outline-none sm:p-8 lg:p-10"
+                className="min-h-[34rem] bg-card p-6 text-card-foreground sm:p-8 lg:p-10"
                 aria-live="polite"
               >
                 {step === 1 ? (
