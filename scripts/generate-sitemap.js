@@ -21,6 +21,7 @@ const staticRoutes = [
   '/capabilities',
   '/service-area',
   '/refer',
+  '/faq',
 ];
 
 const defaultServiceAreasSlugs = [
