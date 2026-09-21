@@ -60,8 +60,9 @@
   "ignoreCommand": "case \"$VERCEL_GIT_COMMIT_REF\" in entire/*) echo 'agent branch, skipping'; exit 0;; *) echo 'proceeding with build'; exit 1;; esac",
   "git": {
     "deploymentEnabled": {
-      "main": true,
-      "entire/*": false
+      "*": false,
+      "**/*": false,
+      "main": true
     }
   }
 }
