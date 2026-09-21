@@ -1,8 +1,8 @@
 'use client';
 
-import { type FormEvent, useMemo, useState } from 'react';
+import { type FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
-import { Bot, Calculator, CheckCircle2, Loader2, Mail, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Bot, Calculator, CheckCircle2, Loader2, Mail, ShieldCheck } from 'lucide-react';
 
 import RangeSlider from '@/components/RangeSlider';
 import {
@@ -20,12 +20,15 @@ import { Input } from '@/components/ui/input';
 import { Progress, ProgressLabel, ProgressValue } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { trackEvent } from '@/lib/analytics';
+import { trackEvent, readUtmParams } from '@/lib/analytics';
 import { buildEstimateMailto } from '@/lib/contact';
 
 type ProjectType = 'interior' | 'exterior' | 'cabinets';
 type PrepLevel = 'standard' | 'premium';
-type SubmitStatus = 'idle' | 'submitting' | 'sent' | 'fallback';
+type SubmitStatus = 'idle' | 'submitting' | 'retrying' | 'sent' | 'error' | 'fallback';
+
+const timelineOptions = ['ASAP', '1-4 weeks', '1-3 months', 'Planning ahead'];
+const contactMethodOptions = ['Call', 'Text', 'Email'];
 
 const projectOptions = [
   ['interior', 'Interior rooms'],
@@ -84,7 +87,26 @@ export default function EstimatePage() {
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [city, setCity] = useState('');
+  const [timeline, setTimeline] = useState('');
+  const [contactMethod, setContactMethod] = useState('');
+  // Honeypot: the leads API rejects any submission where this hidden field
+  // is filled (server schema requires it empty). Bots fill it; humans cannot.
+  const [website, setWebsite] = useState('');
+  const [photosUrl, setPhotosUrl] = useState('');
+  const [formError, setFormError] = useState('');
   const [status, setStatus] = useState<SubmitStatus>('idle');
+
+  // Move keyboard focus to the step panel on step change so screen-reader
+  // and keyboard users land on the new content. Skipped on first render.
+  const stepPanelRef = useRef<HTMLDivElement>(null);
+  const firstRenderRef = useRef(true);
+  useEffect(() => {
+    if (firstRenderRef.current) {
+      firstRenderRef.current = false;
+      return;
+    }
+    stepPanelRef.current?.focus({ preventScroll: false });
+  }, [step]);
 
   const planningRange = useMemo(() => {
     if (!projectType || !prepLevel) return null;
@@ -132,8 +154,16 @@ export default function EstimatePage() {
     Project: projectType || '',
     Details: projectDetail,
     Preparation: prepLevel || '',
+    Timeline: timeline,
+    Photos: photosUrl.trim(),
+    'Preferred contact': contactMethod,
     'Planning range': planningRange ? `$${planningRange.low.toLocaleString()} to $${planningRange.high.toLocaleString()}` : '',
   });
+
+  const goBack = () => {
+    setFormError('');
+    setStep((current) => Math.max(1, current - 1));
+  };
 
   const chooseProject = (value: string) => {
     const selected = value as ProjectType;
@@ -153,30 +183,101 @@ export default function EstimatePage() {
     trackEvent('estimate_range_view', { projectType, prepLevel });
   };
 
+  const validateContactStep = () => {
+    if (!name.trim()) return 'Please enter your name.';
+    if (!phone.trim()) return 'Please enter your phone number.';
+    if (!/^[^\s@]{1,254}@[^\s@]{1,254}\.[^\s@]{2,63}$/.test(email.trim())) return 'Please enter a valid email address.';
+    if (!city.trim()) return 'Please enter your city.';
+    if (!timeline) return 'Please choose a timeline.';
+    if (!contactMethod) return 'Please choose how you would like to be contacted.';
+    if (photosUrl.trim() && !/^https?:\/\/\S+\.\S+/.test(photosUrl.trim())) {
+      return 'Please enter a valid photo link starting with http(s)://, or leave it blank.';
+    }
+    return '';
+  };
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setFormError('');
+
+    // Honeypot: silently "accept" bot submissions client-side; the server
+    // rejects them too because the leads schema requires `website` empty.
+    if (website) {
+      setStatus('sent');
+      return;
+    }
+
+    const contactError = validateContactStep();
+    if (contactError) {
+      setFormError(contactError);
+      return;
+    }
+
+    const utm = readUtmParams();
     const payload = {
       source: 'Chatbot Estimate',
       page: '/estimate',
-      name,
-      phone,
-      email,
-      city,
+      name: name.trim(),
+      phone: phone.trim(),
+      email: email.trim(),
+      city: city.trim(),
       projectType,
       prepLevel,
+      // The estimator is residential-focused (rooms, home stories, cabinets);
+      // market defaults to Residential like the main lead form.
+      market: 'Residential',
+      timeline,
+      contactMethod,
+      photosUrl: photosUrl.trim(),
+      website,
       notes: `Project: ${projectType}\nDetails: ${projectDetail}\nPrep: ${prepLevel}\nPlanning range: ${planningRange ? `$${planningRange.low.toLocaleString()} to $${planningRange.high.toLocaleString()}` : 'Not available'}`,
+      ...utm,
     };
 
     setStatus('submitting');
     trackEvent('estimate_lead_submit', { projectType, prepLevel });
-    try {
-      const response = await fetch('/api/leads', {
+    const postLead = () =>
+      fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      setStatus(response.ok ? 'sent' : 'fallback');
+
+    // Route a non-OK lead response to the email fallback or an inline error.
+    // A 429 that persists after its retry, any 5xx, and the server's explicit
+    // `fallback: 'email'` marker go to the prefilled-email card, where the
+    // "Open Prefilled Email" action actually exists; 4xx validation failures
+    // stay inline so the user can correct and resubmit.
+    const routeFailure = async (response: Response) => {
+      const result = (await response.json().catch(() => ({}))) as { error?: string; fallback?: string };
+      if (response.status === 429 || response.status >= 500 || result?.fallback === 'email') {
+        setStatus('fallback');
+      } else {
+        setStatus('error');
+        setFormError(result?.error || 'The request could not be sent. Please try again.');
+      }
+    };
+
+    try {
+      let response = await postLead();
+      if (!response.ok && response.status === 429) {
+        // 429 is returned before anything is persisted, so one retry is safe.
+        // 5xx is NOT retried: the leads API persists the row before delivery
+        // and its 500 carries { fallback: 'email' } — re-POSTing would insert
+        // a duplicate lead.
+        setStatus('retrying');
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+        response = await postLead();
+      }
+      if (response.ok) {
+        setStatus('sent');
+        return;
+      }
+      await routeFailure(response);
     } catch {
+      // Network error: the POST may or may not have reached the server, so an
+      // automatic retry could insert a duplicate lead. Go straight to the
+      // prefilled-email fallback and let the user send explicitly.
       setStatus('fallback');
     }
   };
@@ -253,7 +354,12 @@ export default function EstimatePage() {
                 </dl>
               </aside>
 
-              <div className="min-h-[34rem] bg-card p-6 text-card-foreground sm:p-8 lg:p-10" aria-live="polite">
+              <div
+                ref={stepPanelRef}
+                tabIndex={-1}
+                className="min-h-[34rem] bg-card p-6 text-card-foreground sm:p-8 lg:p-10"
+                aria-live="polite"
+              >
                 {step === 1 ? (
                   <ChoiceGroup label="Project type" value={projectType} options={projectOptions} onChange={chooseProject} />
                 ) : null}
@@ -271,7 +377,13 @@ export default function EstimatePage() {
                       <RangeSlider id="estimate-length" label="Length" value={length} min={5} max={40} suffix="FT" onChange={setLength} />
                       <RangeSlider id="estimate-height" label="Ceiling height" value={height} min={7} max={20} suffix="FT" onChange={setHeight} />
                     </div>
-                    <Button type="button" size="marketing-lg" onClick={continueToPrep}>Continue to Preparation</Button>
+                    <div className="flex flex-col gap-3 sm:flex-row">
+                      <Button type="button" variant="outline" size="marketing-lg" onClick={goBack}>
+                        <ArrowLeft data-icon="inline-start" />
+                        Back
+                      </Button>
+                      <Button type="button" size="marketing-lg" onClick={continueToPrep}>Continue to Preparation</Button>
+                    </div>
                   </FieldGroup>
                 ) : null}
 
@@ -279,14 +391,26 @@ export default function EstimatePage() {
                   <FieldGroup>
                     <ChoiceGroup label="Home height" value={stories} options={['1 Story', '2 Story', '3+ Story'].map((item) => [item, item] as const)} onChange={setStories} />
                     <ChoiceGroup label="Primary siding" value={siding} options={['Wood / LP SmartSide', 'Stucco', 'Vinyl / Aluminum', 'Brick / Masonry'].map((item) => [item, item] as const)} onChange={setSiding} />
-                    <Button type="button" size="marketing-lg" onClick={continueToPrep}>Continue to Preparation</Button>
+                    <div className="flex flex-col gap-3 sm:flex-row">
+                      <Button type="button" variant="outline" size="marketing-lg" onClick={goBack}>
+                        <ArrowLeft data-icon="inline-start" />
+                        Back
+                      </Button>
+                      <Button type="button" size="marketing-lg" onClick={continueToPrep}>Continue to Preparation</Button>
+                    </div>
                   </FieldGroup>
                 ) : null}
 
                 {step === 2 && projectType === 'cabinets' ? (
                   <FieldGroup>
                     <RangeSlider id="estimate-cabinet-count" label="Total doors and drawers" value={cabinetCount} min={5} max={60} onChange={setCabinetCount} />
-                    <Button type="button" size="marketing-lg" onClick={continueToPrep}>Continue to Preparation</Button>
+                    <div className="flex flex-col gap-3 sm:flex-row">
+                      <Button type="button" variant="outline" size="marketing-lg" onClick={goBack}>
+                        <ArrowLeft data-icon="inline-start" />
+                        Back
+                      </Button>
+                      <Button type="button" size="marketing-lg" onClick={continueToPrep}>Continue to Preparation</Button>
+                    </div>
                   </FieldGroup>
                 ) : null}
 
@@ -302,10 +426,16 @@ export default function EstimatePage() {
                       onChange={(value) => setPrepLevel(value as PrepLevel)}
                     />
                     <FieldDescription>Final preparation requirements are confirmed after surface inspection.</FieldDescription>
-                    <Button type="button" size="marketing-lg" onClick={showRange} disabled={!prepLevel}>
-                      <Calculator data-icon="inline-start" />
-                      Show My Planning Range
-                    </Button>
+                    <div className="flex flex-col gap-3 sm:flex-row">
+                      <Button type="button" variant="outline" size="marketing-lg" onClick={goBack}>
+                        <ArrowLeft data-icon="inline-start" />
+                        Back
+                      </Button>
+                      <Button type="button" size="marketing-lg" onClick={showRange} disabled={!prepLevel}>
+                        <Calculator data-icon="inline-start" />
+                        Show My Planning Range
+                      </Button>
+                    </div>
                   </FieldGroup>
                 ) : null}
 
@@ -330,7 +460,18 @@ export default function EstimatePage() {
                         </CardHeader>
                       </Card>
                     ) : (
-                      <form onSubmit={handleSubmit}>
+                      <form onSubmit={handleSubmit} noValidate>
+                        {/* Honeypot: invisible to humans; the leads API rejects filled values. */}
+                        <input
+                          type="text"
+                          name="website"
+                          value={website}
+                          onChange={(event) => setWebsite(event.target.value)}
+                          tabIndex={-1}
+                          autoComplete="off"
+                          aria-hidden="true"
+                          className="hidden"
+                        />
                         <FieldGroup>
                           <div className="grid gap-5 sm:grid-cols-2">
                             <Field>
@@ -349,14 +490,78 @@ export default function EstimatePage() {
                               <FieldLabel htmlFor="estimate-city">City</FieldLabel>
                               <Input id="estimate-city" name="city" autoComplete="address-level2" required value={city} onChange={(event) => setCity(event.target.value)} />
                             </Field>
+                            <Field>
+                              <FieldLabel htmlFor="estimate-timeline">Timeline</FieldLabel>
+                              <select
+                                id="estimate-timeline"
+                                name="timeline"
+                                value={timeline}
+                                onChange={(event) => setTimeline(event.target.value)}
+                                required
+                                className="min-h-12 w-full rounded-none border border-input bg-background px-4 py-3 text-base text-foreground"
+                              >
+                                <option value="">Select timeline</option>
+                                {timelineOptions.map((option) => (
+                                  <option key={option} value={option}>{option}</option>
+                                ))}
+                              </select>
+                            </Field>
+                            <Field>
+                              <FieldLabel htmlFor="estimate-contact-method">Preferred contact</FieldLabel>
+                              <select
+                                id="estimate-contact-method"
+                                name="contactMethod"
+                                value={contactMethod}
+                                onChange={(event) => setContactMethod(event.target.value)}
+                                required
+                                className="min-h-12 w-full rounded-none border border-input bg-background px-4 py-3 text-base text-foreground"
+                              >
+                                <option value="">Select contact method</option>
+                                {contactMethodOptions.map((option) => (
+                                  <option key={option} value={option}>{option}</option>
+                                ))}
+                              </select>
+                            </Field>
                           </div>
                           <Field>
-                            <Button type="submit" size="marketing-lg" disabled={status === 'submitting'} aria-busy={status === 'submitting'}>
-                              {status === 'submitting' ? <Loader2 data-icon="inline-start" className="animate-spin" /> : <ShieldCheck data-icon="inline-start" />}
-                              {status === 'submitting' ? 'Sending Request' : 'Request the Owner Walkthrough'}
-                            </Button>
-                            <FieldDescription>Your information is used only to respond to this project request.</FieldDescription>
+                            <FieldLabel htmlFor="estimate-photos">Project photo link <span className="font-normal text-muted-foreground">(optional)</span></FieldLabel>
+                            <Input
+                              id="estimate-photos"
+                              name="photosUrl"
+                              type="url"
+                              inputMode="url"
+                              placeholder="https://drive.google.com/..."
+                              value={photosUrl}
+                              onChange={(event) => setPhotosUrl(event.target.value)}
+                            />
+                            <FieldDescription>Photos of the space help Anthony scope the walkthrough.</FieldDescription>
                           </Field>
+                          {formError ? (
+                            <p className="border-l-2 border-destructive pl-3 text-sm font-bold text-destructive" role="alert">
+                              {formError}
+                            </p>
+                          ) : null}
+                          <div className="flex flex-col gap-3 sm:flex-row">
+                            <Button type="button" variant="outline" size="marketing-lg" onClick={goBack}>
+                              <ArrowLeft data-icon="inline-start" />
+                              Back
+                            </Button>
+                            <Field className="flex-1">
+                              <Button
+                                type="submit"
+                                size="marketing-lg"
+                                className="w-full"
+                                disabled={status === 'submitting' || status === 'retrying'}
+                                aria-busy={status === 'submitting' || status === 'retrying'}
+                              >
+                                {status === 'submitting' || status === 'retrying'
+                                  ? <Loader2 data-icon="inline-start" className="animate-spin" />
+                                  : <ShieldCheck data-icon="inline-start" />}
+                                {status === 'retrying' ? 'Retrying' : status === 'submitting' ? 'Sending Request' : 'Request the Owner Walkthrough'}
+                              </Button>
+                              <FieldDescription>Your information is used only to respond to this project request.</FieldDescription>
+                            </Field>
+                          </div>
                         </FieldGroup>
                       </form>
                     )}

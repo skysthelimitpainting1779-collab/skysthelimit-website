@@ -69,6 +69,10 @@ export default function ReferPage() {
         description="Create a trackable referral link for a friend, neighbor, or colleague planning a qualifying painting project."
         image="/brand/generated/chatgpt/sky-crew-at-work.webp"
         imageAlt="Illustrative: painting crew at work on a home exterior"
+        imageCaption={{
+          label: 'Illustration',
+          text: 'Stylized crew illustration — project proof comes with the written scope.',
+        }}
         proof={['Direct referral tracking', 'Qualifying customer offer', 'Owner-operated local business']}
         badgeIcon={Gift}
       />

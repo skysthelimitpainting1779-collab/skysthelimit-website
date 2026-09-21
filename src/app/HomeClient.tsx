@@ -5,8 +5,12 @@ import { ArrowDownRight, ArrowRight, ArrowUpRight, Check, ShieldCheck } from 'lu
 import LeadForm from '../components/LeadForm';
 import PrepProtocolStage from '../components/PrepProtocolStage';
 import ResponsiveImage from '../components/ResponsiveImage';
+import ReviewsSection from '../components/ReviewsSection';
 import { PublicCtaLink, PublicPage } from '../components/public/PublicSystem';
 import { faqSchema } from '../lib/seo';
+
+// Pre-generated hero variants live in public/images/site/ and are referenced
+// directly (see the hero <img> below).
 
 const stageLedger = [
   ['01', 'Protect', 'Cover, mask, and safeguard the property before preparation begins.'],
@@ -246,6 +250,8 @@ export default function HomeClient() {
           </div>
         </div>
       </section>
+
+      <ReviewsSection />
 
       <section id="walkthrough" aria-labelledby="walkthrough-title" className="relative overflow-hidden bg-[#0254C3] text-[#F6F3EB]">
         <div aria-hidden="true" className="proof-walkthrough-lines absolute inset-0" />
