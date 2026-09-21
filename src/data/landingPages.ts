@@ -346,7 +346,7 @@ export const areaLandingPages: LandingPage[] = [
         eyebrow: 'Why Bloomington',
         body: [
           'Sky’s the Limit Painting serves Bloomington neighborhoods and the 494/35W corridor with residential painting, commercial painting, and parking lot striping. We are a local, owner-run crew — not a franchise — and every job gets a direct line to the person doing the work.',
-          'Bloomington has a little of everything: single-family homes that need fresh exteriors after a few hard Minnesota winters, a heavy retail/office/hospitality corridor along 494 that needs to look sharp for tenants and customers, and parking lots that take a real beating from snowplows all winter. Faded, plow-chewed striping is a liability problem in a high-traffic corridor lot, not a cosmetic one — and we are one of the few contractors in the south metro that can fix the building and the lot under one contract.',
+          'Bloomington has a little of everything: single-family homes that need fresh exteriors after a few hard Minnesota winters, a heavy retail/office/hospitality corridor along 494 that needs to look sharp for tenants and customers, and parking lots that take a real beating from snowplows all winter. Faded, plow-chewed striping is a liability problem in a high-traffic corridor lot, not a cosmetic one — and we can fix the building and the lot under one contract.',
           'Call or text 651-410-4196 for a free estimate. We will come out, walk the job with you, and give you a straight number.',
         ],
       },
@@ -454,7 +454,7 @@ export const areaLandingPages: LandingPage[] = [
       'House painting, commercial painting & parking lot striping in Eden Prairie, MN. Local crew, free estimates. Call 651-410-4196.',
     image: '/brand/generated/sky-local-authority.webp',
     accent: 'West metro local',
-    market: 'Residential',
+    market: 'Commercial',
     proof: [
       'Based in Inver Grove Heights, serving Eden Prairie',
       'Owner-led project communication',
@@ -713,7 +713,7 @@ export const areaLandingPages: LandingPage[] = [
       'House painting, commercial painting & parking lot striping in Maple Grove, MN. Local crew, free estimates. Call 651-410-4196.',
     image: '/brand/generated/sky-local-authority.webp',
     accent: 'Northwest metro local',
-    market: 'Residential',
+    market: 'Commercial',
     proof: [
       'Based in Inver Grove Heights, serving Maple Grove',
       'Owner-led project communication',
