@@ -146,7 +146,9 @@ describe('Tier 1: Feature Coverage', () => {
     assert.match(rev, /href=\{googleReviewUrl\}/);
     assert.match(rev, /target="_blank"/);
     assert.match(rev, /rel="noopener noreferrer"/);
-    assert.match(rev, /ChIJ8d-Nq98d9kgR50-mR-K5k84/);
+    // googleReviewUrl is defined once in testimonials-data.ts and imported here.
+    assert.match(rev, /from '@\/components\/testimonials\/testimonials-data'/);
+    assert.match(read('src/components/testimonials/testimonials-data.ts'), /ChIJ8d-Nq98d9kgR50-mR-K5k84/);
   });
 
   test('T1.28 Reputation Funnel - Rating 1, 2, or 3 stars intercepts user and displays private feedback form', () => {
