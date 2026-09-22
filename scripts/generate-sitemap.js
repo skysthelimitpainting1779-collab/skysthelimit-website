@@ -36,6 +36,10 @@ const defaultServiceAreasSlugs = [
   'eden-prairie',
   'edina',
   'maple-grove',
+  'lakeville',
+  'apple-valley',
+  'rosemount',
+  'cottage-grove',
 ];
 
 const defaultPaintingServicesSlugs = [

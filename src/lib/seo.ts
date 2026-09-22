@@ -134,7 +134,10 @@ export function localBusinessSchema(cityName: string, slug: string) {
     ],
     address: {
       '@type': 'PostalAddress',
-      addressLocality: cityName,
+      // Postal address is fixed to the real business location (PRODUCT.md:
+      // 1445 56th St E, Inver Grove Heights, MN 55077). The served city is
+      // expressed via areaServed below, never as the address locality.
+      addressLocality: 'Inver Grove Heights',
       addressRegion: 'MN',
       addressCountry: 'US',
     },

@@ -47,9 +47,11 @@ export const ENV = {
   INSTAGRAM_URL: getEnv('INSTAGRAM_URL') || '',
   LINKEDIN_URL: getEnv('LINKEDIN_URL') || 'https://www.linkedin.com/in/anthony-briseno-5444b0410/',
   TIKTOK_URL: getEnv('TIKTOK_URL') || 'https://tiktok.com/@skysthelimitpaintingllc',
-  // Verified Google Business Profile URL (GBP snapshot 2026-09-21: the place-name
-  // URL resolved on the live listing; the old CID default was never verified).
-  GOOGLE_BUSINESS_URL: getEnv('GOOGLE_BUSINESS_URL') || 'https://www.google.com/maps/place/Skys+The+Limit+Painting+LLC/@44.925452,-93.2359444,11z',
+  // Google Business Profile canonical share URL (CID 8497050136769031462).
+  // The CID form is the entity-stable listing link for JSON-LD sameAs —
+  // the place-name URL is only a human-facing address-bar form and is used
+  // as such in ReviewsSection / testimonials-data, not here.
+  GOOGLE_BUSINESS_URL: getEnv('GOOGLE_BUSINESS_URL') || 'https://www.google.com/maps?cid=8497050136769031462',
   BOOKING_URL: getEnv('BOOKING_URL') || '',
   // Explicitly reference process.env for Next.js client-side static substitution
   SUPABASE_URL: process.env.NEXT_PUBLIC_backend_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || getEnv('SUPABASE_URL') || '',

@@ -437,7 +437,7 @@ export const areaLandingPages: LandingPage[] = [
       },
       {
         question: 'Do you do after-hours work for businesses?',
-        answer: 'Tell us your operating hours at the walkthrough — we build retail, office, and hospitality work around them so your operation never stops, and the schedule goes in the written scope.',
+        answer: 'Tell us your operating hours at the walkthrough — we schedule retail, office, and hospitality work around them, and the schedule goes in the written scope.',
       },
     ],
   },
@@ -482,7 +482,7 @@ export const areaLandingPages: LandingPage[] = [
         eyebrow: 'Why Eden Prairie',
         body: [
           'Sky’s the Limit Painting serves Eden Prairie neighborhoods and the 494/169 corridor with commercial painting, parking lot striping, and residential painting. We are a local, owner-run crew, and this page reads the way we actually work here: written for the facilities manager and the property manager first, the homeowner second.',
-          'Eden Prairie is where the Twin Cities’ corporate corridor lives — business parks, corporate offices, and retail centers that need painters who plan like contractors, not handymen. After-hours and weekend scheduling is the default here, not the exception. Multi-tenant properties get phased work: floor by floor or suite by suite, so tenants stay put and operations never stop.',
+          'Eden Prairie is where the Twin Cities’ corporate corridor lives — business parks, corporate offices, and retail centers that need painters who plan like contractors, not handymen. After-hours and weekend scheduling is available where access allows. Multi-tenant properties get phased work: floor by floor or suite by suite, so tenants can stay put during the work.',
           'And when the same property needs its lot re-striped, one contractor does both. Tell us your operating hours at the walkthrough and we build the schedule around them — in writing.',
         ],
       },
@@ -866,7 +866,7 @@ export const areaLandingPages: LandingPage[] = [
       { title: 'Call or Text', body: 'Tell us what you are looking at — house, townhome, office, parking lot — and where in Lakeville it is.' },
       { title: 'Walkthrough', body: 'We come to you, measure, and note the prep the job actually needs.' },
       { title: 'Written Quote', body: 'One number, line-itemed. You know exactly what is covered before we start.' },
-      { title: 'Scheduled Work', body: 'We show up on the date we said, keep the site clean, and walk it with you at the end.' },
+      { title: 'Scheduled Work', body: 'The start date goes in the written scope. We keep the site clean and walk the finished work with you at the end.' },
     ],
     related: ['apple-valley', 'rosemount', 'inver-grove-heights', 'parking-lot-striping'],
     customSections: [
@@ -884,7 +884,7 @@ export const areaLandingPages: LandingPage[] = [
         eyebrow: 'Homes',
         body: [
           'Lakeville residential work runs from whole-home interior repaints to exterior refreshes on two-stories that have taken ten winters of wind and sun. We scrape, prime, caulk, and topcoat with exterior-grade paint built for freeze-thaw — the prep is the job, the paint is just the finish.',
-          'Cabinet painting is a frequent request: sprayed doors and drawers for a factory-smooth finish, boxes finished in place, hardware back on and aligned. Townhome owners ask about it constantly — it is one of the most cost-effective kitchen updates short of a remodel.',
+          'Cabinet painting suits Lakeville\'s newer kitchens well: sprayed doors and drawers for a factory-smooth finish, boxes finished in place, hardware back on and aligned — one of the most cost-effective kitchen updates short of a remodel.',
           'Interior repaints run year-round. Winter is our busiest interior season in the Twin Cities; we schedule around your household.',
         ],
         links: [
@@ -897,7 +897,7 @@ export const areaLandingPages: LandingPage[] = [
         heading: 'Commercial Painting and Striping for Lakeville Properties',
         eyebrow: 'Businesses',
         body: [
-          'Lakeville’s retail centers, offices, and multi-tenant properties need contractors who do not interrupt business to do the work. We paint after hours and on weekends, stage cleanly, and coordinate with property managers so operations never stop.',
+          'Lakeville’s retail centers, offices, and multi-tenant properties need contractors who do not interrupt business to do the work. We schedule around your business hours where the job allows, stage cleanly, and coordinate with property managers — and the schedule goes in the written scope.',
           'The differentiator: we also run a pavement-marking operation. Re-stripes, ADA stalls and access aisles, fire lanes, arrows, and crosswalks — on the same contract as the building paint if you want it. One walkthrough, one written quote, one schedule.',
         ],
         links: [
@@ -982,7 +982,7 @@ export const areaLandingPages: LandingPage[] = [
       { title: 'Call or Text', body: 'Tell us the project — whole home, kitchen cabinets, office, lot — and where in Apple Valley.' },
       { title: 'Walkthrough', body: 'We measure, check surfaces and prep needs, and talk paint and schedule.' },
       { title: 'Written Quote', body: 'One number, line-itemed. No allowance-line games.' },
-      { title: 'Scheduled Work', body: 'Clean site, on-date arrival, final walkthrough with you.' },
+      { title: 'Scheduled Work', body: 'Clean site, schedule in writing, final walkthrough with you.' },
     ],
     related: ['lakeville', 'rosemount', 'inver-grove-heights', 'cabinet-painting'],
     customSections: [
@@ -999,7 +999,7 @@ export const areaLandingPages: LandingPage[] = [
         heading: 'Cabinet Refinishing in Apple Valley',
         eyebrow: 'Kitchens',
         body: [
-          'Cabinet painting — refinishing, done right — is one of our most-requested Apple Valley jobs. Doors and drawers are finished with a sprayed, factory-smooth finish; boxes are finished in place with full masking and dust control; hardware goes back on aligned and adjusted.',
+          'Cabinet painting — refinishing, done right. Doors and drawers are finished with a sprayed, factory-smooth finish; boxes are finished in place with full masking and dust control; hardware goes back on aligned and adjusted.',
           'It is one of the most cost-effective kitchen updates short of a remodel, at a fraction of the disruption. We give you an exact timeline at the walkthrough based on door count and finish.',
         ],
         links: [
@@ -1023,8 +1023,8 @@ export const areaLandingPages: LandingPage[] = [
         heading: 'Commercial and Lot Work in Apple Valley',
         eyebrow: 'Businesses',
         body: [
-          'Apple Valley’s retail corridors and office properties get the same owner-led treatment: after-hours and weekend scheduling, clean staging, and coordination with your property manager.',
-          'And the lot comes with the building if you want it — re-stripes, ADA stalls and access aisles, fire lanes, arrows, and crosswalks, all on one contract. Plow season chews up markings every winter; a spring walkthrough keeps the lot legible and compliant.',
+          'Apple Valley’s retail corridors and office properties get the same owner-led treatment: scheduling built around your business hours where access allows, clean staging, and coordination with your property manager.',
+          'And the lot comes with the building if you want it — re-stripes, ADA stalls and access aisles, fire lanes, arrows, and crosswalks, all on one contract. Plow season chews up markings every winter; a spring walkthrough identifies faded markings before they become a liability.',
         ],
         links: [
           { text: 'commercial painting', href: '/painting-services/commercial-painting' },
@@ -1052,7 +1052,7 @@ export const areaLandingPages: LandingPage[] = [
       },
       {
         question: 'Do you work with HOAs and townhome associations?',
-        answer: 'Yes — we are used to HOA color approvals and scheduling rules. Bring the requirements to the walkthrough and we will build the quote around them.',
+        answer: 'Bring the HOA color-approval and scheduling requirements to the walkthrough and we will build the quote around them.',
       },
       {
         question: 'Can you stripe our parking lot too?',
@@ -1105,7 +1105,7 @@ export const areaLandingPages: LandingPage[] = [
         eyebrow: 'Why Rosemount',
         body: [
           'Sky’s the Limit Painting serves Rosemount from just north in Inver Grove Heights. Owner-run and prep-first: homes, rentals, offices, and the parking lots that serve them.',
-          'Rosemount mixes established neighborhoods with newer development and working commercial and industrial properties. That mix is exactly where a one-crew contractor earns its keep — the same visit can scope a building repaint and a lot re-stripe, and rental turnovers need painters who schedule to your turnover date and confirm it in writing, because the next tenant is already scheduled.',
+          'Rosemount mixes established neighborhoods with newer development and working commercial and industrial properties. That mix is exactly where a one-contractor operation earns its keep — the same visit can scope a building repaint and a lot re-stripe, and rental turnovers need painters who schedule to your turnover date and confirm it in writing, because the next tenant is already scheduled.',
           'Call or text 651-410-4196 for a free estimate.',
         ],
       },
@@ -1126,7 +1126,7 @@ export const areaLandingPages: LandingPage[] = [
         eyebrow: 'Businesses',
         body: [
           'Rosemount’s commercial and industrial properties need painters who work around operations, not through them. We schedule after hours and weekends, stage cleanly, and keep communication to one owner-led thread.',
-          'The lot work rides along: re-stripes, ADA stalls and access aisles, fire lanes, arrows, crosswalks, and full new-lot layouts. Winter plowing degrades markings every year — a spring walkthrough is the cheapest way to stay compliant and legible.',
+          'The lot work rides along: re-stripes, ADA stalls and access aisles, fire lanes, arrows, crosswalks, and full new-lot layouts. Winter plowing degrades markings every year — a spring walkthrough identifies worn markings before they become a liability problem.',
         ],
         links: [
           { text: 'commercial painting services', href: '/painting-services/commercial-painting' },
@@ -1250,7 +1250,7 @@ export const areaLandingPages: LandingPage[] = [
         heading: 'Commercial Painting and Striping in Cottage Grove',
         eyebrow: 'Businesses',
         body: [
-          'Cottage Grove’s retail, office, and service commercial properties get after-hours and weekend scheduling, clean staging, and one owner-led point of contact.',
+          'Cottage Grove’s retail, office, and service commercial properties get scheduling built around your business hours where access allows, clean staging, and one owner-led point of contact.',
           'Lot work rides on the same contract: re-stripes, ADA stalls and access aisles, fire lanes, arrows, and crosswalks. One walkthrough covers building and lot.',
         ],
         links: [
@@ -1404,7 +1404,7 @@ export const serviceLandingPages: LandingPage[] = [
       { title: 'Protect Operations', body: 'Mask and cover adjacent surfaces while keeping the work area orderly.' },
       { title: 'Close Professionally', body: 'Review the result, handle touchups, and leave a cleaner property presentation.' },
     ],
-    related: ['commercial', 'st-paul', 'minneapolis', 'public-sector', 'ada-parking-lot-striping'],
+    related: ['commercial', 'st-paul', 'minneapolis', 'ada-parking-lot-striping', 'public-sector'],
   },
   {
     kind: 'service',
@@ -1500,7 +1500,7 @@ export const serviceLandingPages: LandingPage[] = [
       { title: 'Prepare The Surface', body: 'Plan cleaning, debris removal, chalk lines, and access timing.' },
       { title: 'Stripe For Clarity', body: 'Focus on visibility, flow, property presentation, and closeout photos.' },
     ],
-    related: ['commercial', 'pavement-marking', 'public-sector', 'parking-lot-striping-pricing', 'twin-cities', 'ada-parking-lot-striping'],
+    related: ['commercial', 'pavement-marking', 'public-sector', 'ada-parking-lot-striping', 'parking-lot-striping-pricing', 'twin-cities'],
     customSections: [
       {
         heading: 'Parking Lot Striping Services in the Minneapolis–St. Paul Metro',
@@ -1613,7 +1613,7 @@ export const serviceLandingPages: LandingPage[] = [
       { title: 'Plan Execution', body: 'Clarify layout, surface condition, cleaning needs, materials, and work windows.' },
       { title: 'Close With Proof', body: 'Use photos and notes to record the completed surface work.' },
     ],
-    related: ['parking-lot-striping', 'commercial', 'public-sector', 'parking-lot-striping-pricing', 'minneapolis', 'ada-parking-lot-striping'],
+    related: ['parking-lot-striping', 'commercial', 'public-sector', 'ada-parking-lot-striping', 'parking-lot-striping-pricing', 'minneapolis'],
     customSections: [
       {
         heading: 'ADA-Compliant Parking Lot Marking in the Twin Cities',
