@@ -126,7 +126,19 @@ test('local SEO and service landing pages are routable and listed in the sitemap
   }
 
   assert.match(landingRoute, /LeadForm/);
-  assert.match(landingRoute, /landingPagePath/);
+  // Related-card paths are resolved server-side (getLandingPageCards) so the
+  // client view never imports the full landing-page catalog into the bundle.
+  assert.match(landingPages, /export function getLandingPageCards/);
+  assert.match(landingPages, /href: landingPagePath\(card\)/);
+  assert.match(landingRoute, /relatedCards/);
+  assert.match(landingRoute, /pagePath/);
+  // The client view may only import types from the data catalog: type-only
+  // imports are erased at build time and pull nothing into the client bundle.
+  const dataImports = [...landingRoute.matchAll(/import\s+(type\s+)?\{[^}]*\}\s+from\s+'@\/data\/landingPages';/g)];
+  assert.ok(dataImports.length > 0, 'view references the landing-page data module');
+  for (const m of dataImports) {
+    assert.ok(m[1], 'every import from @/data/landingPages in the client view must be type-only');
+  }
 
   // Assert that App Router dynamic page has generateMetadata for SEO headers
   const appSlugPage = read('src/app/service-areas/[slug]/page.tsx');
