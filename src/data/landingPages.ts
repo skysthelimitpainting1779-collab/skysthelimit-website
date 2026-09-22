@@ -2370,7 +2370,7 @@ export const serviceLandingPages: LandingPage[] = [
       },
       {
         question: 'What makes a van-accessible space different?',
-        answer: 'A van-accessible space is wider than a standard accessible space, sits beside a full-width access aisle, and carries a sign reading “van-accessible” mounted at the required height. The standards define the exact dimensions — confirm them with your local authority having jurisdiction before you stripe.',
+        answer: 'The 2010 ADA Standards allow two compliant van layouts: a van space at least 132 inches wide beside a 60-inch access aisle, or — as an alternate — a van space at least 96 inches wide beside a 96-inch access aisle. Either way the space carries a sign reading “van-accessible” mounted at the required height, and the access aisle adjoins an accessible route. Confirm the layout with your local authority having jurisdiction before you stripe.',
       },
       {
         question: 'Do painted wheelchair symbols satisfy the signage rule?',
@@ -2443,7 +2443,7 @@ export const serviceLandingPages: LandingPage[] = [
         heading: 'Verify Insurance and Documentation',
         eyebrow: 'Paperwork',
         body: [
-          'Before work starts, require a certificate of insurance and confirm coverage is current — general liability at minimum, and workers’ compensation for the crew that will be in your building. Ask whether the people on your site are employees or subcontractors, and get the answer in the scope.',
+          'Before work starts, require a certificate of insurance and confirm coverage is current — general liability at minimum, plus workers’ compensation coverage for the crew that will be in your building, or a valid documented statutory exemption (for example, an owner-operator exemption under Minnesota Statute 176.041). Ask whether the people on your site are employees or subcontractors, and get the answer in the scope.',
           'This is not adversarial; it is standard commercial procurement. Any established Twin Cities commercial painter produces a COI on request. One that stalls or deflects is telling you something.',
         ],
       },
@@ -2534,4 +2534,37 @@ export function landingPageByKindAndSlug(kind: LandingPageKind, slug?: string) {
 
 export function landingPageBySlug(slug: string) {
   return landingPages.find((page) => page.slug === slug);
+}
+
+export interface LandingPageCard {
+  slug: string;
+  shortTitle: string;
+  eyebrow: string;
+  kind: LandingPageKind;
+  href: string;
+}
+
+/**
+ * Compute the small set of related-card summaries for a landing page.
+ * Kept here (server-side) so client components receive only the card
+ * summaries instead of importing the full landing-page catalog.
+ */
+export function getLandingPageCards(page: LandingPage, count = 4): LandingPageCard[] {
+  const siblings = page.kind === 'area' ? areaLandingPages : serviceLandingPages;
+  const relatedPages = page.related
+    .map((relatedSlug) => landingPageBySlug(relatedSlug))
+    .filter((related): related is LandingPage => Boolean(related));
+  const cards = [
+    ...relatedPages,
+    ...siblings.filter(
+      (sibling) => sibling.slug !== page.slug && !relatedPages.some((related) => related.slug === sibling.slug),
+    ),
+  ].slice(0, count);
+  return cards.map((card) => ({
+    slug: card.slug,
+    shortTitle: card.shortTitle,
+    eyebrow: card.eyebrow,
+    kind: card.kind,
+    href: landingPagePath(card),
+  }));
 }

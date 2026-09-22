@@ -1,5 +1,5 @@
 import LandingPageRoute from '../../../views/LandingPage';
-import { areaLandingPages, type LandingPage } from '../../../data/landingPages';
+import { areaLandingPages, getLandingPageCards, landingPagePath, type LandingPage } from '../../../data/landingPages';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { localBusinessSchema, breadcrumbSchema, faqSchema } from '../../../lib/seo';
@@ -161,7 +161,7 @@ export default async function ServiceAreaLandingPage({ params }: PageProps) {
       <JsonLd data={businessJson} />
       <JsonLd data={breadcrumbJson} />
       {faqJson ? <JsonLd data={faqJson} /> : null}
-      <LandingPageRoute kind="area" initialPageData={page} />
+      <LandingPageRoute initialPageData={page} relatedCards={getLandingPageCards(page)} pagePath={landingPagePath(page)} />
     </>
   );
 }

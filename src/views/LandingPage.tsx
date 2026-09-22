@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { notFound, useParams } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import { Calculator, Camera, ClipboardCheck, MapPin, PaintRoller, Phone, Route } from 'lucide-react';
 
 import LeadForm from '@/components/LeadForm';
@@ -18,21 +18,17 @@ import {
   PublicSplitCard,
 } from '@/components/public/PublicSystem';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  areaLandingPages,
-  landingPageByKindAndSlug,
-  landingPageBySlug,
-  landingPagePath,
-  serviceLandingPages,
-  type LandingPage,
-  type LandingPageKind,
-} from '@/data/landingPages';
+import type { LandingPage, LandingPageCard } from '@/data/landingPages';
 import { phoneHref } from '@/lib/contact';
 import NotFound from '@/views/NotFound';
 
 interface LandingPageRouteProps {
-  kind: LandingPageKind;
   initialPageData?: LandingPage;
+  // Related-card summaries resolved server-side, so the client bundle never
+  // imports the full landing-page catalog.
+  relatedCards?: LandingPageCard[];
+  // Canonical path for this page, resolved server-side.
+  pagePath: string;
 }
 
 const marketPath = {
@@ -41,26 +37,15 @@ const marketPath = {
   'Public Sector': '/public-sector',
 } as const;
 
-export default function LandingPageRoute({ kind, initialPageData }: LandingPageRouteProps) {
-  const { slug } = useParams();
-  const page = initialPageData || landingPageByKindAndSlug(kind, typeof slug === 'string' ? slug : undefined);
+export default function LandingPageRoute({ initialPageData, relatedCards = [], pagePath }: LandingPageRouteProps) {
+  const page = initialPageData;
 
   if (!page) {
     notFound();
     return <NotFound />;
   }
 
-  const path = landingPagePath(page);
-  const siblings = page.kind === 'area' ? areaLandingPages : serviceLandingPages;
-  const relatedPages = page.related
-    .map((relatedSlug) => landingPageBySlug(relatedSlug))
-    .filter((related): related is LandingPage => Boolean(related));
-  const relatedCards = [
-    ...relatedPages,
-    ...siblings.filter(
-      (sibling) => sibling.slug !== page.slug && !relatedPages.some((related) => related.slug === sibling.slug),
-    ),
-  ].slice(0, 4);
+  const path = pagePath;
   return (
     <PublicPage>
       <PublicHero
@@ -237,7 +222,7 @@ export default function LandingPageRoute({ kind, initialPageData }: LandingPageR
           </div>
           <div className="mt-10 grid border-l border-t border-border md:grid-cols-2 xl:grid-cols-4">
             {relatedCards.map((related) => (
-              <Link key={related.slug} href={landingPagePath(related)} className="group border-b border-r border-border">
+              <Link key={related.slug} href={related.href} className="group border-b border-r border-border">
                 <Card variant="interactive" className="h-full border-0">
                   <CardHeader>
                     <p className="text-xs font-bold uppercase tracking-[0.12em] text-trust">{related.eyebrow}</p>
