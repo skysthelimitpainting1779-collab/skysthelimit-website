@@ -1437,10 +1437,10 @@ export const serviceLandingPages: LandingPage[] = [
         heading: 'Get Your Lot Measured',
         eyebrow: 'Next step',
         body: [
-          'The fastest path to a real number is a free on-site measurement: we walk the lot, count stalls, check the surface and the ADA layout, and hand you a written, itemized quote. Call 651-410-4196 or request an estimate online.',
+          'The fastest path to a real number is a free on-site measurement: we walk the lot, count stalls, check the surface and the ADA layout, and hand you a written, itemized quote. Call 651-410-4196 or start your written scope below — it enters the commercial estimate path.',
         ],
         links: [
-          { text: 'request a free estimate', href: '/estimate' },
+          { text: 'start your written scope', href: '#start-scope' },
         ],
       },
     ],
@@ -1459,11 +1459,11 @@ export const serviceLandingPages: LandingPage[] = [
       },
       {
         question: 'Do ADA markings add to the cost?',
-        answer: 'Accessible spaces, van-accessible signage, and stencils are line items on the quote — and they are the cheapest compliance protection a property manager can buy. We quote them transparently as part of the layout, not as surprises.',
+        answer: 'Accessible spaces, van-accessible stall markings, and stencils are line items on the quote — and they are the cheapest compliance protection a property manager can buy. We quote them transparently as part of the layout, not as surprises.',
       },
       {
         question: 'Can I get a quote without a site visit?',
-        answer: 'Often, yes — clear lot photos (aerial or wide shots), a stall count, and knowing whether it is a restripe or new layout gets us close. Final quotes are confirmed on a walk-through so the surface condition does not surprise either of us.',
+        answer: 'You can get a preliminary estimate from clear lot photos (aerial or wide shots), a stall count, and knowing whether it is a restripe or new layout. The final quote is confirmed on a walk-through so the surface condition does not surprise either of us.',
       },
     ],
   },
