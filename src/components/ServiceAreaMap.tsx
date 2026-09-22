@@ -13,6 +13,11 @@ const serviceAreaPins = [
   { name: 'South St. Paul', slug: 'south-st-paul', region: 'South metro', lat: 44.8872, lng: -93.0294 },
   { name: 'Eagan', slug: 'eagan', region: 'Dakota County', lat: 44.8041, lng: -93.1669 },
   { name: 'Woodbury', slug: 'woodbury', region: 'East metro', lat: 44.9239, lng: -92.9594 },
+  { name: 'St. Louis Park', slug: 'st-louis-park', region: 'West metro', lat: 44.9485, lng: -93.3433 },
+  { name: 'Richfield', slug: 'richfield', region: 'South first-ring', lat: 44.8815, lng: -93.2679 },
+  { name: 'Minnetonka', slug: 'minnetonka', region: 'West metro', lat: 44.9401, lng: -93.4674 },
+  { name: 'Plymouth', slug: 'plymouth', region: 'Northwest metro', lat: 45.0189, lng: -93.4760 },
+  { name: 'Burnsville', slug: 'burnsville', region: 'South metro', lat: 44.7663, lng: -93.2762 },
   { name: 'Twin Cities', slug: 'twin-cities', region: 'Metro coverage', lat: 44.9100, lng: -93.1800 },
 ];
 
@@ -181,7 +186,7 @@ export default function ServiceAreaMap({ compact = false }: ServiceAreaMapProps)
               Map of Sky's the Limit Painting service coverage across the Twin Cities metro.
             </span>
             <span id="service-area-visual-description" className="sr-only">
-              Map markers include Minneapolis, St. Paul, Inver Grove Heights, South St. Paul, Eagan, Woodbury, and broad Twin Cities coverage.
+              Map markers include Minneapolis, St. Paul, Inver Grove Heights, South St. Paul, Eagan, Woodbury, St. Louis Park, Richfield, Minnetonka, Plymouth, Burnsville, and broad Twin Cities coverage.
             </span>
 
             <svg className="hidden" aria-hidden="true" />

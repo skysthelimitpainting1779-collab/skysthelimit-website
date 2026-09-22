@@ -1,5 +1,5 @@
 import LandingPageRoute from '../../../views/LandingPage';
-import { areaLandingPages, type LandingPage } from '../../../data/landingPages';
+import { areaLandingPages, getLandingPageCards, landingPagePath, type LandingPage } from '../../../data/landingPages';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { localBusinessSchema, breadcrumbSchema, faqSchema } from '../../../lib/seo';
@@ -41,7 +41,7 @@ export async function getServiceAreaPage(slug: string): Promise<LandingPage | nu
           image: '/brand/generated/sky-local-authority.webp',
           accent: 'Local authority',
           market: 'Residential',
-          proof: [`Based in ${dbArea.city}`, 'Owner-led project communication', 'Residential, commercial, and facility-ready scope'],
+          proof: [`Serving ${dbArea.city} from our Inver Grove Heights base`, 'Owner-led project communication', 'Residential, commercial, and facility-ready scope'],
           scope: ['Interior repainting', 'Exterior refreshes', 'Commercial interior work', 'Facility painting inquiries', 'Pavement-marking and striping conversations'],
           process: [
             { title: 'Local Scope Review', body: 'Clarify surfaces, access, project timing, and the finish standard before a recommendation is made.' },
@@ -161,7 +161,7 @@ export default async function ServiceAreaLandingPage({ params }: PageProps) {
       <JsonLd data={businessJson} />
       <JsonLd data={breadcrumbJson} />
       {faqJson ? <JsonLd data={faqJson} /> : null}
-      <LandingPageRoute kind="area" initialPageData={page} />
+      <LandingPageRoute initialPageData={page} relatedCards={getLandingPageCards(page)} pagePath={landingPagePath(page)} />
     </>
   );
 }

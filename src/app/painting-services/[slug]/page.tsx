@@ -1,8 +1,8 @@
 import LandingPageRoute from '../../../views/LandingPage';
-import { serviceLandingPages } from '../../../data/landingPages';
+import { serviceLandingPages, getLandingPageCards, landingPagePath } from '../../../data/landingPages';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { serviceSchema, breadcrumbSchema, faqSchema } from '../../../lib/seo';
+import { serviceSchema, articleSchema, breadcrumbSchema, faqSchema } from '../../../lib/seo';
 import JsonLd from '../../../components/JsonLd';
 
 export function generateStaticParams() {
@@ -62,7 +62,13 @@ export default async function PaintingServiceLandingPage({ params }: PageProps) 
     throw new Error(`Painting service not found: ${slug}`);
   }
 
-  const serviceJson = serviceSchema(page.title, page.metaDescription, `/painting-services/${page.slug}`);
+  const pagePath = landingPagePath(page);
+  // Buyer guides are informational articles, not offered services: emit
+  // Article JSON-LD for them instead of Service markup.
+  const structuredJson =
+    page.schemaKind === 'article'
+      ? articleSchema(page.title, page.metaDescription, pagePath)
+      : serviceSchema(page.title, page.metaDescription, pagePath);
   const breadcrumbJson = breadcrumbSchema([
     { name: 'Home', path: '/' },
     { name: 'Capabilities', path: '/capabilities' },
@@ -72,10 +78,10 @@ export default async function PaintingServiceLandingPage({ params }: PageProps) 
 
   return (
     <>
-      <JsonLd data={serviceJson} />
+      <JsonLd data={structuredJson} />
       <JsonLd data={breadcrumbJson} />
       {faqJson ? <JsonLd data={faqJson} /> : null}
-      <LandingPageRoute kind="service" initialPageData={page} />
+      <LandingPageRoute initialPageData={page} relatedCards={getLandingPageCards(page)} pagePath={pagePath} />
     </>
   );
 }
