@@ -1030,7 +1030,7 @@ export const serviceLandingPages: LandingPage[] = [
       { title: 'Prepare The Surface', body: 'Plan cleaning, debris removal, chalk lines, and access timing.' },
       { title: 'Stripe For Clarity', body: 'Focus on visibility, flow, property presentation, and closeout photos.' },
     ],
-    related: ['commercial', 'pavement-marking', 'public-sector', 'twin-cities'],
+    related: ['commercial', 'pavement-marking', 'public-sector', 'parking-lot-striping-pricing'],
     customSections: [
       {
         heading: 'Parking Lot Striping Services in the Minneapolis–St. Paul Metro',
@@ -1143,7 +1143,7 @@ export const serviceLandingPages: LandingPage[] = [
       { title: 'Plan Execution', body: 'Clarify layout, surface condition, cleaning needs, materials, and work windows.' },
       { title: 'Close With Proof', body: 'Use photos and notes to record the completed surface work.' },
     ],
-    related: ['parking-lot-striping', 'commercial', 'public-sector', 'minneapolis'],
+    related: ['parking-lot-striping', 'commercial', 'public-sector', 'parking-lot-striping-pricing'],
     customSections: [
       {
         heading: 'ADA-Compliant Parking Lot Marking in the Twin Cities',
@@ -1266,7 +1266,7 @@ export const serviceLandingPages: LandingPage[] = [
       { title: 'Compliant Layout', body: 'We chalk a layout that hits the space counts, van ratio, widths, and closest-to-entrance placement.' },
       { title: 'Crisp Lines', body: 'Professional striping equipment, proper surface prep, and stencils for ISA symbols, arrows, and lettering.' },
     ],
-    related: ['pavement-marking', 'parking-lot-striping', 'commercial-painting', 'twin-cities'],
+    related: ['pavement-marking', 'parking-lot-striping', 'commercial-painting', 'parking-lot-striping-pricing'],
     customSections: [
       {
         heading: 'ADA Parking Lot Striping in the Twin Cities',
