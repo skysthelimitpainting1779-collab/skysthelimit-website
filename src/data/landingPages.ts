@@ -1348,7 +1348,7 @@ export const serviceLandingPages: LandingPage[] = [
     kind: 'service',
     slug: 'parking-lot-striping-pricing',
     title: 'Parking Lot Striping Pricing',
-    shortTitle: 'Striping Pricing',
+    shortTitle: 'Parking Lot Striping',
     eyebrow: 'What striping costs',
     headline: 'Parking lot striping pricing for Twin Cities lots — what drives the cost and how to get an accurate quote.',
     description:
