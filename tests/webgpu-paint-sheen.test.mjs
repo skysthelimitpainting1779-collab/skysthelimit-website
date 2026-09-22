@@ -16,37 +16,47 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const VGPU_BIN = join(root, 'node_modules', '.bin', 'vgpu');
 
 /**
- * Run the WGSL through the real validator: writes the source to a temp
- * .wgsl file and runs `vgpu check --require-validation`. This parses AND
- * compiles the module (tint-backed), so a syntax error or a construct the
- * validator rejects fails the suite instead of silently passing.
- *
- * NOTE: device-backed validation needs a WebGPU adapter. Machines without
- * one (e.g. GitHub's ubuntu runners: no Vulkan drivers) make `vgpu check`
- * exit non-zero with VGPU-WGSL-VALIDATE-NO-DEVICE — but the JSON report is
- * still printed, with parse diagnostics intact. This helper returns the
- * report in that case so the test can assert the portable part (clean
- * parse/compile) and skip only the device step, never fake it.
+ * Compile WGSL through the real compiler: writes the source to a temp
+ * .wgsl file and runs plain `vgpu check` (parse + naga validation +
+ * reflection). This needs no GPU device, so it is deterministic on every
+ * machine including CI runners. A syntax error, or a construct the
+ * compiler rejects, makes the CLI exit non-zero — invalid shader code
+ * fails the suite instead of silently passing.
  */
 async function checkWgsl(source, label) {
   const dir = mkdtempSync(join(tmpdir(), 'paint-sheen-wgsl-'));
   const file = join(dir, `${label}.wgsl`);
   writeFileSync(file, source, 'utf8');
+  const { stdout } = await execFileAsync(VGPU_BIN, ['check', file], {
+    timeout: 120_000,
+  });
+  return JSON.parse(stdout);
+}
+
+/**
+ * Device-backed validation tier (`--require-validation`). Needs a WebGPU
+ * adapter; runners without one (e.g. GitHub's ubuntu runners: no Vulkan
+ * drivers) report VGPU-WGSL-VALIDATE-NO-DEVICE. Returns the report, or
+ * null when the environment cannot provide an adapter — an environment
+ * limit, not a shader problem. The compile check above is the enforced
+ * gate; this tier only strengthens it where it can run.
+ */
+async function checkWgslStrict(source, label) {
+  const dir = mkdtempSync(join(tmpdir(), 'paint-sheen-wgsl-'));
+  const file = join(dir, `${label}.wgsl`);
+  writeFileSync(file, source, 'utf8');
   try {
-    const { stdout } = await execFileAsync(VGPU_BIN, ['check', file, '--require-validation'], {
-      timeout: 120_000,
-    });
+    const { stdout } = await execFileAsync(
+      VGPU_BIN,
+      ['check', file, '--require-validation'],
+      { timeout: 120_000 },
+    );
     return JSON.parse(stdout);
   } catch (error) {
-    // Only the no-device case is recoverable: the JSON report is printed
-    // with parse diagnostics intact. A genuine parse failure rethrows so
-    // the negative control below keeps failing loudly.
     const stdout = typeof error?.stdout === 'string' ? error.stdout : '';
-    if (stdout.includes('"diagnostics"')) {
-      const report = JSON.parse(stdout);
-      if (report?.validation?.error?.code === 'VGPU-WGSL-VALIDATE-NO-DEVICE') {
-        return report;
-      }
+    const marker = '"code": "VGPU-WGSL-VALIDATE-NO-DEVICE"';
+    if (stdout.includes(marker) || stdout.includes('VGPU-NODE-NO-ADAPTER')) {
+      return null;
     }
     throw error;
   }
@@ -71,40 +81,47 @@ test('startup guards: sheen runs only with WebGPU and without reduced motion', (
   );
 });
 
-test('WGSL parses and compiles cleanly; device validation runs where a device exists', async () => {
+test('WGSL compiles: parse, naga validation, and reflection (vgpu check)', async () => {
   const report = await checkWgsl(PAINT_SHEEN_WGSL, 'paint-sheen');
-  // Portable guarantee, asserted on every machine: zero parse/compile
-  // diagnostics. A WGSL syntax error fails before we ever get here
-  // (vgpu check exits non-zero at parse time with no usable report).
   assert.deepEqual(
     report.diagnostics,
     [],
     `WGSL must compile with zero diagnostics, got: ${JSON.stringify(report.diagnostics)}`,
   );
-  if (report.validation?.error?.code === 'VGPU-WGSL-VALIDATE-NO-DEVICE') {
-    // No WebGPU adapter on this machine (e.g. CI runners without Vulkan
-    // drivers): device-backed validation is impossible here, so it is
-    // skipped — not faked. It runs on dev machines and GPUs.
-    console.log('note: no WebGPU device here; device-backed validation skipped');
+  // Real compiler output, not substring matching: the reflected module must
+  // expose the documented fragment entry point and the params uniform.
+  const entryPoints = report.reflection?.entryPoints ?? [];
+  const fsMain = entryPoints.find((e) => e.name === 'fs_main');
+  assert.ok(fsMain, `expected a reflected fs_main entry point`);
+  assert.equal(fsMain.stage, 'fragment', 'fs_main must be a fragment entry point');
+  const bindings = report.reflection?.bindings ?? [];
+  assert.ok(
+    bindings.some((b) => b.group === 0 && b.binding === 0 && b.name === 'params'),
+    'expected the params uniform at group 0, binding 0 in the reflected bindings',
+  );
+
+  // Device-backed tier: strengthens the gate where an adapter exists.
+  const strict = await checkWgslStrict(PAINT_SHEEN_WGSL, 'paint-sheen-strict');
+  if (strict === null) {
+    console.log(
+      'note: no WebGPU adapter in this environment; device-backed validation skipped (compile check above still enforced)',
+    );
     return;
   }
   assert.equal(
-    report.validation?.attempted,
+    strict.validation?.ok,
     true,
-    'validation must actually run, not be skipped',
-  );
-  assert.equal(
-    report.validation?.ok,
-    true,
-    `WGSL must validate cleanly, got: ${JSON.stringify(report.validation?.error)}`,
+    `device validation must pass where an adapter exists, got: ${JSON.stringify(strict.validation?.error)}`,
   );
 });
 
-test('the validator actually rejects invalid WGSL (the check is not vacuous)', async () => {
+test('the compiler actually rejects invalid WGSL (the check is not vacuous)', async () => {
   const broken = 'fn broken( -> f32 { return 1.0; }\n';
+  // Plain check parses without a device, so this control is meaningful on
+  // every machine: a validator that passes broken WGSL is worthless.
   await assert.rejects(
     () => checkWgsl(broken, 'paint-sheen-broken'),
-    /Command failed|exit|Unexpected token/i,
+    /Command failed/i,
     'vgpu check must fail on invalid WGSL',
   );
 });
