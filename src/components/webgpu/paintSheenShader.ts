@@ -68,7 +68,11 @@ fn fs_main(@location(0) uv: vec2f) -> @location(0) vec4f {
   let bone = vec3f(0.965, 0.953, 0.922);
   let ember = vec3f(1.0, 0.40, 0.11);
   let color = mix(bone, ember, smoothstep(0.55, 0.95, n) * 0.5);
-  return vec4f(color, alpha);
+  // Premultiplied output: vgpu configures the canvas surface with
+  // alphaMode "premultiplied", so the compositor consumes color already
+  // scaled by alpha. Writing full-strength RGB here would composite the
+  // sheen at ~6x its intended 0-16% intensity and wash out the hero.
+  return vec4f(color * alpha, alpha);
 }
 `;
 
