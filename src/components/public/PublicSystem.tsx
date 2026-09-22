@@ -106,7 +106,15 @@ interface PublicHeroProps {
   proof?: readonly string[];
   actions?: ReactNode;
   badgeIcon?: IconComponent;
+  // Overrides the caption strip under the hero image. Use for generated/illustrative
+  // imagery so a synthetic image is never presented as authentic field documentation.
+  imageCaption?: { label: string; text: string };
 }
+
+const fieldRecordCaption = {
+  label: 'Field record',
+  text: 'Real surfaces. Written preparation. Owner-led review.',
+};
 
 export function PublicHero({
   id,
@@ -118,6 +126,7 @@ export function PublicHero({
   proof = [],
   actions,
   badgeIcon: BadgeIcon,
+  imageCaption = fieldRecordCaption,
 }: PublicHeroProps) {
   return (
     <section id={id} data-tone="paper" className="border-b border-border">
@@ -157,8 +166,8 @@ export function PublicHero({
             className="absolute inset-0 h-full w-full object-cover"
           />
           <div className="absolute inset-x-0 bottom-0 border-t border-border bg-background/95 px-5 py-4 backdrop-blur-sm sm:px-8">
-            <p className="text-xs font-bold uppercase tracking-[0.12em] text-trust">Field record</p>
-            <p className="mt-1 text-sm font-semibold text-foreground">Real surfaces. Written preparation. Owner-led review.</p>
+            <p className="text-xs font-bold uppercase tracking-[0.12em] text-trust">{imageCaption.label}</p>
+            <p className="mt-1 text-sm font-semibold text-foreground">{imageCaption.text}</p>
           </div>
         </div>
       </div>

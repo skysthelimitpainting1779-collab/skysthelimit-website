@@ -69,6 +69,7 @@ export default function LandingPageRoute({ kind, initialPageData }: LandingPageR
         description={page.headline}
         image={page.image}
         imageAlt={`Painting surface reference for ${page.shortTitle}`}
+        imageCaption={page.imageCaption}
         proof={page.proof}
         badgeIcon={page.kind === 'area' ? MapPin : PaintRoller}
         actions={

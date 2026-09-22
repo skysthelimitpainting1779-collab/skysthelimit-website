@@ -7,6 +7,7 @@ import '../index.css';
 import AnalyticsDelegator from '../components/AnalyticsDelegator';
 import ConversionFooterCta from '../components/ConversionFooterCta';
 import ConversionHeader from '../components/ConversionHeader';
+import GoogleAnalytics from '../components/GoogleAnalytics';
 import JsonLd from '../components/JsonLd';
 import MobileConversionRail from '../components/public/MobileConversionRail';
 import PublicFooter from '../components/public/PublicFooter';
@@ -177,6 +178,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="antialiased">
         <AnalyticsDelegator />
+        <GoogleAnalytics measurementId={gaMeasurementId} />
         <div className="flex min-h-[100dvh] flex-col bg-page-bg text-page-text">
           <a
             href="#main-content"
