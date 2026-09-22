@@ -48,27 +48,22 @@ export default function HomeClient() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema([...faqItems])) }} />
 
       <section aria-labelledby="home-title" className="proof-hero relative isolate min-h-[calc(100svh_-_var(--site-header-height-expanded))] overflow-hidden bg-[#071321] text-[#F6F3EB]">
-        <link
-          rel="preload"
-          as="image"
-          imageSrcSet="/images/site/proof-in-the-prep-tape-material-640.webp 640w, /images/site/proof-in-the-prep-tape-material-828.webp 828w, /images/site/proof-in-the-prep-tape-material-1280.webp 1280w, /images/site/proof-in-the-prep-tape-material-1920.webp 1920w"
-          imageSizes="100vw"
-          fetchPriority="high"
-        />
-        <img
-          src="/images/site/proof-in-the-prep-tape-material-1280.webp"
-          srcSet="/images/site/proof-in-the-prep-tape-material-640.webp 640w, /images/site/proof-in-the-prep-tape-material-828.webp 828w, /images/site/proof-in-the-prep-tape-material-1280.webp 1280w, /images/site/proof-in-the-prep-tape-material-1920.webp 1920w"
-          sizes="100vw"
+        <ResponsiveImage
+          src="/brand/generated/chatgpt/sky-hero-exterior.webp"
           alt=""
-          width={1920}
-          height={1080}
-          decoding="async"
+          width={1672}
+          height={941}
+          sizes="100vw"
+          priority
           fetchPriority="high"
           className="absolute inset-0 h-full w-full object-cover object-center"
         />
         <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(90deg,rgba(7,19,33,0.98)_0%,rgba(7,19,33,0.9)_45%,rgba(7,19,33,0.38)_76%,rgba(7,19,33,0.12)_100%)]" />
         <div aria-hidden="true" className="proof-hero-grain absolute inset-0" />
         <div aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-white/30" />
+        <p className="absolute right-5 top-2 z-10 bg-[#071321]/55 px-2 py-1 text-[0.62rem] font-bold uppercase tracking-[0.16em] text-[#F6F3EB]/90 sm:right-8 lg:right-12">
+          Illustration — stylized exterior rendering
+        </p>
 
         <div className="relative mx-auto flex min-h-[calc(100svh_-_var(--site-header-height-expanded))] max-w-[96rem] flex-col justify-between px-5 py-8 sm:px-8 sm:py-10 lg:px-12 lg:py-12 xl:px-16">
           <div className="flex items-center justify-between gap-6 text-[0.7rem] font-black uppercase tracking-[0.18em] text-[#DDEBFA]">
