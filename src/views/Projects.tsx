@@ -28,14 +28,22 @@ interface CaseStudyCardProps {
   imageAlt?: string;
   beforeImage?: string;
   afterImage?: string;
+  /** True only when the before/after pair documents one real project. */
+  verifiedPair?: boolean;
 }
 
-function CaseStudyCard({ type, location, problem, prep, result, image, imageAlt, beforeImage, afterImage }: CaseStudyCardProps) {
+function CaseStudyCard({ type, location, problem, prep, result, image, imageAlt, beforeImage, afterImage, verifiedPair }: CaseStudyCardProps) {
   return (
     <Card variant="panel" className="flex h-full flex-col overflow-hidden">
       <div className="relative min-h-[22rem] border-b border-border">
         {beforeImage && afterImage ? (
-          <BeforeAfterSlider beforeImage={beforeImage} afterImage={afterImage} beforeLabel="Before" afterLabel="After" />
+          <BeforeAfterSlider
+            beforeImage={beforeImage}
+            afterImage={afterImage}
+            beforeLabel="Before"
+            afterLabel="After"
+            verifiedPair={verifiedPair === true}
+          />
         ) : image ? (
           <ResponsiveImage
             src={image}
@@ -102,6 +110,10 @@ export default async function ProjectsPage() {
       problem: 'A storefront interior needed a darker, more finished look while working with the existing ceiling grid.',
       prep: ['Grid cleaning', 'Floor protection', 'Masking fixtures', 'Adhesion primer'],
       result: 'A cleaner commercial interior with a more complete presentation for customers and staff.',
+      // No verified before/after pair exists for this card. The AI-generated brand
+      // image previously used here as "Before" is illustrative only and must
+      // never be presented as before/after proof, so it renders as a single
+      // finished-work image instead of a slider.
       image: '/images/services/commercial/sky-work-08-finished-commercial.webp',
     },
     {
@@ -110,6 +122,9 @@ export default async function ProjectsPage() {
       problem: 'Bedroom walls, trim, and doors had visible wear, dated colors, and stains that required preparation before finish paint.',
       prep: ['Drywall patching', 'Stain-blocking primer', 'Trim sanding', 'Dust containment'],
       result: 'A calmer bedroom finish with sharper lines, stronger coverage, and cleaner detail.',
+      // The finished-kitchen photo previously used as "Before" belongs to a
+      // different room and cannot document this project, so the slider is
+      // removed until a real before photo is captured.
       image: '/images/services/interior/sky-work-real-04-before-after-bedroom.webp',
       imageAlt: 'Before-and-after bedroom repaint, Twin Cities Metro',
     },
