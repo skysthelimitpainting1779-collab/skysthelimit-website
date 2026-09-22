@@ -100,6 +100,33 @@ export function serviceSchema(name: string, description: string, path: string) {
   };
 }
 
+export function articleSchema(headline: string, description: string, path: string) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline,
+    description,
+    author: {
+      '@type': 'Organization',
+      name: "Sky's the Limit Painting LLC",
+      url: siteUrl,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: "Sky's the Limit Painting LLC",
+      logo: {
+        '@type': 'ImageObject',
+        url: `${siteUrl}/brand/SkyLLP_BrandLogo.svg`,
+      },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `${siteUrl}${path}`,
+    },
+    url: `${siteUrl}${path}`,
+  };
+}
+
 export function breadcrumbSchema(items: Array<{ name: string; path: string }>) {
   return {
     '@context': 'https://schema.org',
@@ -114,6 +141,10 @@ export function breadcrumbSchema(items: Array<{ name: string; path: string }>) {
 }
 
 export function localBusinessSchema(cityName: string, slug: string) {
+  // The business is physically based in Inver Grove Heights; the service-area
+  // city is expressed through areaServed, never as the business address, so
+  // crawlers do not read each suburb page as a separate business location.
+  const businessLocality = 'Inver Grove Heights';
   return {
     '@context': 'https://schema.org',
     '@type': 'HousePainter',
@@ -134,7 +165,7 @@ export function localBusinessSchema(cityName: string, slug: string) {
     ],
     address: {
       '@type': 'PostalAddress',
-      addressLocality: cityName,
+      addressLocality: businessLocality,
       addressRegion: 'MN',
       addressCountry: 'US',
     },

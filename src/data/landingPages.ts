@@ -3,6 +3,9 @@ export type LandingPageKind = 'service' | 'area';
 export interface LandingPage {
   kind: LandingPageKind;
   slug: string;
+  // Structured-data classification: 'service' (default) emits Service JSON-LD;
+  // 'article' emits Article JSON-LD for informational buyer guides.
+  schemaKind?: 'service' | 'article';
   title: string;
   shortTitle: string;
   eyebrow: string;
@@ -2262,6 +2265,7 @@ export const serviceLandingPages: LandingPage[] = [
   },
   {
     kind: 'service',
+    schemaKind: 'article',
     slug: 'ada-striping-requirements-minnesota',
     title: 'ADA Parking Lot Striping Requirements: A Minnesota Property Owner’s Guide',
     shortTitle: 'ADA Requirements Guide',
@@ -2380,6 +2384,7 @@ export const serviceLandingPages: LandingPage[] = [
   },
   {
     kind: 'service',
+    schemaKind: 'article',
     slug: 'how-to-choose-commercial-painter',
     title: 'How to Choose a Commercial Painting Contractor in the Twin Cities',
     shortTitle: 'Choosing a Commercial Painter',
