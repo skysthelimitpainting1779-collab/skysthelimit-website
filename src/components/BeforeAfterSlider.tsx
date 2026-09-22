@@ -21,20 +21,20 @@ interface BeforeAfterSliderProps {
 
 function UnverifiedPairPlaceholder() {
   return (
-    <div className="flex min-h-[22rem] flex-col items-start justify-center gap-5 border border-white/10 bg-white/[0.03] p-8">
-      <span className="inline-flex h-11 w-11 items-center justify-center border border-white/15 text-[#8FA6BC]">
+    <div className="flex min-h-[22rem] flex-col items-start justify-center gap-5 border border-border bg-card p-8">
+      <span className="inline-flex h-11 w-11 items-center justify-center border border-border text-muted-foreground">
         <ImageOff aria-hidden="true" size={20} />
       </span>
       <div>
-        <p className="text-lg font-black leading-7 text-[#F6F3EB]">Before and after, in progress.</p>
-        <p className="mt-2 max-w-[36rem] text-sm leading-6 text-[#8FA6BC]">
+        <p className="text-lg font-black leading-7 text-card-foreground">Before and after, in progress.</p>
+        <p className="mt-2 max-w-[36rem] text-sm leading-6 text-muted-foreground">
           This project's before and after photos are still being documented. We only show
           before/after pairs from real, completed work.
         </p>
       </div>
       <a
         href="/contact"
-        className="inline-flex min-h-12 items-center gap-3 border-b-2 border-[#FF661C] text-sm font-black uppercase tracking-[0.08em] text-[#F6F3EB] transition-colors hover:text-[#FF661C]"
+        className="inline-flex min-h-12 items-center gap-3 border-b-2 border-[#FF661C] text-sm font-black uppercase tracking-[0.08em] text-card-foreground transition-colors hover:text-[#FF661C]"
       >
         Talk through your scope
       </a>
@@ -91,7 +91,7 @@ export default function BeforeAfterSlider({
 
   return (
     <div className="space-y-4">
-      <div className="relative h-[350px] w-full cursor-ew-resize select-none overflow-hidden rounded-none border border-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
+      <div className="relative h-[350px] w-full cursor-ew-resize select-none overflow-hidden rounded-none border border-white/10 focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-white">
         {/* Underlay Image: After */}
         <div className="absolute inset-0 h-full w-full">
           <ResponsiveImage

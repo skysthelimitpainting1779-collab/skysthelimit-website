@@ -40,13 +40,15 @@ export default function TestimonialsSection() {
           </h2>
           <p className="mt-6 max-w-[38rem] text-lg leading-8 text-[#C8D7E6]">
             {aggregateRating} stars across {reviewCount} Google reviews as of September 2026. Quoted word
-            for word from the listing; each card links to the full review on Google.
+            for word from the listing; each card links to our reviews on Google.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-8">
             <a
               href={googleReviewsUrl}
               target="_blank"
               rel="noopener noreferrer"
+              data-track="review_read_click"
+              data-track-payload={JSON.stringify({ source: 'reviews_section', label: 'Read reviews on Google' })}
               className="inline-flex min-h-12 items-center gap-3 border-b-2 border-[#F6F3EB] text-sm font-black uppercase tracking-[0.08em] transition-colors hover:border-[#FF661C] hover:text-[#FF661C]"
             >
               Read reviews on Google <ArrowUpRight aria-hidden="true" size={17} />
@@ -55,6 +57,8 @@ export default function TestimonialsSection() {
               href={googleReviewUrl}
               target="_blank"
               rel="noopener noreferrer"
+              data-track="review_write_click"
+              data-track-payload={JSON.stringify({ source: 'reviews_section', label: 'Leave us a Google review' })}
               className="inline-flex min-h-12 items-center gap-3 border-b-2 border-transparent text-sm font-black uppercase tracking-[0.08em] text-[#C8D7E6] transition-colors hover:border-[#FF661C] hover:text-[#FF661C]"
             >
               Leave us a Google review <ArrowUpRight aria-hidden="true" size={17} />
@@ -62,7 +66,7 @@ export default function TestimonialsSection() {
           </div>
         </motion.div>
 
-        <ul className="mt-14 grid gap-5 md:grid-cols-3">
+        <ul className="mt-14 grid gap-5 lg:grid-cols-3">
           {reviews.map((review, index) => (
             <li key={review.author} className="h-full">
               <TestimonialCard review={review} index={index} tone={index === 0 ? 'featured' : 'default'} />

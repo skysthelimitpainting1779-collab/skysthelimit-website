@@ -69,7 +69,7 @@ export function TestimonialCard({ review, index, tone }: TestimonialCardProps) {
         </figure>
       ) : (
         <div className="mt-5 flex flex-1 flex-col justify-end">
-          <p className="text-[0.95rem] leading-7 text-[#8FA6BC]">Rated 5 stars on Google.</p>
+          <p aria-hidden="true" className="text-[0.95rem] leading-7 text-[#8FA6BC]">Rated 5 stars on Google.</p>
           <div className="mt-6 border-t border-white/20 pt-4">
             <p className="text-sm font-black text-[#F6F3EB]">{review.author}</p>
             <p className="mt-1 text-xs font-semibold uppercase tracking-[0.1em] text-[#8FA6BC]">
@@ -83,10 +83,10 @@ export function TestimonialCard({ review, index, tone }: TestimonialCardProps) {
         href={googleReviewsUrl}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label={`Read ${review.author}'s review on Google`}
+        aria-label="Read our Google reviews"
         className="absolute inset-0 z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#FF661C]"
       >
-        <span className="sr-only">Read this review on Google</span>
+        <span className="sr-only">Read our Google reviews</span>
       </a>
     </motion.article>
   );

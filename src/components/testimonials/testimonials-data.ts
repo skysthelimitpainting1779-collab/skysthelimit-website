@@ -2,7 +2,8 @@
 // (provenance: ~/workspace/skys-crm/gbp-reviews-2026-09-21.md, captured 2026-09-21).
 // Only add reviews verified from that source. Tori Athey left a star-only
 // review, so her card shows stars without quoted text.
-// NOTE: keep googleReviewUrl in sync with src/views/Review.tsx.
+// NOTE: googleReviewUrl (write-a-review link) is also used by src/views/Review.tsx,
+// which imports it from here so the two stay in sync.
 export const googleReviewUrl =
   'https://search.google.com/local/writereview?placeid=ChIJ8d-Nq98d9kgR50-mR-K5k84';
 
@@ -48,4 +49,4 @@ export const reviews: readonly VerifiedReview[] = [
 ] as const;
 
 export const aggregateRating = '5.0';
-export const reviewCount = 3;
+export const reviewCount = reviews.length;
