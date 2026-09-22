@@ -27,7 +27,7 @@ import {
   type LandingPage,
   type LandingPageKind,
 } from '@/data/landingPages';
-import { businessPhone } from '@/lib/contact';
+import { phoneHref } from '@/lib/contact';
 import NotFound from '@/views/NotFound';
 
 interface LandingPageRouteProps {
@@ -84,7 +84,7 @@ export default function LandingPageRoute({ kind, initialPageData }: LandingPageR
               Get a Free Price Range
             </PublicCtaLink>
             <PublicCtaLink
-              href={`tel:${businessPhone}`}
+              href={phoneHref}
               variant="outline"
               icon={Phone}
               iconPosition="start"
@@ -141,6 +141,58 @@ export default function LandingPageRoute({ kind, initialPageData }: LandingPageR
           <PublicProcess items={page.process} />
         </PublicContainer>
       </PublicSection>
+
+      {page.customSections?.map((section) => (
+        <PublicSection key={section.heading} tone="soft">
+          <PublicContainer className="max-w-4xl">
+            <PublicSectionHeading eyebrow={section.eyebrow ?? 'Service detail'} title={section.heading} />
+            <div className="mt-6 space-y-4">
+              {section.body.map((paragraph, index) => (
+                <p key={index} className="text-base leading-7 text-muted-foreground">
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+            {section.links?.length ? (
+              <div className="mt-6 flex flex-wrap items-center gap-x-2 gap-y-2 text-sm">
+                <span className="text-xs font-bold uppercase tracking-[0.12em] text-trust">Related</span>
+                {section.links.map((link, index) => (
+                  <span key={`${link.href}-${link.text}`}>
+                    {index > 0 ? (
+                      <span className="text-muted-foreground" aria-hidden="true">
+                        {' '}
+                        ·{' '}
+                      </span>
+                    ) : null}
+                    <Link
+                      href={link.href}
+                      className="font-semibold text-foreground underline decoration-trust underline-offset-4 hover:text-trust"
+                    >
+                      {link.text}
+                    </Link>
+                  </span>
+                ))}
+              </div>
+            ) : null}
+          </PublicContainer>
+        </PublicSection>
+      ))}
+
+      {page.faq?.length ? (
+        <PublicSection tone="paper">
+          <PublicContainer className="max-w-4xl">
+            <PublicSectionHeading eyebrow="Questions" title="Asked before every project like this." />
+            <dl className="mt-8 space-y-6">
+              {page.faq.map((item) => (
+                <div key={item.question}>
+                  <dt className="text-lg font-bold text-foreground">{item.question}</dt>
+                  <dd className="mt-2 text-base leading-7 text-muted-foreground">{item.answer}</dd>
+                </div>
+              ))}
+            </dl>
+          </PublicContainer>
+        </PublicSection>
+      ) : null}
 
       <PublicSection tone="paper">
         <PublicContainer>

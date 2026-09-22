@@ -2,7 +2,8 @@ import LandingPageRoute from '../../../views/LandingPage';
 import { areaLandingPages, type LandingPage } from '../../../data/landingPages';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { localBusinessSchema, breadcrumbSchema } from '../../../lib/seo';
+import { localBusinessSchema, breadcrumbSchema, faqSchema } from '../../../lib/seo';
+import JsonLd from '../../../components/JsonLd';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 
 // Create safe, cookie-less public client for build/static rendering tasks
@@ -142,6 +143,9 @@ export default async function ServiceAreaLandingPage({ params }: PageProps) {
   const page = await getServiceAreaPage(slug);
   if (!page) {
     notFound();
+    // notFound() is not typed as `never` in this Next version, so the
+    // explicit throw keeps TypeScript narrowing sound (unreachable at runtime).
+    throw new Error(`Service area not found: ${slug}`);
   }
 
   const businessJson = localBusinessSchema(page.shortTitle, page.slug);
@@ -150,17 +154,13 @@ export default async function ServiceAreaLandingPage({ params }: PageProps) {
     { name: 'Service Area', path: '/service-area' },
     { name: page.shortTitle, path: `/service-areas/${page.slug}` },
   ]);
+  const faqJson = page.faq?.length ? faqSchema(page.faq) : null;
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(businessJson) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJson) }}
-      />
+      <JsonLd data={businessJson} />
+      <JsonLd data={breadcrumbJson} />
+      {faqJson ? <JsonLd data={faqJson} /> : null}
       <LandingPageRoute kind="area" initialPageData={page} />
     </>
   );

@@ -10,6 +10,9 @@ import {
 export const metadata: Metadata = {
   title: 'Privacy Policy',
   description: "How Sky's the Limit Painting LLC handles information submitted through this website.",
+  alternates: {
+    canonical: 'https://www.skysthelimitpaintingllc.com/privacy',
+  },
 };
 
 const sections = [

@@ -24,6 +24,7 @@ const ALLOWED = [
   'chore/',
   'docs/',
   'infra/',
+  'slice/',
   'devin/',
   'agent/',
   'dependabot/',

@@ -1,3 +1,17 @@
+// Shared API response shape: success is always { ...data, ok: true },
+// errors are always { ...extra, error: message }.
+// Data/extras are spread first so the reserved fields can't be overridden
+// by caller-supplied values.
+import { NextResponse } from 'next/server';
+
+export function jsonOk(data: Record<string, unknown> = {}, status = 200) {
+  return NextResponse.json({ ...data, ok: true }, { status });
+}
+
+export function jsonError(error: string, status = 400, extra: Record<string, unknown> = {}) {
+  return NextResponse.json({ ...extra, error }, { status });
+}
+
 export function asText(value: unknown): string {
   return typeof value === 'string' ? value.trim() : '';
 }
@@ -96,13 +110,13 @@ export function validate(payload: Record<string, unknown>): string {
   return '';
 }
 
-export function buildLeadHtml(payload: Record<string, unknown>): string {
+export function buildLeadHtml(payload: Record<string, unknown>, title = "New Sky's the Limit Painting lead"): string {
   const rows = Object.entries(payload)
     .filter(([key, value]) => key !== 'website' && asText(value).length > 0)
     .map(([key, value]) => '<tr><td style="padding:6px 10px;border:1px solid #ddd;font-weight:700;">' + escapeHtml(key) + '</td><td style="padding:6px 10px;border:1px solid #ddd;">' + escapeHtml(value) + '</td></tr>')
     .join('');
 
-  return '<h1>New Sky\'s the Limit Painting lead</h1><table style="border-collapse:collapse;">' + rows + '</table>';
+  return '<h1>' + title + '</h1><table style="border-collapse:collapse;">' + rows + '</table>';
 }
 
 export function createRateLimiter(maxRequests: number, windowMs: number) {

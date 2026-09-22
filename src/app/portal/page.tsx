@@ -57,6 +57,9 @@ async function PortalDashboard() {
   const gate = gatePortalAccess(user);
   if (!gate.authenticated) {
     redirect(portalLoginUrl('/portal'));
+    // redirect() is not typed as `never` in this Next version, so the
+    // explicit throw keeps TypeScript narrowing sound (unreachable at runtime).
+    throw new Error('Redirecting to portal login');
   }
 
   const dashboard = await loadPortalDashboard(gate.user);
