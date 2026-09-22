@@ -126,6 +126,10 @@ export default function AboutPage() {
               sizes="(min-width: 1024px) 80vw, 100vw"
               className="h-auto w-full object-cover"
             />
+            <figcaption className="border-t border-white/20 px-5 py-3">
+              <span className="text-xs font-bold uppercase tracking-[0.12em] text-[#FF661C]">Illustration</span>
+              <span className="mt-1 block text-sm font-semibold text-white/70">Stylized trim-work rendering — project proof comes with the written scope.</span>
+            </figcaption>
           </figure>
           <div className="mt-12"><PublicProcess items={process} /></div>
         </PublicContainer>
