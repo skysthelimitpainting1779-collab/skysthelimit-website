@@ -57,7 +57,7 @@
       "schedule": "0 8 * * *"
     }
   ],
-  "ignoreCommand": "if [ \"$VERCEL_GIT_COMMIT_REF\" = main ]; then echo 'main — proceeding'; exit 1; else echo \"non-main ($VERCEL_GIT_COMMIT_REF) — skipping\"; exit 0; fi",
+  "ignoreCommand": "if [ -z \"$VERCEL_GIT_COMMIT_REF\" ] || [ \"$VERCEL_GIT_COMMIT_REF\" = main ]; then echo \"ref '${VERCEL_GIT_COMMIT_REF:-<empty>}' — proceeding with build\"; exit 1; else echo \"non-main ($VERCEL_GIT_COMMIT_REF) — skipping build\"; exit 0; fi",
   "git": {
     "deploymentEnabled": {
       "*": false,
