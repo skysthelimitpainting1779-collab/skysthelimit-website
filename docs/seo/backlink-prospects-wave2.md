@@ -165,14 +165,16 @@ backlinks. 18 is a referral/resource contact, not a backlink source.
   https://msp-ifma.org/wp-content/uploads/2024/11/IFMA-Sponsorship-Guide-11.1.24.pdf
 - **Path exists:** yes (both returned verbatim in search results).
 
-### 17. Minnesota Shopping Center Association (MSCA)
-- **Domain:** msca-online.com
+### 17. Retail Real Estate Network Minnesota (formerly MSCA)
+- **Domain:** retailrealestatenetworkmn.com
 - **Why relevant:** Retail real estate association — shopping-center owners
   and managers who buy facade painting and lot striping. Membership
   registration is the entry point.
-- **Exact verified path:** https://www.msca-online.com/account/register
-- **Path exists:** yes (returned verbatim in search results, linked from
-  the MSCA calendar as "sign up to become a member").
+- **Exact verified path:** https://www.retailrealestatenetworkmn.com/membership-information-landing
+- **Path exists:** yes (live 2026-09-22; linked from the Who We Are page as
+  "Join the Retail Real Estate Network"). The old msca-online.com domain
+  rebranded to retailrealestatenetworkmn.com; /account/register 404s on
+  both domains.
 
 ---
 
