@@ -17,8 +17,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { ENV } from '@/lib/env';
 import { trackEvent } from '@/lib/analytics';
-
-const googleReviewUrl = 'https://search.google.com/local/writereview?placeid=ChIJ8d-Nq98d9kgR50-mR-K5k84';
+import { googleReviewUrl } from '@/components/testimonials/testimonials-data';
 
 export default function ReviewPage() {
   const [rating, setRating] = useState<number | null>(null);

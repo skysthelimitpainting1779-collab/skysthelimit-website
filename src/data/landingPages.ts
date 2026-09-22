@@ -346,7 +346,7 @@ export const areaLandingPages: LandingPage[] = [
         eyebrow: 'Why Bloomington',
         body: [
           'Sky’s the Limit Painting serves Bloomington neighborhoods and the 494/35W corridor with residential painting, commercial painting, and parking lot striping. We are a local, owner-run crew — not a franchise — and every job gets a direct line to the person doing the work.',
-          'Bloomington has a little of everything: single-family homes that need fresh exteriors after a few hard Minnesota winters, a heavy retail/office/hospitality corridor along 494 that needs to look sharp for tenants and customers, and parking lots that take a real beating from snowplows all winter. Faded, plow-chewed striping is a liability problem in a high-traffic corridor lot, not a cosmetic one — and we are one of the few contractors in the south metro that can fix the building and the lot under one contract.',
+          'Bloomington has a little of everything: single-family homes that need fresh exteriors after a few hard Minnesota winters, a heavy retail/office/hospitality corridor along 494 that needs to look sharp for tenants and customers, and parking lots that take a real beating from snowplows all winter. Faded, plow-chewed striping is a liability problem in a high-traffic corridor lot, not a cosmetic one — and we can fix the building and the lot under one contract.',
           'Call or text 651-410-4196 for a free estimate. We will come out, walk the job with you, and give you a straight number.',
         ],
       },
@@ -454,7 +454,7 @@ export const areaLandingPages: LandingPage[] = [
       'House painting, commercial painting & parking lot striping in Eden Prairie, MN. Local crew, free estimates. Call 651-410-4196.',
     image: '/brand/generated/sky-local-authority.webp',
     accent: 'West metro local',
-    market: 'Residential',
+    market: 'Commercial',
     proof: [
       'Based in Inver Grove Heights, serving Eden Prairie',
       'Owner-led project communication',
@@ -713,7 +713,7 @@ export const areaLandingPages: LandingPage[] = [
       'House painting, commercial painting & parking lot striping in Maple Grove, MN. Local crew, free estimates. Call 651-410-4196.',
     image: '/brand/generated/sky-local-authority.webp',
     accent: 'Northwest metro local',
-    market: 'Residential',
+    market: 'Commercial',
     proof: [
       'Based in Inver Grove Heights, serving Maple Grove',
       'Owner-led project communication',
@@ -1030,7 +1030,7 @@ export const serviceLandingPages: LandingPage[] = [
       { title: 'Prepare The Surface', body: 'Plan cleaning, debris removal, chalk lines, and access timing.' },
       { title: 'Stripe For Clarity', body: 'Focus on visibility, flow, property presentation, and closeout photos.' },
     ],
-    related: ['commercial', 'pavement-marking', 'public-sector', 'twin-cities'],
+    related: ['commercial', 'pavement-marking', 'public-sector', 'parking-lot-striping-pricing'],
     customSections: [
       {
         heading: 'Parking Lot Striping Services in the Minneapolis–St. Paul Metro',
@@ -1143,7 +1143,7 @@ export const serviceLandingPages: LandingPage[] = [
       { title: 'Plan Execution', body: 'Clarify layout, surface condition, cleaning needs, materials, and work windows.' },
       { title: 'Close With Proof', body: 'Use photos and notes to record the completed surface work.' },
     ],
-    related: ['parking-lot-striping', 'commercial', 'public-sector', 'minneapolis'],
+    related: ['parking-lot-striping', 'commercial', 'public-sector', 'parking-lot-striping-pricing'],
     customSections: [
       {
         heading: 'ADA-Compliant Parking Lot Marking in the Twin Cities',
@@ -1266,7 +1266,7 @@ export const serviceLandingPages: LandingPage[] = [
       { title: 'Compliant Layout', body: 'We chalk a layout that hits the space counts, van ratio, widths, and closest-to-entrance placement.' },
       { title: 'Crisp Lines', body: 'Professional striping equipment, proper surface prep, and stencils for ISA symbols, arrows, and lettering.' },
     ],
-    related: ['pavement-marking', 'parking-lot-striping', 'commercial-painting', 'twin-cities'],
+    related: ['pavement-marking', 'parking-lot-striping', 'commercial-painting', 'parking-lot-striping-pricing'],
     customSections: [
       {
         heading: 'ADA Parking Lot Striping in the Twin Cities',
@@ -1341,6 +1341,129 @@ export const serviceLandingPages: LandingPage[] = [
       {
         question: 'Do you do the signage too, or just the paint?',
         answer: 'We stripe the pavement markings and lay out the accessible stalls and aisles. On the walkthrough we will tell you honestly what your lot needs, including signage.',
+      },
+    ],
+  },
+  {
+    kind: 'service',
+    slug: 'parking-lot-striping-pricing',
+    title: 'Parking Lot Striping Pricing',
+    shortTitle: 'Parking Lot Striping',
+    eyebrow: 'What striping costs',
+    headline: 'Parking lot striping pricing for Twin Cities lots — what drives the cost and how to get an accurate quote.',
+    description:
+      'How parking lot striping is priced in the Minneapolis–St. Paul metro: the cost drivers, how contractors structure quotes, and restripe vs. new layout. Free on-site measurement from Sky’s the Limit Painting.',
+    metaTitle: 'Parking Lot Striping Pricing, Twin Cities',
+    metaDescription:
+      'How parking lot striping is priced in the Twin Cities — cost drivers, quote structures, restripe vs. new layout. Free on-site measurement. Call 651-410-4196.',
+    image: '/brand/generated/sky-commercial-authority.webp',
+    accent: 'Striping pricing guide',
+    market: 'Commercial',
+    proof: [
+      'Free on-site measurement and written quote',
+      'No flat numbers pulled from a price list',
+      'Same local crew that stripes the lot',
+      'ADA and specialty markings quoted transparently',
+    ],
+    scope: [
+      'Parking lot restriping',
+      'New layout design and striping',
+      'Accessible-space layouts',
+      'Fire lanes, crosswalks, and stencils',
+      'Seasonal refresh planning',
+    ],
+    process: [
+      { title: 'Measure', body: 'We walk the lot or review your photos, count stalls, note layout complexity, and check surface condition and ADA needs.' },
+      { title: 'Quote', body: 'You get a written quote that shows how the price was built — no mystery line items, no flat number from a list.' },
+      { title: 'Stripe', body: 'The same local crew lays the layout we quoted, on your lot’s low-traffic schedule.' },
+    ],
+    related: ['parking-lot-striping', 'pavement-marking', 'ada-parking-lot-striping', 'commercial-painting'],
+    customSections: [
+      {
+        heading: 'How Parking Lot Striping Is Actually Priced',
+        eyebrow: 'The honest version',
+        body: [
+          'Striping is one of the cheapest ways to make a commercial lot look managed and stay compliant — but what it costs depends on your lot, not a price list. Any contractor who gives you a number without seeing the lot is guessing.',
+          'An honest quote is built from measurements: how much paint goes down, how complex the layout is, what the surface needs first, and whether the layout itself has to change. This page explains each of those drivers so you can read any quote — including ours — with confidence.',
+        ],
+        links: [
+          { text: 'parking lot striping services', href: '/painting-services/parking-lot-striping' },
+        ],
+      },
+      {
+        heading: 'What Drives the Price',
+        eyebrow: 'The five drivers',
+        body: [
+          'Lot size and stall count. More stalls mean more linear feet of paint and more crew time. This is the single biggest driver — a small retail pad and a large office lot are different jobs, not different prices on the same job.',
+          'Layout complexity. Straight 90-degree stalls go down fast. Angled stalls, one-way arrows, crosswalks, stop bars, loading zones, numbered stalls, and fire-lane markings all add layout and stencil time.',
+          'Surface condition. Clean, sound asphalt takes paint directly. Lots that need sweeping, cleaning, crack repair, or old-mark blackout first cost more to stripe — paint will not hold on a surface that is not prepped.',
+          'ADA and specialty requirements. Accessible spaces, van-accessible signage, and stencils add line items. This is also the work that carries the most liability weight — price it as compliance, not paint.',
+          'Mobilization. A crew coming to your lot has setup, equipment, and scheduling cost. Bundling striping with other lot work in one visit keeps that overhead from being paid twice.',
+        ],
+      },
+      {
+        heading: 'How Contractors Structure Quotes',
+        eyebrow: 'Reading a quote',
+        body: [
+          'Striping quotes are usually structured one of three ways. Per linear foot is common nationally — you pay for the amount of line painted. Per stall shows up on straightforward restripes with uniform stalls. Per project covers new layouts and complex lots where design time matters as much as paint.',
+          'The structure matters less than what is inside it. A good quote names the layout being striped, the surface prep included, the ADA line items, and the schedule. If a quote is a single number with no breakdown, you cannot compare it to anything — ask for the detail.',
+          'Our quotes are written and itemized before any paint goes down. What we measure is what you pay for.',
+        ],
+        links: [
+          { text: 'ADA striping and compliance', href: '/painting-services/ada-parking-lot-striping' },
+        ],
+      },
+      {
+        heading: 'Restripe vs. New Layout: The Cost Difference',
+        eyebrow: 'Which one you need',
+        body: [
+          'Restriping is refresh work: the layout stays, the paint gets renewed. Because layout time drops to nearly zero, restriping is the lowest-cost option — the right move when the layout still works and only the paint has faded.',
+          'A new layout is design work: measuring, chalking a fresh stall plan, possibly removing conflicting old marks, and striping from scratch. It runs meaningfully above a restripe of the same lot — the layout labor is the difference. ADA redesigns (accessible-space counts, aisle rework, sign placement) sit in this category.',
+          'A walk-through is what turns the drivers above into a number. Most quotes take one site visit or a good set of lot photos with a stall count.',
+        ],
+        links: [
+          { text: 'pavement marking services', href: '/painting-services/pavement-marking' },
+        ],
+      },
+      {
+        heading: 'What to Ask Before You Hire',
+        eyebrow: 'Protect yourself',
+        body: [
+          'Is the quote itemized, or a single number? Does it include surface prep, or does prep get billed as a surprise later? Are ADA spaces, van signage, and stencils separate line items? Who is doing the work — the company quoting it, or a subcontractor you have never met? And what is the refresh plan — Minnesota winters eat paint, and a contractor who stripes your lot should be the one you call when the lines fade.',
+          'Ask those five questions and the snake oil separates itself from the trade work fast.',
+        ],
+      },
+      {
+        heading: 'Get Your Lot Measured',
+        eyebrow: 'Next step',
+        body: [
+          'The fastest path to a real number is a free on-site measurement: we walk the lot, count stalls, check the surface and the ADA layout, and hand you a written, itemized quote. Call 651-410-4196 or start your written scope below — it enters the commercial estimate path.',
+        ],
+        links: [
+          { text: 'start your written scope', href: '#start-scope' },
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: 'How is parking lot striping usually priced?',
+        answer: 'Most contractors quote per linear foot of line painted, per stall on uniform restripes, or per project on new layouts and complex lots. The structure varies, but every honest quote is built from the same drivers: stall count, layout complexity, surface prep, and ADA requirements.',
+      },
+      {
+        question: 'What is cheaper — restriping or a full new layout?',
+        answer: 'Comparing like for like, restriping is cheaper: same layout, fresh paint, no design time. A new layout adds measuring, chalking, and old-mark removal — worth it when the layout is wrong (wrong stall sizes, bad flow, ADA gaps), not when only the paint has faded.',
+      },
+      {
+        question: 'How often should a Minnesota lot be restriped?',
+        answer: 'Most commercial lots need fresh paint every few years. Heavy plow exposure shortens that — plows scrape flat-painted lines and symbols every winter. A spring walkthrough catches fading before it becomes a compliance or appearance problem.',
+      },
+      {
+        question: 'Do ADA markings add to the cost?',
+        answer: 'Accessible spaces, van-accessible stall markings, and stencils are line items on the quote — and they are the cheapest compliance protection a property manager can buy. We quote them transparently as part of the layout, not as surprises.',
+      },
+      {
+        question: 'Can I get a quote without a site visit?',
+        answer: 'You can get a preliminary estimate from clear lot photos (aerial or wide shots), a stall count, and knowing whether it is a restripe or new layout. The final quote is confirmed on a walk-through so the surface condition does not surprise either of us.',
       },
     ],
   },
