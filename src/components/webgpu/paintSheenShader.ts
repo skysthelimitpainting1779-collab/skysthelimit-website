@@ -52,8 +52,9 @@ fn fbm(p: vec2f) -> f32 {
 
 @fragment
 fn fs_main(@location(0) uv: vec2f) -> @location(0) vec4f {
-  // ~2-minute drift cycle: ambient, never distracting.
-  let t = params.time * 0.008;
+  // ~2-minute drift cycle: ambient, never distracting. The phase is
+  // periodic (period 120 s), so the frame at t=120 s matches t=0 exactly.
+  let t = sin(params.time * (6.2831853 / 120.0)) * 0.96;
   let warp = vec2f(
     fbm(uv * 2.0 + vec2f(t * 0.6, 0.0)),
     fbm(uv * 2.0 + vec2f(3.1, t * 0.4))
@@ -63,9 +64,9 @@ fn fs_main(@location(0) uv: vec2f) -> @location(0) vec4f {
   let sideMask = smoothstep(0.12, 0.85, uv.x);
   let band = smoothstep(0.38, 0.78, n);
   let alpha = band * sideMask * 0.16;
-  // Brand palette only.
+  // Brand palette only: bone highlight + #FF661C safety-orange ember.
   let bone = vec3f(0.965, 0.953, 0.922);
-  let ember = vec3f(1.0, 0.42, 0.12);
+  let ember = vec3f(1.0, 0.40, 0.11);
   let color = mix(bone, ember, smoothstep(0.55, 0.95, n) * 0.5);
   return vec4f(color, alpha);
 }

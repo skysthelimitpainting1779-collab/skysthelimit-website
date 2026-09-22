@@ -17,10 +17,13 @@ import { shouldStartPaintSheen } from './paintSheenShader';
  *   contend with the LCP image.
  * - prefers-reduced-motion or no WebGPU: never boots. The hero keeps its
  *   existing photo + CSS grain — the static fallback is the current design.
+ *   A change to reduced motion mid-session tears the loop down immediately.
  * - The canvas is absolute/inert (aria-hidden, pointer-events-none); reveal
  *   is opacity-only, so CLS is impossible.
- * - The render loop pauses when the tab is hidden (visibilitychange) and is
- *   torn down on unmount (React strict-mode safe).
+ * - The render loop pauses when the tab is hidden (visibilitychange) or the
+ *   hero scrolls off-screen (the IntersectionObserver stays attached and
+ *   restarts the loop on re-entry), and is torn down on unmount
+ *   (React strict-mode safe). Only one boot is ever in flight.
  */
 export default function PaintSheenCanvas() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -29,12 +32,15 @@ export default function PaintSheenCanvas() {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+
+    const motionQuery =
+      typeof window !== 'undefined'
+        ? window.matchMedia('(prefers-reduced-motion: reduce)')
+        : undefined;
     if (
       !shouldStartPaintSheen({
         hasWebGPU: typeof navigator !== 'undefined' && 'gpu' in navigator,
-        prefersReducedMotion:
-          typeof window !== 'undefined' &&
-          window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+        prefersReducedMotion: !!motionQuery?.matches,
       })
     ) {
       return;
@@ -44,7 +50,10 @@ export default function PaintSheenCanvas() {
     let stopLoop: (() => void) | undefined;
     let observer: IntersectionObserver | undefined;
     let idleId: number | undefined;
+    let timeoutId: number | undefined;
     let loadListenerAttached = false;
+    let bootPromise: Promise<void> | null = null;
+    let inViewport = false;
 
     // requestIdleCallback is not in every TS DOM lib: probe it structurally.
     const idleWindow = window as Window & {
@@ -52,30 +61,86 @@ export default function PaintSheenCanvas() {
       cancelIdleCallback?: (id: number) => void;
     };
 
-    const boot = async () => {
-      if (cancelled || stopLoop) return;
-      try {
-        const mod = await import('./paintSheen');
-        if (cancelled) return;
-        stopLoop = mod.startPaintSheen(canvas, () => {
-          if (!cancelled) setReady(true);
-        });
-      } catch {
-        // vgpu chunk failed to load or WebGPU init failed: stay hidden,
-        // the photo + CSS grain remain. Never break the page.
+    /** Drop any not-yet-fired deferred start (idle callback / timeout / load). */
+    const cancelPending = () => {
+      if (idleId !== undefined && idleWindow.cancelIdleCallback) {
+        idleWindow.cancelIdleCallback(idleId);
+        idleId = undefined;
+      }
+      if (timeoutId !== undefined) {
+        window.clearTimeout(timeoutId);
+        timeoutId = undefined;
+      }
+      if (loadListenerAttached) {
+        window.removeEventListener('load', kick);
+        loadListenerAttached = false;
       }
     };
 
+    /** Hard stop: cancel pending starts, kill the loop, hide the canvas. */
+    const stopAll = () => {
+      cancelPending();
+      stopLoop?.();
+      stopLoop = undefined;
+      setReady(false);
+    };
+
+    /**
+     * Single in-flight boot. Guards are checked BEFORE the dynamic import
+     * and re-checked AFTER it resolves, so a hide/scroll-away/unmount during
+     * the chunk load aborts instead of starting an orphaned loop. Two
+     * callers racing through the pre-await guard share this one promise —
+     * boot can never initialize twice.
+     */
+    const boot = (): Promise<void> => {
+      if (bootPromise) return bootPromise;
+      bootPromise = (async () => {
+        try {
+          if (cancelled || document.hidden || !inViewport || stopLoop) return;
+          const mod = await import('./paintSheen');
+          if (cancelled || document.hidden || !inViewport || stopLoop) return;
+          stopLoop = mod.startPaintSheen(
+            canvas,
+            () => {
+              if (!cancelled) setReady(true);
+            },
+            () => {
+              // WebGPU init failed after boot: stay hidden, never throw.
+              if (!cancelled) setReady(false);
+            },
+          );
+        } catch {
+          // vgpu chunk failed to load: stay hidden, the photo + CSS grain
+          // remain. Never break the page.
+        } finally {
+          bootPromise = null;
+        }
+      })();
+      return bootPromise;
+    };
+
     const kick = () => {
-      if (cancelled || stopLoop) return;
+      if (cancelled || document.hidden || !inViewport || stopLoop || bootPromise)
+        return;
       if (idleWindow.requestIdleCallback) {
-        idleId = idleWindow.requestIdleCallback(boot, { timeout: 4000 });
+        idleId = idleWindow.requestIdleCallback(
+          () => {
+            idleId = undefined;
+            void boot();
+          },
+          { timeout: 4000 },
+        );
       } else {
-        window.setTimeout(boot, 1200);
+        timeoutId = window.setTimeout(() => {
+          timeoutId = undefined;
+          void boot();
+        }, 1200);
       }
     };
 
     const schedule = () => {
+      cancelPending();
+      if (cancelled || document.hidden || !inViewport) return;
       if (document.readyState === 'complete') kick();
       else {
         loadListenerAttached = true;
@@ -85,41 +150,54 @@ export default function PaintSheenCanvas() {
 
     const onVisibility = () => {
       if (document.hidden) {
-        stopLoop?.();
-        stopLoop = undefined;
-        setReady(false);
+        // stopAll also cancels a boot still queued behind idle/load; an
+        // in-flight import re-checks document.hidden after resolving.
+        stopAll();
       } else if (!cancelled) {
         schedule();
       }
     };
 
-    // Start only when the hero is on screen; re-arm after tab-hide.
+    const onMotionChange = (event: MediaQueryListEvent) => {
+      if (cancelled) return;
+      if (event.matches) {
+        // User enabled reduced motion: stop animating immediately.
+        stopAll();
+      } else {
+        // Preference lifted: resume normal lifecycle if visible.
+        schedule();
+      }
+    };
+
+    // Keep observing for the whole mount: pause the loop when the hero
+    // scrolls off-screen, restart it on re-entry. Never a one-shot gate.
     if ('IntersectionObserver' in window) {
       observer = new IntersectionObserver(
         (entries) => {
-          if (entries[0]?.isIntersecting) {
-            observer?.disconnect();
-            observer = undefined;
-            schedule();
-          }
+          if (cancelled) return;
+          const visible = entries[0]?.isIntersecting ?? false;
+          if (visible === inViewport) return;
+          inViewport = visible;
+          if (visible) schedule();
+          else stopAll();
         },
         { rootMargin: '200px' },
       );
       observer.observe(canvas);
     } else {
+      inViewport = true;
       schedule();
     }
+
     document.addEventListener('visibilitychange', onVisibility);
+    motionQuery?.addEventListener('change', onMotionChange);
 
     return () => {
       cancelled = true;
       observer?.disconnect();
       document.removeEventListener('visibilitychange', onVisibility);
-      if (loadListenerAttached) window.removeEventListener('load', kick);
-      if (idleId !== undefined && idleWindow.cancelIdleCallback) {
-        idleWindow.cancelIdleCallback(idleId);
-      }
-      stopLoop?.();
+      motionQuery?.removeEventListener('change', onMotionChange);
+      stopAll();
     };
   }, []);
 

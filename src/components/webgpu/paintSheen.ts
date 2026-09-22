@@ -6,6 +6,13 @@
  * function (not a hook) per the vgpu Next.js guide: it is easier to read
  * and the part worth testing.
  *
+ * vgpu is a devDependency, not a runtime dependency: the browser receives
+ * only the bundled, tree-shaken framework modules it needs (init, surface,
+ * effect, clock, frameLoop — verified to pull in neither the MCP server
+ * nor the node adapter), so nothing about this feature needs vgpu
+ * resolvable in a production-only install. Both CI and the Vercel build
+ * install devDependencies, which is when the bundling happens.
+ *
  * Performance posture (per vgpu's shipping-to-production guide):
  * - DPR pinned to 1: the sheen is low-frequency noise, visually identical
  *   upscaled, far cheaper per frame.
@@ -24,12 +31,15 @@ import { PAINT_SHEEN_WGSL } from "./paintSheenShader";
  * `onFirstFrame` fires once the first frame is encoded, so the caller can
  * fade the canvas in with opacity only (no layout impact).
  * Returns a teardown function: stops the loop and disposes the device.
- * If WebGPU init fails, the promise rejects and the caller keeps the
- * canvas hidden — the hero photo + CSS grain remain the visual.
+ * If WebGPU init fails (e.g. a browser that exposes navigator.gpu but
+ * fails device creation), the error is caught HERE — the promise never
+ * rejects unhandled. `onError` fires, the loop never starts, and the
+ * caller keeps the canvas hidden: the hero photo + CSS grain remain.
  */
 export function startPaintSheen(
   canvas: HTMLCanvasElement,
   onFirstFrame: () => void,
+  onError?: (error: unknown) => void,
 ): () => void {
   let disposed = false;
   let loop: FrameLoopHandle | undefined;
@@ -37,31 +47,43 @@ export function startPaintSheen(
   let firstFrameFired = false;
 
   void (async () => {
-    gpu = await init();
-    if (disposed) {
-      gpu.dispose();
-      return;
+    try {
+      gpu = await init();
+      if (disposed) {
+        gpu.dispose();
+        return;
+      }
+
+      const canvasSurface = surface(gpu, canvas, { dpr: 1 });
+      const sheen = effect(gpu, PAINT_SHEEN_WGSL, {
+        label: "paint-sheen",
+        set: { params: { time: 0 } },
+      });
+
+      const time = clock(gpu);
+      loop = frameLoop(
+        gpu,
+        (frame) => {
+          sheen.set({ params: { time: time.time } });
+          frame.pass(canvasSurface, sheen);
+          if (!firstFrameFired) {
+            firstFrameFired = true;
+            onFirstFrame();
+          }
+        },
+        { fps: 24 },
+      );
+    } catch (error) {
+      // Graceful inert fallback: never an unhandled rejection. Dispose any
+      // partially-initialized device, notify the caller, stay hidden.
+      disposed = true;
+      try {
+        gpu?.dispose();
+      } catch {
+        // Best effort: teardown must not throw either.
+      }
+      onError?.(error);
     }
-
-    const canvasSurface = surface(gpu, canvas, { dpr: 1 });
-    const sheen = effect(gpu, PAINT_SHEEN_WGSL, {
-      label: "paint-sheen",
-      set: { params: { time: 0 } },
-    });
-
-    const time = clock(gpu);
-    loop = frameLoop(
-      gpu,
-      (frame) => {
-        sheen.set({ params: { time: time.time } });
-        frame.pass(canvasSurface, sheen);
-        if (!firstFrameFired) {
-          firstFrameFired = true;
-          onFirstFrame();
-        }
-      },
-      { fps: 24 },
-    );
   })();
 
   return () => {
