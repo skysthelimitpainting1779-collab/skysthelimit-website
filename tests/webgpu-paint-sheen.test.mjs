@@ -17,20 +17,43 @@ const VGPU_BIN = join(root, 'node_modules', '.bin', 'vgpu');
 
 /**
  * Compile WGSL through the real compiler: writes the source to a temp
- * .wgsl file and runs plain `vgpu check` (parse + naga validation +
- * reflection). This needs no GPU device, so it is deterministic on every
- * machine including CI runners. A syntax error, or a construct the
- * compiler rejects, makes the CLI exit non-zero — invalid shader code
- * fails the suite instead of silently passing.
+ * .wgsl file and runs plain `vgpu check` (parse + naga/device validation +
+ * reflection). Never throws on a non-zero exit: the CLI prints its JSON
+ * report on validation failures too, so the caller inspects the report.
+ * Only a missing/unparseable report (broken CLI contract) throws — loud,
+ * never a silent pass.
  */
-async function checkWgsl(source, label) {
+async function runCheck(source, label) {
   const dir = mkdtempSync(join(tmpdir(), 'paint-sheen-wgsl-'));
   const file = join(dir, `${label}.wgsl`);
   writeFileSync(file, source, 'utf8');
-  const { stdout } = await execFileAsync(VGPU_BIN, ['check', file], {
-    timeout: 120_000,
-  });
-  return JSON.parse(stdout);
+  let stdout;
+  let exitCode = 0;
+  try {
+    ({ stdout } = await execFileAsync(VGPU_BIN, ['check', file], {
+      timeout: 120_000,
+    }));
+  } catch (error) {
+    exitCode = typeof error?.code === 'number' ? error.code : 1;
+    stdout = typeof error?.stdout === 'string' ? error.stdout : '';
+  }
+  let report;
+  try {
+    report = JSON.parse(stdout);
+  } catch {
+    throw new Error(
+      `vgpu check produced no parseable JSON report (exit ${exitCode}); stdout was: ${stdout.slice(0, 500)}`,
+    );
+  }
+  return { exitCode, report };
+}
+
+/** The report shows the shader failed to compile, on any machine. */
+function reportFailed(report) {
+  return (
+    (report.diagnostics ?? []).some((d) => d.severity === 'error') ||
+    report.validation?.ok === false
+  );
 }
 
 /**
@@ -82,7 +105,12 @@ test('startup guards: sheen runs only with WebGPU and without reduced motion', (
 });
 
 test('WGSL compiles: parse, naga validation, and reflection (vgpu check)', async () => {
-  const report = await checkWgsl(PAINT_SHEEN_WGSL, 'paint-sheen');
+  const { exitCode, report } = await runCheck(PAINT_SHEEN_WGSL, 'paint-sheen');
+  assert.equal(
+    exitCode,
+    0,
+    `vgpu check must exit 0 for the shipped shader, got diagnostics: ${JSON.stringify(report.diagnostics)}`,
+  );
   assert.deepEqual(
     report.diagnostics,
     [],
@@ -117,12 +145,15 @@ test('WGSL compiles: parse, naga validation, and reflection (vgpu check)', async
 
 test('the compiler actually rejects invalid WGSL (the check is not vacuous)', async () => {
   const broken = 'fn broken( -> f32 { return 1.0; }\n';
-  // Plain check parses without a device, so this control is meaningful on
-  // every machine: a validator that passes broken WGSL is worthless.
-  await assert.rejects(
-    () => checkWgsl(broken, 'paint-sheen-broken'),
-    /Command failed/i,
-    'vgpu check must fail on invalid WGSL',
+  // Assert on the report, not the exit code: on machines with a WebGPU
+  // adapter the device compiler rejects this (non-zero exit); on
+  // adapter-less machines validation is skipped (exit 0) but the report
+  // still records validation.ok === false. Either way the failure must be
+  // visible — a validator that passes broken WGSL is worthless.
+  const { report } = await runCheck(broken, 'paint-sheen-broken');
+  assert.ok(
+    reportFailed(report),
+    `broken WGSL must fail the compiler, got validation=${JSON.stringify(report.validation)} diagnostics=${JSON.stringify(report.diagnostics)}`,
   );
 });
 
