@@ -61,7 +61,7 @@ export default function HomeClient() {
         <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(90deg,rgba(7,19,33,0.98)_0%,rgba(7,19,33,0.9)_45%,rgba(7,19,33,0.38)_76%,rgba(7,19,33,0.12)_100%)]" />
         <div aria-hidden="true" className="proof-hero-grain absolute inset-0" />
         <div aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-white/30" />
-        <p className="absolute right-5 top-2 z-10 text-[0.62rem] font-bold uppercase tracking-[0.16em] text-[#F6F3EB]/55 sm:right-8 lg:right-12">
+        <p className="absolute right-5 top-2 z-10 bg-[#071321]/55 px-2 py-1 text-[0.62rem] font-bold uppercase tracking-[0.16em] text-[#F6F3EB]/90 sm:right-8 lg:right-12">
           Illustration — stylized exterior rendering
         </p>
 
