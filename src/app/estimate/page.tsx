@@ -3,8 +3,8 @@ import CalBooking from '../../components/CalBooking';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'What Does House Painting Cost in Minneapolis?',
-  description: 'What house painting costs in Minneapolis — real room-by-room pricing, then get your free written estimate.',
+  title: 'Twin Cities Room Painting Cost Calculator',
+  description: 'Estimate room painting and trim preparation costs for Twin Cities homes, then request a written owner-led scope for firm pricing.',
   alternates: {
     canonical: 'https://www.skysthelimitpaintingllc.com/estimate',
   },
