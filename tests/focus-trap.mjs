@@ -51,10 +51,21 @@ describe('getFocusableElements', () => {
     const ids = getFocusableElements(dialog).map((el) => el.id);
     assert.deepEqual(ids, ['close', 'orb']);
   });
+
+  it('excludes elements with negative tabindex outside sequential tab order', () => {
+    const document = setup();
+    const dialog = document.getElementById('dialog');
+    const neg = document.createElement('button');
+    neg.id = 'neg';
+    neg.setAttribute('tabindex', '-2');
+    dialog.appendChild(neg);
+    const ids = getFocusableElements(dialog).map((el) => el.id);
+    assert.ok(!ids.includes('neg'), 'tabindex=-2 element must not be a trap target');
+  });
 });
 
 describe('getTrapTarget with the voice-widget dialog (close + iframe)', () => {
-  it('Tab from the Close button lets the browser move to the iframe', () => {
+  it('Tab from the Close button: trap returns null, declining to intercept', () => {
     const document = setup();
     const dialog = document.getElementById('dialog');
     const close = document.getElementById('close');
@@ -77,7 +88,7 @@ describe('getTrapTarget with the voice-widget dialog (close + iframe)', () => {
     assert.equal(getTrapTarget(dialog, close, true), orb);
   });
 
-  it('Shift+Tab from the iframe moves to the Close button by default', () => {
+  it('Shift+Tab from the iframe: trap returns null, declining to intercept', () => {
     const document = setup();
     const dialog = document.getElementById('dialog');
     const orb = document.getElementById('orb');

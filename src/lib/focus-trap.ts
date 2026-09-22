@@ -20,7 +20,11 @@ const FOCUSABLE_SELECTOR = [
 /** Visible, keyboard-focusable descendants of the dialog, in tab order. */
 export function getFocusableElements(container: HTMLElement): HTMLElement[] {
   const candidates = Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR));
-  return candidates.filter((el) => el.getClientRects().length > 0);
+  // The attribute selector above only excludes tabindex="-1" exactly; other
+  // negative values (e.g. tabindex="-2") still match but are skipped by the
+  // browser's sequential tab order, so filter on the numeric tabIndex too —
+  // otherwise focus could strand on a control Tab can never reach.
+  return candidates.filter((el) => el.tabIndex >= 0 && el.getClientRects().length > 0);
 }
 
 /**

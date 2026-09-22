@@ -655,6 +655,11 @@
 .public-surface.voice-widget-panel {
   background-color: var(--color-surface-raised);
   color: var(--color-ink-1);
+  /* Panel is near-black; the inherited .public-surface --border is a dark
+     hairline (20% black) built for the light surface and disappears here.
+     Give the panel its own light hairline so its outline, close button,
+     and dividers stay visible. */
+  --border: rgb(246 243 235 / 22%);
 }
 
 .public-surface [data-tone="soft"] {
