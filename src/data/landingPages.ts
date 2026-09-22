@@ -1451,7 +1451,7 @@ export const serviceLandingPages: LandingPage[] = [
       },
       {
         question: 'What is cheaper — restriping or a full new layout?',
-        answer: 'Restriping is always cheaper: same layout, fresh paint, no design time. A new layout adds measuring, chalking, and old-mark removal — worth it when the layout is wrong (wrong stall sizes, bad flow, ADA gaps), not when only the paint has faded.',
+        answer: 'Comparing like for like, restriping is cheaper: same layout, fresh paint, no design time. A new layout adds measuring, chalking, and old-mark removal — worth it when the layout is wrong (wrong stall sizes, bad flow, ADA gaps), not when only the paint has faded.',
       },
       {
         question: 'How often should a Minnesota lot be restriped?',
