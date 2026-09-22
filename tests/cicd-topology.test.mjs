@@ -110,7 +110,14 @@ test('Vercel Git integration owns main deployment and the release marker is gone
   const config = JSON.parse(read('vercel.json'));
 
   assert.equal(config.installCommand, 'npm ci');
-  assert.equal(config.git?.deploymentEnabled?.main, true);
-  assert.equal(config.git?.deploymentEnabled?.['entire/*'], false);
+  assert.deepEqual(config.git?.deploymentEnabled, { '*': false, '**/*': false, main: true });
+  const ignoreCommand = String(config.ignoreCommand ?? '');
+  // Lock the deny-all semantics: exact `= main` equality test (not `!=`),
+  // exit 1 in the proceed branch before `else`, exit 0 in the skip branch before `fi`,
+  // and an empty-ref guard so CLI/API production deploys are not silently canceled.
+  assert.match(ignoreCommand, /\[\s*"\$VERCEL_GIT_COMMIT_REF"\s*=\s*main\s*\]/);
+  assert.match(ignoreCommand, /-z "\$VERCEL_GIT_COMMIT_REF"/);
+  assert.match(ignoreCommand, /exit 1;\s*else/);
+  assert.match(ignoreCommand, /exit 0;\s*fi/);
   assert.equal(exists('.github/production-release.json'), false);
 });
