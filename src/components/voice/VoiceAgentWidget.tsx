@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 import { getFocusableElements, getTrapTarget, isFocusOutside } from '@/lib/focus-trap';
 
 const ORB_URL =
-  'https://agent.retellai.com/orb/agent_a0567494bf22df44e28d9af556?token=fcaaf2d093bf5d7dd095a00c647a51';
+  'https://agent.retellai.com/orb/agent_a0567494bf22df44e28d9af556?token=fcaaf2d093bf5d7dd095a00c647a513f';
 
 const INTERNAL_ROUTE_PREFIXES = ['/admin', '/manage', '/portal'];
 
