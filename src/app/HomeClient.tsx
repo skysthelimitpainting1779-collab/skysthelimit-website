@@ -6,6 +6,7 @@ import LeadForm from '../components/LeadForm';
 import PrepProtocolStage from '../components/PrepProtocolStage';
 import ResponsiveImage from '../components/ResponsiveImage';
 import TestimonialsSection from '../components/testimonials/TestimonialsSection';
+import PaintSheenCanvas from '../components/webgpu/PaintSheenCanvas';
 import { PublicCtaLink, PublicPage } from '../components/public/PublicSystem';
 import { faqSchema } from '../lib/seo';
 
@@ -58,6 +59,7 @@ export default function HomeClient() {
           fetchPriority="high"
           className="absolute inset-0 h-full w-full object-cover object-center"
         />
+        <PaintSheenCanvas />
         <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(90deg,rgba(7,19,33,0.98)_0%,rgba(7,19,33,0.9)_45%,rgba(7,19,33,0.38)_76%,rgba(7,19,33,0.12)_100%)]" />
         <div aria-hidden="true" className="proof-hero-grain absolute inset-0" />
         <div aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-white/30" />

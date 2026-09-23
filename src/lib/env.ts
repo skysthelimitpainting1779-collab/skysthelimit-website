@@ -47,7 +47,10 @@ export const ENV = {
   INSTAGRAM_URL: getEnv('INSTAGRAM_URL') || '',
   LINKEDIN_URL: getEnv('LINKEDIN_URL') || 'https://www.linkedin.com/in/anthony-briseno-5444b0410/',
   TIKTOK_URL: getEnv('TIKTOK_URL') || 'https://tiktok.com/@skysthelimitpaintingllc',
-  // Verified Google Business Profile (CID), the strongest local-SEO entity link.
+  // Google Business Profile canonical share URL (CID 8497050136769031462).
+  // The CID form is the entity-stable listing link for JSON-LD sameAs —
+  // the place-name URL is only a human-facing address-bar form and is used
+  // as such in ReviewsSection / testimonials-data, not here.
   GOOGLE_BUSINESS_URL: getEnv('GOOGLE_BUSINESS_URL') || 'https://www.google.com/maps?cid=8497050136769031462',
   BOOKING_URL: getEnv('BOOKING_URL') || '',
   // Explicitly reference process.env for Next.js client-side static substitution

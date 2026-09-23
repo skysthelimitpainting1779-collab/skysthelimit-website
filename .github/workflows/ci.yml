@@ -54,6 +54,13 @@ jobs:
       - name: Lint Markdown
         run: npm run lint:md
 
+      - name: Install software WebGPU renderer (WGSL validation tests)
+        # The paint-sheen WGSL tests compile shaders through `vgpu check`,
+        # which needs a WebGPU adapter. Runners have no GPU/Vulkan drivers,
+        # so install vgpu's portable CPU renderer (Lavapipe); without it the
+        # validator skips device-backed checks and invalid WGSL can't fail CI.
+        run: npx vgpu install-software-renderer
+
       - name: Run tests
         id: tests
         shell: bash
