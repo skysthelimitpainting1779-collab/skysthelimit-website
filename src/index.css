@@ -636,6 +636,32 @@
   color: var(--foreground);
 }
 
+/*
+  Voice widget surfaces.
+  `.public-surface` above is unlayered, so its `background`/`color` beat
+  Tailwind's layered utilities — `bg-brand` / `bg-surface-raised` on the
+  widget silently lost. These scoped overrides (same unlayered level, later
+  in source, higher specificity) restore the widget's intended surfaces
+  using existing design tokens. Kept widget-scoped on purpose: re-layering
+  `.public-surface` itself would change rendering across the whole site.
+*/
+.public-surface.voice-widget-trigger {
+  background-color: var(--color-brand);
+  color: var(--color-ink);
+}
+.public-surface.voice-widget-trigger:hover {
+  background-color: var(--color-ink-1);
+}
+.public-surface.voice-widget-panel {
+  background-color: var(--color-surface-raised);
+  color: var(--color-ink-1);
+  /* Panel is near-black; the inherited .public-surface --border is a dark
+     hairline (20% black) built for the light surface and disappears here.
+     Give the panel its own light hairline so its outline, close button,
+     and dividers stay visible. */
+  --border: rgb(246 243 235 / 22%);
+}
+
 .public-surface [data-tone="soft"] {
   --background: var(--sky-paper-50);
   --card: var(--sky-paper-100);
