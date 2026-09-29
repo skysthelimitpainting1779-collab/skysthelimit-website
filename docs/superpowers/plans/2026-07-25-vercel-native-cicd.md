@@ -31,7 +31,7 @@
 
 - [ ] **Step 1: Write the failing test**
 
-Create tests that assert exactly `ci.yml`, `security.yml`, and `deployment-verification.yml` exist; reject deployment commands and `npm run build`; require the expected commands and triggers in each workflow; require `vercel.json.git.deploymentEnabled.main === true`; require `entire/* === false`; and require `.github/production-release.json` to be absent.
+Create tests that assert exactly `ci.yml`, `security.yml`, and `deployment-verification.yml` exist; reject deployment commands and `npm run build`; require the expected commands and triggers in each workflow; require the deny-all contract `vercel.json.git.deploymentEnabled` deep-equals `{'*': false, '**/*': false, main: true}`; and require `.github/production-release.json` to be absent.
 
 - [ ] **Step 2: Run the red phase remotely**
 
@@ -142,7 +142,7 @@ Write the chosen URL and event type to the GitHub step summary before running sm
 
 - [ ] **Step 1: Enable `main` Git deployments**
 
-Set `vercel.json.git.deploymentEnabled.main` to `true` and retain `entire/*` as `false`.
+Set `vercel.json.git.deploymentEnabled` to the deny-all contract: `main` to `true`, `'*'` and `'**/*'` to `false`.
 
 - [ ] **Step 2: Delete GitHub-owned deployment and self-test workflows**
 

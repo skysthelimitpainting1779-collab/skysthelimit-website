@@ -49,8 +49,9 @@ Git deployment configuration changes to:
 ```json
 "git": {
   "deploymentEnabled": {
-    "main": true,
-    "entire/*": false
+    "*": false,
+    "**/*": false,
+    "main": true
   }
 }
 ```
@@ -89,7 +90,7 @@ Repository contract tests must prove:
 - `ci.yml` runs install, workflow contract, Git standards, lint/typecheck, and tests.
 - `security.yml` contains CodeQL, dependency review, and production audit.
 - `deployment-verification.yml` consumes Vercel deployment events and uses the existing smoke runner.
-- `vercel.json` enables `main` Git deployments and keeps `entire/*` disabled.
+- `vercel.json` enables only `main` Git deployments; every other branch or pattern is disabled (`'*': false`, `'**/*': false`).
 - The obsolete release marker does not exist.
 
 The red phase is committed before the implementation. The branch is considered ready only after CI, security, and the Vercel Preview Deployment are green.
