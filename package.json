@@ -41,7 +41,7 @@
     "render:markets": "remotion render remotion/index.ts ResidentialLoop public/videos/sky-residential-loop.mp4 --codec=h264 --crf=22 --muted && remotion render remotion/index.ts CommercialLoop public/videos/sky-commercial-loop.mp4 --codec=h264 --crf=22 --muted && remotion render remotion/index.ts PublicSectorLoop public/videos/sky-public-sector-loop.mp4 --codec=h264 --crf=22 --muted"
   },
   "dependencies": {
-    "@base-ui/react": "^1.6.0",
+    "@base-ui/react": "^1.8.0",
     "@directus/sdk": "^23.0.0",
     "@libsql/client": "0.17.4",
     "@payloadcms/db-postgres": "3.88.0",
