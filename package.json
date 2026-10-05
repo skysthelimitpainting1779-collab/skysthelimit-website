@@ -45,7 +45,7 @@
     "@directus/sdk": "^23.0.0",
     "@libsql/client": "0.17.4",
     "@payloadcms/db-postgres": "3.88.0",
-    "@payloadcms/next": "3.88.0",
+    "@payloadcms/next": "3.90.2",
     "@payloadcms/richtext-lexical": "3.90.2",
     "@payloadcms/storage-s3": "3.88.0",
     "@phosphor-icons/react": "2.1.10",
