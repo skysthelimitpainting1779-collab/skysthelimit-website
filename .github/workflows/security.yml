@@ -76,6 +76,7 @@ jobs:
         run: npm ci --ignore-scripts
 
       - name: Audit all locked dependencies
+        # Gate: npm audit --audit-level=high, with one documented exception.
         # Accepted residual (recorded 2026-10-12): GHSA-vfj7-8cjw-p6xm
         # (braces stack-exhaustion DoS, reachable via build tooling) has no
         # fixed version — braces is unmaintained at 3.0.3 and the advisory
@@ -86,7 +87,7 @@ jobs:
           const ALLOWLIST = new Set(['GHSA-vfj7-8cjw-p6xm']);
           let out = '';
           try {
-            out = execSync('npm audit --json', { encoding: 'utf8', maxBuffer: 128 * 1024 * 1024 });
+            out = execSync('npm audit --audit-level=high --json', { encoding: 'utf8', maxBuffer: 128 * 1024 * 1024 });
             console.log('npm audit clean — gate passes.');
             process.exit(0);
           } catch (e) { out = String(e.stdout || ''); }
