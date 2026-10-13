@@ -76,4 +76,38 @@ jobs:
         run: npm ci --ignore-scripts
 
       - name: Audit all locked dependencies
-        run: npm audit --audit-level=high
+        # Gate: npm audit --audit-level=high, with one documented exception.
+        # Accepted residual (recorded 2026-10-12): GHSA-vfj7-8cjw-p6xm
+        # (braces stack-exhaustion DoS, reachable via build tooling) has no
+        # fixed version — braces is unmaintained at 3.0.3 and the advisory
+        # flags every release. Any other high/critical advisory fails the gate.
+        run: |
+          node -e "
+          const { execSync } = require('node:child_process');
+          const ALLOWLIST = new Set(['GHSA-vfj7-8cjw-p6xm']);
+          let out = '';
+          try {
+            out = execSync('npm audit --audit-level=high --json', { encoding: 'utf8', maxBuffer: 128 * 1024 * 1024 });
+            console.log('npm audit clean — gate passes.');
+            process.exit(0);
+          } catch (e) { out = String(e.stdout || ''); }
+          const audit = JSON.parse(out);
+          const flagged = new Map();
+          for (const vuln of Object.values(audit.vulnerabilities || {})) {
+            if (!['high', 'critical'].includes(vuln.severity)) continue;
+            for (const via of vuln.via || []) {
+              if (via && typeof via === 'object' && via.url) {
+                const m = String(via.url).match(/GHSA-[a-z0-9-]+/i);
+                const id = m ? m[0] : via.url;
+                if (!ALLOWLIST.has(id)) flagged.set(id, via.title || vuln.name);
+              }
+            }
+          }
+          if (flagged.size === 0) {
+            console.log('Only the documented braces residual remains — gate passes.');
+            process.exit(0);
+          }
+          console.error('Failing high/critical advisories:');
+          for (const [id, title] of flagged) console.error(' - ' + id + ': ' + title);
+          process.exit(1);
+          "
