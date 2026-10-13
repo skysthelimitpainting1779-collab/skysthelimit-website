@@ -89,7 +89,7 @@
     "remotion": "4.0.526",
     "tailwindcss": "4.3.3",
     "tsx": "4.23.1",
-    "typescript": "6.0.3",
+    "typescript": "7.0.2",
     "vercel": "^59.23.0",
     "vgpu": "0.5.0"
   },
