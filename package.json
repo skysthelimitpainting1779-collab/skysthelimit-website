@@ -84,7 +84,7 @@
     "gray-matter": "^4.0.3",
     "jsdom": "^30.1.1",
     "markdownlint-cli": "^0.49.1",
-    "pg": "8.23.0",
+    "pg": "8.23.1",
     "postcss": "8.5.28",
     "remotion": "4.0.526",
     "tailwindcss": "4.3.3",
